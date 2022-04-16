@@ -6,10 +6,9 @@
 </p>
 
 ## 🍟概述
-* 本项目适合有一定vue基础的开发人员
 * 本仓库为前端技术栈 [Vue3](https://v3.cn.vuejs.org) + [Element Plus](https://element-plus.org/zh-CN) + [Vite](https://cn.vitejs.dev) 版本。
-* 配套后端代码仓库地址[ZRAdmin-Vue](https://gitee.com/izory/ZrAdminNetCore/) 版本。
-* 前端采用Vue3.0、Element UI Plus。
+* 配套后端代码仓库地址[ZRAdmin.NET](https://gitee.com/izory/ZrAdminNetCore/) 版本。
+* 前端采用Vue3.0、Element UI Plus、vite。
 * 支持加载动态权限菜单，多方式轻松权限控制
 * 七牛云通用云产品优惠券：[点我进入](https://s.qiniu.com/FzEfay)。
 * 腾讯云秒杀场：[点我进入](https://curl.qcloud.com/4yEoRquq)。
@@ -21,7 +20,7 @@
 
 ## 🍿在线体验
 - 官方文档：http://www.izhaorui.cn/doc
-- 体验地址：http://www.izhaorui.cn/admin
+- 体验地址：http://www.izhaorui.cn/vue3
 - 管理员：admin
 - 密  码：123456
 
@@ -32,10 +31,10 @@
 
 ```bash
 # 克隆项目
-git clone https://gitee.com/izory/ZrAdminNetCore
+git clone https://gitee.com/izory/ZRAdmin-vue.git
 
 # 进入项目目录
-cd ZR.vue3
+cd ZRAdmin-vue
 
 # 安装依赖
 yarn --registry=https://registry.npm.taobao.org
@@ -50,6 +49,7 @@ yarn dev
 
 
 ## 🍖内置功能
+目前只开发了以下功能，其他功能陆续开发中...
 
 1. 用户管理：用户是系统操作者，该功能主要完成系统用户配置。
 2. 部门管理：配置系统组织机构（公司、部门、小组），树结构展现。
