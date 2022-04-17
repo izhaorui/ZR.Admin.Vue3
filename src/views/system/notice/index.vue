@@ -86,7 +86,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="内容">
+            <el-form-item label="内容" prop="noticeContent">
               <editor v-model="form.noticeContent" :min-height="196" />
             </el-form-item>
           </el-col>
