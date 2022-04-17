@@ -119,7 +119,9 @@
               <template #label>
                 <span>
                   <el-tooltip content="选择是外链则路由地址需要以`http(s)://`开头" placement="top">
-                    <i class="question"></i>
+                    <el-icon :size="15">
+                      <questionFilled />
+                    </el-icon>
                   </el-tooltip>是否外链
                 </span>
               </template>
