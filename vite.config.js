@@ -18,14 +18,15 @@ export default defineConfig(({ mode, command }) => {
       // https://cn.vitejs.dev/config/#resolve-extensions
       extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
     },
+    css: {
+      devSourcemap: true //开发模式时启用
+    },
     base: env.VITE_APP_ROUTER_PREFIX,
     // 打包配置
     build: {
       sourcemap: command === 'build' ? false : true,
-      target: 'modules',
       outDir: 'dist', //指定输出目录
-      assetsDir: 'assets', //指定静态资源存储目录
-      minify: 'terser', //混淆器，terser构建后文件体积更小
+      assetsDir: 'assets', //指定静态资源存储目录(相对于outDir)
     },
     // vite 相关配置
     server: {
