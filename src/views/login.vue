@@ -105,7 +105,8 @@ function handleLogin() {
           router.push({ path: redirect.value || "/" });
         })
         .catch((error) => {
-          // proxy.$modal.msgError(error.msg);
+					console.log(error)
+          proxy.$modal.msgError(error.msg);
           loading.value = false;
           // 重新获取验证码
           if (captchaOnOff.value) {
@@ -155,13 +156,14 @@ getCookie();
 .title {
   margin: 0px auto 30px auto;
   text-align: center;
-  color: #707070;
+  color: #fff;
 }
 
 .login-form {
   border-radius: 6px;
-  background: #ffffff;
-  width: 400px;
+  // background: #ffffff;
+  background-color: hsla(0, 0%, 100%, 0.3);
+  width: 310px;
   padding: 25px 25px 5px 25px;
   .el-input {
     height: 40px;
