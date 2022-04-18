@@ -52,7 +52,7 @@ service.interceptors.response.use(res => {
         type: 'warning'
       }).then(() => {
         store.dispatch('LogOut').then(() => {
-          location.href = import.meta.env.VITE_APP_ROUTER_PREFIX + '/index';
+          location.href = import.meta.env.VITE_APP_ROUTER_PREFIX + 'index';
         })
       })
 
