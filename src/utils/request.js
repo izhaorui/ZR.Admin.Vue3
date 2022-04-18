@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
+import { ElMessageBox, ElMessage } from 'element-plus'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 // import { blobValidate } from "@/utils/ruoyi";
@@ -52,17 +52,17 @@ service.interceptors.response.use(res => {
         type: 'warning'
       }).then(() => {
         store.dispatch('LogOut').then(() => {
-          location.href = process.env.VUE_APP_ROUTER_PREFIX + 'index';
+          location.href = import.meta.env.VITE_APP_ROUTER_PREFIX + '/index';
         })
       })
 
       return Promise.reject('无效的会话，或者会话已过期，请重新登录。')
-    } else if (code == 0 || code == 1 || code == 110 || code == 101 || code == 103 || code == 403 || code == 500 || code == 429) {
+    } else if (code == 0 || code == 1 || code == 110 || code == 101 || code == 403 || code == 500 || code == 429) {
       ElMessage({
         message: msg,
         type: 'error'
       })
-      return Promise.reject(msg)
+      return Promise.reject(res.data)
     } else {
       //返回标准 code/msg/data字段
       return res.data;
