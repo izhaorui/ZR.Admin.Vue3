@@ -19,22 +19,20 @@
           start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="search"  @click="handleQuery">搜索</el-button>
-        <el-button icon="refresh"  @click="resetQuery">重置</el-button>
+        <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
+        <el-button icon="refresh" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="delete"  :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['PRIV_JOBLOG_DELETE']">删除</el-button>
+        <el-button type="danger" plain icon="delete" :disabled="multiple" @click="handleDelete" v-hasPermi="['PRIV_JOBLOG_DELETE']">删除</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="delete"  @click="handleClean" :disabled="total <= 0"
-          v-hasPermi="['PRIV_JOBLOG_REMOVE']">清空</el-button>
+        <el-button type="danger" plain icon="delete" @click="handleClean" :disabled="total <= 0" v-hasPermi="['PRIV_JOBLOG_REMOVE']">清空</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="warning" plain icon="download"  @click="handleExport" v-hasPermi="['PRIV_JOBLOG_EXPORT']">导出</el-button>
+        <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['PRIV_JOBLOG_EXPORT']">导出</el-button>
       </el-col>
       <right-toolbar :showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -60,7 +58,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button  type="text" icon="view" @click="handleView(scope.row)">详细</el-button>
+          <el-button type="text" icon="view" @click="handleView(scope.row)">详细</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -69,7 +67,7 @@
 
     <!-- 调度日志详细 -->
     <el-dialog title="调度日志详细" v-model="open" width="700px" append-to-body>
-      <el-form ref="form" :model="form" label-width="100px" >
+      <el-form ref="form" :model="form" label-width="100px">
         <el-row>
           <el-col :span="12">
             <el-form-item label="日志序号：">{{ form.jobLogId }}</el-form-item>
@@ -106,152 +104,145 @@
   </div>
 </template>
 
-<script>
+<script setup name="job/log">
 import {
   listJobLog,
   delJobLog,
   exportJobLog,
   cleanJobLog,
 } from '@/api/monitor/jobLog'
+import { useRoute } from 'vue-router'
+import { getCurrentInstance, reactive, toRefs } from 'vue-demi'
+const { proxy } = getCurrentInstance()
+const route = useRoute()
 
-export default {
-  name: 'job/log',
-  data() {
-    return {
-      // 遮罩层
-      loading: true,
-      // 选中数组
-      ids: [],
-      // 非多个禁用
-      multiple: true,
-      // 显示搜索条件
-      showSearch: true,
-      // 总条数
-      total: 0,
-      // 调度日志表格数据
-      jobLogList: [],
-      // 是否显示弹出层
-      open: false,
-      // 日期范围
-      dateRange: [],
-      // 表单参数
-      form: {},
-      // 执行状态字典
-      statusOptions: [],
-      // 任务组名字典
-      jobGroupOptions: [],
-      // 查询参数
-      queryParams: {
-        pageNum: 1,
-        pageSize: 10,
-        jobName: undefined,
-        jobGroup: undefined,
-        status: undefined,
-        jobId: undefined,
-      },
+const loading = ref(true)
+const ids = ref([])
+const multiple = ref(true)
+const showSearch = ref(true)
+const total = ref(0)
+const jobLogList = ref([])
+const open = ref(false)
+const dateRange = ref([])
+const statusOptions = ref([])
+const jobGroupOptions = ref([])
+
+const data = reactive({
+  form: {},
+  queryParams: {
+    pageNum: 1,
+    pageSize: 10,
+    jobName: undefined,
+    jobGroup: undefined,
+    status: undefined,
+    jobId: undefined,
+  },
+})
+
+const { form, queryParams } = toRefs(data)
+queryParams.value.jobId = route.query.jobId
+
+proxy.getDicts('sys_job_status').then((response) => {
+  statusOptions.value = response.data
+})
+proxy.getDicts('sys_job_group').then((response) => {
+  jobGroupOptions.value = response.data
+})
+
+/** 查询调度日志列表 */
+function getList() {
+  loading.value = true
+  listJobLog(proxy.addDateRange(queryParams.value, dateRange.value)).then(
+    (response) => {
+      jobLogList.value = response.data.result
+      total.value = response.data.totalNum
+      loading.value = false
     }
-  },
-  created() {
-    this.queryParams.jobId = this.$route.query.jobId
-    this.getList()
-    this.getDicts('sys_job_status').then((response) => {
-      this.statusOptions = response.data
-    })
-    this.getDicts('sys_job_group').then((response) => {
-      this.jobGroupOptions = response.data
-    })
-  },
-  methods: {
-    /** 查询调度日志列表 */
-    getList() {
-      this.loading = true
-      listJobLog(this.addDateRange(this.queryParams, this.dateRange)).then(
-        (response) => {
-          this.jobLogList = response.data.result
-          this.total = response.data.totalNum
-          this.loading = false
-        }
-      )
-    },
-    // 执行状态字典翻译
-    statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status)
-    },
-    // 任务组名字典翻译
-    jobGroupFormat(row, column) {
-      return this.selectDictLabel(this.jobGroupOptions, row.jobGroup)
-    },
-    /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1
-      this.getList()
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.dateRange = []
-      this.resetForm('queryForm')
-      this.handleQuery()
-    },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map((item) => item.jobLogId)
-      this.multiple = !selection.length
-    },
-    /** 详细按钮操作 */
-    handleView(row) {
-      this.open = true
-      this.form = row
-    },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const jobLogIds = this.ids
-      this.$confirm(
-        '是否确认删除调度日志编号为"' + jobLogIds + '"的数据项?',
-        '警告',
-        {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-        }
-      )
-        .then(function () {
-          return delJobLog(jobLogIds)
-        })
-        .then(() => {
-          this.getList()
-          this.$modal.msgSuccess('删除成功')
-        })
-    },
-    /** 清空按钮操作 */
-    handleClean() {
-      this.$confirm('是否确认清空所有调度日志数据项?', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(function () {
-          return cleanJobLog()
-        })
-        .then(() => {
-          this.getList()
-          this.$modal.msgSuccess('清空成功')
-        })
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams
-      this.$confirm('是否确认导出所有调度日志数据项?', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(function () {
-          return exportJobLog(queryParams)
-        })
-        .then((response) => {
-          this.download(response.data.path)
-        })
-    },
-  },
+  )
 }
+
+// 执行状态字典翻译
+function statusFormat(row, column) {
+  return proxy.selectDictLabel(statusOptions.value, row.status)
+}
+// 任务组名字典翻译
+function jobGroupFormat(row, column) {
+  return proxy.selectDictLabel(jobGroupOptions.value, row.jobGroup)
+}
+
+/** 搜索按钮操作 */
+function handleQuery() {
+  queryParams.value.pageNum = 1
+  getList()
+}
+/** 重置按钮操作 */
+function resetQuery() {
+  dateRange.value = []
+  resetForm('queryForm')
+  handleQuery()
+}
+
+// 多选框选中数据
+function handleSelectionChange(selection) {
+  ids.value = selection.map((item) => item.jobLogId)
+  multiple.value = !selection.length
+}
+/** 详细按钮操作 */
+function handleView(row) {
+  open.value = true
+  form.value = row
+}
+/** 删除按钮操作 */
+function handleDelete(row) {
+  const jobLogIds = ids.value
+  proxy
+    .$confirm(
+      '是否确认删除调度日志编号为"' + jobLogIds + '"的数据项?',
+      '警告',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+    )
+    .then(function () {
+      return delJobLog(jobLogIds)
+    })
+    .then(() => {
+      getList()
+      proxy.$modal.msgSuccess('删除成功')
+    })
+}
+/** 清空按钮操作 */
+function handleClean() {
+  proxy
+    .$confirm('是否确认清空所有调度日志数据项?', '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+    .then(function () {
+      return cleanJobLog()
+    })
+    .then(() => {
+      getList()
+      proxy.$modal.msgSuccess('清空成功')
+    })
+}
+/** 导出按钮操作 */
+function handleExport() {
+  proxy
+    .$confirm('是否确认导出所有调度日志数据项?', '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+    .then(function () {
+      return exportJobLog(queryParams.value)
+    })
+    .then((response) => {
+      proxy.download(response.data.path)
+    })
+}
+handleQuery()
 </script>
