@@ -41,7 +41,7 @@
       </el-table-column>
       <el-table-column prop="accessUrl" align="center" label="预览图" width="100">
         <template #default="{row}">
-          <el-image :src="row.accessUrl" :preview-src-list="[row.accessUrl]" :hide-on-click-modal="true" fit="contain" lazy class="el-avatar">
+          <el-image preview-teleported :src="row.accessUrl" :preview-src-list="[row.accessUrl]" :hide-on-click-modal="true" fit="contain" lazy class="el-avatar">
             <template #error>
               <i class="document" />
             </template>
