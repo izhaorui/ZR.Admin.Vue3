@@ -21,137 +21,142 @@
 </template>
 
 <script setup>
-import { constantRoutes } from "@/router";
-import { isHttp } from "@/utils/validate";
+import { constantRoutes } from '@/router'
+import { isHttp } from '@/utils/validate'
+import { useRouter } from 'vue-router'
 
 // 顶部栏初始数
-const visibleNumber = ref(5);
+const visibleNumber = ref(5)
 // 是否为首次加载
-const isFrist = ref(false);
+const isFrist = ref(false)
 // 当前激活菜单的 index
-const currentIndex = ref(null);
+const currentIndex = ref(undefined)
 
-const store = useStore();
-const route = useRoute();
+const store = useStore()
+const route = useRoute()
+const router = useRouter()
 
 // 主题颜色
-const theme = computed(() => store.state.settings.theme);
+const theme = computed(() => store.state.settings.theme)
 // 所有的路由信息
-const routers = computed(() => store.state.permission.topbarRouters);
+const routers = computed(() => store.state.permission.topbarRouters)
 
 // 顶部显示菜单
 const topMenus = computed(() => {
-  let topMenus = [];
+  let topMenus = []
   routers.value.map((menu) => {
     if (menu.hidden !== true) {
       // 兼容顶部栏一级菜单内部跳转
-      if (menu.path === "/") {
-        topMenus.push(menu.children[0]);
+      if (menu.path === '/') {
+        topMenus.push(menu.children[0])
       } else {
-        topMenus.push(menu);
+        topMenus.push(menu)
       }
     }
-  });
-  return topMenus;
-});
+  })
+  return topMenus
+})
 
 // 设置子路由
 const childrenMenus = computed(() => {
-  let childrenMenus = [];
+  let childrenMenus = []
   routers.value.map((router) => {
     for (let item in router.children) {
       if (router.children[item].parentPath === undefined) {
-        if (router.path === "/") {
-          router.children[item].path =
-            "/redirect/" + router.children[item].path;
+        if (router.path === '/') {
+          router.children[item].path = '/redirect/' + router.children[item].path
         } else {
           if (!isHttp(router.children[item].path)) {
             router.children[item].path =
-              router.path + "/" + router.children[item].path;
+              router.path + '/' + router.children[item].path
           }
         }
-        router.children[item].parentPath = router.path;
+        router.children[item].parentPath = router.path
       }
-      childrenMenus.push(router.children[item]);
+      childrenMenus.push(router.children[item])
     }
-  });
-  return constantRoutes.concat(childrenMenus);
-});
+  })
+  return constantRoutes.concat(childrenMenus)
+})
 
 // 默认激活的菜单
 const activeMenu = computed(() => {
-  const path = route.path;
-  let activePath = defaultRouter.value;
-  if (path.lastIndexOf("/") > 0) {
-    const tmpPath = path.substring(1, path.length);
-    activePath = "/" + tmpPath.substring(0, tmpPath.indexOf("/"));
-  } else if ("/index" == path || "" == path) {
+  const path = route.path
+  let activePath = defaultRouter.value
+  if (path.lastIndexOf('/') > 0) {
+    const tmpPath = path.substring(1, path.length)
+    activePath = '/' + tmpPath.substring(0, tmpPath.indexOf('/'))
+  } else if ('/index' == path || '' == path) {
     if (!isFrist.value) {
-      isFrist.value = true;
+      isFrist.value = true
     } else {
-      activePath = "index";
+      activePath = 'index'
     }
   }
-  let routes = activeRoutes(activePath);
+  let routes = activeRoutes(activePath)
   if (routes.length === 0) {
-    activePath = currentIndex.value || defaultRouter.value;
-    activeRoutes(activePath);
+    activePath = currentIndex.value || defaultRouter.value
+
+    console.log('activePath', activePath)
+    activeRoutes(activePath)
   }
-  return activePath;
-});
+  return activePath
+})
 // 默认激活的路由
 const defaultRouter = computed(() => {
-  let router;
+  let router
   Object.keys(routers.value).some((key) => {
     if (!routers.value[key].hidden) {
-      router = routers.value[key].path;
-      return true;
+      router = routers.value[key].path
+      return true
     }
-  });
-  return router;
-});
+  })
+
+  return router
+})
 function setVisibleNumber() {
-  const width = document.body.getBoundingClientRect().width / 3;
-  visibleNumber.value = parseInt(width / 85);
+  const width = document.body.getBoundingClientRect().width / 3
+  visibleNumber.value = parseInt(width / 85)
 }
 function handleSelect(key, keyPath) {
-  currentIndex.value = key;
+  currentIndex.value = key
   if (isHttp(key)) {
     // http(s):// 路径新窗口打开
-    window.open(key, "_blank");
-  } else if (key.indexOf("/redirect") !== -1) {
+    window.open(key, '_blank')
+  } else if (key.indexOf('/redirect') !== -1) {
     // /redirect 路径内部打开
     router.push({ path: key.replace("/redirect", "") }).catch(err => {});
   } else {
     // 显示左侧联动菜单
-    activeRoutes(key);
+    activeRoutes(key)
   }
 }
+// 当前激活的路由
 function activeRoutes(key) {
-  let routes = [];
+  var routes = []
   if (childrenMenus.value && childrenMenus.value.length > 0) {
     childrenMenus.value.map((item) => {
-      if (key == item.parentPath || (key == "index" && "" == item.path)) {
-        routes.push(item);
+      if (key == item.parentPath || (key == 'index' && '' == item.path)) {
+        routes.push(item)
       }
-    });
+    })
   }
   if (routes.length > 0) {
-    store.commit("SET_SIDEBAR_ROUTERS", routes);
+    store.commit('SET_SIDEBAR_ROUTERS', routes)
   }
-  return routes;
+  return routes
 }
 
 onMounted(() => {
-  window.addEventListener("resize", setVisibleNumber);
-});
+  window.addEventListener('resize', setVisibleNumber)
+})
 onBeforeUnmount(() => {
-  window.removeEventListener("resize", setVisibleNumber);
-});
+  window.removeEventListener('resize', setVisibleNumber)
+})
 
 onMounted(() => {
-  setVisibleNumber();
-});
+  setVisibleNumber()
+})
 </script>
 
 <style lang="scss">
@@ -164,7 +169,7 @@ onMounted(() => {
 //   margin: 0 10px !important;
 // }
 .el-menu--horizontal {
-	border-bottom: 0px !important;
+  border-bottom: 0px !important;
 }
 // .topmenu-container.el-menu--horizontal > .el-menu-item.is-active,
 // .el-menu--horizontal > .el-sub-menu.is-active .el-submenu__title {
