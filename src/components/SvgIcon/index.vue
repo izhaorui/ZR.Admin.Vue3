@@ -13,11 +13,11 @@ export default defineComponent({
     },
     className: {
       type: String,
-      default: "",
+      default: '',
     },
     color: {
       type: String,
-      default: "",
+      default: '',
     },
   },
   setup(props) {
@@ -25,29 +25,21 @@ export default defineComponent({
       iconName: computed(() => `#icon-${props.iconClass}`),
       svgClass: computed(() => {
         if (props.className) {
-          return `svg-icon ${props.className}`;
+          return `svg-icon ${props.className}`
         }
-        return "svg-icon";
+        return 'svg-icon'
       }),
-    };
+    }
   },
-});
+})
 </script>
 
 <style scope lang="scss">
-.sub-el-icon,
-.nav-icon {
-  display: inline-block;
-  font-size: 15px;
-  margin-right: 12px;
-  position: relative;
-}
-
 .svg-icon {
   width: 1em;
   height: 1em;
-  position: relative;
+  vertical-align: -0.15em;
   fill: currentColor;
-  vertical-align: -2px;
+  overflow: hidden;
 }
 </style>
