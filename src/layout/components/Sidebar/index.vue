@@ -1,12 +1,15 @@
 <template>
-  <div :class="{ 'has-logo': showLogo }"
+  <div class="layout-sidebar__container" :class="{ 'has-logo': showLogo }"
     :style="{ backgroundColor: sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground }">
+
     <logo v-if="showLogo" :collapse="isCollapse" />
+
     <el-scrollbar :class="sideTheme" wrap-class="scrollbar-wrapper">
       <el-menu :default-active="activeMenu" :collapse="isCollapse"
         :background-color="sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground"
         :text-color="sideTheme === 'theme-dark' ? variables.menuColor : variables.menuLightColor" :unique-opened="true" :active-text-color="theme"
         :collapse-transition="false" mode="vertical">
+
         <sidebar-item v-for="(route, index) in sidebarRouters" :key="route.path + index" :item="route" :base-path="route.path" />
       </el-menu>
     </el-scrollbar>
@@ -36,3 +39,64 @@ const activeMenu = computed(() => {
   return path
 })
 </script>
+
+<style lang="scss">
+@import '@/assets/styles/variables.module.scss';
+.layout-sidebar__container {
+  transition: width 0.28s;
+  width: $base-sidebar-width !important;
+  // background-color: $base-menu-background;
+  height: 100%;
+  position: fixed;
+  font-size: 0px;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1001;
+  overflow: hidden;
+
+  .scrollbar-wrapper {
+    overflow-x: hidden;
+  }
+  .el-scrollbar {
+    flex: 1;
+  }
+  .el-scrollbar__bar.is-vertical {
+    right: 0px;
+  }
+
+  a {
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .el-menu {
+    border: none;
+    height: 100%;
+    width: 100% !important;
+  }
+
+  // menu hover
+  .submenu-title-noDropdown,
+  .el-sub-menu__title {
+    &:hover {
+      // background-color: $menuHover !important;
+    }
+  }
+
+  .is-active > .el-sub-menu__title {
+    // color: $subMenuActiveText !important;
+  }
+
+  & .nest-menu .el-sub-menu > .el-sub-menu__title,
+  & .el-sub-menu .el-menu-item {
+    min-width: $base-sidebar-width !important;
+    // background-color: $base-menu-background !important;
+
+    &:hover {
+      // background-color: $base-sub-menu-hover !important;
+    }
+  }
+}
+</style>

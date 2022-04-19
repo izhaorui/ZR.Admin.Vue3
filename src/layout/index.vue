@@ -1,8 +1,8 @@
 <template>
   <div :class="classObj" class="app-wrapper" :style="{ '--current-color': theme }">
     <div v-if="device === 'mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
-    <sidebar v-if="!sidebar.hide" class="sidebar-container" />
-    <div :class="{ hasTagsView: needTagsView, sidebarHide: sidebar.hide }" class="main-container">
+    <sidebar class="sidebar-container" v-if="!sidebar.hide" />
+    <div class="main-container" :class="{ hasTagsView: needTagsView, sidebarHide: sidebar.hide }">
       <div :class="{ 'fixed-header': fixedHeader }">
         <navbar @setLayout="setLayout" />
         <tags-view v-if="needTagsView" />
@@ -59,7 +59,7 @@ function setLayout() {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '@/assets/styles/mixin.scss';
 @import '@/assets/styles/variables.module.scss';
 
@@ -68,7 +68,6 @@ function setLayout() {
   position: relative;
   height: 100%;
   width: 100%;
-
   &.mobile.openSidebar {
     position: fixed;
     top: 0;
@@ -76,8 +75,7 @@ function setLayout() {
 }
 
 .drawer-bg {
-  background: #000;
-  opacity: 0.3;
+  background: rgba(0, 0, 0, 0.3);
   width: 100%;
   top: 0;
   height: 100%;
@@ -93,13 +91,8 @@ function setLayout() {
   width: calc(100% - #{$base-sidebar-width});
   transition: width 0.28s;
 }
-
 .hideSidebar .fixed-header {
   width: calc(100% - 54px);
-}
-
-.sidebarHide .fixed-header {
-  width: 100%;
 }
 
 .mobile .fixed-header {

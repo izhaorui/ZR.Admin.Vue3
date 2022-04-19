@@ -61,12 +61,12 @@ app.component('UploadFile', FileUpload)
 app.component('UploadImage', ImageUpload)
 app.component('ImagePreview', ImagePreview)
 app.component('RightToolbar', RightToolbar)
+app.component('svg-icon', SvgIcon)
 
 app.use(router)
 app.use(store)
 app.use(plugins)
 app.use(elementIcons)
-app.component('svg-icon', SvgIcon)
 
 directive(app)
 
