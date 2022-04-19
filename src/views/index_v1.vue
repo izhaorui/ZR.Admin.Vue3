@@ -39,7 +39,7 @@
                   </el-col>
                 </el-col>
                 <el-col :lg="24" class="mt10">
-                  <el-button size="small" icon="el-icon-edit-outline">
+                  <el-button size="small" icon="edit">
                     <router-link to="/user/profile">修改信息</router-link>
                   </el-button>
                   <!-- <el-button size="small" icon="el-icon-position" type="primary">发布活动</el-button> -->
@@ -49,7 +49,7 @@
           </div>
         </el-card>
       </el-col>
-      <!-- <el-col :md="24" :lg="8" :xl="8" class="mb10">
+      <el-col :md="24" :lg="8" :xl="8" class="mb10">
         <el-card shadow="hover">
           <template #header>
             <div>
@@ -59,25 +59,25 @@
           </template>
 
           <div class="info">
-            <Scroll :data="newArticleList" class="info-scroll" :class-option="optionSingleHeight">
+            <vue3-seamless-scroll :list="newArticleList" class="info-scroll" :step="0.2" :limitScrollNum="2">
               <ul class="info-ul">
                 <li v-for="(v, k) in newArticleList" :key="k" class="info-item">
                   <div class="info-item-left" v-text="v.title"></div>
                   <div class="info-item-right" v-text="parseTime(v.updateTime, '{m}/{d}')"></div>
                 </li>
               </ul>
-            </Scroll>
+            </vue3-seamless-scroll>
           </div>
         </el-card>
-			</el-col>-->
+      </el-col>
     </el-row>
-    <!-- <panel-group @handleSetLineChartData="handleSetLineChartData" /> -->
+    <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
-    <!-- <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <line-chart :chart-data="lineChartData" />
-		</el-row>-->
+		</el-row>
 
-    <!-- <el-row :gutter="32">
+   <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
           <raddar-chart />
@@ -93,17 +93,17 @@
           <bar-chart />
         </div>
       </el-col>
-		</el-row>-->
+		</el-row>
   </div>
 </template>
 
 <script>
-// import PanelGroup from "./dashboard/PanelGroup";
-// import LineChart from "./dashboard/LineChart";
-// import RaddarChart from "./dashboard/RaddarChart";
-// import PieChart from "./dashboard/PieChart";
-// import BarChart from "./dashboard/BarChart";
-// import Scroll from "vue-seamless-scroll";
+import PanelGroup from "./dashboard/PanelGroup";
+import LineChart from "./dashboard/LineChart";
+import RaddarChart from "./dashboard/RaddarChart";
+import PieChart from "./dashboard/PieChart";
+import BarChart from "./dashboard/BarChart";
+import { Vue3SeamlessScroll } from 'vue3-seamless-scroll'
 import { listNewArticle } from '@/api/system/article.js'
 
 const lineChartData = {
@@ -127,12 +127,12 @@ const lineChartData = {
 export default {
   name: 'Index',
   components: {
-    // PanelGroup,
-    // LineChart,
-    // RaddarChart,
-    // PieChart,
-    // BarChart,
-    // Scroll,
+    PanelGroup,
+    LineChart,
+    RaddarChart,
+    PieChart,
+    BarChart,
+    Vue3SeamlessScroll,
   },
   computed: {
     photo() {
@@ -154,25 +154,25 @@ export default {
     //     singleHeight: 0, // 单步运动停止的高度(默认值0是无缝不停止的滚动) direction => 0/1
     //     singleWidth: 0, // 单步运动停止的宽度(默认值0是无缝不停止的滚动) direction => 2/3
     //     waitTime: 1000, // 单步运动停止的时间(默认值1000ms)
-    //   };
+    //   }
     // },
   },
   data() {
     return {
-      // lineChartData: lineChartData.newVisitis,
-      // newArticleList: [],
+      lineChartData: lineChartData.newVisitis,
+      newArticleList: [],
     }
   },
   created() {
-    // listNewArticle().then((res) => {
-    //   this.newArticleList = res.data;
-    // });
+    listNewArticle().then((res) => {
+      this.newArticleList = res.data
+    })
   },
   methods: {
-    // handleSetLineChartData(type) {
-    //   this.lineChartData = lineChartData[type];
-    // },
-    // onOpenGitee() {},
+    handleSetLineChartData(type) {
+      this.lineChartData = lineChartData[type];
+    },
+    onOpenGitee() {},
   },
 }
 </script>
@@ -198,7 +198,7 @@ export default {
     align-items: center;
     .user-item-left {
       width: 100px;
-      height: 130px;
+      height: 100px;
       border-radius: 4px;
       overflow: hidden;
       img {
