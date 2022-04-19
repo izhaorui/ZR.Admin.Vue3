@@ -1,14 +1,28 @@
 <template>
   <div class="icon-body">
     <el-input v-model="iconName" style="position: relative;" clearable placeholder="请输入图标名称" @clear="filterIcons" @input="filterIcons">
-      <template #suffix><i class="el-icon-search el-input__icon" /></template>
+      <template #prefix>
+        <el-icon class="el-input__icon">
+          <search />
+        </el-icon>
+      </template>
+      <template #suffix>
+        <el-icon class="el-input__icon" @click="selectedIcon('')">
+          <delete />
+        </el-icon>
+      </template>
     </el-input>
-    <div class="icon-list">
-      <div v-for="(item, index) in iconList" :key="index" @click="selectedIcon(item)">
-        <svg-icon :icon-class="item" style="height: 30px;width: 16px;" />
-        <span>{{ item }}</span>
-      </div>
-    </div>
+    <el-tabs v-model="activeName">
+      <el-tab-pane label="svg-icon" name="1">
+        <div class="icon-list">
+          <div v-for="(item, index) in iconList" :key="index" @click="selectedIcon(item)">
+            <svg-icon :icon-class="item" style="height: 30px;width: 16px;" />
+            <span>{{ item }}</span>
+          </div>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
+
   </div>
 </template>
 
@@ -17,6 +31,7 @@ import icons from './requireIcons'
 
 const iconName = ref('')
 const iconList = ref(icons)
+const activeName = ref('1')
 const emit = defineEmits(['selected'])
 
 function filterIcons() {
