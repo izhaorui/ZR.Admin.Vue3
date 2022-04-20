@@ -57,6 +57,9 @@
             <el-tab-pane label="修改密码" name="resetPwd">
               <resetPwd :user="state.user" />
             </el-tab-pane>
+            <el-tab-pane label="操作日志" name="log">
+              <operLog></operLog>
+            </el-tab-pane>
           </el-tabs>
         </el-card>
       </el-col>
@@ -65,29 +68,30 @@
 </template>
 
 <script setup name="Profile">
-import userAvatar from "./userAvatar";
-import userInfo from "./userInfo";
-import resetPwd from "./resetPwd";
-import { getUserProfile } from "@/api/system/user";
+import userAvatar from './userAvatar'
+import userInfo from './userInfo'
+import resetPwd from './resetPwd'
+import operLog from './operLog.vue'
+import { getUserProfile } from '@/api/system/user'
 
-const activeTab = ref("userinfo");
+const activeTab = ref('userinfo')
 const state = reactive({
   user: {},
   roles: [],
   roleGroup: {},
   postGroup: {},
-});
+})
 
 function getUser() {
   getUserProfile().then((response) => {
-    state.user = response.data.user;
-    state.roles = response.data.roles;
-    state.roleGroup = response.data.roleGroup;
-    state.postGroup = response.data.postGroup;
-  });
+    state.user = response.data.user
+    state.roles = response.data.roles
+    state.roleGroup = response.data.roleGroup
+    state.postGroup = response.data.postGroup
+  })
 }
 
-getUser();
+getUser()
 </script>
 
 <style scoped>
