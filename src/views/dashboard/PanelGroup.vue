@@ -6,10 +6,10 @@
           <svg-icon icon-class="peoples" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">
+          <div class="card-panel-text" v-waves>
             在线用户
           </div>
-         <vue-number-roll-plus :number="onlineUserNum" background="transparent" />
+          <vue-number-roll-plus :number="onlineUserNum" background="transparent" />
         </div>
       </div>
     </el-col>
@@ -19,7 +19,7 @@
           <svg-icon icon-class="message" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">
+          <div class="card-panel-text" v-waves>
             消息
           </div>
           <vue-number-roll-plus :number="18888" background="transparent" />
@@ -32,7 +32,7 @@
           <svg-icon icon-class="money" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">
+          <div class="card-panel-text" v-waves>
             金额
           </div>
           <vue-number-roll-plus :number="9288" background="transparent" />
@@ -45,7 +45,7 @@
           <svg-icon icon-class="shopping" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">
+          <div class="card-panel-text" v-waves>
             订单
           </div>
           <vue-number-roll-plus :number="13500" background="transparent" />
