@@ -1,5 +1,5 @@
 <template>
-  <!-- <starBackground></starBackground> -->
+  <starBackground></starBackground>
   <div class="login">
     <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form">
       <h3 class="title">{{ defaultSettings.title }}</h3>
@@ -65,7 +65,6 @@ import Cookies from 'js-cookie'
 import { encrypt, decrypt } from '@/utils/jsencrypt'
 import defaultSettings from '@/settings'
 import starBackground from '@/views/components/starBackground.vue'
-import VueParticles from 'vue-particles'
 
 const store = useStore()
 const router = useRouter()
@@ -154,9 +153,6 @@ function getCookie() {
     rememberMe: rememberMe === undefined ? false : Boolean(rememberMe),
   }
 }
-const starRef = ref(null)
-const stars = ref(800)
-
 getCode()
 getCookie()
 onMounted(() => {})
