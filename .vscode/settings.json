@@ -1,0 +1,41 @@
+{
+  "editor.fontSize": 15,
+  "editor.insertSpaces": false,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.formatOnPaste": true,
+  "editor.formatOnType": true,
+  // 配置eslint适用于vue代码
+  "eslint.validate": [
+    "javascript",
+    "vue"
+  ],
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // 保存时 prettier 自动格式化
+  "editor.formatOnSave": true,
+  // 保存时自动启用 eslint --fix 自动修复
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "eslint.autoFixOnSave": true,
+  },
+  "prettier.printWidth": 120,
+  "eslint.options": {
+    "overrideConfig": {
+      "env": {
+        "browser": true,
+        "es6": true
+      },
+      "parserOptions": {
+        "ecmaVersion": 2020,
+        "sourceType": "module",
+        "ecmaFeatures": {
+          "jsx": false
+        }
+      },
+      "rules": {
+        "no-debugger": "off"
+      }
+    }
+  }
+}
