@@ -1,7 +1,8 @@
 <template>
+  <!-- <starBackground></starBackground> -->
   <div class="login">
     <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">{{defaultSettings.title}}</h3>
+      <h3 class="title">{{ defaultSettings.title }}</h3>
       <el-form-item prop="username">
         <el-input v-model="loginForm.username" type="text" size="large" auto-complete="off" placeholder="账号">
           <template #prefix>
@@ -10,14 +11,28 @@
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input v-model="loginForm.password" type="password" size="large" auto-complete="off" placeholder="密码" @keyup.enter="handleLogin">
+        <el-input
+          v-model="loginForm.password"
+          type="password"
+          size="large"
+          auto-complete="off"
+          placeholder="密码"
+          @keyup.enter="handleLogin"
+        >
           <template #prefix>
             <svg-icon icon-class="password" class="el-input__icon input-icon" />
           </template>
         </el-input>
       </el-form-item>
       <el-form-item prop="code" v-if="captchaOnOff != 'off'">
-        <el-input v-model="loginForm.code" size="large" auto-complete="off" placeholder="验证码" style="width: 63%" @keyup.enter="handleLogin">
+        <el-input
+          v-model="loginForm.code"
+          size="large"
+          auto-complete="off"
+          placeholder="验证码"
+          style="width: 63%"
+          @keyup.enter="handleLogin"
+        >
           <template #prefix>
             <svg-icon icon-class="validCode" class="el-input__icon input-icon" />
           </template>
@@ -26,9 +41,9 @@
           <img :src="codeUrl" @click="getCode" class="login-code-img" />
         </div>
       </el-form-item>
-      <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
-      <el-form-item style="width:100%;">
-        <el-button :loading="loading" size="large" type="primary" style="width:100%;" @click.prevent="handleLogin">
+      <el-checkbox v-model="loginForm.rememberMe" style="margin: 0px 0px 25px 0px">记住密码</el-checkbox>
+      <el-form-item style="width: 100%">
+        <el-button :loading="loading" size="large" type="primary" style="width: 100%" @click.prevent="handleLogin">
           <span v-if="!loading">登 录</span>
           <span v-else>登 录 中...</span>
         </el-button>
@@ -39,120 +54,128 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright ©2022 izhaorui.cn All Rights Reserved.</span>
+      <span>{{ defaultSettings.copyright }}</span>
     </div>
   </div>
 </template>
 
-<script setup>
-import { getCodeImg } from "@/api/login";
-import Cookies from "js-cookie";
-import { encrypt, decrypt } from "@/utils/jsencrypt";
-import defaultSettings from "@/settings";
+<script setup name="login">
+import { getCodeImg } from '@/api/login'
+import Cookies from 'js-cookie'
+import { encrypt, decrypt } from '@/utils/jsencrypt'
+import defaultSettings from '@/settings'
+import starBackground from '@/views/components/starBackground.vue'
+import VueParticles from 'vue-particles'
 
-const store = useStore();
-const router = useRouter();
-const { proxy } = getCurrentInstance();
+const store = useStore()
+const router = useRouter()
+const { proxy } = getCurrentInstance()
 
 const loginForm = ref({
-  username: "",
-  password: "",
+  username: '',
+  password: '',
   rememberMe: false,
-  code: "",
-  uuid: "",
-});
+  code: '',
+  uuid: '',
+})
 
 const loginRules = {
-  username: [{ required: true, trigger: "blur", message: "请输入您的账号" }],
-  password: [{ required: true, trigger: "blur", message: "请输入您的密码" }],
-  code: [{ required: true, trigger: "change", message: "请输入验证码" }],
-};
+  username: [{ required: true, trigger: 'blur', message: '请输入您的账号' }],
+  password: [{ required: true, trigger: 'blur', message: '请输入您的密码' }],
+  code: [{ required: true, trigger: 'change', message: '请输入验证码' }],
+}
 
-const codeUrl = ref("");
-const loading = ref(false);
+const codeUrl = ref('')
+const loading = ref(false)
 // 验证码开关
-const captchaOnOff = ref("");
+const captchaOnOff = ref('')
 // 注册开关
-const register = ref(false);
-const redirect = ref(undefined);
+const register = ref(false)
+const redirect = ref(undefined)
 
-proxy.getConfigKey("sys.account.captchaOnOff").then((response) => {
-  captchaOnOff.value = response.data;
-});
+proxy.getConfigKey('sys.account.captchaOnOff').then((response) => {
+  captchaOnOff.value = response.data
+})
 
 function handleLogin() {
   proxy.$refs.loginRef.validate((valid) => {
     if (valid) {
-      loading.value = true;
+      loading.value = true
       // 勾选了需要记住密码设置在cookie中设置记住用户明和名命
       if (loginForm.value.rememberMe) {
-        Cookies.set("username", loginForm.value.username, { expires: 30 });
-        Cookies.set("password", encrypt(loginForm.value.password), {
+        Cookies.set('username', loginForm.value.username, { expires: 30 })
+        Cookies.set('password', encrypt(loginForm.value.password), {
           expires: 30,
-        });
-        Cookies.set("rememberMe", loginForm.value.rememberMe, { expires: 30 });
+        })
+        Cookies.set('rememberMe', loginForm.value.rememberMe, { expires: 30 })
       } else {
         // 否则移除
-        Cookies.remove("username");
-        Cookies.remove("password");
-        Cookies.remove("rememberMe");
+        Cookies.remove('username')
+        Cookies.remove('password')
+        Cookies.remove('rememberMe')
       }
       // 调用action的登录方法
       store
-        .dispatch("Login", loginForm.value)
+        .dispatch('Login', loginForm.value)
         .then(() => {
-          proxy.$modal.msgSuccess("登录成功");
-          router.push({ path: redirect.value || "/" });
+          proxy.$modal.msgSuccess('登录成功')
+          router.push({ path: redirect.value || '/' })
         })
         .catch((error) => {
-					console.log(error)
-          proxy.$modal.msgError(error.msg);
-          loading.value = false;
+          console.log(error)
+          proxy.$modal.msgError(error.msg)
+          loading.value = false
           // 重新获取验证码
           if (captchaOnOff.value) {
-            getCode();
+            getCode()
           }
-        });
+        })
     }
-  });
+  })
 }
 
 function getCode() {
   getCodeImg().then((res) => {
-    captchaOnOff.value =
-      res.captchaOnOff === undefined ? true : res.captchaOnOff;
+    captchaOnOff.value = res.captchaOnOff === undefined ? true : res.captchaOnOff
     if (captchaOnOff.value) {
-      codeUrl.value = "data:image/gif;base64," + res.data.img;
-      loginForm.value.uuid = res.data.uuid;
+      codeUrl.value = 'data:image/gif;base64,' + res.data.img
+      loginForm.value.uuid = res.data.uuid
     }
-  });
+  })
 }
 
 function getCookie() {
-  const username = Cookies.get("username");
-  const password = Cookies.get("password");
-  const rememberMe = Cookies.get("rememberMe");
+  const username = Cookies.get('username')
+  const password = Cookies.get('password')
+  const rememberMe = Cookies.get('rememberMe')
   loginForm.value = {
     username: username === undefined ? loginForm.value.username : username,
-    password:
-      password === undefined ? loginForm.value.password : decrypt(password),
+    password: password === undefined ? loginForm.value.password : decrypt(password),
     rememberMe: rememberMe === undefined ? false : Boolean(rememberMe),
-  };
+  }
 }
+const starRef = ref(null)
+const stars = ref(800)
 
-getCode();
-getCookie();
+getCode()
+getCookie()
+onMounted(() => {})
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .login {
+  background: radial-gradient(200% 100% at bottom center, #f7f7b6, #e96f92, #1b2947);
+  background: radial-gradient(220% 105% at top center, #1b2947 10%, #75517d 40%, #e96f92 65%, #f7f7b6);
+  background-attachment: fixed;
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-image: url("../assets/images/login-background.jpg");
+  // background-image: url('../assets/images/login-background.jpg');
   background-size: cover;
 }
+
 .title {
   margin: 0px auto 30px auto;
   text-align: center;
@@ -165,32 +188,39 @@ getCookie();
   background-color: hsla(0, 0%, 100%, 0.3);
   width: 310px;
   padding: 25px 25px 5px 25px;
+
   .el-input {
     height: 40px;
+
     input {
       height: 40px;
     }
   }
+
   .input-icon {
     height: 39px;
     width: 14px;
     margin-left: 0px;
   }
 }
+
 .login-tip {
   font-size: 13px;
   text-align: center;
   color: #bfbfbf;
 }
+
 .login-code {
   width: 33%;
   height: 40px;
   float: right;
+
   img {
     cursor: pointer;
     vertical-align: middle;
   }
 }
+
 .el-login-footer {
   height: 40px;
   line-height: 40px;
@@ -203,6 +233,7 @@ getCookie();
   font-size: 12px;
   letter-spacing: 1px;
 }
+
 .login-code-img {
   height: 40px;
   padding-left: 12px;

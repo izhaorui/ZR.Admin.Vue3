@@ -15,7 +15,8 @@
             <div class="user-item-right overflow">
               <el-row>
                 <el-col :xs="24" :md="24" class="right-title mb20 one-text-overflow">
-                  {{ userInfo.welcomeMessage }}，{{ userInfo.nickName }}，{{ userInfo.welcomeContent }}</el-col>
+                  {{ userInfo.welcomeMessage + ',' + userInfo.nickName + ' ,' + userInfo.welcomeContent }}
+                </el-col>
                 <el-col :xs="24" :sm="24" :md="24">
                   <el-col :xs="24" :md="8" class="right-l-v">
                     <div class="right-label">昵称：</div>
@@ -24,18 +25,24 @@
                   <el-col :xs="24" :md="16" class="right-l-v">
                     <div class="right-label">身份：</div>
                     <div class="right-value">
-                      <span v-for="item in userInfo.roles" :key="item.roleId">{{ item.roleName }}</span>
+                      <span v-for="item in userInfo.roles" :key="item.roleId">
+                        {{ item.roleName }}
+                      </span>
                     </div>
                   </el-col>
                 </el-col>
                 <el-col :md="24" class="mt10">
                   <el-col :xs="24" :sm="12" :md="8" class="right-l-v">
                     <div class="right-label one-text-overflow">IP：</div>
-                    <div class="right-value one-text-overflow">{{ userInfo.loginIP }}</div>
+                    <div class="right-value one-text-overflow">
+                      {{ userInfo.loginIP }}
+                    </div>
                   </el-col>
                   <el-col :xs="24" :sm="12" :md="16" class="right-l-v">
                     <div class="right-label one-text-overflow">时间：</div>
-                    <div class="right-value one-text-overflow">{{ currentTime }}</div>
+                    <div class="right-value one-text-overflow">
+                      {{ currentTime }}
+                    </div>
                   </el-col>
                 </el-col>
                 <el-col :lg="24" class="mt10">
@@ -73,11 +80,11 @@
     </el-row>
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :chart-data="lineChartData" />
-		</el-row>
+    <el-row class="mb20" style="background: #fff;">
+      <line-chart :chart-data="lineChartData" :key="dataType" />
+    </el-row>
 
-   <el-row :gutter="32">
+    <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
           <raddar-chart />
@@ -93,20 +100,21 @@
           <bar-chart />
         </div>
       </el-col>
-		</el-row>
+    </el-row>
   </div>
 </template>
 
-<script>
-import PanelGroup from "./dashboard/PanelGroup";
-import LineChart from "./dashboard/LineChart";
-import RaddarChart from "./dashboard/RaddarChart";
-import PieChart from "./dashboard/PieChart";
-import BarChart from "./dashboard/BarChart";
+<script setup name="Index">
+import PanelGroup from './dashboard/PanelGroup'
+import LineChart from './dashboard/LineChart'
+import RaddarChart from './dashboard/RaddarChart'
+import PieChart from './dashboard/PieChart'
+import BarChart from './dashboard/BarChart'
 import { Vue3SeamlessScroll } from 'vue3-seamless-scroll'
 import { listNewArticle } from '@/api/system/article.js'
+import { computed, getCurrentInstance, reactive } from 'vue'
 
-const lineChartData = {
+const data = {
   newVisitis: {
     expectedData: [100, 120, 161, 134, 105, 160, 165],
     actualData: [120, 82, 91, 154, 162, 140, 145],
@@ -124,57 +132,26 @@ const lineChartData = {
     actualData: [120, 82, 91, 154, 162, 140, 130],
   },
 }
-export default {
-  name: 'Index',
-  components: {
-    PanelGroup,
-    LineChart,
-    RaddarChart,
-    PieChart,
-    BarChart,
-    Vue3SeamlessScroll,
-  },
-  computed: {
-    photo() {
-      return this.$store.getters.photo
-    },
-    userInfo() {
-      return this.$store.getters.userinfo
-    },
-    currentTime() {
-      return this.parseTime(new Date())
-    },
-    // optionSingleHeight() {
-    //   return {
-    //     step: 0.2, // 数值越大速度滚动越快
-    //     limitMoveNum: 2, // 开始无缝滚动的数据量 this.dataList.length
-    //     hoverStop: true, // 是否开启鼠标悬停stop
-    //     direction: 1, // 0向下 1向上 2向左 3向右
-    //     openWatch: true, // 开启数据实时监控刷新dom
-    //     singleHeight: 0, // 单步运动停止的高度(默认值0是无缝不停止的滚动) direction => 0/1
-    //     singleWidth: 0, // 单步运动停止的宽度(默认值0是无缝不停止的滚动) direction => 2/3
-    //     waitTime: 1000, // 单步运动停止的时间(默认值1000ms)
-    //   }
-    // },
-  },
-  data() {
-    return {
-      lineChartData: lineChartData.newVisitis,
-      newArticleList: [],
-    }
-  },
-  created() {
-    listNewArticle().then((res) => {
-      this.newArticleList = res.data
-    })
-  },
-  methods: {
-    handleSetLineChartData(type) {
-      this.lineChartData = lineChartData[type];
-    },
-    onOpenGitee() {},
-  },
+const { proxy } = getCurrentInstance()
+const userInfo = computed(() => {
+  return proxy.$store.getters.userinfo
+})
+const currentTime = computed(() => {
+  return proxy.parseTime(new Date())
+})
+let newArticleList = reactive([])
+
+listNewArticle().then((res) => {
+  newArticleList = res.data
+})
+let lineChartData = reactive([])
+const dataType = ref(null)
+function handleSetLineChartData(type) {
+  dataType.value = type
+  lineChartData = data[type]
 }
+handleSetLineChartData('newVisitis')
+function onOpenGitee() {}
 </script>
 
 <style lang="scss" scoped>
@@ -239,6 +216,7 @@ export default {
           color: gray;
           height: 28px;
           line-height: 28px;
+
           &:hover {
             color: var(--color-primary);
             cursor: pointer;
@@ -266,6 +244,7 @@ export default {
       border-radius: 4px;
       overflow: hidden;
       cursor: pointer;
+
       &:hover {
         i {
           right: 0px !important;
@@ -273,6 +252,7 @@ export default {
           transition: all ease 0.3s;
         }
       }
+
       i {
         position: absolute;
         right: -10px;
@@ -281,6 +261,7 @@ export default {
         transform: rotate(-30deg);
         transition: all ease 0.3s;
       }
+
       .home-recommend-auto {
         padding: 15px;
         position: absolute;
@@ -317,9 +298,11 @@ export default {
       align-items: center;
       margin-bottom: 12px;
       cursor: pointer;
+
       &:last-of-type {
         margin-bottom: 0;
       }
+
       &:hover {
         .home-charts-item-right {
           i {
@@ -349,7 +332,6 @@ export default {
     }
   }
 }
-
 .dashboard-editor-container {
   padding: 18px;
   background-color: rgb(240, 242, 245);
