@@ -1,8 +1,8 @@
 export default {
-	/**
-	* 框架版本号
-	*/
- version: '3.8.0',
+  /**
+   * 框架版本号
+   */
+  version: '3.8.0',
   /**
    * 网页标题
    */
@@ -47,5 +47,9 @@ export default {
    * The default is only used in the production env
    * If you want to also use it in dev, you can pass ['production', 'development']
    */
-  errorLog: 'production'
+	errorLog: 'production',
+	/**
+	 * 版权信息
+	 */
+  copyright: 'Copyright ©2022 izhaorui.cn All Rights Reserved.'
 }
