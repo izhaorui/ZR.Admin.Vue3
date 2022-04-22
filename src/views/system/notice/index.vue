@@ -81,7 +81,7 @@
           <el-col :span="24">
             <el-form-item label="状态">
               <el-radio-group v-model="form.status">
-                <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictValue">{{dict.dictLabel}}</el-radio>
+                <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictValue">{{ dict.dictLabel }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -104,14 +104,9 @@
 
 <script setup name="notice">
 // 富文本组件
-import Editor from "@/components/Editor";
-import {
-  listNotice,
-  getNotice,
-  delNotice,
-  addNotice,
-  updateNotice,
-} from '@/api/system/notice'
+import Editor from '@/components/Editor'
+import { listNotice, getNotice, delNotice, addNotice, updateNotice } from '@/api/system/notice'
+import { getCurrentInstance } from 'vue';
 
 const { proxy } = getCurrentInstance()
 const noticeList = ref([])
@@ -123,6 +118,7 @@ const single = ref(true)
 const multiple = ref(true)
 const total = ref(0)
 const title = ref('')
+const noticeRef = ref()
 
 const data = reactive({
   form: {},
@@ -134,12 +130,8 @@ const data = reactive({
     status: undefined,
   },
   rules: {
-    noticeTitle: [
-      { required: true, message: '公告标题不能为空', trigger: 'blur' },
-    ],
-    noticeType: [
-      { required: true, message: '公告类型不能为空', trigger: 'change' },
-    ],
+    noticeTitle: [{ required: true, message: '公告标题不能为空', trigger: 'blur' }],
+    noticeType: [{ required: true, message: '公告类型不能为空', trigger: 'change' }],
   },
 })
 const statusOptions = ref([])
@@ -213,7 +205,6 @@ function handleUpdate(row) {
 /** 提交按钮 */
 function submitForm() {
   proxy.$refs['noticeRef'].validate((valid) => {
-		console.log(valid)
     if (valid) {
       if (form.value.noticeId != undefined) {
         updateNotice(form.value).then((response) => {

@@ -25,8 +25,15 @@
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-if="refreshTable" v-loading="loading" :data="menuList" row-key="menuId" :default-expand-all="isExpandAll" border
-      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
+    <el-table
+      v-if="refreshTable"
+      v-loading="loading"
+      :data="menuList"
+      row-key="menuId"
+      :default-expand-all="isExpandAll"
+      border
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+    >
       <el-table-column prop="menuName" label="菜单名称" :show-overflow-tooltip="true" width="160"></el-table-column>
       <el-table-column prop="icon" label="图标" align="center" width="100">
         <template #default="scope">
@@ -41,7 +48,7 @@
           <el-tag type="warning" v-else-if="scope.row.menuType == 'F'">按钮</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="orderNum" label="排序" width="60"></el-table-column>
+      <el-table-column prop="orderNum" label="排序" width="60" align="center"></el-table-column>
       <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="visible" label="显示" width="70">
@@ -74,8 +81,19 @@
         <el-row>
           <el-col :lg="24">
             <el-form-item label="上级菜单">
-              <tree-select v-model:value="form.parentId" :options="menuOptions" :objMap="{ value: 'menuId', label: 'menuName', children: 'children' }"
-                placeholder="选择上级菜单" />
+              <el-cascader
+                class="w100"
+                :options="menuOptions"
+                :props="{ checkStrictly: true, value: 'menuId', label: 'menuName', emitPath: false }"
+                placeholder="请选择上级菜单"
+                clearable
+                v-model="form.parentId"
+              >
+                <template #default="{ node, data }">
+                  <span>{{ data.menuName }}</span>
+                  <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+                </template>
+              </el-cascader>
             </el-form-item>
           </el-col>
           <el-col :lg="24">
@@ -146,7 +164,6 @@
           <el-col :lg="12" v-if="form.menuType == 'C'">
             <el-form-item prop="component">
               <template #label>
-
                 <el-tooltip content="访问的组件路径，如：`system/user/index`，默认在`views`目录下" placement="top">
                   <el-icon :size="15">
                     <questionFilled />
@@ -170,7 +187,7 @@
               </template>
             </el-form-item>
           </el-col>
-          <el-col :lg="12" v-if="form.menuType == 'C'">
+          <!-- <el-col :lg="12" v-if="form.menuType == 'C'">
             <el-form-item>
               <el-input v-model="form.query" placeholder="请输入路由参数" maxlength="255" />
               <template #label>
@@ -182,11 +199,10 @@
                 路由参数
               </template>
             </el-form-item>
-          </el-col>
+          </el-col> -->
           <el-col :lg="12" v-if="form.menuType == 'C'">
-            <el-form-item>
+            <el-form-item prop="isCache">
               <template #label>
-
                 <el-tooltip content="选择是则会被`keep-alive`缓存，需要匹配组件的`name`和地址保持一致" placement="top">
                   <el-icon :size="15">
                     <questionFilled />
@@ -201,9 +217,8 @@
             </el-form-item>
           </el-col>
           <el-col :lg="12" v-if="form.menuType != 'F'">
-            <el-form-item>
+            <el-form-item prop="visible">
               <template #label>
-
                 <el-tooltip content="选择隐藏则路由将不会出现在侧边栏，但仍然可以访问" placement="top">
                   <el-icon :size="15">
                     <questionFilled />
@@ -243,14 +258,8 @@
   </div>
 </template>
 
-<script setup name="menu">
-import {
-  addMenu,
-  delMenu,
-  getMenu,
-  listMenu,
-  updateMenu,
-} from '@/api/system/menu'
+<script setup name="sysmenu">
+import { addMenu, delMenu, getMenu, listMenu, updateMenu } from '@/api/system/menu'
 import SvgIcon from '@/components/SvgIcon'
 import IconSelect from '@/components/IconSelect'
 
@@ -287,13 +296,10 @@ const data = reactive({
     visible: undefined,
   },
   rules: {
-    menuName: [
-      { required: true, message: '菜单名称不能为空', trigger: 'blur' },
-    ],
-    orderNum: [
-      { required: true, message: '菜单顺序不能为空', trigger: 'blur' },
-    ],
+    menuName: [{ required: true, message: '菜单名称不能为空', trigger: 'blur' }],
+    orderNum: [{ required: true, message: '菜单顺序不能为空', trigger: 'blur' }],
     path: [{ required: true, message: '路由地址不能为空', trigger: 'blur' }],
+    visible: [{ required: true, message: '显示状态不能为空', trigger: 'blur' }],
   },
 })
 
@@ -303,16 +309,16 @@ const { queryParams, form, rules } = toRefs(data)
 function getList() {
   loading.value = true
   listMenu(queryParams.value).then((response) => {
-    menuList.value = response.data // proxy.handleTree(response.data, "menuId");
+    menuList.value = response.data
     loading.value = false
   })
 }
 /** 查询菜单下拉树结构 */
-async function getTreeselect() {
-  menuOptions.value = []
-  await listMenu().then((response) => {
-    const menu = { menuId: 0, menuName: '主类目', children: [] }
-    //menu.children = proxy.handleTree(response.data, "menuId");
+function getTreeselect() {
+  listMenu().then((response) => {
+    menuOptions.value = []
+    const menu = { menuId: 0, menuName: '根菜单', children: [] }
+
     menu.children = response.data
     menuOptions.value.push(menu)
   })
@@ -325,7 +331,7 @@ function cancel() {
 /** 表单重置 */
 function reset() {
   form.value = {
-    menuId: undefined,
+    menuId: 0,
     parentId: 0,
     menuName: undefined,
     icon: undefined,
@@ -358,10 +364,10 @@ function resetQuery() {
   handleQuery()
 }
 /** 新增按钮操作 */
-async function handleAdd(row) {
+function handleAdd(row) {
   reset()
-  await getTreeselect()
-  if (row != null && row.menuId) {
+  getTreeselect()
+  if (row != null && row.menuId != undefined) {
     form.value.parentId = row.menuId
   } else {
     form.value.parentId = 0
@@ -380,7 +386,7 @@ function toggleExpandAll() {
 /** 修改按钮操作 */
 async function handleUpdate(row) {
   reset()
-  await getTreeselect()
+  getTreeselect()
   getMenu(row.menuId).then((response) => {
     form.value = response.data
     open.value = true

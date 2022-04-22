@@ -45,8 +45,6 @@
 <script setup name="operlog">
 import { list as queryLog } from '@/api/monitor/operlog'
 
-import { getCurrentInstance } from 'vue-demi'
-
 // 遮罩层
 const loading = ref(true)
 // 总条数

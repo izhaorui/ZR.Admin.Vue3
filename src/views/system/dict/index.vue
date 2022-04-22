@@ -31,8 +31,7 @@
         <el-button type="primary" plain icon="plus" @click="handleAdd" v-hasPermi="['system:dict:add']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success" plain icon="edit" :disabled="single" @click="handleUpdate" v-hasPermi="['system:dict:edit']">修改
-        </el-button>
+        <el-button type="success" plain icon="edit" :disabled="single" @click="handleUpdate" v-hasPermi="['system:dict:edit']">修改 </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="delete" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:dict:remove']">删除</el-button>
@@ -43,9 +42,9 @@
       <right-toolbar :showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table :data="typeList" border @selection-change="handleSelectionChange">
+    <el-table :data="typeList" v-loading="loading" border @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="字典编号" align="center" prop="dictId" width="80" />
+      <el-table-column label="字典编号" align="center" prop="dictId" width="100" sortable/>
       <el-table-column label="字典类型" align="center" :show-overflow-tooltip="true">
         <template #default="scope">
           <el-button type="text" @click="showDictData(scope.row)">{{ scope.row.dictType }}</el-button>
@@ -75,7 +74,7 @@
 
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="字典名称" prop="dictName">
           <el-input v-model="form.dictName" placeholder="请输入字典名称" />
         </el-form-item>
@@ -84,12 +83,12 @@
         </el-form-item>
         <el-form-item label="字典状态" prop="status">
           <el-radio-group v-model="form.status">
-            <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictValue">{{dict.dictLabel}}</el-radio>
+            <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictValue">{{ dict.dictLabel }}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="系统内置" prop="type">
           <el-radio-group v-model="form.type">
-            <el-radio v-for="dict in typeOptions" :key="dict.dictValue" :label="dict.dictValue">{{dict.dictLabel}}</el-radio>
+            <el-radio v-for="dict in typeOptions" :key="dict.dictValue" :label="dict.dictValue">{{ dict.dictLabel }}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
@@ -102,215 +101,189 @@
           <el-button @click="cancel">取 消</el-button>
         </div>
       </template>
-
     </el-dialog>
 
     <el-dialog v-model="dictDataVisible" width="60%" :lock-scroll="false">
       <dict-data v-model:dictId="dictId"></dict-data>
     </el-dialog>
-
   </div>
 </template>
 
-<script>
-import dictData from "@/views/components/dictData";
+<script setup name="dict">
+import dictData from '@/views/components/dictData'
+import { listType, getType, delType, addType, updateType, exportType } from '@/api/system/dict/type'
+import { getCurrentInstance } from 'vue'
+const { proxy } = getCurrentInstance()
+// 遮罩层
+const loading = ref(true)
+// 选中数组
+const ids = ref([])
+// 非单个禁用
+const single = ref(true)
+// 非多个禁用
+const multiple = ref(true)
+// 显示搜索条件
+const showSearch = ref(true)
+// 总条数
+const total = ref(0)
+// 字典表格数据
+const typeList = ref([])
+// 弹出层标题
+const title = ref('')
+// 是否显示弹出层
+const open = ref(false)
+// 字典弹出层
+const dictDataVisible = ref(false)
+// 状态数据字典
+const statusOptions = ref([])
+// 是否内置
+const typeOptions = ref([])
+// 日期范围
+const dateRange = ref([])
+// 查询参数
 
-import {
-  listType,
-  getType,
-  delType,
-  addType,
-  updateType,
-  exportType,
-} from "@/api/system/dict/type";
-export default {
-  name: "dict",
-  components: { dictData },
-  data() {
-    return {
-      // 遮罩层
-      loading: true,
-      // 选中数组
-      ids: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
-      // 显示搜索条件
-      showSearch: true,
-      // 总条数
-      total: 0,
-      // 字典表格数据
-      typeList: [],
-      // 弹出层标题
-      title: "",
-      // 是否显示弹出层
-      open: false,
-      // 字典弹出层
-      dictDataVisible: false,
-      // 状态数据字典
-      statusOptions: [],
-      // 是否内置
-      typeOptions: [],
-      // 日期范围
-      dateRange: [],
-      // 查询参数
-      queryParams: {
-        pageNum: 1,
-        pageSize: 10,
-        dictName: undefined,
-        dictType: undefined,
-        status: undefined,
-      },
-      // 字典Id传值给子组件
-      dictId: 0,
-      // 表单参数
-      form: {},
-      // 表单校验
-      rules: {
-        dictName: [
-          { required: true, message: "字典名称不能为空", trigger: "blur" },
-        ],
-        dictType: [
-          { required: true, message: "字典类型不能为空", trigger: "blur" },
-        ],
-      },
-    };
+const formRef = ref()
+// 字典Id传值给子组件
+const dictId = ref(0)
+
+const state = reactive({
+  rules: {
+    dictName: [{ required: true, message: '字典名称不能为空', trigger: 'blur' }],
+    dictType: [{ required: true, message: '字典类型不能为空', trigger: 'blur' }],
   },
-  created() {
-    this.getList();
-    this.getDicts("sys_normal_disable").then((response) => {
-      this.statusOptions = response.data;
-    });
-    this.getDicts("sys_yes_no").then((response) => {
-      this.typeOptions = response.data;
-    });
+  form: {},
+  queryParams: {
+    pageNum: 1,
+    pageSize: 10,
+    dictName: undefined,
+    dictType: undefined,
+    status: undefined,
   },
-  methods: {
-    /** 查询字典类型列表 */
-    getList() {
-      this.loading = true;
-      listType(this.addDateRange(this.queryParams, this.dateRange)).then(
-        (response) => {
-          this.typeList = response.data.result;
-          this.total = response.data.totalNum;
-          this.loading = false;
-        }
-      );
-    },
-    // 字典状态字典翻译
-    statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
-    },
-    // 取消按钮
-    cancel() {
-      this.open = false;
-      this.reset();
-    },
-    // 表单重置
-    reset() {
-      this.form = {
-        dictId: undefined,
-        dictName: undefined,
-        dictType: undefined,
-        status: "0",
-        type: "N",
-        remark: undefined,
-      };
-      this.resetForm("form");
-    },
-    /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.dateRange = [];
-      this.resetForm("queryForm");
-      this.handleQuery();
-    },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加字典类型";
-    },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map((item) => item.dictId);
-      this.single = selection.length != 1;
-      this.multiple = !selection.length;
-    },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      const dictId = row.dictId || this.ids;
-      getType(dictId).then((response) => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改字典类型";
-      });
-    },
-    /** 提交按钮 */
-    submitForm: function () {
-      this.$refs["form"].validate((valid) => {
-        if (valid) {
-          if (this.form.dictId != undefined) {
-            updateType(this.form).then((response) => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addType(this.form).then((response) => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
-      });
-    },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const dictIds = row.dictId || this.ids;
-      this.$confirm(
-        '是否确认删除字典编号为"' + dictIds + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
-        .then(function () {
-          return delType(dictIds);
+})
+const { rules, form, queryParams } = toRefs(state)
+
+/** 查询字典类型列表 */
+function getList() {
+  loading.value = true
+  listType(proxy.addDateRange(queryParams.value, dateRange.value)).then((response) => {
+    typeList.value = response.data.result
+    total.value = response.data.totalNum
+    loading.value = false
+  })
+}
+
+// 取消按钮
+function cancel() {
+  open.value = false
+  reset()
+}
+// 表单重置
+function reset() {
+  form.value = {
+    dictId: undefined,
+    dictName: undefined,
+    dictType: undefined,
+    status: '0',
+    type: 'N',
+    remark: undefined,
+  }
+  proxy.resetForm('formRef')
+}
+/** 搜索按钮操作 */
+function handleQuery() {
+  queryParams.value.pageNum = 1
+  getList()
+}
+/** 重置按钮操作 */
+function resetQuery() {
+  dateRange.value = []
+  proxy.resetForm('queryForm')
+  handleQuery()
+}
+/** 新增按钮操作 */
+function handleAdd() {
+  reset()
+  open.value = true
+  title.value = '添加字典类型'
+}
+// 多选框选中数据
+function handleSelectionChange(selection) {
+  ids.value = selection.map((item) => item.dictId)
+  single.value = selection.length != 1
+  multiple.value = !selection.length
+}
+/** 修改按钮操作 */
+function handleUpdate(row) {
+  reset()
+  const dictId = row.dictId || ids.value
+  getType(dictId).then((response) => {
+    form.value = response.data
+    open.value = true
+    title.value = '修改字典类型'
+  })
+}
+/** 提交按钮 */
+function submitForm() {
+  proxy.$refs['formRef'].validate((valid) => {
+    if (valid) {
+      if (form.value.dictId != undefined) {
+        updateType(form.value).then((response) => {
+          proxy.$modal.msgSuccess('修改成功')
+          open.value = false
+          getList()
         })
-        .then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        });
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有类型数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(function () {
-          return exportType(queryParams);
+      } else {
+        addType(form.value).then((response) => {
+          proxy.$modal.msgSuccess('新增成功')
+          open.value = false
+          getList()
         })
-        .then((response) => {
-          this.download(response.data.path);
-        });
-    },
-    showDictData(row) {
-      this.dictId = row.dictId;
-      this.dictDataVisible = true;
-    },
-  },
-};
+      }
+    }
+  })
+}
+/** 删除按钮操作 */
+function handleDelete(row) {
+  const dictIds = row.dictId || ids.value
+  proxy
+    .$confirm('是否确认删除字典编号为"' + dictIds + '"的数据项?', '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+    .then(function () {
+      return delType(dictIds)
+    })
+    .then(() => {
+      getList()
+      proxy.$modal.msgSuccess('删除成功')
+    })
+}
+/** 导出按钮操作 */
+function handleExport() {
+  proxy
+    .$confirm('是否确认导出所有类型数据项?', '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+    .then(function () {
+      return exportType(queryParams.value)
+    })
+    .then((response) => {
+      proxy.download(response.data.path)
+    })
+}
+function showDictData(row) {
+  dictId.value = row.dictId
+  dictDataVisible.value = true
+}
+
+getList()
+proxy.getDicts('sys_normal_disable').then((response) => {
+  statusOptions.value = response.data
+})
+proxy.getDicts('sys_yes_no').then((response) => {
+  typeOptions.value = response.data
+})
 </script>

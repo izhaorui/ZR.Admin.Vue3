@@ -32,7 +32,7 @@
               <li class="list-group-item">
                 <svg-icon icon-class="peoples" />所属角色
                 <div class="pull-right">
-                  <span v-for="item in state.roles" :key="item">{{item}}</span>
+                  <span v-for="item in state.roles" :key="item">{{ item }}</span>
                 </div>
               </li>
               <li class="list-group-item">

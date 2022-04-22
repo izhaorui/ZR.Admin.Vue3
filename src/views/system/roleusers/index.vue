@@ -1,13 +1,5 @@
 <template>
   <div class="app-container">
-
-    <!-- <el-col :span="4" :xs="24">
-      <el-table ref="roleTable" v-loading="loadingRole" highlight-current-row :data="dataRoleTable" border :height="tableHeight-135"
-        @row-click="handleRoleTableSelection">
-        <el-table-column prop="roleName" label="请选择角色名称" />
-      </el-table>
-    </el-col> -->
-
     <el-form :inline="true" @submit.prevent>
       <el-form-item label="角色名">
         <el-input v-model="roleUserQueryParams.roleName" disabled />
@@ -16,7 +8,7 @@
         <el-input v-model="roleUserQueryParams.roleKey" disabled />
       </el-form-item>
       <el-form-item label="用户名">
-        <el-input v-model="roleUserQueryParams.userName" placeholder="请输入用户名称" clearable prefix-icon="el-icon-search" @keyup.enter="searchRoleUser" />
+        <el-input v-model="roleUserQueryParams.userName" placeholder="请输入用户名称" clearable prefix-icon="search" @keyup.enter="searchRoleUser" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="search" @click="searchRoleUser">搜索</el-button>
@@ -26,24 +18,21 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="plus" @click="handleGetUserTable" v-hasPermi="['system:roleusers:add']">添加用户
-        </el-button>
+        <el-button type="primary" plain icon="plus" @click="handleGetUserTable" v-hasPermi="['system:roleusers:add']">添加用户 </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="circle-close" @click="cancelAuthUserAll" v-hasPermi="['system:roleusers:remove']">
-          批量取消授权</el-button>
+        <el-button type="danger" plain icon="circle-close" @click="cancelAuthUserAll" v-hasPermi="['system:roleusers:remove']"> 批量取消授权</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="warning" plain icon="close" @click="handleClose">关闭</el-button>
       </el-col>
     </el-row>
 
-    <el-table ref="roleUserTable" v-loading="loadingRoleUser" :data="dataRoleUserTable" row-key="userId" stripe border>
+    <el-table ref="roleUserTableRef" v-loading="loading" :data="roleUserList" @selection-change="handleCancelSelectionChange" row-key="userId" stripe border>
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column prop="userId" align="center" label="用户Id" width="150" />
       <el-table-column prop="userName" align="center" label="用户名" width="150" />
       <el-table-column prop="nickName" align="center" label="用户昵称" width="150" />
-      <el-table-column prop="email" align="center" label="邮箱" />
       <el-table-column prop="status" align="center" label="账号状态" width="80">
         <template #default="scope">
           <dict-tag :options="statusOptions" :value="scope.row.status" />
@@ -52,25 +41,33 @@
       <el-table-column prop="remark" :show-overflow-tooltip="true" align="center" label="备注" />
       <el-table-column align="center" label="操作">
         <template #default="scope">
-          <el-button type="text" icon="el-icon-circle-close" @click="handleCancelPerm(scope.row)" v-if="scope.row.userId != 1"
-            v-hasPermi="['system:roleusers:del']">取消授权</el-button>
+          <el-button type="text" icon="el-icon-circle-close" @click="handleCancelPerm(scope.row)" v-if="scope.row.userId != 1" v-hasPermi="['system:roleusers:del']">
+            取消授权
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-model:total="dataRoleUserCount" v-model:page="roleUserQueryParams.pageNum" v-model:limit="roleUserQueryParams.pageSize" @pagination="getRoleUser" />
+    <pagination v-model:total="roleUserCount" v-model:page="roleUserQueryParams.pageNum" v-model:limit="roleUserQueryParams.pageSize" @pagination="getRoleUser" />
 
     <!-- 添加或修改菜单对话框 -->
     <el-dialog title="添加用户" v-model="open" append-to-body @close="cancel">
       <el-form :inline="true" @submit.prevent>
         <el-form-item>
-          <el-input v-model="userQueryParams.userName" placeholder="请输入用户名称" clearable prefix-icon="search"
-            @keyup.enter="handleSearchRoleUser" />
+          <el-input v-model="userQueryParams.userName" placeholder="请输入用户名称" clearable prefix-icon="search" @keyup.enter="handleSearchRoleUser" />
         </el-form-item>
       </el-form>
       <el-row>
         <el-col>
-          <el-table ref="userTable" v-loading="loadingUser" :data="dataUserTable" @selection-change="handleSelectionChange" row-key="userId" stripe
-            border :height="tableHeight*0.5">
+          <el-table
+            ref="userTable"
+            v-loading="loadingUser"
+            :data="dataUserTable"
+            @selection-change="handleSelectionChange"
+            row-key="userId"
+            stripe
+            border
+            :height="tableHeight * 0.5"
+          >
             <el-table-column type="selection" width="55" align="center" />
             <el-table-column prop="userId" align="center" label="用户编号" width="150" />
             <el-table-column prop="userName" align="center" label="用户名称" width="150" />
@@ -93,203 +90,175 @@
     </el-dialog>
   </div>
 </template>
-<script>
+<script setup name="roleusers">
 // import { listRole } from "@/api/system/role";
-import { getRole } from "@/api/system/role";
-import {
-  getRoleUsers,
-  createRoleUsers,
-  deleteRoleUsers,
-  getExcludeUsers,
-} from "@/api/system/userRoles";
-export default {
-  name: "roleusers",
-  data() {
-    return {
-      // 遮罩层
-      loadingRole: false,
-      loadingUser: false,
-      loadingRoleUser: false,
-      // 表格高度
-      tableHeight: window.innerHeight,
-      // 角色列表
-      dataRoleTable: [],
-      // 已添加用户列表
-      dataRoleUserTable: [],
-      dataRoleUserCount: 0,
-      // 未添加用户列表
-      dataUserTable: [],
-      dataUserCount: 0,
-      // 勾选添加用户列表
-      addSelections: [],
-      // 勾选删除用户列表
-      delSelections: [],
-      // 过滤查询
-      search: "",
-      // 角色id
-      roleId: "",
-      // 是否显示弹出层
-      open: false,
-      // 角色用户查询参数
-      roleUserQueryParams: {
-        pageNum: 1,
-        pageSize: 10,
-        roleId: undefined,
-        userName: undefined,
-        roleName: undefined,
-        roleKey: undefined,
-      },
-      userQueryParams: {
-        pageNum: 1,
-        pageSize: 10,
-        roleId: undefined,
-        userName: undefined,
-      },
-      // 状态字典
-      statusOptions: [],
-    };
-  },
-  created() {
-    // 获取角色列表
-    // this.loadingRole = true;
-    // listRole({ pageSize: 50 }).then((response) => {
-    //   this.dataRoleTable = response.data.result;
-    //   // this.handleRoleTableSelection(this.dataRoleTable[0]);
-    //   // this.$refs.roleTable.setCurrentRow(this.dataRoleTable[0]);
-    //   this.loadingRole = false;
-    // });
-    this.getDicts("sys_normal_disable").then((response) => {
-      this.statusOptions = response.data;
-    });
-    var roleId = this.$route.query.roleId;
-    console.log(roleId);
-    if (roleId) {
-      this.roleId = roleId;
-      this.searchRoleUser();
+import { getRole } from '@/api/system/role'
+import { getRoleUsers, createRoleUsers, deleteRoleUsers, getExcludeUsers } from '@/api/system/userRoles'
 
-      getRole(roleId).then((response) => {
-        const { code, data } = response;
-        if (code == 200) {
-          this.roleUserQueryParams.roleName = data.roleName;
-          this.roleUserQueryParams.roleKey = data.roleKey;
-        }
-      });
-    } else {
-      this.msgError("请升级数据库");
+const loadingUser = ref(false)
+const loading = ref(false)
+// 表格高度
+const tableHeight = ref(window.innerHeight)
+// 已添加用户列表
+const roleUserList = ref([])
+const roleUserCount = ref(0)
+// 未添加用户列表
+const dataUserTable = ref([])
+const dataUserCount = ref(0)
+// 勾选添加用户列表
+const addSelections = ref([])
+// 勾选删除用户列表
+const delSelections = ref([])
+// 是否显示弹出层
+const open = ref(false)
+const roleUserTableRef = ref()
+// 角色用户查询参数
+const roleUserQueryParams = reactive({
+  pageNum: 1,
+  pageSize: 10,
+  roleId: undefined,
+  userName: undefined,
+  roleName: undefined,
+  roleKey: undefined,
+})
+const userQueryParams = reactive({
+  pageNum: 1,
+  pageSize: 10,
+  roleId: undefined,
+  userName: undefined,
+})
+// 状态字典
+const statusOptions = ref([])
+
+const { proxy } = getCurrentInstance()
+const route = useRoute()
+proxy.getDicts('sys_normal_disable').then((response) => {
+  statusOptions.value = response.data
+})
+const role_id = route.query.roleId
+roleUserQueryParams.roleId = role_id
+userQueryParams.roleId = role_id
+function init() {
+  searchRoleUser()
+
+  getRole(roleUserQueryParams.roleId).then((response) => {
+    const { code, data } = response
+    if (code == 200) {
+      roleUserQueryParams.roleName = data.roleName
+      roleUserQueryParams.roleKey = data.roleKey
     }
-  },
-  methods: {
-    searchRoleUser() {
-      this.roleUserQueryParams.pageNum = 1;
-      this.getRoleUser();
-    },
-    // 获取角色用户
-    getRoleUser() {
-      this.loadingRoleUser = true;
-      this.roleUserQueryParams.roleId = this.roleId;
-      getRoleUsers(this.roleUserQueryParams).then((response) => {
-        this.dataRoleUserTable = response.data.result;
-        this.dataRoleUserCount = response.data.totalNum;
-        this.loadingRoleUser = false;
-      });
-    },
-    // 返回按钮
-    handleClose() {
-      const obj = { path: "/system/role" };
-      this.$tab.closeOpenPage(obj);
-    },
-    // 批量删除角色用户
-    cancelAuthUserAll() {
-      this.delSelections = [];
-      this.$refs.roleUserTable.selection.forEach((element) => {
-        this.delSelections.push(element.userId);
-      });
-      if (this.delSelections.length === 0) {
-        this.$modal.msgError("请选择要删除的用户");
-        return;
-      }
-      this.$confirm(
-        "是否确认删除选中的 " + this.delSelections.length + " 条数据?",
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
-        .then(() => {
-          deleteRoleUsers({
-            roleId: this.roleId,
-            userIds: this.delSelections,
-          }).then((response) => {
-            if (response.code === 200) {
-              this.$message({
-                message: "成功删除" + response.data + "条数据",
-                type: "success",
-              });
-              this.getRoleUser();
-            }
-          });
-        })
-        .catch(() => {});
-    },
-    // 取消授权
-    handleCancelPerm(row) {
-      this.delSelections = [];
-      this.delSelections.push(row.userId);
+  })
+}
 
+function searchRoleUser() {
+  roleUserQueryParams.pageNum = 1
+  getRoleUser()
+}
+// 获取角色用户
+function getRoleUser() {
+  loading.value = true
+  getRoleUsers(roleUserQueryParams).then((response) => {
+    roleUserList.value = response.data.result
+    roleUserCount.value = response.data.totalNum
+    loading.value = false
+  })
+}
+// 返回按钮
+function handleClose() {
+  const obj = { path: '/system/role' }
+  proxy.$tab.closeOpenPage(obj)
+}
+function handleCancelSelectionChange(selection) {
+  delSelections.value = selection.map((item) => item.userId)
+}
+// 批量删除角色用户
+function cancelAuthUserAll() {
+  if (delSelections.value.length === 0) {
+    proxy.$modal.msgError('请选择要删除的用户')
+    return
+  }
+  proxy
+    .$confirm('是否确认删除选中的 ' + delSelections.value.length + ' 条数据?', '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+    .then(() => {
       deleteRoleUsers({
-        roleId: this.roleId,
-        userIds: this.delSelections,
+        roleId: role_id,
+        userIds: delSelections.value,
       }).then((response) => {
         if (response.code === 200) {
-          this.$message({
-            message: "成功删除" + response.data + "条数据",
-            type: "success",
-          });
-          this.getRoleUser();
+          proxy.$message({
+            message: '成功删除' + response.data + '条数据',
+            type: 'success',
+          })
+          getRoleUser()
         }
-      });
-    },
-    // 选中角色
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.addSelections = selection.map((item) => item.userId);
-    },
-    handleSearchRoleUser() {
-      this.userQueryParams.pageNum = 1;
-      this.handleGetUserTable();
-    },
-    // 获取未添加角色列表
-    handleGetUserTable() {
-      this.open = true;
-      this.loadingUser = true;
-      this.userQueryParams.roleId = this.roleId;
-      getExcludeUsers(this.userQueryParams).then((response) => {
-        this.dataUserTable = response.data.result;
-        this.dataUserCount = response.data.totalNum;
-        this.loadingUser = false;
-      });
-    },
-    // 新增用户角色
-    handleSubmit() {
-      createRoleUsers({
-        roleId: this.roleId,
-        userIds: this.addSelections,
-      }).then((response) => {
-        if (response.code === 200) {
-          this.$message({
-            message: "成功添加" + response.data + "条数据",
-            type: "success",
-          });
-          this.getRoleUser();
-          this.open = false;
-        }
-      });
-    },
-    cancel() {
-      this.open = false;
-    },
-  },
-};
+      })
+    })
+    .catch(() => {})
+}
+// 取消授权
+function handleCancelPerm(row) {
+  delSelections.value = []
+  delSelections.value.push(row.userId)
+
+  deleteRoleUsers({
+    roleId: role_id,
+    userIds: delSelections.value,
+  }).then((response) => {
+    if (response.code === 200) {
+      proxy.$message({
+        message: '成功删除' + response.data + '条数据',
+        type: 'success',
+      })
+      getRoleUser()
+    }
+  })
+}
+// 选中角色
+// 多选框选中数据
+function handleSelectionChange(selection) {
+  addSelections.value = selection.map((item) => item.userId)
+}
+
+function handleSearchRoleUser() {
+  userQueryParams.pageNum = 1
+  handleGetUserTable()
+}
+// 获取未添加角色列表
+function handleGetUserTable() {
+  open.value = true
+  loadingUser.value = true
+  getExcludeUsers(userQueryParams).then((response) => {
+    dataUserTable.value = response.data.result
+    dataUserCount.value = response.data.totalNum
+    loadingUser.value = false
+  })
+}
+// 新增用户角色
+function handleSubmit() {
+  if (addSelections.value.length <= 0) {
+    proxy.$modal.msgError('请选择要添加的用户')
+    return
+  }
+  createRoleUsers({
+    roleId: role_id,
+    userIds: addSelections.value,
+  }).then((response) => {
+    if (response.code === 200) {
+      proxy.$message({
+        message: '成功添加' + response.data + '条数据',
+        type: 'success',
+      })
+      getRoleUser()
+      open.value = false
+    }
+  })
+}
+function cancel() {
+  open.value = false
+}
+init()
 </script>
