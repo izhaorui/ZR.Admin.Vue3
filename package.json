@@ -25,7 +25,7 @@
     "highlight.js": "^11.5.1",
     "js-cookie": "3.0.1",
     "jsencrypt": "3.2.1",
-    "mavon-editor": "^2.10.4",
+    "md-editor-v3": "^1.11.11",
     "nprogress": "0.2.0",
     "vue": "3.2.26",
     "vue-cropper": "1.0.2",
