@@ -20,7 +20,7 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <!-- <el-button type="primary" plain icon="plus" v-hasPermi="['system:article:add']" @click="handleAdd">发布文章</el-button> -->
+        <el-button type="primary" plain icon="plus" v-hasPermi="['system:article:add']" @click="handleAdd">发布文章</el-button>
       </el-col>
       <right-toolbar :showSearch="showSearch"></right-toolbar>
     </el-row>
@@ -44,7 +44,7 @@
       <el-table-column label="操作" align="center" width="190">
         <template #default="scope">
           <el-button type="text" icon="view" @click="handleView(scope.row)">查看</el-button>
-          <!-- <el-button type="text" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:article:update']">编辑</el-button> -->
+          <el-button type="text" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:article:update']">编辑</el-button>
           <el-popconfirm title="确定删除吗？" @onConfirm="handleDelete(scope.row)" style="margin-left:10px">
             <template #reference>
               <el-button type="text" icon="delete" v-hasPermi="['system:article:delete']">删除</el-button>
@@ -59,26 +59,16 @@
 </template>
 <script setup name="articleindex">
 import { listArticle, delArticle } from '@/api/system/article.js'
-import { getCurrentInstance, reactive, toRefs } from 'vue-demi'
-import { useRoute, useRouter } from 'vue-router'
 const { proxy } = getCurrentInstance()
 const router = useRouter()
-// 遮罩层
-const loading = ref(true)
 // 显示搜索条件
 const showSearch = ref(true)
-// 弹出层标题
-const title = ref('')
-// 是否显示弹出层
-const open = ref(false)
 // 文章状态下拉框
 const statusOptions = ref([])
 // 数据列表
 const dataList = ref([])
 // 总记录数
 const total = ref(0)
-// 提交按钮是否显示
-const btnSubmitVisible = ref(true)
 // 文章预览地址
 const previewUrl = ref('')
 
@@ -87,7 +77,7 @@ const data = reactive({
   queryParams: {},
 })
 
-const { form, queryParams } = toRefs(data)
+const { queryParams } = toRefs(data)
 
 proxy.getDicts('sys_article_status').then((response) => {
   statusOptions.value = response.data
