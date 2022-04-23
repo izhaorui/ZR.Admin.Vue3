@@ -196,7 +196,12 @@ div:focus {
 .mb {
   margin-bottom: auto;
 }
-
+.w20 {
+	width: 20%;
+}
+.w100 {
+	width: 100%;
+}
 .el-dialog:not(.is-fullscreen) {
   margin-top: 6vh !important;
 }
