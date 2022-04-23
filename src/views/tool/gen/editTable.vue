@@ -121,7 +121,6 @@ import { updateGenTable, getGenTable } from '@/api/tool/gen'
 import { listType } from '@/api/system/dict/type'
 import basicInfoForm from './basicInfoForm'
 import genInfoForm from './genInfoForm'
-import { getCurrentInstance, reactive } from 'vue-demi'
 import { useRoute } from 'vue-router'
 // import Sortable from 'sortablejs'
 

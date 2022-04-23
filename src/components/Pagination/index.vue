@@ -78,7 +78,6 @@ export default {
       }
     }
     function handleCurrentChange(val) {
-			console.log(val)
       emit("pagination", { page: val, limit: pageSize.value });
       if (props.autoScroll) {
         // scrollTo(0, 800);

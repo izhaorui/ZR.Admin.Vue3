@@ -80,7 +80,7 @@
     </el-row>
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
-    <el-row class="mb20" style="background: #fff;">
+    <el-row class="mb20" style="background: #fff">
       <line-chart :chart-data="lineChartData" :key="dataType" />
     </el-row>
 

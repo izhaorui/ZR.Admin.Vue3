@@ -265,12 +265,10 @@
 <script setup name="genInfoForm">
 import { listMenu } from '@/api/system/menu'
 import { queryColumnInfo } from '@/api/tool/gen'
-import { watch } from 'vue-demi'
 
 const subColumns = ref([])
 const menuOptions = ref([])
 // const checkedBtn = ref([])
-const { proxy } = getCurrentInstance()
 
 const props = defineProps({
   info: {
