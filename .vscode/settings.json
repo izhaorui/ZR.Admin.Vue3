@@ -19,7 +19,6 @@
     "source.fixAll": true,
     "eslint.autoFixOnSave": true,
   },
-  "prettier.printWidth": 120,
   "eslint.options": {
     "overrideConfig": {
       "env": {
