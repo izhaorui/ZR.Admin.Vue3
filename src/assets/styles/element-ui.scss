@@ -119,9 +119,9 @@
 
 // dialog
 @media screen and (max-width: 500px) {
-  .el-dialog__wrapper .el-dialog {
-    width: 95% !important;
-  }
+	.el-dialog {
+		--el-dialog-width: 100% !important
+	}
 }
 
 /** 表格更多操作下拉样式 */
