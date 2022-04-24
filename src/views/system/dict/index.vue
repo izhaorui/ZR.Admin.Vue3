@@ -112,7 +112,7 @@
 <script setup name="dict">
 import dictData from '@/views/components/dictData'
 import { listType, getType, delType, addType, updateType, exportType } from '@/api/system/dict/type'
-import { getCurrentInstance } from 'vue'
+
 const { proxy } = getCurrentInstance()
 // 遮罩层
 const loading = ref(true)
