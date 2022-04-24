@@ -15,8 +15,15 @@
         </el-select>
       </el-form-item>
       <el-form-item label="执行时间">
-        <el-date-picker v-model="dateRange" style="width: 240px" value-format="YYYY-MM-DD" type="daterange" range-separator="-"
-          start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+        <el-date-picker
+          v-model="dateRange"
+          style="width: 240px"
+          value-format="YYYY-MM-DD"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
@@ -47,8 +54,7 @@
       <el-table-column label="执行状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="作业用时" align="center" prop="elapsed">
         <template #default="scope">
-          <span :style="scope.row.elapsed < 1000 ? 'color:green':scope.row.elapsed <3000 ?'color:orange':'color:red'">{{ scope.row.elapsed /1000 }}
-            ms</span>
+          <span :style="scope.row.elapsed < 1000 ? 'color:green' : scope.row.elapsed < 3000 ? 'color:orange' : 'color:red'">{{ scope.row.elapsed / 1000 }} ms</span>
         </template>
       </el-table-column>
       <el-table-column label="执行时间" align="center" prop="createTime" width="180">
@@ -89,7 +95,8 @@
               <div v-else-if="form.status == 1">失败</div>
             </el-form-item>
           </el-col>
-          <el-col :span="24" v-if="form.status == 1">>
+          <el-col :span="24" v-if="form.status == 1"
+            >>
             <el-form-item label="异常信息：">{{ form.exception }}</el-form-item>
           </el-col>
         </el-row>
@@ -99,20 +106,12 @@
           <el-button type="text" @click="open = false">关 闭</el-button>
         </div>
       </template>
-
     </el-dialog>
   </div>
 </template>
 
 <script setup name="job/log">
-import {
-  listJobLog,
-  delJobLog,
-  exportJobLog,
-  cleanJobLog,
-} from '@/api/monitor/jobLog'
-import { useRoute } from 'vue-router'
-import { getCurrentInstance, reactive, toRefs } from 'vue-demi'
+import { listJobLog, delJobLog, exportJobLog, cleanJobLog } from '@/api/monitor/jobLog'
 const { proxy } = getCurrentInstance()
 const route = useRoute()
 
@@ -152,13 +151,11 @@ proxy.getDicts('sys_job_group').then((response) => {
 /** 查询调度日志列表 */
 function getList() {
   loading.value = true
-  listJobLog(proxy.addDateRange(queryParams.value, dateRange.value)).then(
-    (response) => {
-      jobLogList.value = response.data.result
-      total.value = response.data.totalNum
-      loading.value = false
-    }
-  )
+  listJobLog(proxy.addDateRange(queryParams.value, dateRange.value)).then((response) => {
+    jobLogList.value = response.data.result
+    total.value = response.data.totalNum
+    loading.value = false
+  })
 }
 
 // 执行状态字典翻译
@@ -196,15 +193,11 @@ function handleView(row) {
 function handleDelete(row) {
   const jobLogIds = ids.value
   proxy
-    .$confirm(
-      '是否确认删除调度日志编号为"' + jobLogIds + '"的数据项?',
-      '警告',
-      {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      }
-    )
+    .$confirm('是否确认删除调度日志编号为"' + jobLogIds + '"的数据项?', '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
     .then(function () {
       return delJobLog(jobLogIds)
     })
