@@ -11,28 +11,14 @@
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input
-          v-model="loginForm.password"
-          type="password"
-          size="large"
-          auto-complete="off"
-          placeholder="密码"
-          @keyup.enter="handleLogin"
-        >
+        <el-input v-model="loginForm.password" type="password" size="large" auto-complete="off" placeholder="密码" @keyup.enter="handleLogin">
           <template #prefix>
             <svg-icon icon-class="password" class="el-input__icon input-icon" />
           </template>
         </el-input>
       </el-form-item>
       <el-form-item prop="code" v-if="captchaOnOff != 'off'">
-        <el-input
-          v-model="loginForm.code"
-          size="large"
-          auto-complete="off"
-          placeholder="验证码"
-          style="width: 63%"
-          @keyup.enter="handleLogin"
-        >
+        <el-input v-model="loginForm.code" size="large" auto-complete="off" placeholder="验证码" style="width: 63%" @keyup.enter="handleLogin">
           <template #prefix>
             <svg-icon icon-class="validCode" class="el-input__icon input-icon" />
           </template>
@@ -135,11 +121,8 @@ function handleLogin() {
 
 function getCode() {
   getCodeImg().then((res) => {
-    captchaOnOff.value = res.captchaOnOff === undefined ? true : res.captchaOnOff
-    if (captchaOnOff.value) {
-      codeUrl.value = 'data:image/gif;base64,' + res.data.img
-      loginForm.value.uuid = res.data.uuid
-    }
+    codeUrl.value = 'data:image/gif;base64,' + res.data.img
+    loginForm.value.uuid = res.data.uuid
   })
 }
 
