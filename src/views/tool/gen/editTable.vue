@@ -8,13 +8,12 @@
         <gen-info-form ref="genInfo" :info="info" :tables="tables" :columns="columns" />
       </el-tab-pane>
       <el-tab-pane label="字段信息" name="cloum">
-        <el-table ref="dragTable" v-loading="loading" :data="columns" row-key="columnId" :max-height="tableHeight">
+        <el-table ref="dragTableRef" v-loading="loading" :data="columns" row-key="columnId" :max-height="tableHeight">
           <el-table-column label="序号" type="index" min-width="5%" class-name="allowDrag" />
           <el-table-column label="字段列名" prop="columnName" min-width="10%" :show-overflow-tooltip="true" />
-          <el-table-column label="字段描述" prop="columnComment" min-width="10%">
+          <el-table-column label="字段描述" min-width="10%">
             <template #default="scope">
-              <el-input v-model="scope.row.columnComment">
-              </el-input>
+              <el-input v-model="scope.row.columnComment" :ref="setColumnsRef" @keydown="nextFocus(scope.row, scope.$index, $event)"> </el-input>
             </template>
           </el-table-column>
           <el-table-column label="物理类型" prop="columnType" min-width="10%" :show-overflow-tooltip="true" />
@@ -43,7 +42,7 @@
           </el-table-column>
           <el-table-column label="编辑" min-width="5%" v-if="info.tplCategory != 'select'">
             <template #default="scope">
-              <el-checkbox v-model="scope.row.isEdit" :disabled="scope.row.isPk  || scope.row.isIncrement"></el-checkbox>
+              <el-checkbox v-model="scope.row.isEdit" :disabled="scope.row.isPk || scope.row.isIncrement"></el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="列表" min-width="5%">
@@ -53,8 +52,7 @@
           </el-table-column>
           <el-table-column label="查询" min-width="5%">
             <template #default="scope">
-              <el-checkbox v-model="scope.row.isQuery" :disabled="scope.row.htmlType == 'imageUpload' || scope.row.htmlType == 'fileUpload'">
-              </el-checkbox>
+              <el-checkbox v-model="scope.row.isQuery" :disabled="scope.row.htmlType == 'imageUpload' || scope.row.htmlType == 'fileUpload'"> </el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="查询方式" min-width="10%">
@@ -95,8 +93,13 @@
           </el-table-column>
           <el-table-column label="字典类型" min-width="12%">
             <template #default="scope">
-              <el-select v-model="scope.row.dictType" clearable filterable placeholder="请选择"
-                v-if="scope.row.htmlType == 'select' || scope.row.htmlType == 'radio' || scope.row.htmlType =='checkbox'">
+              <el-select
+                v-model="scope.row.dictType"
+                clearable
+                filterable
+                placeholder="请选择"
+                v-if="scope.row.htmlType == 'select' || scope.row.htmlType == 'radio' || scope.row.htmlType == 'checkbox'"
+              >
                 <el-option v-for="dict in dictOptions" :key="dict.dictType" :label="dict.dictName" :value="dict.dictType">
                   <span style="float: left">{{ dict.dictName }}</span>
                   <span style="float: right; color: #8492a6; font-size: 13px">{{ dict.dictType }}</span>
@@ -108,7 +111,7 @@
       </el-tab-pane>
     </el-tabs>
     <el-form label-width="100px">
-      <el-form-item style="text-align: center;margin-left:-100px;margin-top:10px;">
+      <el-form-item style="text-align: center; margin-left: -100px; margin-top: 10px">
         <el-button type="primary" icon="check" @click="submitForm()">提交</el-button>
         <el-button type="success" icon="refresh" @click="handleQuery()">刷新</el-button>
         <el-button icon="back" @click="close()">返回</el-button>
@@ -137,7 +140,7 @@ const dictOptions = ref([])
 // 表详细信息
 const info = ref({})
 const loading = ref(true)
-
+const dragTableRef = ref()
 const route = useRoute()
 const { proxy } = getCurrentInstance()
 
@@ -211,5 +214,31 @@ function close() {
   }
   proxy.$tab.closeOpenPage(obj)
 }
+
+/*************** table column  回车代码 start*************/
+// 动态ref设置值
+const columnRefs = ref([])
+const setColumnsRef = (el) => {
+  if (el) {
+    columnRefs.value.push(el)
+  }
+}
+
+/**
+ * 回车到下一行
+ */
+function nextFocus(row, index, e) {
+  var length = columnRefs.value.length
+  var keyCode = e.keyCode || e.which || e.charCode
+  if (keyCode === 13) {
+    if (length - 1 == index) {
+      console.log('到最后一个了')
+    } else {
+      columnRefs.value[index + 1].focus()
+    }
+  }
+}
+/*************** table column  回车代码 end *************/
+
 handleQuery()
 </script>

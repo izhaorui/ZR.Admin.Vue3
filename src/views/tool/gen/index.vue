@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-
     <el-form ref="codeform" :inline="true" :model="queryParams">
       <el-form-item label="表名" prop="tableName">
         <el-input v-model="queryParams.tableName" clearable placeholder="输入要查询的表名" />
@@ -16,16 +15,14 @@
         <el-button type="info" plain icon="upload" @click="openImportTable" v-hasPermi="['tool:gen:import']">导入</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" :disabled="multiple" plain icon="delete" @click="handleDelete" v-hasPermi="['tool:gen:remove']">
-          删除</el-button>
+        <el-button type="danger" :disabled="multiple" plain icon="delete" @click="handleDelete" v-hasPermi="['tool:gen:remove']"> 删除</el-button>
       </el-col>
     </el-row>
-    <el-table ref="gridtable" v-loading="tableloading" :data="tableList" border @selection-change="handleSelectionChange" highlight-current-row
-      height="480px">
+    <el-table ref="gridtable" v-loading="tableloading" :data="tableList" border @selection-change="handleSelectionChange" highlight-current-row height="480px">
       <el-table-column type="selection" align="center" width="55"></el-table-column>
       <el-table-column label="序号" type="index" width="50" align="center">
         <template #default="scope">
-          <span>{{(queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1}}</span>
+          <span>{{ (queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="dbName" label="数据库名" width="90" />
@@ -41,8 +38,7 @@
           <el-button type="text" icon="edit" @click="handleEditTable(scope.row)" v-hasPermi="['tool:gen:edit']">编辑</el-button>
           <el-button type="text" icon="delete" @click="handleDelete(scope.row)" v-hasPermi="['tool:gen:remove']">删除</el-button>
           <el-button type="text" icon="refresh" @click="handleSynchDb(scope.row)" v-hasPermi="['tool:gen:edit']">同步</el-button>
-          <el-button type="text" icon="download" @click="handleGenTable(scope.row)" v-hasPermi="['tool:gen:code']">生成代码
-          </el-button>
+          <el-button type="text" icon="download" @click="handleGenTable(scope.row)" v-hasPermi="['tool:gen:code']">生成代码 </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -52,8 +48,7 @@
     <el-dialog :title="preview.title" v-model="preview.open" width="80%" top="5vh" append-to-body>
       <el-tabs v-model="preview.activeName">
         <el-tab-pane v-for="(item, key) in preview.data" :label="item.title" :name="key.toString()" :key="key">
-          <el-link :underline="false" icon="document-copy" v-clipboard:copy="item.content" v-clipboard:success="clipboardSuccess" style="float:right">
-            复制</el-link>
+          <el-link :underline="false" icon="document-copy" v-clipboard:copy="item.content" v-clipboard:success="clipboardSuccess" style="float: right"> 复制</el-link>
           <pre><code class="hljs" v-html="highlightedCode(item.content, item.title)"></code></pre>
         </el-tab-pane>
       </el-tabs>
@@ -63,13 +58,7 @@
 </template>
 
 <script setup name="gen">
-import {
-  codeGenerator,
-  listTable,
-  delTable,
-  previewTable,
-  synchDb,
-} from '@/api/tool/gen'
+import { codeGenerator, listTable, delTable, previewTable, synchDb } from '@/api/tool/gen'
 import { useRouter } from 'vue-router'
 import importTable from './importTable'
 import hljs from 'highlight.js'
@@ -81,14 +70,11 @@ const { proxy } = getCurrentInstance()
 
 const tableList = ref([])
 const tableloading = ref(true)
-const showSearch = ref(true)
 const tableIds = ref([])
 const single = ref(true)
 const multiple = ref(true)
 const total = ref(0)
-const tableNames = ref([])
 const dateRange = ref([])
-const uniqueId = ref('')
 const showGenerate = ref(false)
 // 选中行的表
 const currentSelected = ref({})
@@ -110,27 +96,14 @@ const data = reactive({
 
 const { queryParams, preview } = toRefs(data)
 
-// onActivated(() => {
-//   const time = route.query.t
-//   if (time != null && time != uniqueId.value) {
-//     uniqueId.value = time
-//     queryParams.value.pageNum = Number(route.query.pageNum)
-//     dateRange.value = []
-//     proxy.resetForm('queryForm')
-//     getList()
-//   }
-// })
-
 /** 查询表集合 */
 function getList() {
   tableloading.value = true
-  listTable(proxy.addDateRange(queryParams.value, dateRange.value)).then(
-    (response) => {
-      tableList.value = response.data.result
-      total.value = response.data.totalNum
-      tableloading.value = false
-    }
-  )
+  listTable(proxy.addDateRange(queryParams.value, dateRange.value)).then((response) => {
+    tableList.value = response.data.result
+    total.value = response.data.totalNum
+    tableloading.value = false
+  })
 }
 /** 搜索按钮操作 */
 function handleQuery() {

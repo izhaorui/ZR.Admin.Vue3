@@ -34,7 +34,6 @@
 
 <script setup>
 import { listDbTable, importTable, codeGetDBList } from '@/api/tool/gen'
-import { reactive } from 'vue-demi'
 
 const total = ref(0)
 const visible = ref(false)
@@ -92,20 +91,6 @@ function resetQuery() {
 }
 /** 导入按钮操作 */
 function handleImportTable() {
-  // const tableNames = tables.value.join(',')
-  // if (tableNames == '') {
-  //   proxy.$modal.msgError('请选择要导入的表')
-  //   return
-  // }
-  // importTable({ tables: tableNames }).then((res) => {
-  //   proxy.$modal.msgSuccess(res.msg)
-  //   if (res.code === 200) {
-  //     visible.value = false
-  //     emit('ok')
-  //   }
-  // })
-  console.log(JSON.stringify(tables.value))
-
   importTable({
     tables: tables.value.join(','),
     dbName: queryParams.dbName,
