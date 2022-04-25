@@ -8,7 +8,7 @@
 ## 🍟概述
 * 本仓库为前端技术栈 [Vue3](https://v3.cn.vuejs.org) + [Element Plus](https://element-plus.org/zh-CN) + [Vite](https://cn.vitejs.dev) 版本。
 * 配套后端代码仓库地址[ZRAdmin.NET](https://gitee.com/izory/ZrAdminNetCore/) 版本。
-* 前端采用Vue3.0、Element UI Plus、vite。
+* 前端采用Vue3.0、Element UI Plus、vite、compisition api。
 * 支持加载动态权限菜单，多方式轻松权限控制
 * 七牛云通用云产品优惠券：[点我进入](https://s.qiniu.com/FzEfay)。
 * 腾讯云秒杀场：[点我进入](https://curl.qcloud.com/4yEoRquq)。
@@ -67,9 +67,6 @@ yarn dev
 14. 文件管理：可以进行上传文件管理，目前支持上传到本地、阿里云
 15. 通知管理：系统通知公告信息发布维护
 16. 参数管理：对系统动态配置常用参数。
-
-## 计划
-- [ ] 控制台
 
 ## 🎉优势
 
