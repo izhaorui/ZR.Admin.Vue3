@@ -54,6 +54,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
+          <el-button type="text" icon="bell" @click="handleNotice(scope.row)" v-hasPermi="['system:notice:edit']">通知</el-button>
           <el-button type="text" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:notice:edit']">修改</el-button>
           <el-button type="text" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:notice:remove']">删除</el-button>
         </template>
@@ -105,8 +106,8 @@
 <script setup name="notice">
 // 富文本组件
 import Editor from '@/components/Editor'
-import { listNotice, getNotice, delNotice, addNotice, updateNotice } from '@/api/system/notice'
-import { getCurrentInstance } from 'vue';
+import { listNotice, getNotice, delNotice, addNotice, updateNotice, sendNotice } from '@/api/system/notice'
+import { getCurrentInstance } from 'vue'
 
 const { proxy } = getCurrentInstance()
 const noticeList = ref([])
@@ -236,6 +237,12 @@ function handleDelete(row) {
     })
     .catch(() => {})
 }
-
+// 发送通知
+function handleNotice(row) {
+  const noticeId = row.noticeId || ids.value
+  sendNotice(noticeId).then((res) => {
+    proxy.$modal.msgSuccess('发送通知成功')
+  })
+}
 getList()
 </script>

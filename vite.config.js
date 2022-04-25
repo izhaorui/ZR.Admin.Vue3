@@ -39,7 +39,12 @@ export default defineConfig(({ mode, command }) => {
           target: 'http://localhost:8888',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/dev-api/, '')
-        }
+				},
+				'/msghub': {
+					target: 'http://localhost:8888',
+					ws: true,
+					rewrite: (path) => path.replace(/^\/msgHub/, '')
+				}
       },
     },
   }

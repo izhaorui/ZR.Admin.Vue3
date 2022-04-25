@@ -22,6 +22,17 @@
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
       </template>
+      <!-- 通知 -->
+      <div class="right-menu-item">
+        <el-popover placement="bottom" trigger="click" v-model:visible="isShowUserNewsPopover" width="300" popper-class="el-popover-pupop-user-news">
+          <template #reference>
+            <el-badge @click.stop="isShowUserNewsPopover = !isShowUserNewsPopover" :is-dot="true" slot="reference" style="line-height: 32px">
+              <el-icon><bell /></el-icon>
+            </el-badge>
+          </template>
+          <Notice v-show="isShowUserNewsPopover" />
+        </el-popover>
+      </div>
       <div class="avatar-container">
         <el-dropdown @command="handleCommand" class="right-menu-item hover-effect" trigger="click">
           <div class="avatar-wrapper">
@@ -59,9 +70,11 @@ import SizeSelect from '@/components/SizeSelect'
 import HeaderSearch from '@/components/HeaderSearch'
 import ZrGit from '@/components/Zr/Git'
 import ZrDoc from '@/components/Zr/Doc'
+import Notice from '@/components/Notice/Index'
 
 const store = useStore()
 const getters = computed(() => store.getters)
+const isShowUserNewsPopover = ref(false)
 
 function toggleSideBar() {
   store.dispatch('app/toggleSideBar')
@@ -100,7 +113,7 @@ function setLayout() {
 }
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .el-menu {
   // display: inline-table;
   line-height: 46px !important;
