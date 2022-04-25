@@ -14,6 +14,7 @@ import directive from './directive' // directive
 // 注册指令
 import plugins from './plugins' // plugins
 // import { download } from '@/utils/request'
+import signalR from '@/utils/signalR'
 
 // svg图标
 import 'virtual:svg-icons-register'
@@ -42,7 +43,9 @@ import TreeSelect from '@/components/TreeSelect'
 import DictTag from '@/components/DictTag'
 
 const app = createApp(App)
-
+signalR.init(
+  import.meta.env.VITE_APP_SOCKET_API)
+app.config.globalProperties.signalr = signalR
 // 全局方法挂载
 app.config.globalProperties.getConfigKey = getConfigKey
 app.config.globalProperties.getDicts = getDicts
