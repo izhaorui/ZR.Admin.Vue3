@@ -6,10 +6,8 @@
           <svg-icon icon-class="peoples" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text" v-waves>
-            在线用户
-          </div>
-          <vue-number-roll-plus :number="onlineUserNum" background="transparent" />
+          <div class="card-panel-text" v-waves>在线用户</div>
+          <div id="onlineNum" class="card-panel-num">{{ state.onlineUserNum }}</div>
         </div>
       </div>
     </el-col>
@@ -19,10 +17,8 @@
           <svg-icon icon-class="message" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text" v-waves>
-            消息
-          </div>
-          <vue-number-roll-plus :number="18888" background="transparent" />
+          <div class="card-panel-text" v-waves>消息</div>
+          <div class="card-panel-num" id="messageNum">{{ state.chatNum }}</div>
         </div>
       </div>
     </el-col>
@@ -32,10 +28,8 @@
           <svg-icon icon-class="money" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text" v-waves>
-            金额
-          </div>
-          <vue-number-roll-plus :number="9288" background="transparent" />
+          <div class="card-panel-text" v-waves>金额</div>
+          <div id="amount" class="card-panel-num">{{ state.amount }}</div>
         </div>
       </div>
     </el-col>
@@ -45,32 +39,35 @@
           <svg-icon icon-class="shopping" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text" v-waves>
-            订单
-          </div>
-          <vue-number-roll-plus :number="13500" background="transparent" />
+          <div class="card-panel-text" v-waves>订单</div>
+          <div id="order" class="card-panel-num">{{ state.order }}</div>
         </div>
       </div>
     </el-col>
   </el-row>
 </template>
 
-<script>
-import VueNumberRollPlus from 'vue3-number-roll-plus'
-import 'vue3-number-roll-plus/main.css'
-import { mapGetters } from 'vuex'
-export default {
-  components: {
-    VueNumberRollPlus,
-  },
-  computed: {
-    ...mapGetters(['onlineUserNum']),
-  },
-  methods: {
-    handleSetLineChartData(type) {
-      this.$emit('handleSetLineChartData', type)
-    },
-  },
+<script setup>
+import { CountUp } from 'countup.js'
+const emit = defineEmits()
+const { proxy } = getCurrentInstance()
+
+const state = reactive({
+  chatNum: 1390,
+  onlineNum: computed(() => {
+    return proxy.$store.getters.onlineUserNum
+  }),
+  amount: 99998,
+  order: 1999,
+})
+onMounted(() => {
+  new CountUp('messageNum', state.chatNum).start(),
+    new CountUp('onlineNum', state.onlineNum).start(),
+    new CountUp('amount', state.amount).start(),
+    new CountUp('order', state.order).start()
+})
+function handleSetLineChartData(type) {
+  emit('handleSetLineChartData', type)
 }
 </script>
 
