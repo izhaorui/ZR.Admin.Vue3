@@ -80,15 +80,25 @@
               </el-icon>
             </el-tooltip>
           </template>
-          <tree-select v-model:value="info.parentMenuId" :options="menuOptions" :show-count="true"
-            :objMap="{ value: 'menuId', label: 'menuName', children: 'children' }" placeholder="选择上级菜单" />
+          <el-cascader
+            class="w100"
+            :options="menuOptions"
+            :props="{ checkStrictly: true, value: 'menuId', label: 'menuName', emitPath: false }"
+            placeholder="请选择上级菜单"
+            clearable
+            v-model="info.parentMenuId"
+          >
+            <template #default="{ node, data }">
+              <span>{{ data.menuName }}</span>
+              <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+            </template>
+          </el-cascader>
         </el-form-item>
       </el-col>
       <el-col :lg="12">
         <el-form-item label="查询排序字段">
           <el-select v-model="info.sortField" placeholder="请选择字段" class="mr10" clearable="">
-            <el-option v-for="item in columns" :key="item.columnId" :label="item.csharpField" :value="item.csharpField">
-            </el-option>
+            <el-option v-for="item in columns" :key="item.columnId" :label="item.csharpField" :value="item.csharpField"> </el-option>
           </el-select>
 
           <el-radio v-model="info.sortType" label="asc">正序</el-radio>
@@ -186,8 +196,7 @@
             </el-tooltip>
           </template>
           <el-select v-model="info.treeCode" placeholder="请选择">
-            <el-option v-for="(column, index) in columns" :key="index" :label="column.csharpField + '：' + column.columnComment"
-              :value="column.csharpField"></el-option>
+            <el-option v-for="(column, index) in columns" :key="index" :label="column.csharpField + '：' + column.columnComment" :value="column.csharpField"></el-option>
           </el-select>
         </el-form-item>
       </el-col>
@@ -202,8 +211,7 @@
             </el-tooltip>
           </template>
           <el-select v-model="info.treeParentCode" placeholder="请选择">
-            <el-option v-for="(column, index) in columns" :key="index" :label="column.csharpField + '：' + column.columnComment"
-              :value="column.csharpField"></el-option>
+            <el-option v-for="(column, index) in columns" :key="index" :label="column.csharpField + '：' + column.columnComment" :value="column.csharpField"></el-option>
           </el-select>
         </el-form-item>
       </el-col>
@@ -218,8 +226,7 @@
             </el-tooltip>
           </template>
           <el-select v-model="info.treeName" placeholder="请选择">
-            <el-option v-for="(column, index) in columns" :key="index" :label="column.csharpField + '：' + column.columnComment"
-              :value="column.csharpField"></el-option>
+            <el-option v-for="(column, index) in columns" :key="index" :label="column.csharpField + '：' + column.columnComment" :value="column.csharpField"></el-option>
           </el-select>
         </el-form-item>
       </el-col>
@@ -237,8 +244,7 @@
             </el-tooltip>
           </template>
           <el-select v-model="info.subTableName" placeholder="请选择" @change="subSelectChange(this)">
-            <el-option v-for="(table, index) in tables" :key="index" :label="table.tableName + '：' + table.tableComment" :value="table.tableName">
-            </el-option>
+            <el-option v-for="(table, index) in tables" :key="index" :label="table.tableName + '：' + table.tableComment" :value="table.tableName"> </el-option>
           </el-select>
         </el-form-item>
       </el-col>
@@ -253,8 +259,7 @@
             </el-tooltip>
           </template>
           <el-select v-model="info.subTableFkName" placeholder="请选择">
-            <el-option v-for="(column, index) in subColumns" :key="index" :label="column.columnName + '：' + column.columnComment"
-              :value="column.columnName"></el-option>
+            <el-option v-for="(column, index) in subColumns" :key="index" :label="column.columnName + '：' + column.columnComment" :value="column.columnName"></el-option>
           </el-select>
         </el-form-item>
       </el-col>
@@ -305,9 +310,7 @@ const rules = ref({
       pattern: /^[A-Za-z]+$/,
     },
   ],
-  functionName: [
-    { required: true, message: '请输入生成功能名', trigger: 'blur' },
-  ],
+  functionName: [{ required: true, message: '请输入生成功能名', trigger: 'blur' }],
   permissionPrefix: {
     required: true,
     message: '请输入权限前缀',
@@ -354,7 +357,7 @@ watch(
   () => props.info.subTableName,
   (val) => {
     setSubTableColumns(val)
-  }
+  },
 )
 
 getMenuTreeselect()

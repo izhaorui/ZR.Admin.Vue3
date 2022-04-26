@@ -110,8 +110,8 @@
         </el-table>
       </el-tab-pane>
     </el-tabs>
-    <el-form label-width="100px">
-      <el-form-item style="text-align: center; margin-left: -100px; margin-top: 10px">
+    <el-form class="mt20">
+      <el-form-item>
         <el-button type="primary" icon="check" @click="submitForm()">提交</el-button>
         <el-button type="success" icon="refresh" @click="handleQuery()">刷新</el-button>
         <el-button icon="back" @click="close()">返回</el-button>
