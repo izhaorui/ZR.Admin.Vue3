@@ -125,7 +125,7 @@ import { listType } from '@/api/system/dict/type'
 import basicInfoForm from './basicInfoForm'
 import genInfoForm from './genInfoForm'
 import { useRoute } from 'vue-router'
-// import Sortable from 'sortablejs'
+import Sortable from 'sortablejs'
 
 // 选中选项卡的 name
 const activeName = ref('cloum')
@@ -239,6 +239,28 @@ function nextFocus(row, index, e) {
   }
 }
 /*************** table column  回车代码 end *************/
+
+// 拖动排序
+const tableSort = () => {
+  const tbody = document.querySelector('.el-table__body > tbody')
+
+  Sortable.create(tbody, {
+    onEnd: (evt) => {
+      const targetRow = columns.value.splice(evt.oldIndex, 1)[0]
+      columns.value.splice(evt.newIndex, 0, targetRow)
+      for (const index in columns.value) {
+        columns.value[index].sort = parseInt(index) + 1
+      }
+      nextTick(() => {
+        console.log(columns.value)
+      })
+    },
+  })
+}
+
+onMounted(() => {
+  tableSort()
+})
 
 handleQuery()
 </script>
