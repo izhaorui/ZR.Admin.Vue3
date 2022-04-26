@@ -95,9 +95,9 @@
               <el-input :disabled="form.userId != undefined" v-model="form.userName" placeholder="请输入用户名(用于登陆)" />
             </el-form-item>
           </el-col>
-          <el-col :lg="12">
+          <el-col :lg="12" v-if="form.userId == undefined">
             <el-form-item label="用户密码" prop="password">
-              <el-input :disabled="form.userId != undefined" v-model="form.password" placeholder="请输入用户密码" type="password" />
+              <el-input v-model="form.password" placeholder="请输入用户密码" type="password" />
             </el-form-item>
           </el-col>
           <el-col :lg="12">
