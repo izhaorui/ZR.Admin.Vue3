@@ -48,7 +48,13 @@
           <el-tag type="warning" v-else-if="scope.row.menuType == 'F'">按钮</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="orderNum" label="排序" width="60" align="center"></el-table-column>
+      <!-- <el-table-column prop="orderNum" label="排序" width="60" align="center"></el-table-column> -->
+      <el-table-column prop="orderNum" label="排序" width="90" sortable align="center">
+        <template #default="scope">
+          <span v-show="editIndex != scope.$index" @click="editCurrRow(scope.$index)">{{ scope.row.orderNum }}</span>
+          <el-input :id="scope.$index" v-show="editIndex == scope.$index" v-model="scope.row.orderNum" @blur="handleChangeSort(scope.row)"></el-input>
+        </template>
+      </el-table-column>
       <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="visible" label="显示" width="70">
@@ -259,7 +265,7 @@
 </template>
 
 <script setup name="sysmenu">
-import { addMenu, delMenu, getMenu, listMenu, updateMenu } from '@/api/system/menu'
+import { addMenu, delMenu, getMenu, listMenu, updateMenu, changeMenuSort as changeSort } from '@/api/system/menu'
 import SvgIcon from '@/components/SvgIcon'
 import IconSelect from '@/components/IconSelect'
 
@@ -426,6 +432,33 @@ function handleDelete(row) {
     })
     .catch(() => {})
 }
+// ******************自定义编辑 start **********************
 
+const editIndex = ref(-1)
+// 显示编辑排序
+function editCurrRow(rowId) {
+  editIndex.value = rowId
+
+  setTimeout(() => {
+    document.getElementById(rowId).focus()
+  }, 100)
+}
+// 保存排序
+function handleChangeSort(info) {
+  editIndex.value = -1
+  proxy
+    .$confirm('是否保存数据?')
+    .then(function () {
+      return changeSort({ value: info.orderNum, id: info.menuId })
+    })
+    .then(() => {
+      handleQuery()
+      proxy.$modal.msgSuccess('修改成功')
+    })
+    .catch(() => {
+      handleQuery()
+    })
+}
+// ******************自定义编辑 end **********************
 getList()
 </script>
