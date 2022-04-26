@@ -2,9 +2,6 @@ import axios from 'axios'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
-// import { blobValidate } from "@/utils/ruoyi";
-// import errorCode from '@/utils/errorCode'
-// import { saveAs } from 'file-saver'
 
 // 解决后端跨域获取不到cookie问题
 // axios.defaults.withCredentials = true
@@ -24,8 +21,6 @@ service.interceptors.request.use(config => {
     //将token放到请求头发送给服务器,将tokenkey放在请求头中
     config.headers['Authorization'] = 'Bearer ' + getToken();
     config.headers['userid'] = store.getters.userId;
-  } else {
-    // console.log(config)
   }
   return config;
 }, error => {
@@ -52,7 +47,8 @@ service.interceptors.response.use(res => {
         type: 'warning'
       }).then(() => {
         store.dispatch('LogOut').then(() => {
-          location.href = import.meta.env.VITE_APP_ROUTER_PREFIX + 'index';
+          location.href =
+            import.meta.env.VITE_APP_ROUTER_PREFIX + 'index';
         })
       })
 

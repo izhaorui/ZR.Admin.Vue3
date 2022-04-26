@@ -1,6 +1,6 @@
 import { login, logout, getInfo } from '@/api/system/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-// import defAva from '@/assets/images/profile.jpg'
+import defAva from '@/assets/images/profile.jpg'
 
 const user = {
   state: {
@@ -48,7 +48,7 @@ const user = {
             commit('SET_TOKEN', res.data)
             resolve() //then处理
           } else {
-            console.log('login error ' + res);
+            console.log('login error ', res)
             reject(res) //catch处理
           }
         }).catch(error => {
@@ -62,7 +62,7 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo().then(res => {
           const data = res.data
-          const avatar = data.user.avatar == "" ? require("@/assets/image/profile.jpg") : data.user.avatar;
+          const avatar = data.user.avatar == "" ? defAva : data.user.avatar;
 
           if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', data.roles)
@@ -76,7 +76,8 @@ const user = {
           commit('SET_USERINFO', data.user) //新加
           resolve(res)
         }).catch(error => {
-          reject(error)
+          console.error(error);
+          reject("获取用户信息失败")
         })
       })
     },

@@ -107,7 +107,7 @@ function handleLogin() {
           router.push({ path: redirect.value || '/' })
         })
         .catch((error) => {
-          console.log(error)
+          console.error(error)
           proxy.$modal.msgError(error.msg)
           loading.value = false
           // 重新获取验证码
@@ -138,7 +138,6 @@ function getCookie() {
 }
 getCode()
 getCookie()
-onMounted(() => {})
 </script>
 
 <style lang="scss" scoped>
