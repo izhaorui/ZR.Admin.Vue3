@@ -37,9 +37,8 @@
         <el-dropdown @command="handleCommand" class="right-menu-item hover-effect" trigger="click">
           <div class="avatar-wrapper">
             <img :src="getters.avatar" class="user-avatar" />
-            <el-icon>
-              <caret-bottom />
-            </el-icon>
+            <span class="name">{{ getters.name }}</span>
+            <el-icon><ArrowDown /></el-icon>
           </div>
           <template #dropdown>
             <el-dropdown-menu>
@@ -184,7 +183,7 @@ function setLayout() {
     }
 
     .avatar-container {
-      margin-right: 40px;
+      margin-right: 30px;
 
       .avatar-wrapper {
         margin-top: 5px;
@@ -192,16 +191,21 @@ function setLayout() {
 
         .user-avatar {
           cursor: pointer;
-          width: 40px;
-          height: 40px;
+          width: 30px;
+          height: 30px;
           border-radius: 10px;
+          vertical-align: middle;
+          margin-right: 5px;
+					margin-top: 5px;
         }
-
+        .name {
+          font-size: 12px;
+        }
         i {
           cursor: pointer;
           position: absolute;
-          right: -20px;
-          top: 25px;
+          right: -30px;
+          top: 15px;
           font-size: 12px;
         }
       }
