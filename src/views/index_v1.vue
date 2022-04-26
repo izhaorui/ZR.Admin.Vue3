@@ -18,11 +18,11 @@
                   {{ userInfo.welcomeMessage + ',' + userInfo.nickName + ' ,' + userInfo.welcomeContent }}
                 </el-col>
                 <el-col :xs="24" :sm="24" :md="24">
-                  <el-col :xs="24" :md="8" class="right-l-v">
+                  <el-col :xs="24" :lg="8" class="right-l-v">
                     <div class="right-label">昵称：</div>
                     <div class="right-value">{{ userInfo.nickName }}</div>
                   </el-col>
-                  <el-col :xs="24" :md="16" class="right-l-v">
+                  <el-col :xs="24" :lg="16" class="right-l-v">
                     <div class="right-label">身份：</div>
                     <div class="right-value">
                       <span v-for="item in userInfo.roles" :key="item.roleId">

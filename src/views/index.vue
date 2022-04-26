@@ -96,10 +96,12 @@
           <ul>
             <li>Vue3</li>
             <li>Vuex</li>
-            <li>Element-ui</li>
+            <li>Element plus</li>
             <li>Axios</li>
             <li>Sass</li>
-            <li>Quill</li>
+            <li>Wangeditor</li>
+						<li>Vite</li>
+						<li>Composition api</li>
             <li>...</li>
           </ul>
         </el-col>

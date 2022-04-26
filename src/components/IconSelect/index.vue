@@ -1,6 +1,6 @@
 <template>
   <div class="icon-body">
-    <el-input v-model="iconName" style="position: relative;" clearable placeholder="请输入图标名称" @clear="filterIcons" @input="filterIcons">
+    <el-input v-model="iconName" style="position: relative" clearable placeholder="请输入图标名称" @clear="filterIcons" @input="filterIcons">
       <template #prefix>
         <el-icon class="el-input__icon">
           <search />
@@ -15,20 +15,32 @@
     <el-tabs v-model="activeName">
       <el-tab-pane label="svg-icon" name="1">
         <div class="icon-list">
-          <div v-for="(item, index) in iconList" :key="index" @click="selectedIcon(item)">
-            <svg-icon :icon-class="item" style="height: 30px;width: 16px;" />
-            <span>{{ item }}</span>
+          <div class="icon-item mb10" v-for="(item, index) in iconList" :key="index" @click="selectedIcon(item)">
+            <svg-icon :icon-class="item" style="height: 30px; width: 16px" />
+            <div class="name">{{ item }}</div>
+          </div>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="Element-UI Icons" name="2">
+        <div class="icon-list">
+          <div class="icon-item mb10" v-for="item of elementIcons" :key="item" @click="selectedIcon(item, 'ele-')">
+            <svg-icon :icon-class="'ele-' + item" style="height: 30px; width: 16px" />
+            <div class="name">{{ item }}</div>
           </div>
         </div>
       </el-tab-pane>
     </el-tabs>
-
   </div>
 </template>
 
 <script setup>
 import icons from './requireIcons'
+import * as elIcons from '@element-plus/icons-vue'
 
+const elementIcons = ref([])
+for (const key in elIcons) {
+  elementIcons.value.push(key)
+}
 const iconName = ref('')
 const iconList = ref(icons)
 const activeName = ref('1')
@@ -41,8 +53,8 @@ function filterIcons() {
   }
 }
 
-function selectedIcon(name) {
-  emit('selected', name)
+function selectedIcon(name, prefix) {
+  emit('selected', prefix != undefined ? prefix + name : name)
   document.body.click()
 }
 
@@ -56,26 +68,31 @@ defineExpose({
 })
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .icon-body {
   width: 100%;
   padding: 10px;
   .icon-list {
-    height: 200px;
     overflow-y: scroll;
-    div {
-      height: 30px;
-      line-height: 30px;
-      margin-bottom: -5px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    height: 200px;
+
+    .icon-item {
+      // height: 30px;
+      // line-height: 30px;
+      // margin-bottom: -5px;
       cursor: pointer;
-      width: 33%;
-      float: left;
+      width: 19%;
+      text-align: center;
+      // float: left;
     }
-    span {
-      display: inline-block;
-      vertical-align: -0.15em;
-      fill: currentColor;
-      overflow: hidden;
+    .name {
+      // display: inline-block;
+      // vertical-align: -0.15em;
+      // fill: currentColor;
+      // overflow: hidden;
     }
   }
 }
