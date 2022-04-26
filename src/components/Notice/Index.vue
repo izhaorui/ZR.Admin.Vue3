@@ -14,7 +14,7 @@
       </template>
       <div class="content-box-empty" v-else>
         <div class="content-box-empty-margin">
-          <i class="el-icon-s-promotion"></i>
+          <el-icon><Promotion /></el-icon>
           <div class="mt15">全部已读</div>
         </div>
       </div>
