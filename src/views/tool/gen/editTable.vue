@@ -86,7 +86,7 @@
                 <el-option label="日期控件" value="datetime" />
                 <el-option label="图片上传" value="imageUpload" />
                 <el-option label="文件上传" value="fileUpload" />
-                <el-option label="富文本控件" value="editor" />
+                <!-- <el-option label="富文本控件" value="editor" /> -->
                 <el-option label="自定义输入框" value="customInput" />
               </el-select>
             </template>
