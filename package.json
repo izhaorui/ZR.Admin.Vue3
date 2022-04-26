@@ -38,8 +38,8 @@
     "wangeditor": "^4.7.15"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "1.9.4",
-    "@vue/compiler-sfc": "3.2.22",
+    "@vitejs/plugin-vue": "^2.3.1",
+    "@vue/compiler-sfc": "^3.2.33",
     "sass": "1.45.0",
     "unplugin-auto-import": "0.5.3",
     "vite": "^2.9.5",
