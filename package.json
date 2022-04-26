@@ -28,6 +28,7 @@
     "jsencrypt": "3.2.1",
     "md-editor-v3": "^1.11.11",
     "nprogress": "0.2.0",
+    "sortablejs": "^1.15.0",
     "vue": "3.2.26",
     "vue-cropper": "1.0.2",
     "vue-router": "4.0.12",
