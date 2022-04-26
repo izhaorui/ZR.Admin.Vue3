@@ -18,32 +18,36 @@
                   {{ userInfo.welcomeMessage + ',' + userInfo.nickName + ' ,' + userInfo.welcomeContent }}
                 </el-col>
                 <el-col :xs="24" :sm="24" :md="24">
-                  <el-col :xs="24" :lg="8" class="right-l-v">
-                    <div class="right-label">昵称：</div>
-                    <div class="right-value">{{ userInfo.nickName }}</div>
-                  </el-col>
-                  <el-col :xs="24" :lg="16" class="right-l-v">
-                    <div class="right-label">身份：</div>
-                    <div class="right-value">
-                      <span v-for="item in userInfo.roles" :key="item.roleId">
-                        {{ item.roleName }}
-                      </span>
-                    </div>
-                  </el-col>
+                  <el-row>
+                    <el-col :xs="24" :lg="8" class="right-l-v">
+                      <div class="right-label">昵称：</div>
+                      <div class="right-value">{{ userInfo.nickName }}</div>
+                    </el-col>
+                    <el-col :xs="24" :lg="16" class="right-l-v">
+                      <div class="right-label">身份：</div>
+                      <div class="right-value">
+                        <span v-for="item in userInfo.roles" :key="item.roleId">
+                          {{ item.roleName }}
+                        </span>
+                      </div>
+                    </el-col>
+                  </el-row>
                 </el-col>
                 <el-col :md="24" class="mt10">
-                  <el-col :xs="24" :sm="12" :md="8" class="right-l-v">
-                    <div class="right-label one-text-overflow">IP：</div>
-                    <div class="right-value one-text-overflow">
-                      {{ userInfo.loginIP }}
-                    </div>
-                  </el-col>
-                  <el-col :xs="24" :sm="12" :md="16" class="right-l-v">
-                    <div class="right-label one-text-overflow">时间：</div>
-                    <div class="right-value one-text-overflow">
-                      {{ currentTime }}
-                    </div>
-                  </el-col>
+                  <el-row>
+                    <el-col :xs="24" :sm="12" :md="8" class="right-l-v">
+                      <div class="right-label one-text-overflow">IP：</div>
+                      <div class="right-value one-text-overflow">
+                        {{ userInfo.loginIP }}
+                      </div>
+                    </el-col>
+                    <el-col :xs="24" :sm="12" :md="16" class="right-l-v">
+                      <div class="right-label one-text-overflow">时间：</div>
+                      <div class="right-value one-text-overflow">
+                        {{ currentTime }}
+                      </div>
+                    </el-col>
+                  </el-row>
                 </el-col>
                 <el-col :lg="24" class="mt10">
                   <el-button size="small" icon="edit">
