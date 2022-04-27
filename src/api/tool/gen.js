@@ -85,11 +85,11 @@ export function updateGenTable(data) {
 }
 
 // 预览生成代码
-export function previewTable(tableId) {
+export function previewTable(tableId, data) {
   return request({
     url: '/tool/gen/preview/' + tableId,
     method: 'post',
-    // data: data
+    params: data
   })
 }
 

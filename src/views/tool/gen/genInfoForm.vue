@@ -6,8 +6,8 @@
           <template #label>生成模板</template>
           <el-select v-model="info.tplCategory" @change="tplSelectChange">
             <el-option label="单表（增删改查）" value="crud" />
-            <!-- <el-option label="单表查询" value="select" />
-            <el-option label="树表（增删改查）" value="tree" /> -->
+            <!-- <el-option label="单表查询" value="select" /> -->
+            <el-option label="树表（增删改查）" value="tree" />
             <!-- <el-option label="导航查询" value="subNav"></el-option> -->
             <!-- <el-option label="主子表（增删改查）" value="sub" /> -->
           </el-select>
@@ -195,7 +195,7 @@
               </el-icon>
             </el-tooltip>
           </template>
-          <el-select v-model="info.treeCode" placeholder="请选择">
+          <el-select v-model="info.treeCode" placeholder="请选择树编码字段">
             <el-option v-for="(column, index) in columns" :key="index" :label="column.csharpField + '：' + column.columnComment" :value="column.csharpField"></el-option>
           </el-select>
         </el-form-item>
@@ -210,14 +210,14 @@
               </el-icon>
             </el-tooltip>
           </template>
-          <el-select v-model="info.treeParentCode" placeholder="请选择">
+          <el-select v-model="info.treeParentCode" placeholder="请选择树父编码字段">
             <el-option v-for="(column, index) in columns" :key="index" :label="column.csharpField + '：' + column.columnComment" :value="column.csharpField"></el-option>
           </el-select>
         </el-form-item>
       </el-col>
       <el-col :lg="12">
         <el-form-item>
-          <template label>
+          <template #label>
             树名称字段
             <el-tooltip content="树节点的显示名称字段名， 如：dept_name" placement="top">
               <el-icon>
@@ -225,7 +225,7 @@
               </el-icon>
             </el-tooltip>
           </template>
-          <el-select v-model="info.treeName" placeholder="请选择">
+          <el-select v-model="info.treeName" placeholder="请选择树名称字段">
             <el-option v-for="(column, index) in columns" :key="index" :label="column.csharpField + '：' + column.columnComment" :value="column.csharpField"></el-option>
           </el-select>
         </el-form-item>

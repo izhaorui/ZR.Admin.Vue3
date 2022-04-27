@@ -6,7 +6,6 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="search" @click="getList()">查询</el-button>
-        <!-- <el-button type="default" icon="refresh" @click="loadTableData()">刷新</el-button> -->
       </el-form-item>
     </el-form>
 
@@ -84,7 +83,6 @@ const data = reactive({
     pageNum: 1,
     pageSize: 10,
     tableName: undefined,
-    // tableComment: undefined,
   },
   preview: {
     open: false,
@@ -121,12 +119,11 @@ function handleGenTable(row) {
     if (valid) {
       proxy.$modal.loading('正在生成代码...')
 
-      var seachdata = {
+      codeGenerator({
         tableId: currentSelected.value.tableId,
         tableName: currentSelected.value.name,
-      }
-
-      codeGenerator(seachdata)
+        VueVersion: 3,
+      })
         .then((res) => {
           const { data } = res
           showGenerate.value = false
@@ -163,12 +160,6 @@ function handleSynchDb(row) {
 function openImportTable() {
   proxy.$refs['importRef'].show()
 }
-/** 重置按钮操作 */
-function resetQuery() {
-  dateRange.value = []
-  proxy.resetForm('queryParams')
-  handleQuery()
-}
 /** 预览按钮 */
 function handlePreview(row) {
   proxy.$refs['codeform'].validate((valid) => {
@@ -177,7 +168,7 @@ function handlePreview(row) {
       return
     }
     proxy.$modal.loading('请稍后...')
-    previewTable(row.tableId).then((res) => {
+    previewTable(row.tableId, { VueVersion: 3 }).then((res) => {
       if (res.code === 200) {
         showGenerate.value = false
         preview.value.open = true
@@ -238,10 +229,6 @@ function highlightedCode(code, key) {
 /** 复制代码成功 */
 function clipboardSuccess() {
   proxy.$modal.msgSuccess('复制成功')
-}
-function cancel() {
-  showGenerate.value = false
-  currentSelected.value = {}
 }
 getList()
 </script>
