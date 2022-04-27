@@ -16,8 +16,6 @@
 </template>
 
 <script setup>
-import { ElMessage } from "element-plus";
-
 const store = useStore();
 const size = computed(() => store.getters.size);
 const route = useRoute();
