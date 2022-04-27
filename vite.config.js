@@ -15,6 +15,7 @@ export default defineConfig(({ mode, command }) => {
         // 设置别名
         '@': path.resolve(__dirname, './src')
       },
+      // 导入时想要省略的扩展名列表
       // https://cn.vitejs.dev/config/#resolve-extensions
       extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
     },
@@ -24,9 +25,17 @@ export default defineConfig(({ mode, command }) => {
     base: env.VITE_APP_ROUTER_PREFIX,
     // 打包配置
     build: {
-      sourcemap: command === 'build' ? false : true,
+      sourcemap: command === 'build' ? false : 'inline',
       outDir: 'dist', //指定输出目录
       assetsDir: 'assets', //指定静态资源存储目录(相对于outDir)
+      // 将js、css文件分离到单独文件夹
+      rollupOptions: {
+        output: {
+          chunkFileNames: "static/js/[name]-[hash].js",
+          entryFileNames: "static/js/[name]-[hash].js",
+          assetFileNames: "static/[ext]/[name]-[hash].[ext]"
+        }
+			},
     },
     // vite 相关配置
     server: {
@@ -39,12 +48,12 @@ export default defineConfig(({ mode, command }) => {
           target: 'http://localhost:8888',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/dev-api/, '')
-				},
-				'/msghub': {
-					target: 'http://localhost:8888',
-					ws: true,
-					rewrite: (path) => path.replace(/^\/msgHub/, '')
-				}
+        },
+        '/msghub': {
+          target: 'http://localhost:8888',
+          ws: true,
+          rewrite: (path) => path.replace(/^\/msgHub/, '')
+        }
       },
     },
   }
