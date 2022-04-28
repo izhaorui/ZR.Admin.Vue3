@@ -13,6 +13,8 @@ $base-menu-color: #bfcbd9;
 $base-menu-color-active: #f4f4f5;
 $base-menu-background: #304156;
 $base-logo-title-color: #ffffff;
+$base-topBar-background: #ffffff;
+
 $menuHover:#263445;
 // sidebar
 $menuText:#bfcbd9;
@@ -52,9 +54,9 @@ $base-sidebar-width: 210px;
   sideBarWidth: $base-sidebar-width;
   logoTitleColor: $base-logo-title-color;
   logoLightTitleColor: $base-logo-light-title-color;
-  primaryColor: $--color-primary;
-  successColor: $--color-success;
-  dangerColor: $--color-danger;
-  infoColor: $--color-info;
-  warningColor: $--color-warning;
+  // primaryColor: $--color-primary;
+  // successColor: $--color-success;
+  // dangerColor: $--color-danger;
+  // infoColor: $--color-info;
+  // warningColor: $--color-warning;
 }

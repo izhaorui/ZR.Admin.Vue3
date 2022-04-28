@@ -6,55 +6,34 @@
 
     <div class="right-menu">
       <template v-if="getters.device !== 'mobile'">
-        <header-search id="header-search" class="right-menu-item" />
-
-        <el-tooltip content="源码地址" effect="dark" placement="bottom">
-          <zr-git class="right-menu-item hover-effect" />
-        </el-tooltip>
-
-        <el-tooltip content="文档地址" effect="dark" placement="bottom">
-          <zr-doc class="right-menu-item hover-effect" />
-        </el-tooltip>
-
-        <screenfull id="screenfull" class="right-menu-item hover-effect" />
-
-        <el-tooltip content="布局大小" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip>
+        <header-search id="header-search" class="right-menu-item" v-waves="'orange'" />
+        <zr-git title="源码地址" class="right-menu-item" />
+        <zr-doc title="文档地址" class="right-menu-item" />
+        <screenfull title="全屏" class="right-menu-item" />
+        <size-select title="布局大小" class="right-menu-item" />
       </template>
-      <!-- 通知 -->
-      <div class="right-menu-item">
-        <el-popover placement="bottom" trigger="click" v-model:visible="isShowUserNewsPopover" width="300" popper-class="el-popover-pupop-user-news">
-          <template #reference>
-            <el-badge @click.stop="isShowUserNewsPopover = !isShowUserNewsPopover" :is-dot="true" slot="reference" style="line-height: 32px">
-              <el-icon><bell /></el-icon>
-            </el-badge>
-          </template>
-          <Notice v-show="isShowUserNewsPopover" />
-        </el-popover>
-      </div>
-      <div class="avatar-container">
-        <el-dropdown @command="handleCommand" class="right-menu-item hover-effect" trigger="click">
-          <div class="avatar-wrapper">
-            <img :src="getters.avatar" class="user-avatar" />
-            <span class="name">{{ getters.name }}</span>
-            <el-icon><ArrowDown /></el-icon>
-          </div>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <router-link to="/user/profile">
-                <el-dropdown-item>个人中心</el-dropdown-item>
-              </router-link>
-              <el-dropdown-item command="setLayout">
-                <span>布局设置</span>
-              </el-dropdown-item>
-              <el-dropdown-item divided command="logout">
-                <span>退出登录</span>
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-      </div>
+      <Notice title="通知" class="right-menu-item" />
+
+      <el-dropdown @command="handleCommand" class="right-menu-item avatar-container" trigger="hover">
+        <span class="avatar-wrapper">
+          <img :src="getters.avatar" class="user-avatar" />
+          <span class="name">{{ getters.name }}</span>
+          <el-icon><ArrowDown /></el-icon>
+        </span>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <router-link to="/user/profile">
+              <el-dropdown-item>个人中心</el-dropdown-item>
+            </router-link>
+            <el-dropdown-item command="setLayout">
+              <span>布局设置</span>
+            </el-dropdown-item>
+            <el-dropdown-item divided command="logout">
+              <span>退出登录</span>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
   </div>
 </template>
@@ -73,7 +52,6 @@ import Notice from '@/components/Notice/Index'
 
 const store = useStore()
 const getters = computed(() => store.getters)
-const isShowUserNewsPopover = ref(false)
 
 function toggleSideBar() {
   store.dispatch('app/toggleSideBar')
@@ -115,7 +93,6 @@ function setLayout() {
 <style lang="scss" scoped>
 .el-menu {
   // display: inline-table;
-  line-height: 46px !important;
   .el-menu-item {
     vertical-align: center;
   }
@@ -155,40 +132,26 @@ function setLayout() {
   }
 
   .right-menu {
-    float: right;
     height: 100%;
     line-height: 50px;
     display: flex;
+    justify-content: flex-end;
+    align-items: center;
 
     &:focus {
       outline: none;
     }
 
     .right-menu-item {
-      display: inline-block;
       padding: 0 8px;
-      height: 100%;
-      font-size: 18px;
       color: #5a5e66;
       vertical-align: text-bottom;
-
-      &.hover-effect {
-        cursor: pointer;
-        transition: background 0.3s;
-
-        &:hover {
-          background: rgba(0, 0, 0, 0.025);
-        }
-      }
     }
 
     .avatar-container {
-      margin-right: 30px;
-
       .avatar-wrapper {
-        margin-top: 5px;
-        position: relative;
-
+        display: flex;
+        align-items: center;
         .user-avatar {
           cursor: pointer;
           width: 30px;
@@ -196,17 +159,13 @@ function setLayout() {
           border-radius: 10px;
           vertical-align: middle;
           margin-right: 5px;
-					margin-top: 5px;
         }
         .name {
           font-size: 12px;
         }
         i {
           cursor: pointer;
-          position: absolute;
-          right: -30px;
-          top: 15px;
-          font-size: 12px;
+          margin-left: 10px;
         }
       }
     }

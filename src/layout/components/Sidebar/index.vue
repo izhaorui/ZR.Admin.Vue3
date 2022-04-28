@@ -1,5 +1,6 @@
 <template>
   <div
+    :data-theme="sideTheme"
     class="layout-sidebar__container"
     :class="{ 'has-logo': showLogo }"
     :style="{ backgroundColor: sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground }"
@@ -17,12 +18,7 @@
         :collapse-transition="false"
         mode="vertical"
       >
-        <sidebar-item
-          v-for="(route, index) in sidebarRouters"
-          :key="route.path + index"
-          :item="route"
-          :base-path="route.path"
-        />
+        <sidebar-item v-for="(route, index) in sidebarRouters" :key="route.path + index" :item="route" :base-path="route.path" />
       </el-menu>
     </el-scrollbar>
   </div>
@@ -58,7 +54,7 @@ const activeMenu = computed(() => {
 .layout-sidebar__container {
   transition: width 0.28s;
   width: $base-sidebar-width !important;
-  // background-color: $base-menu-background;
+  background-color: $base-menu-background;
   height: 100%;
   position: fixed;
   font-size: 0px;

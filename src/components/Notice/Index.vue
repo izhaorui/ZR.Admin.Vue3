@@ -1,35 +1,48 @@
 <template>
-  <div class="layout-navbars-breadcrumb-user-news">
-    <div class="head-box">
-      <div class="head-box-title">通知</div>
-      <div class="head-box-btn" v-if="noticeList.length > 0" @click="onAllReadClick">全部已读</div>
-    </div>
-    <div class="content-box">
-      <template v-if="noticeList.length > 0">
-        <div class="content-box-item" v-for="(v, k) in noticeList" :key="k">
-          <div>{{ v.noticeTitle }}</div>
-          <div class="content-box-msg" v-html="v.noticeContent"></div>
-          <div class="content-box-time">{{ v.updateTime }}</div>
-        </div>
+  <div>
+    <el-popover placement="bottom" trigger="hover" width="400" popper-class="el-popover-pupop-user-news">
+      <template #reference>
+        <el-badge :is-dot="newsDot" style="line-height: 18px">
+          <el-icon><bell /></el-icon>
+        </el-badge>
       </template>
-      <div class="content-box-empty" v-else>
-        <div class="content-box-empty-margin">
-          <el-icon><Promotion /></el-icon>
-          <div class="mt15">全部已读</div>
+      <div class="layout-navbars-breadcrumb-user-news">
+        <div class="head-box">
+          <div class="head-box-title">通知</div>
+          <div class="head-box-btn" v-if="noticeList.length > 0" @click="onAllReadClick">全部已读</div>
         </div>
+        <div class="content-box">
+          <template v-if="noticeList.length > 0">
+            <div class="content-box-item" v-for="(v, k) in noticeList" :key="k">
+              <div>{{ v.noticeTitle }}</div>
+              <div class="content-box-msg" v-html="v.noticeContent"></div>
+              <div class="content-box-time">{{ v.updateTime }}</div>
+            </div>
+          </template>
+          <div class="content-box-empty" v-else>
+            <div class="content-box-empty-margin">
+              <el-icon><Promotion /></el-icon>
+              <div class="mt15">全部已读</div>
+            </div>
+          </div>
+        </div>
+        <div class="foot-box" @click="onGoToGiteeClick" v-if="noticeList.length > 0">前往通知中心</div>
       </div>
-    </div>
-    <div class="foot-box" @click="onGoToGiteeClick" v-if="noticeList.length > 0">前往通知中心</div>
+    </el-popover>
   </div>
 </template>
 
 <script setup name="noticeIndex">
 const { proxy } = getCurrentInstance()
+// 小红点
+const newsDot = ref(true)
+
 const noticeList = computed(() => {
   return proxy.$store.getters.noticeList
 })
 // 全部已读点击
 function onAllReadClick() {
+  newsDot.value = false
   proxy.$modal.msg('敬请期待！！！')
 }
 // 前往通知中心点击
