@@ -37,7 +37,7 @@
       <el-table-column prop="menuName" label="菜单名称" :show-overflow-tooltip="true" width="160"></el-table-column>
       <el-table-column prop="icon" label="图标" align="center" width="100">
         <template #default="scope">
-          <svg-icon :icon-class="scope.row.icon" />
+          <svg-icon :name="scope.row.icon" />
         </template>
       </el-table-column>
       <el-table-column prop="menuType" label="类型" align="center" width="80">
@@ -127,7 +127,7 @@
                 <template #reference>
                   <el-input v-model="form.icon" placeholder="点击选择图标" @click="showSelectIcon" readonly>
                     <template #prefix>
-                      <svg-icon v-if="form.icon" :icon-class="form.icon" class="el-input__icon" />
+                      <svg-icon v-if="form.icon" :name="form.icon" class="el-input__icon" />
                       <el-icon class="el-input__icon" v-else>
                         <search />
                       </el-icon>

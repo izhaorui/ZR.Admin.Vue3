@@ -8,9 +8,10 @@
 <script>
 export default defineComponent({
   props: {
-    iconClass: {
+    name: {
       type: String,
       required: true,
+      default: '',
     },
     className: {
       type: String,
@@ -24,17 +25,17 @@ export default defineComponent({
   setup(props) {
     return {
       iconType: computed(() => {
-        if (props.iconClass.startsWith('ele')) {
+        if (props.name.startsWith('ele')) {
           return 1
         } else {
           return 0
         }
       }),
       iconName: computed(() => {
-        if (props.iconClass?.startsWith('ele-')) {
-          return props.iconClass.replace('ele-', '')
+        if (props.name?.startsWith('ele-')) {
+          return props.name.replace('ele-', '')
         } else {
-          return `#icon-${props.iconClass}`
+          return `#icon-${props.name}`
         }
       }),
       svgClass: computed(() => {

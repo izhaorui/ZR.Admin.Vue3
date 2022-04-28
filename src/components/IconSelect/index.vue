@@ -16,7 +16,7 @@
       <el-tab-pane label="svg-icon" name="1">
         <div class="icon-list">
           <div class="icon-item mb10" v-for="(item, index) in iconList" :key="index" @click="selectedIcon(item)">
-            <svg-icon :icon-class="item" style="height: 30px; width: 16px" />
+            <svg-icon :name="item" style="height: 30px; width: 16px" />
             <div class="name">{{ item }}</div>
           </div>
         </div>
@@ -24,7 +24,7 @@
       <el-tab-pane label="Element-UI Icons" name="2">
         <div class="icon-list">
           <div class="icon-item mb10" v-for="item of elementIcons" :key="item" @click="selectedIcon(item, 'ele-')">
-            <svg-icon :icon-class="'ele-' + item" style="height: 30px; width: 16px" />
+            <svg-icon :name="'ele-' + item" style="height: 30px; width: 16px" />
             <div class="name">{{ item }}</div>
           </div>
         </div>

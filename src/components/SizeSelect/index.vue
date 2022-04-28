@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dropdown trigger="hover" @command="handleSetSize" style="vertical-align: middle">
-      <svg-icon class-name="size-icon" icon-class="size" />
+      <svg-icon class-name="size-icon" name="size" />
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item v-for="item of sizeOptions" :key="item.value" :disabled="size === item.value" :command="item.value">

@@ -43,7 +43,7 @@
     <transition-group class="upload-file-list el-upload-list el-upload-list--text" name="el-fade-in-linear" tag="ul">
       <li :key="file.uid" class="el-upload-list__item ele-upload-list__item-content" v-for="(file, index) in fileList">
         <el-link :href="`${file.url}`" :underline="false" target="_blank">
-          <svg-icon class-name="doc-icon" icon-class="documentation" />
+          <svg-icon class-name="doc-icon" name="documentation" />
           {{ file.name }}
         </el-link>
         <div class="ele-upload-list__item-content-action">
@@ -89,8 +89,6 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  // form 列名
-  column: [String],
   // 上传携带的参数
   data: {
     type: Object,

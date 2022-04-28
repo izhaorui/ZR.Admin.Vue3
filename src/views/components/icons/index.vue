@@ -6,7 +6,7 @@
           <el-tooltip placement="top">
             <template #content> {{ generateIconCode(item) }} </template>
             <div class="icon-item">
-              <svg-icon :icon-class="item" style="height: 40px; width: 40px" />
+              <svg-icon :name="item" style="height: 40px; width: 40px" />
             </div>
           </el-tooltip>
         </div>
@@ -37,7 +37,7 @@ for (const key in elIcons) {
 }
 
 function generateIconCode(symbol) {
-  return `<svg-icon icon-class="${symbol}" />`
+  return `<svg-icon name="${symbol}" />`
 }
 function generateElementIconCode(symbol) {
   return `<el-icon><${symbol} /></el-icon>`

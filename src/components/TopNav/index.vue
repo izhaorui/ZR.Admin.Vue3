@@ -2,7 +2,7 @@
   <el-menu :default-active="activeMenu" mode="horizontal" @select="handleSelect" :ellipsis="false">
     <template v-for="(item, index) in topMenus">
       <el-menu-item :style="{'--theme': theme}" :index="item.path" :key="index" v-if="index < visibleNumber">
-        <svg-icon :icon-class="item.meta.icon" />
+        <svg-icon :name="item.meta.icon" />
         &nbsp;{{ item.meta.title }}
       </el-menu-item>
     </template>
@@ -12,7 +12,7 @@
       <template #title>更多菜单</template>
       <template v-for="(item, index) in topMenus">
         <el-menu-item :index="item.path" :key="index" v-if="index >= visibleNumber">
-          <svg-icon :icon-class="item.meta.icon" />
+          <svg-icon :name="item.meta.icon" />
           {{ item.meta.title }}
         </el-menu-item>
       </template>
