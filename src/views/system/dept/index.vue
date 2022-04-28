@@ -47,7 +47,7 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button type="text" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dept:update']">修改</el-button>
           <el-button type="text" icon="plus" @click="handleAdd(scope.row)" v-hasPermi="['system:dept:add']">新增</el-button>
@@ -62,7 +62,14 @@
         <el-row :gutter="20">
           <el-col :lg="24" v-if="form.parentId !== 0">
             <el-form-item label="上级部门" prop="parentId">
-              <TreeSelect v-model:value="form.parentId" :options="deptOptions" :objMap="{ value: 'deptId', label: 'deptName', children: 'children' }" placeholder="选择上级部门" />
+              <el-tree-select
+                v-model="form.parentId"
+                :data="deptOptions"
+                :props="{ value: 'deptId', label: 'deptName', children: 'children' }"
+                value-key="deptId"
+                placeholder="选择上级部门"
+                check-strictly
+              />
             </el-form-item>
           </el-col>
           <el-col :lg="12">
@@ -139,7 +146,7 @@ const state = reactive({
   form: {},
   // 表单校验
   rules: {
-    parentId: [{ required: true, message: '上级部门不能为空', trigger: 'blur' }],
+    // parentId: [{ required: true, message: '上级部门不能为空', trigger: 'blur' }],
     deptName: [{ required: true, message: '部门名称不能为空', trigger: 'blur' }],
     orderNum: [{ required: true, message: '显示排序不能为空', trigger: 'blur' }],
     email: [
