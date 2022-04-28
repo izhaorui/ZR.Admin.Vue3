@@ -1,13 +1,9 @@
-<template>
-  <svg :class="svgClass" aria-hidden="true" v-if="iconType == 0">
-    <use :xlink:href="iconName" :fill="color" />
-  </svg>
-  <el-icon v-else><component :is="iconName" /></el-icon>
-</template>
-
 <script>
+import { h, resolveComponent } from 'vue'
+
 export default defineComponent({
   props: {
+    // svg 图标组件名字
     name: {
       type: String,
       required: true,
@@ -17,33 +13,37 @@ export default defineComponent({
       type: String,
       default: '',
     },
+    // svg 颜色
     color: {
       type: String,
       default: '',
     },
   },
   setup(props) {
-    return {
-      iconType: computed(() => {
-        if (props.name.startsWith('ele')) {
-          return 1
-        } else {
-          return 0
-        }
-      }),
-      iconName: computed(() => {
-        if (props.name?.startsWith('ele-')) {
-          return props.name.replace('ele-', '')
-        } else {
-          return `#icon-${props.name}`
-        }
-      }),
-      svgClass: computed(() => {
-        if (props.className) {
-          return `svg-icon ${props.className}`
-        }
-        return 'svg-icon'
-      }),
+    if (props.name?.startsWith('ele')) {
+      return () =>
+        h(
+          'i',
+          {
+            class: 'el-icon',
+          },
+          [h(resolveComponent(props.name.replace('ele-', '')))],
+        )
+    } else {
+      return () =>
+        h(
+          'svg',
+          {
+            name: props.name,
+            'aria-hidden': true,
+            style: `color: ${props.color}`,
+            class: 'svg-icon',
+          },
+          h('use', {
+            'xlink:href': `#icon-${props.name}`,
+            fill: `${props.color}`,
+          }),
+        )
     }
   },
 })

@@ -1,14 +1,14 @@
 <template>
   <el-menu :default-active="activeMenu" mode="horizontal" @select="handleSelect" :ellipsis="false">
     <template v-for="(item, index) in topMenus">
-      <el-menu-item :style="{'--theme': theme}" :index="item.path" :key="index" v-if="index < visibleNumber">
+      <el-menu-item :style="{ '--theme': theme }" :index="item.path" :key="index" v-if="index < visibleNumber">
         <svg-icon :name="item.meta.icon" />
         &nbsp;{{ item.meta.title }}
       </el-menu-item>
     </template>
 
     <!-- 顶部菜单超出数量折叠 -->
-    <el-sub-menu :style="{'--theme': theme}" index="more" v-if="topMenus.length > visibleNumber">
+    <el-sub-menu :style="{ '--theme': theme }" index="more" v-if="topMenus.length > visibleNumber">
       <template #title>更多菜单</template>
       <template v-for="(item, index) in topMenus">
         <el-menu-item :index="item.path" :key="index" v-if="index >= visibleNumber">
@@ -67,8 +67,7 @@ const childrenMenus = computed(() => {
           router.children[item].path = '/redirect/' + router.children[item].path
         } else {
           if (!isHttp(router.children[item].path)) {
-            router.children[item].path =
-              router.path + '/' + router.children[item].path
+            router.children[item].path = router.path + '/' + router.children[item].path
           }
         }
         router.children[item].parentPath = router.path
@@ -125,7 +124,7 @@ function handleSelect(key, keyPath) {
     window.open(key, '_blank')
   } else if (key.indexOf('/redirect') !== -1) {
     // /redirect 路径内部打开
-    router.push({ path: key.replace("/redirect", "") }).catch(err => {});
+    router.push({ path: key.replace('/redirect', '') }).catch((err) => {})
   } else {
     // 显示左侧联动菜单
     activeRoutes(key)
