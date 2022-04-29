@@ -180,7 +180,7 @@ function onOpenGitee() {}
     .user-item-left {
       width: 100px;
       height: 100px;
-      border-radius: 4px;
+      border-radius: 50%;
       overflow: hidden;
       img {
         width: 100%;
