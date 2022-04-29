@@ -37,7 +37,7 @@ export default defineComponent({
             name: props.name,
             'aria-hidden': true,
             style: `color: ${props.color}`,
-            class: 'svg-icon',
+            class: `svg-icon ${props.className}`,
           },
           h('use', {
             'xlink:href': `#icon-${props.name}`,
