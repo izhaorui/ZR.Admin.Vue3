@@ -1,4 +1,4 @@
-import { parseTime } from '@/ruoyi'
+import { parseTime } from './ruoyi'
 
 /**
  * 表格时间格式化
@@ -94,6 +94,7 @@ export function byteLength(str) {
 }
 
 /**
+ * 清空数组
  * @param {Array} actual
  * @returns {Array}
  */
@@ -331,49 +332,6 @@ export function makeMap(str, expectsLowerCase) {
     val => map[val]
 }
 
-export const exportDefault = 'export default '
-
-export const beautifierConf = {
-  html: {
-    indent_size: '2',
-    indent_char: ' ',
-    max_preserve_newlines: '-1',
-    preserve_newlines: false,
-    keep_array_indentation: false,
-    break_chained_methods: false,
-    indent_scripts: 'separate',
-    brace_style: 'end-expand',
-    space_before_conditional: true,
-    unescape_strings: false,
-    jslint_happy: false,
-    end_with_newline: true,
-    wrap_line_length: '110',
-    indent_inner_html: true,
-    comma_first: false,
-    e4x: true,
-    indent_empty_lines: true
-  },
-  js: {
-    indent_size: '2',
-    indent_char: ' ',
-    max_preserve_newlines: '-1',
-    preserve_newlines: false,
-    keep_array_indentation: false,
-    break_chained_methods: false,
-    indent_scripts: 'normal',
-    brace_style: 'end-expand',
-    space_before_conditional: true,
-    unescape_strings: false,
-    jslint_happy: true,
-    end_with_newline: true,
-    wrap_line_length: '110',
-    indent_inner_html: true,
-    comma_first: false,
-    e4x: true,
-    indent_empty_lines: true
-  }
-}
-
 // 首字母大小
 export function titleCase(str) {
   return str.replace(/( |^)[a-z]/g, L => L.toUpperCase())
@@ -384,6 +342,52 @@ export function camelCase(str) {
   return str.replace(/_[a-z]/g, str1 => str1.substr(-1).toUpperCase())
 }
 
+// 是否数字
 export function isNumberStr(str) {
   return /^[+-]?(0|([1-9]\d*))(\.\d+)?$/g.test(str)
+}
+
+/**
+ * 变浅颜色值
+ * @param color 颜色值字符串
+ * @param level 加深的程度，限0-1之间
+ * @returns 返回处理后的颜色值
+ */
+export function getLightColor(color, level) {
+  let reg = /^\#?[0-9A-Fa-f]{6}$/;
+  if (!reg.test(color)) return color;
+  let rgb = hexToRgb(color);
+  for (let i = 0; i < 3; i++) rgb[i] = Math.floor((255 - rgb[i]) * level + rgb[i]);
+  return rgbToHex(rgb[0], rgb[1], rgb[2]);
+}
+
+/**
+ * hex颜色转rgb颜色
+ * @param str 颜色值字符串
+ * @returns 返回处理后的颜色值
+ */
+export function hexToRgb(str) {
+  let hexs = '';
+  let reg = /^\#?[0-9A-Fa-f]{6}$/;
+  if (!reg.test(str)) return str;
+  str = str.replace('#', '');
+  hexs = str.match(/../g);
+  for (let i = 0; i < 3; i++) hexs[i] = parseInt(hexs[i], 16);
+  return hexs;
+}
+
+/**
+ * rgb颜色转Hex颜色
+ * @param r 代表红色
+ * @param g 代表绿色
+ * @param b 代表蓝色
+ * @returns 返回处理后的颜色值
+ */
+export function rgbToHex(r, g, b) {
+  let reg = /^\d{1,3}$/;
+  if (!reg.test(r) || !reg.test(g) || !reg.test(b)) return "";
+  let hexs = [r.toString(16), g.toString(16), b.toString(16)];
+  for (let i = 0; i < 3; i++)
+    if (hexs[i].length == 1) hexs[i] = `0${hexs[i]}`;
+  return `#${hexs.join('')}`;
 }
