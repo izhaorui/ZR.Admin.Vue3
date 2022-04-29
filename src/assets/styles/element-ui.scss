@@ -91,7 +91,6 @@
 //   color: var(--el-color-primary) !important;
 // }
 
-
 // element ui 移动端组件适配
 .el-icon {
   vertical-align: middle;
@@ -118,16 +117,20 @@
 }
 
 // dialog
-@media screen and (max-width: 500px) {
-	.el-dialog {
-		--el-dialog-width: 100% !important
+@media screen and (max-width: 700px) {
+  .el-dialog {
+    --el-dialog-width: 100% !important;
+    --el-dialog-margin-top: 0 !important;
+  }
+	.el-dialog:not(.is-fullscreen){
+		margin-top: 0 !important;
 	}
 }
 
 /** 表格更多操作下拉样式 */
 .el-table .el-dropdown-link {
   cursor: pointer;
-  color: #409EFF;
+  color: #409eff;
   margin-left: 5px;
 }
 
