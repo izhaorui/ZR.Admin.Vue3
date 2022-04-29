@@ -125,6 +125,9 @@
 	.el-dialog:not(.is-fullscreen){
 		margin-top: 0 !important;
 	}
+	.el-drawer{
+		width: 85% !important;
+	}
 }
 
 /** 表格更多操作下拉样式 */
