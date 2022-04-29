@@ -44,9 +44,7 @@
         <el-table-column prop="remark" align="center" label="备注" :show-overflow-tooltip="true" />
         <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
           <template #default="scope">
-            <el-button type="text" icon="view" v-hasPermi="['monitor:job:query']" @click="handleJobLog(scope.row.id, scope.row.name)">
-              日志
-            </el-button>
+            <el-button type="text" icon="view" v-hasPermi="['monitor:job:query']" @click="handleJobLog(scope.row.id, scope.row.name)"> 日志 </el-button>
             <el-button type="text" v-if="scope.row.isStart" v-hasPermi="['monitor:job:run']" icon="remove" title="运行" @click="handleRun(scope.row)">运行</el-button>
             <el-button type="text" v-if="scope.row.isStart" v-hasPermi="['monitor:job:stop']" icon="video-pause" style="color: red" title="停止" @click="handleStop(scope.row)">
               停止
@@ -192,7 +190,7 @@
     </el-dialog>
 
     <!-- <el-dialog title="Cron表达式生成器" v-model="openCron" destroy-on-close>
-      <crontab @hide="openCron=false" @fill="crontabFill" :expression="expression"></crontab>
+      <crontab @hide="openCron = false" @fill="crontabFill" :expression="expression"></crontab>
     </el-dialog> -->
 
     <el-drawer :title="logTitle" v-model="drawer">
