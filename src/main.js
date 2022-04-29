@@ -36,8 +36,6 @@ import FileUpload from "@/components/FileUpload"
 import ImageUpload from "@/components/ImageUpload"
 // 图片预览组件
 import ImagePreview from "@/components/ImagePreview"
-// 自定义树选择组件
-import TreeSelect from '@/components/TreeSelect'
 // 字典标签组件
 import DictTag from '@/components/DictTag'
 // el-date-picker 快捷选项
@@ -61,7 +59,6 @@ app.config.globalProperties.dateOptions = dateOptions
 // 全局组件挂载
 app.component('DictTag', DictTag)
 app.component('Pagination', Pagination)
-app.component('TreeSelect', TreeSelect)
 app.component('UploadFile', FileUpload)
 app.component('UploadImage', ImageUpload)
 app.component('ImagePreview', ImagePreview)
