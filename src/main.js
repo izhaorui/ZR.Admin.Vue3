@@ -1,10 +1,9 @@
 import { createApp } from 'vue'
-
 import Cookies from 'js-cookie'
 
 import ElementPlus from 'element-plus'
 import locale from 'element-plus/lib/locale/lang/zh-cn' // 中文语言
-
+import 'dayjs/locale/zh-cn'
 import '@/assets/styles/index.scss' // global css
 
 import App from './App'
@@ -41,6 +40,8 @@ import ImagePreview from "@/components/ImagePreview"
 import TreeSelect from '@/components/TreeSelect'
 // 字典标签组件
 import DictTag from '@/components/DictTag'
+// el-date-picker 快捷选项
+import dateOptions from '@/utils/dateOptions'
 
 const app = createApp(App)
 signalR.init(
@@ -55,6 +56,7 @@ app.config.globalProperties.resetForm = resetForm
 app.config.globalProperties.handleTree = handleTree
 app.config.globalProperties.addDateRange = addDateRange
 app.config.globalProperties.selectDictLabel = selectDictLabel
+app.config.globalProperties.dateOptions = dateOptions
 
 // 全局组件挂载
 app.component('DictTag', DictTag)
