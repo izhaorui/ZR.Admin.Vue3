@@ -1,21 +1,15 @@
 <template>
-  <div
-    :data-theme="sideTheme"
-    class="layout-sidebar__container"
-    :class="{ 'has-logo': showLogo }"
-    :style="{ backgroundColor: sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground }"
-  >
+  <div :data-theme="sideTheme" class="layout-sidebar__container" :class="{ 'has-logo': showLogo }">
     <logo v-if="showLogo" :collapse="isCollapse" />
 
     <el-scrollbar :class="sideTheme" wrap-class="scrollbar-wrapper">
       <el-menu
         :default-active="activeMenu"
         :collapse="isCollapse"
-        :background-color="sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground"
-        :text-color="sideTheme === 'theme-dark' ? variables.menuColor : variables.menuLightColor"
         :unique-opened="true"
         :active-text-color="theme"
         :collapse-transition="false"
+        background-color="transparent"
         mode="vertical"
       >
         <sidebar-item v-for="(route, index) in sidebarRouters" :key="route.path + index" :item="route" :base-path="route.path" />
@@ -53,8 +47,8 @@ const activeMenu = computed(() => {
 
 .layout-sidebar__container {
   transition: width 0.28s;
-  width: $base-sidebar-width !important;
-  background-color: $base-menu-background;
+  width: var(--base-sidebar-width);
+  background-color: var(--base-menu-background);
   height: 100%;
   position: fixed;
   font-size: 0px;
@@ -63,7 +57,8 @@ const activeMenu = computed(() => {
   left: 0;
   z-index: 1001;
   overflow: hidden;
-
+  -webkit-box-shadow: 2px 0 14px rgb(0 21 41 / 10%);
+  box-shadow: 2px 0 14px rgb(0 21 41 / 10%);
   .scrollbar-wrapper {
     overflow-x: hidden;
   }
@@ -102,7 +97,7 @@ const activeMenu = computed(() => {
 
   & .nest-menu .el-sub-menu > .el-sub-menu__title,
   & .el-sub-menu .el-menu-item {
-    min-width: $base-sidebar-width !important;
+    min-width: var(--base-sidebar-width) !important;
     // background-color: $base-menu-background !important;
 
     &:hover {

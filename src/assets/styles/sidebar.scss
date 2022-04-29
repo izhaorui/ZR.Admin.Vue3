@@ -1,16 +1,15 @@
 #app {
-
   .main-container {
     min-height: 100%;
-    transition: margin-left .28s;
-    margin-left: $base-sidebar-width;
+    transition: margin-left 0.28s;
+    margin-left: var(--base-sidebar-width);
     position: relative;
   }
 
-	// 展开sidebar状态设置svg-icon边距
-	.openSidebar .layout-sidebar__container .svg-icon {
-		margin-right: 5px;
-	}
+  // 展开sidebar状态设置svg-icon边距
+  .openSidebar .layout-sidebar__container .svg-icon {
+    margin-right: 5px;
+  }
   .hideSidebar {
     .layout-sidebar__container {
       width: 54px !important;
@@ -31,21 +30,23 @@
 
     .el-sub-menu {
       overflow: hidden;
-      
-      &>.el-sub-menu__title {
+
+      & > .el-sub-menu__title {
         .el-sub-menu__icon-arrow {
           display: none;
         }
       }
     }
-
+    // 折叠状态下
     .el-menu--collapse {
-      [class^=el-icon] {
+      [class^='el-icon'] {
         width: auto;
+        font-size: medium;
+        margin-right: 0;
       }
       .el-sub-menu {
-        &>.el-sub-menu__title {
-          &>span {
+        & > .el-sub-menu__title {
+          & > span {
             height: 0;
             width: 0;
             overflow: hidden;
@@ -58,7 +59,7 @@
   }
 
   .el-menu--collapse .el-menu .el-sub-menu {
-    min-width: $base-sidebar-width !important;
+    min-width: var(--base-sidebar-width);
   }
 
   // mobile responsive
@@ -68,21 +69,18 @@
     }
 
     .layout-sidebar__container {
-      transition: transform .28s;
-      width: $base-sidebar-width !important;
+      transition: transform 0.28s;
+      width: var(--base-sidebar-width) !important;
     }
 
     &.hideSidebar {
       .layout-sidebar__container {
-        pointer-events: none;
-        transition-duration: 0.3s;
-        transform: translate3d(-$base-sidebar-width, 0, 0);
+        display: none;
       }
     }
   }
 
   .withoutAnimation {
-
     .main-container,
     .layout-sidebar__container {
       transition: none;
@@ -92,17 +90,16 @@
 
 // when menu collapsed
 .el-menu--vertical {
-
-  .nest-menu .el-sub-menu>.el-sub-menu__title,
+  .nest-menu .el-sub-menu > .el-sub-menu__title,
   .el-menu-item {
     &:hover {
-      // you can use $subMenuHover
-      background-color: $base-sub-menu-hover !important;
+      // 缩小状态下选中背景
+      // background-color: var(--base-sub-menu-hover) !important;
     }
   }
 
   // the scroll bar appears when the subMenu is too long
-  >.el-menu--popup {
+  > .el-menu--popup {
     max-height: 100vh;
     overflow-y: auto;
 

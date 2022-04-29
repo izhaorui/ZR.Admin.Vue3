@@ -1,48 +1,56 @@
 // base color
 $blue: #324157;
-$light-blue: #3A71A8;
-$red: #C03639;
-$pink: #E65D6E;
-$green: #30B08F;
-$tiffany: #4AB7BD;
-$yellow: #FEC171;
-$panGreen: #30B08F;
+$light-blue: #3a71a8;
+$red: #c03639;
+$pink: #e65d6e;
+$green: #30b08f;
+$tiffany: #4ab7bd;
+$yellow: #fec171;
+$panGreen: #30b08f;
 
-:root {
-	--base-menu-color: #bfcbd9;
-	--base-menu-color-active: #f4f4f5;
-	--base-menu-background: #304156;
-	--base-logo-title-color: #ffffff;
-	--base-topBar-background: #ffffff;
-}
 // 默认菜单主题风格
-$base-menu-color: #bfcbd9;
-$base-menu-color-active: #f4f4f5;
-$base-menu-background: #304156;
-$base-logo-title-color: #ffffff;
-$base-topBar-background: #ffffff;
+:root {
+  --base-menu-color: #bfcbd9;
+  --base-menu-color-active: #f4f4f5;
+  --base-menu-background: #ffffff;
+  --base-logo-title-color: #ffffff;
+  --base-topBar-background: #ffffff;
+  --base-sidebar-width: 210px;
+}
+/***默认主题颜色配置***/
+[data-theme='theme-light'] {
+  --base-menu-color: #bfcbd9;
+  --base-menu-color-active: #f4f4f5;
+  // 菜单背景
+  --base-menu-background: #ffffff;
+  // logo部分文字颜色
+  --base-logo-title-color: #001529;
+  // 顶部导航栏背景色
+  --base-topBar-background: #ffffff;
 
-$menuHover:#263445;
+  //缩小状态下子菜单选中颜色
+  --base-sub-menu-hover: #ccc;
+
+  // el-ement ui 设置
+}
+/***深色主题颜色配置***/
+[data-theme='theme-dark'] {
+  --base-menu-color: #bfcbd9;
+  --base-menu-color-active: #f4f4f5;
+  --base-menu-background: #304156;
+  --base-logo-title-color: #ffffff;
+  --base-topBar-background: #ffffff;
+
+  //缩小状态下子菜单选中颜色
+  --base-sub-menu-hover: #000;
+
+  // el-ement ui 设置
+  --el-fill-color-blank: #304156;
+  --el-text-color-primary: #ffffff;
+}
+
 // sidebar
-$menuText:#bfcbd9;
-$menuActiveText:#409EFF;
-$subMenuActiveText:#f4f4f5;
 //https://github.com/ElemeFE/element/issues/12951
-
-$base-menu-light-color: rgba(0, 0, 0, 0.7);
-$base-menu-light-background: #ffffff;
-$base-logo-light-title-color: #001529;
-
-$base-sub-menu-background: #1f2d3d;
-$base-sub-menu-hover: #001528;
-
-$--color-primary: #409EFF;
-$--color-success: #67C23A;
-$--color-warning: #E6A23C;
-$--color-danger: #F56C6C;
-$--color-info: #909399;
-
-$base-sidebar-width: 210px;
 
 // the :export directive is the magic sauce for webpack
 // https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass
@@ -50,20 +58,5 @@ $base-sidebar-width: 210px;
    template中使用 eg：variables.menuColor 
 */
 
-:export {
-  menuColor: $base-menu-color;
-  menuLightColor: $base-menu-light-color;
-  menuColorActive: $base-menu-color-active;
-  menuBackground: $base-menu-background;
-  menuLightBackground: $base-menu-light-background;
-  subMenuBackground: $base-sub-menu-background;
-  subMenuHover: $base-sub-menu-hover;
-  sideBarWidth: $base-sidebar-width;
-  logoTitleColor: $base-logo-title-color;
-  logoLightTitleColor: $base-logo-light-title-color;
-  // primaryColor: $--color-primary;
-  // successColor: $--color-success;
-  // dangerColor: $--color-danger;
-  // infoColor: $--color-info;
-  // warningColor: $--color-warning;
-}
+// :export {
+// }

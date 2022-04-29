@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar">
+  <div class="navbar" :data-theme="sideTheme">
     <hamburger id="hamburger-container" :is-active="getters.sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" v-if="!$store.state.settings.topNav" />
     <top-nav id="topmenu-container" class="topmenu-container" v-if="$store.state.settings.topNav" />
@@ -52,7 +52,7 @@ import Notice from '@/components/Notice/Index'
 
 const store = useStore()
 const getters = computed(() => store.getters)
-
+const sideTheme = computed(() => store.state.settings.sideTheme)
 function toggleSideBar() {
   store.dispatch('app/toggleSideBar')
 }

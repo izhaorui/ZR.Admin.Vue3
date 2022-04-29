@@ -1,9 +1,9 @@
 <template>
-  <el-menu :default-active="activeMenu" mode="horizontal" @select="handleSelect" :ellipsis="false">
+  <el-menu :default-active="activeMenu" :active-text-color="theme" mode="horizontal" background-color="transparent" @select="handleSelect" :ellipsis="false">
     <template v-for="(item, index) in topMenus">
       <el-menu-item :style="{ '--theme': theme }" :index="item.path" :key="index" v-if="index < visibleNumber">
         <svg-icon :name="item.meta.icon" />
-        &nbsp;{{ item.meta.title }}
+        {{ item.meta.title }}
       </el-menu-item>
     </template>
 
@@ -159,16 +159,16 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-// .topmenu-container.el-menu--horizontal > .el-menu-item {
-//   float: left;
-//   height: 50px !important;
-//   line-height: 50px !important;
-//   color: #999093 !important;
-//   padding: 0 5px !important;
-//   margin: 0 10px !important;
-// }
-.el-menu--horizontal {
-  border-bottom: 0px !important;
+// 修改默认样式
+.topmenu-container.el-menu--horizontal > .el-menu-item {
+  height: 50px !important;
+  line-height: 50px !important;
+  color: #999093 !important;
+  padding: 0 5px !important;
+  margin: 0 10px !important;
+}
+.el-menu--horizontal > .el-menu-item .svg-icon {
+  margin-right: 5px;
 }
 // .topmenu-container.el-menu--horizontal > .el-menu-item.is-active,
 // .el-menu--horizontal > .el-sub-menu.is-active .el-submenu__title {
@@ -177,12 +177,11 @@ onMounted(() => {
 // }
 
 /* sub-menu item */
-// .topmenu-container.el-menu--horizontal > .el-sub-menu .el-submenu__title {
-//   float: left;
-//   height: 50px !important;
-//   line-height: 50px !important;
-//   color: #999093 !important;
-//   padding: 0 5px !important;
-//   margin: 0 10px !important;
-// }
+.topmenu-container.el-menu--horizontal > .el-sub-menu .el-sub-menu__title {
+  height: 50px !important;
+  line-height: 50px !important;
+  color: #999093 !important;
+  padding: 0 5px !important;
+  margin: 0 10px !important;
+}
 </style>
