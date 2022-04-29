@@ -322,11 +322,11 @@ function getList() {
 /** 查询菜单下拉树结构 */
 function getTreeselect() {
   listMenu().then((response) => {
-    menuOptions.value = []
-    const menu = { menuId: 0, menuName: '根菜单', children: [] }
+    menuOptions.value = response.data
+    // const menu = { menuId: 0, menuName: '根菜单', children: [] }
 
-    menu.children = response.data
-    menuOptions.value.push(menu)
+    // menu.children = response.data
+    // menuOptions.value.push(menu)
   })
 }
 /** 取消按钮 */
@@ -337,7 +337,7 @@ function cancel() {
 /** 表单重置 */
 function reset() {
   form.value = {
-    menuId: 0,
+    menuId: undefined,
     parentId: 0,
     menuName: undefined,
     icon: undefined,
