@@ -357,6 +357,7 @@ function handleQuery() {
 function resetQuery() {
   dateRange.value = []
   proxy.resetForm('queryRef')
+	queryParams.value.deptId = undefined
   handleQuery()
 }
 /** 删除按钮操作 */
