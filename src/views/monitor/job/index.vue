@@ -37,7 +37,7 @@
         <el-table-column prop="cron" align="center" label="运行表达式" :show-overflow-tooltip="true" />
         <el-table-column sortable prop="isStart" align="center" label="任务状态" width="100">
           <template #default="scope">
-            <el-tag :type="scope.row.isStart ? 'success' : 'danger'">{{ scope.row.isStart ? '运行中' : '已停止' }}</el-tag>
+            <dict-tag :value="scope.row.isStart" :options="isStartOptions"></dict-tag>
           </template>
         </el-table-column>
         <el-table-column prop="lastRunTime" align="center" label="最后运行时间" :show-overflow-tooltip="true" />
@@ -67,7 +67,7 @@
     <el-dialog :title="title" v-model="open" width="600px" append-to-body>
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
         <el-row>
-          <el-col :lg="24" v-if="this.form.id">
+          <el-col :lg="24" v-if="form.id">
             <el-form-item label="任务ID">
               <div>{{ form.id }}</div>
             </el-form-item>
@@ -136,15 +136,9 @@
               <el-input v-model="form.jobParams" placeholder="传入参数" />
             </el-form-item>
           </el-col>
-          <el-col :lg="24" v-show="form.triggerType == 1">
+          <el-col :lg="24" v-if="form.triggerType == 1">
             <el-form-item label="间隔(Cron)" prop="cron">
               <el-input v-model="form.cron" placeholder="请输入cron执行表达式">
-                <!-- <template #append>
-                  <el-button type="primary" @click="handleShowCron">
-                    生成表达式
-										<el-icon><time/></el-icon>
-                  </el-button>
-                </template> -->
               </el-input>
             </el-form-item>
           </el-col>
@@ -160,8 +154,7 @@
                   开始日期
                 </span>
               </template>
-
-              <el-date-picker v-model="form.beginTime" style="width: 100%" type="date" :picker-options="pickerOptions" placeholder="选择开始日期" />
+              <el-date-picker v-model="form.beginTime" style="width: 100%" type="date" placeholder="选择开始日期" />
             </el-form-item>
           </el-col>
           <el-col :lg="12">
@@ -210,50 +203,6 @@ import { queryTasks, getTasks, createTasks, updateTasks, deleteTasks, startTasks
 import { listJobLog } from '@/api/monitor/jobLog'
 // import Crontab from '@/components/Crontab'
 
-var cronValidate = (rule, value, callback) => {
-  if (form.value.triggerType === 1) {
-    if (value === '' || value === undefined) {
-      callback(new Error('运行时间表达式不能为空!'))
-    } else {
-      callback()
-    }
-  } else {
-    callback()
-  }
-}
-var beginTimeValidate = (rule, value, callback) => {
-  if (form.value.triggerType === 0) {
-    if (value === '' || value === undefined) {
-      callback(new Error('选择开始日期!'))
-    } else {
-      callback()
-    }
-  } else {
-    callback()
-  }
-}
-var endTimeValidate = (rule, value, callback) => {
-  if (form.value.triggerType === 0) {
-    if (value === '' || value === undefined) {
-      callback(new Error('选择结束日期!'))
-    } else {
-      callback()
-    }
-  } else {
-    callback()
-  }
-}
-var intervalSecondValidate = (rule, value, callback) => {
-  if (form.value.triggerType === 0) {
-    if (value === '' || value === undefined) {
-      callback(new Error('请设置执行间隔!'))
-    } else {
-      callback()
-    }
-  } else {
-    callback()
-  }
-}
 const router = useRouter()
 const { proxy } = getCurrentInstance()
 // 是否显示Cron表达式弹出层
@@ -284,11 +233,11 @@ const dataTasks = ref([])
 // 任务日志列表
 const jobLogList = ref([])
 const logTitle = ref('')
-const formRef = ref()
+const formRef = ref(null)
 // 任务状态字典
 const isStartOptions = ref([
-  { dictLabel: '运行中', dictValue: 'true' },
-  { dictLabel: '已停止', dictValue: 'false', listClass: 'danger' },
+  { dictLabel: '运行中', dictValue: 'true', listClass: 'success' },
+  { dictLabel: '已停止', dictValue: 'false' },
 ])
 // 任务组名字典
 const jobGroupOptions = ref([])
@@ -313,25 +262,19 @@ const state = reactive({
     className: [{ required: true, message: '任务类名不能为空', trigger: 'blur' }],
     triggerType: [{ required: true, message: '请选择触发器类型', trigger: 'blur' }],
     apiUrl: [{ required: true, message: '请输入apiUrl地址', trigger: 'blur' }],
-    cron: [{ validator: cronValidate, trigger: 'blur' }],
-    beginTime: [{ validator: beginTimeValidate, trigger: 'blur' }],
-    endTime: [{ validator: endTimeValidate, trigger: 'blur' }],
-    intervalSecond: [
-      {
-        validator: intervalSecondValidate,
-        type: 'number',
-        trigger: 'blur',
-      },
-    ],
+    cron: [{ required: true, message: '请输入cron表达式', trigger: 'blur' }],
+    beginTime: [{ required: false, message: '请选择开始日期', trigger: 'blur' }],
+    endTime: [{ required: false, message: '请选择结束日期', trigger: 'blur' }],
+    intervalSecond: [{ message: '请设置执行间隔', type: 'number', trigger: 'blur' }],
   },
 })
 const { rules, form } = toRefs(state)
 // 时间的选择
-const pickerOptions = reactive({
-  disabledDate(time) {
-    return time.getTime() < Date.now() - 8.64e7
-  },
-})
+// const pickerOptions = reactive({
+//   disabledDate(time) {
+//     return time.getTime() < Date.now() - 8.64e7
+//   },
+// })
 /** 查询计划任务列表 */
 function getList() {
   loading.value = true
@@ -380,15 +323,15 @@ function handleJobLog(id, title) {
   }
 }
 /** cron表达式按钮操作 */
-function handleShowCron() {
-  expression.value = form.value.cron
-  openCron.value = true
-}
+// function handleShowCron() {
+//   expression.value = form.value.cron
+//   openCron.value = true
+// }
 /** 确定后回传值 */
-function crontabFill(value) {
-  console.log(value)
-  form.value.cron = value
-}
+// function crontabFill(value) {
+//   console.log(value)
+//   form.value.cron = value
+// }
 // 启动按钮
 function handleStart(row) {
   startTasks(row.id).then((response) => {
@@ -528,9 +471,8 @@ proxy.getDicts('sys_job_group').then((response) => {
 watch(
   () => form.value.triggerType,
   (val) => {
-    console.log(val)
     if (val == 0) {
-      form.value.cron = undefined
+      form.value.cron = ''
     }
   },
   {
