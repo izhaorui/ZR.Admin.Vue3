@@ -139,6 +139,12 @@
           <el-col :lg="24" v-if="form.triggerType == 1">
             <el-form-item label="间隔(Cron)" prop="cron">
               <el-input v-model="form.cron" placeholder="请输入cron执行表达式">
+                <template #append>
+                  <el-button type="primary" @click="handleShowCron" style="width: 80px;">
+                    生成表达式
+                    <el-icon><time /></el-icon>
+                  </el-button>
+                </template>
               </el-input>
             </el-form-item>
           </el-col>
@@ -182,9 +188,10 @@
       </template>
     </el-dialog>
 
-    <!-- <el-dialog title="Cron表达式生成器" v-model="openCron" destroy-on-close>
-      <crontab @hide="openCron = false" @fill="crontabFill" :expression="expression"></crontab>
-    </el-dialog> -->
+    <el-dialog title="Cron表达式生成器" v-model="openCron" destroy-on-close>
+      <!-- 使用组件例子 -->
+      <Vue3CronCore i18n="cn" maxHeight="350px" @change="changeCron" v-model:value="form.cron" style="flex: 0.4" />
+    </el-dialog>
 
     <el-drawer :title="logTitle" v-model="drawer">
       <el-timeline>
@@ -201,7 +208,7 @@
 <script setup name="job">
 import { queryTasks, getTasks, createTasks, updateTasks, deleteTasks, startTasks, stopTasks, runTasks, exportTasks } from '@/api/monitor/job'
 import { listJobLog } from '@/api/monitor/jobLog'
-// import Crontab from '@/components/Crontab'
+import Vue3CronCore from '@/components/vue3-cron-core/Index.vue'
 
 const router = useRouter()
 const { proxy } = getCurrentInstance()
@@ -323,15 +330,16 @@ function handleJobLog(id, title) {
   }
 }
 /** cron表达式按钮操作 */
-// function handleShowCron() {
-//   expression.value = form.value.cron
-//   openCron.value = true
-// }
+function handleShowCron() {
+  // expression.value = form.value.cron
+  openCron.value = true
+}
 /** 确定后回传值 */
-// function crontabFill(value) {
-//   console.log(value)
-//   form.value.cron = value
-// }
+const changeCron = (val) => {
+  if (typeof val !== 'string') return false
+	openCron.value = false
+  form.value.cron = val
+}
 // 启动按钮
 function handleStart(row) {
   startTasks(row.id).then((response) => {
