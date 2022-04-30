@@ -101,7 +101,7 @@ function setLayout() {
   height: 50px;
   overflow: hidden;
   position: relative;
-  background: #fff;
+  background: var(--base-topBar-background);
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
   .hamburger-container {
@@ -144,7 +144,7 @@ function setLayout() {
 
     .right-menu-item {
       padding: 0 8px;
-      color: #5a5e66;
+      color: var(--base-topBar-color);
       vertical-align: text-bottom;
     }
 

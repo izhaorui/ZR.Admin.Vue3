@@ -70,10 +70,10 @@ function isActive(r) {
 }
 function activeStyle(tag) {
   if (!isActive(tag)) return {}
-  return {
-    'background-color': theme.value,
-    'border-color': theme.value,
-  }
+  // return {
+  //   'background-color': theme.value,
+  //   'border-color': theme.value,
+  // }
 }
 function isAffix(tag) {
   return tag.meta && tag.meta.affix
@@ -226,8 +226,8 @@ function handleScroll() {
 .tags-view-container {
   height: 34px;
   width: 100%;
-  background: #fff;
-  border-bottom: 1px solid #d8dce5;
+  background: var(--base-topBar-background);
+  // border-bottom: 1px solid #d8dce5;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
   .tags-view-wrapper {
     .tags-view-item {
@@ -236,9 +236,8 @@ function handleScroll() {
       cursor: pointer;
       height: 26px;
       line-height: 26px;
-      border: 1px solid #d8dce5;
-      color: #495060;
-      background: #fff;
+      border: 1px solid #ccc;
+      color: var(--el-text-color-regular);
       padding: 0 8px;
       font-size: 12px;
       margin-left: 5px;
@@ -250,9 +249,9 @@ function handleScroll() {
         margin-right: 15px;
       }
       &.active {
-        background-color: #42b983;
+        background-color: var(--el-color-primary);
+        border-color: var(--el-color-primary);
         color: #fff;
-        border-color: #42b983;
         &::before {
           content: '';
           background: #fff;

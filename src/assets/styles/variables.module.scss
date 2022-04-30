@@ -15,7 +15,10 @@ $panGreen: #30b08f;
   --base-menu-background: #ffffff;
   --base-logo-title-color: #ffffff;
   --base-topBar-background: #ffffff;
+	--base-topBar-color: #5a5e66;
   --base-sidebar-width: 210px;
+
+  --base-tags-bg-border: #d8dce5;
 }
 /***默认主题颜色配置***/
 [data-theme='theme-light'] {
@@ -30,8 +33,6 @@ $panGreen: #30b08f;
 
   //缩小状态下子菜单选中颜色
   --base-sub-menu-hover: #ccc;
-
-  // el-ement ui 设置
 }
 /***深色主题颜色配置***/
 [data-theme='theme-dark'] {
@@ -48,15 +49,3 @@ $panGreen: #30b08f;
   --el-fill-color-blank: #304156;
   --el-text-color-primary: #bfcbd9;
 }
-
-// sidebar
-//https://github.com/ElemeFE/element/issues/12951
-
-// the :export directive is the magic sauce for webpack
-// https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass
-/* js中import， import variables from '@/assets/styles/variables.module.scss'
-   template中使用 eg：variables.menuColor 
-*/
-
-// :export {
-// }
