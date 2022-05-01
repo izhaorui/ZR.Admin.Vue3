@@ -584,7 +584,7 @@ proxy.getDicts('sys_normal_disable').then((response) => {
 .tree-border {
   margin-top: 5px;
   border: 1px solid #e5e6e7;
-  background: #ffffff none;
+  background: var(--base-bg-main) none;
   border-radius: 4px;
   width: 100%;
 }

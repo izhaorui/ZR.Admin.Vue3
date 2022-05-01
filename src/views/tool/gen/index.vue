@@ -61,7 +61,7 @@ import { codeGenerator, listTable, delTable, previewTable, synchDb } from '@/api
 import { useRouter } from 'vue-router'
 import importTable from './importTable'
 import hljs from 'highlight.js'
-import 'highlight.js/styles/idea.css' // 这里有多个样式，自己可以根据需要切换
+import 'highlight.js/styles/dark.css' // 这里有多个样式，自己可以根据需要切换
 
 // const route = useRoute()
 const router = useRouter()

@@ -1,14 +1,14 @@
 // 黑夜模式
 [data-theme='theme-black'] {
-  // root
-  --base-menu-color: #304156;
-  --base-menu-color-active: #f4f4f5;
-  --base-bg-main: #304156;
-  --base-menu-background: #304156;
-  --base-logo-title-color: #ffffff;
-  --base-topBar-background: #304156 !important;
-  --base-topBar-color: #fff;
   --base-color: #304156;
+  // root
+  --base-menu-color: var(--base-color);
+  --base-menu-color-active: #f4f4f5;
+  --base-bg-main: var(--base-color);
+  --base-menu-background: var(--base-color);
+  --base-logo-title-color: #ffffff;
+  --base-topBar-background: var(--base-color) !important;
+  --base-topBar-color: #fff;
   // --base-tags-bg-border: #304156 !important;
   //缩小状态下子菜单选中颜色
   // --base-sub-menu-hover: #000;
@@ -16,7 +16,6 @@
   --next-color-white: #ffffff;
   --next-color-disabled: #304156;
   --next-color-bar: #dadada;
-  --next-color-primary: #304156;
   --next-border-color: #424242;
   --next-border-black: #333333;
   --next-text-color-regular: #9b9da1;
@@ -35,10 +34,10 @@
   --el-border-color-light: var(--next-border-black) !important;
   --el-text-color-regular: var(--next-text-color-regular) !important;
   --el-bg-color: var(--base-bg-main) !important;
-  --el-color-success-lighter: var(--next-color-primary) !important;
-  --el-color-warning-lighter: var(--next-color-primary) !important;
-  --el-color-danger-lighter: var(--next-color-primary) !important;
-  --el-color-primary-lighter: var(--next-color-primary) !important;
+  --el-color-success-lighter: var(--base-color) !important;
+  --el-color-warning-lighter: var(--base-color) !important;
+  --el-color-danger-lighter: var(--base-color) !important;
+  --el-color-primary-lighter: var(--base-color) !important;
   --el-color-primary-light-9: var(--next-color-hover) !important;
   --el-text-color-disabled-base: var(--el-color-primary) !important;
   --el-border-color-lighter: var(--next-border-black) !important;
@@ -87,7 +86,7 @@
     background-color: var(--el-color-white) !important;
   }
   .el-tabs--border-card > .el-tabs__header .el-tabs__item.is-active {
-    background: var(--next-color-primary) !important;
+    background: var(--base-color) !important;
   }
 
   // alert / notice-bar
@@ -135,5 +134,12 @@
   .tags-view-container .tags-view-wrapper .tags-view-item.active {
     background-color: var(--base-color) !important;
     // border-color: var(--base-color) !important;
+  }
+
+  // md 编辑器、图片加载错误、
+  .md,
+  .el-upload--picture-card,
+  .el-image__error {
+    background: none !important;
   }
 }
