@@ -31,8 +31,6 @@ $panGreen: #30b08f;
   // 顶部导航栏背景色
   --base-topBar-background: #ffffff;
 
-  //缩小状态下子菜单选中颜色
-  --base-sub-menu-hover: #ccc;
 }
 /***深色主题颜色配置***/
 [data-theme='theme-dark'] {
@@ -41,9 +39,6 @@ $panGreen: #30b08f;
   --base-menu-background: #304156;
   --base-logo-title-color: #ffffff;
   --base-topBar-background: #ffffff;
-
-  //缩小状态下子菜单选中颜色
-  --base-sub-menu-hover: #000;
 
   // el-ement ui 设置
   --el-fill-color-blank: #304156;

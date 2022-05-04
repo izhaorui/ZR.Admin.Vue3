@@ -84,8 +84,12 @@
     </el-row>
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
-    <el-row class="mb20" style="background: #fff">
-      <line-chart :chart-data="lineChartData" :key="dataType" />
+    <el-row :gutter="32">
+      <el-col :xs="24" :sm="24" :lg="24">
+        <div class="chart-wrapper">
+          <line-chart :chart-data="lineChartData" :key="dataType" />
+        </div>
+      </el-col>
     </el-row>
 
     <el-row :gutter="32">
@@ -116,7 +120,6 @@ import PieChart from './dashboard/PieChart'
 import BarChart from './dashboard/BarChart'
 import { Vue3SeamlessScroll } from 'vue3-seamless-scroll'
 import { listNewArticle } from '@/api/system/article.js'
-import { computed, getCurrentInstance, reactive } from 'vue'
 
 const data = {
   newVisitis: {
@@ -160,7 +163,7 @@ function onOpenGitee() {}
 
 <style lang="scss" scoped>
 .home {
-  width: 100%;
+  width: 97%;
   overflow: hidden;
   .home-card-more {
     float: right;
@@ -338,11 +341,11 @@ function onOpenGitee() {}
 }
 .dashboard-editor-container {
   padding: 18px;
-  background-color: rgb(240, 242, 245);
+  background-color: var(--base-bg-main);
   position: relative;
 
   .chart-wrapper {
-    background: #fff;
+    background: var(--base-bg-main);
     padding: 16px 16px 0;
     margin-bottom: 32px;
   }

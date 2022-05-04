@@ -86,7 +86,7 @@ function handleSetLineChartData(type) {
     position: relative;
     overflow: hidden;
     color: #666;
-    background: #fff;
+    background: var(--base-bg-main);
     box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.05);
     border-color: rgba(0, 0, 0, 0.05);
 
@@ -149,13 +149,14 @@ function handleSetLineChartData(type) {
 
       .card-panel-text {
         line-height: 18px;
-        color: rgba(0, 0, 0, 0.45);
+        color: var(--base-color-white);
         font-size: 16px;
         margin-bottom: 12px;
       }
 
       .card-panel-num {
         font-size: 20px;
+        color: var(--base-color-white);
       }
     }
   }

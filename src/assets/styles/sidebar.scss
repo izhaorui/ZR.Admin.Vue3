@@ -90,14 +90,6 @@
 
 // when menu collapsed
 .el-menu--vertical {
-  .nest-menu .el-sub-menu > .el-sub-menu__title,
-  .el-menu-item {
-    &:hover {
-      // 缩小状态下选中背景
-      // background-color: var(--base-sub-menu-hover) !important;
-    }
-  }
-
   // the scroll bar appears when the subMenu is too long
   > .el-menu--popup {
     max-height: 100vh;

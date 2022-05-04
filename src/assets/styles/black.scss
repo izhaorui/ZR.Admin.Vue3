@@ -1,6 +1,7 @@
 // 黑夜模式
 [data-theme='theme-black'] {
   --base-color: #304156;
+  --base-color-rgba: rgba(48, 65, 86, 0.3);
   // root
   --base-menu-color: var(--base-color);
   --base-menu-color-active: #f4f4f5;
@@ -9,12 +10,8 @@
   --base-logo-title-color: #ffffff;
   --base-topBar-background: var(--base-color) !important;
   --base-topBar-color: #fff;
-  // --base-tags-bg-border: #304156 !important;
-  //缩小状态下子菜单选中颜色
-  // --base-sub-menu-hover: #000;
 
-  --next-color-white: #ffffff;
-  --next-color-disabled: #304156;
+  --base-color-white: #ffffff;
   --next-color-bar: #dadada;
   --next-border-color: #424242;
   --next-border-black: #333333;
@@ -28,7 +25,7 @@
   --el-fill-color-blank: var(--base-bg-main) !important;
   // element plus
   --el-table-bg-color: var(--el-fill-color-blank);
-  --el-color-white: var(--next-color-disabled) !important;
+  --el-color-white: var(--base-color) !important;
   --el-text-color-primary: var(--next-color-bar) !important;
   --el-border-color-base: var(--next-border-black) !important;
   --el-border-color-light: var(--next-border-black) !important;
@@ -42,30 +39,24 @@
   --el-text-color-disabled-base: var(--el-color-primary) !important;
   --el-border-color-lighter: var(--next-border-black) !important;
   --el-text-color-placeholder: var(--next-text-color-placeholder) !important;
-  --el-disabled-bg-color: var(--next-color-disabled) !important;
-  --el-fill-base: var(--next-color-white) !important;
+  --el-disabled-bg-color: var(--base-color) !important;
+  --el-fill-base: var(--base-color-white) !important;
   // el-date-picker bg
   --el-bg-color-overlay: var(--base-bg-main) !important;
   // drawer
   .drawer-item,
   .drawer-title {
-    color: var(--next-color-white) !important;
+    color: var(--base-color-white) !important;
   }
 
-  // button
-  .el-button {
-    &:hover {
-      border-color: var(--next-border-color) !important;
-    }
-  }
   .el-button--primary,
   .el-button--info,
   .el-button--danger,
   .el-button--success,
   .el-button--warning {
-    --el-button-text-color: var(--next-color-white) !important;
-    --el-button-hover-text-color: var(--next-color-white) !important;
-    --el-button-disabled-text-color: var(--next-color-white) !important;
+    --el-button-text-color: var(--base-color-white) !important;
+    --el-button-hover-text-color: var(--base-color-white) !important;
+    --el-button-disabled-text-color: var(--base-color-white) !important;
     &:hover {
       border-color: var(--el-button-hover-border-color, var(--el-button-hover-bg-color)) !important;
     }
@@ -73,7 +64,7 @@
 
   // pagination
   .el-pagination.is-background .el-pager li:not(.disabled).active {
-    color: var(--next-color-white) !important;
+    color: var(--base-color-white) !important;
   }
   .el-pagination.is-background .btn-next,
   .el-pagination.is-background .btn-prev,
@@ -96,7 +87,7 @@
   .el-alert,
   .notice-bar {
     border: 1px solid var(--next-border-color) !important;
-    background-color: var(--next-color-disabled) !important;
+    background-color: var(--base-color) !important;
   }
 
   // colorPicker
@@ -141,5 +132,9 @@
   .el-upload--picture-card,
   .el-image__error {
     background: none !important;
+  }
+	//el table loading mask
+  .el-loading-mask {
+    background-color: var(--base-color-rgba) !important;
   }
 }

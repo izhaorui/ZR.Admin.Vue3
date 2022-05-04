@@ -115,4 +115,7 @@ function onGoToGiteeClick() {
 :deep(.el-empty__description p) {
   font-size: 13px;
 }
+.head-box-title{
+	color: var(--base-color-white);
+}
 </style>
