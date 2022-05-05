@@ -7,12 +7,16 @@
   // 配置eslint适用于vue代码
   "eslint.validate": [
     "javascript",
+    "typescript",
     "vue"
   ],
   "[vue]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[ts]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   // 保存时 prettier 自动格式化
