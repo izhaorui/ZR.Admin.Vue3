@@ -32,6 +32,7 @@
     "sortablejs": "^1.15.0",
     "vue": "3.2.26",
     "vue-cropper": "1.0.2",
+    "vue-i18n": "^9.1.10",
     "vue-router": "4.0.12",
     "vue3-seamless-scroll": "^1.2.0",
     "vuex": "4.0.2",

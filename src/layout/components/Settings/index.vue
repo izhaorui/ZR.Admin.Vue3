@@ -1,7 +1,7 @@
 <template>
   <el-drawer v-model="showSettings" :withHeader="false" direction="rtl" size="300px">
     <div class="setting-drawer-title">
-      <h3 class="drawer-title">主题风格设置</h3>
+      <h3 class="drawer-title">{{ $t('layout.themeStyleSet') }}</h3>
     </div>
     <div class="setting-drawer-block-checbox">
       <div class="setting-drawer-block-checbox-item" @click="handleTheme('theme-dark')">
@@ -21,48 +21,48 @@
           <el-icon><Check /></el-icon>
         </div>
         <el-icon><moon /></el-icon>
-        深色模式
+        {{ $t('layout.darkMode') }}
       </div>
     </div>
     <div class="drawer-item">
-      <span>主题颜色</span>
+      <span>{{ $t('layout.themeColor') }}</span>
       <span class="comp-style">
         <el-color-picker v-model="theme" :predefine="predefineColors" @change="themeChange" />
       </span>
     </div>
     <el-divider />
 
-    <h3 class="drawer-title">系统布局配置</h3>
+    <h3 class="drawer-title">{{ $t('layout.sysLayoutSet') }}</h3>
     <div class="drawer-item">
-      <span>开启 TopNav</span>
+      <span>{{ $t('layout.open') }} TopNav</span>
       <span class="comp-style">
         <el-switch v-model="topNav" class="drawer-switch" />
       </span>
     </div>
 
     <div class="drawer-item">
-      <span>开启 Tags-Views</span>
+      <span>{{ $t('layout.open') }} Tags-Views</span>
       <span class="comp-style">
         <el-switch v-model="tagsView" class="drawer-switch" />
       </span>
     </div>
 
     <div class="drawer-item">
-      <span>固定 Header</span>
+      <span>{{ $t('layout.fixed') }} Header</span>
       <span class="comp-style">
         <el-switch v-model="fixedHeader" class="drawer-switch" />
       </span>
     </div>
 
     <div class="drawer-item">
-      <span>显示 Logo</span>
+      <span>{{ $t('layout.show') }} Logo</span>
       <span class="comp-style">
         <el-switch v-model="sidebarLogo" class="drawer-switch" />
       </span>
     </div>
 
     <div class="drawer-item">
-      <span>动态标题</span>
+      <span>{{ $t('layout.dynamicTitle') }}</span>
       <span class="comp-style">
         <el-switch v-model="dynamicTitle" class="drawer-switch" />
       </span>
@@ -70,8 +70,8 @@
 
     <el-divider />
 
-    <el-button type="primary" plain icon="DocumentAdd" @click="saveSetting">保存配置</el-button>
-    <el-button plain icon="Refresh" @click="resetSetting">重置配置</el-button>
+    <el-button type="primary" plain icon="DocumentAdd" @click="saveSetting">{{ $t('layout.saveConfig') }}</el-button>
+    <el-button plain icon="Refresh" @click="resetSetting">{{ $t('layout.resetConfig') }}</el-button>
   </el-drawer>
 </template>
 

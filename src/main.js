@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import Cookies from 'js-cookie'
 
 import ElementPlus from 'element-plus'
-import locale from 'element-plus/lib/locale/lang/zh-cn' // 中文语言
+import elZhCn from 'element-plus/lib/locale/lang/zh-cn' // 中文语言
 import 'dayjs/locale/zh-cn'
 import '@/assets/styles/index.scss' // global css
 
@@ -14,6 +14,7 @@ import directive from './directive' // directive
 import plugins from './plugins' // plugins
 // import { download } from '@/utils/request'
 import signalR from '@/utils/signalR'
+import vueI18n from './i18n/index'
 
 // svg图标
 import 'virtual:svg-icons-register'
@@ -69,12 +70,12 @@ app.use(router)
 app.use(store)
 app.use(plugins)
 app.use(elementIcons)
+app.use(vueI18n)
 
 directive(app)
-
 // 使用element-plus 并且设置全局的大小
 app.use(ElementPlus, {
-  locale: locale,
+  // locale: elZhCn,
   // 支持 large、default、small
   size: Cookies.get('size') || 'small'
 })

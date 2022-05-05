@@ -11,6 +11,7 @@
         <zr-doc title="文档地址" class="right-menu-item" />
         <screenfull title="全屏" class="right-menu-item" />
         <size-select title="布局大小" class="right-menu-item" />
+        <LangSelect title="语音设置" class="right-menu-item" />
       </template>
       <Notice title="通知" class="right-menu-item" />
 
@@ -23,13 +24,13 @@
         <template #dropdown>
           <el-dropdown-menu>
             <router-link to="/user/profile">
-              <el-dropdown-item>个人中心</el-dropdown-item>
+              <el-dropdown-item>{{ $t('layout.personalCenter') }}</el-dropdown-item>
             </router-link>
             <el-dropdown-item command="setLayout">
-              <span>布局设置</span>
+              <span>{{ $t('layout.layoutSetting') }}</span>
             </el-dropdown-item>
             <el-dropdown-item divided command="logout">
-              <span>退出登录</span>
+              <span>{{ $t('layout.logOut') }}</span>
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -49,7 +50,9 @@ import HeaderSearch from '@/components/HeaderSearch'
 import ZrGit from '@/components/Zr/Git'
 import ZrDoc from '@/components/Zr/Doc'
 import Notice from '@/components/Notice/Index'
+import LangSelect from '@/components/LangSelect/index'
 
+const { proxy } = getCurrentInstance()
 const store = useStore()
 const getters = computed(() => store.getters)
 const sideTheme = computed(() => store.state.settings.sideTheme)
@@ -71,9 +74,9 @@ function handleCommand(command) {
 }
 
 function logout() {
-  ElMessageBox.confirm('确定注销并退出系统吗？', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
+  ElMessageBox.confirm(proxy.$t('layout.logOutConfirm'), proxy.$t('common.tips'), {
+    confirmButtonText: proxy.$t('common.ok'),
+    cancelButtonText: proxy.$t('common.cancel'),
     type: 'warning',
   })
     .then(() => {

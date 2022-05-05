@@ -7,7 +7,8 @@ const state = {
     hide: false
   },
   device: 'desktop',
-  size: Cookies.get('size') || 'default'
+  size: Cookies.get('size') || 'default',
+  lang: Cookies.get('lang') || 'zh-cn'
 }
 
 const mutations = {
@@ -37,7 +38,11 @@ const mutations = {
   },
   SET_SIDEBAR_HIDE: (state, status) => {
     state.sidebar.hide = status
-  }
+  },
+  SET_LANG: (state, lang) => {
+    state.lang = lang
+    Cookies.set('lang', lang)
+  },
 }
 
 const actions = {
@@ -55,7 +60,10 @@ const actions = {
   },
   toggleSideBarHide({ commit }, status) {
     commit('SET_SIDEBAR_HIDE', status)
-  }
+  },
+  setLang({ commit }, lang) {
+    commit('SET_LANG', lang)
+  },
 }
 
 export default {

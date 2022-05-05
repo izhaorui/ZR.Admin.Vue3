@@ -5,22 +5,16 @@
         <blockquote class="text-warning" style="font-size: 14px">
           领取七牛云通用云产品优惠券
           <br />
-          <el-link href="https://s.qiniu.com/FzEfay" type="primary" target="_blank">
-            https://s.qiniu.com/FzEfay
-          </el-link>
+          <el-link href="https://s.qiniu.com/FzEfay" type="primary" target="_blank"> https://s.qiniu.com/FzEfay </el-link>
           <br />
 
           领取腾讯云通用云产品新用户专属大礼包2860优惠券，每种代金券限量500张，先到先得。
           <br />
-          <el-link href="https://curl.qcloud.com/5J4nag8D" type="primary" target="_blank">
-            https://curl.qcloud.com/5J4nag8D
-          </el-link>
+          <el-link href="https://curl.qcloud.com/5J4nag8D" type="primary" target="_blank"> https://curl.qcloud.com/5J4nag8D </el-link>
           <br />
 
           腾讯云限时秒杀活动<br />
-          <el-link href="https://curl.qcloud.com/4yEoRquq" type="primary" target="_blank">
-            https://curl.qcloud.com/4yEoRquq
-          </el-link>
+          <el-link href="https://curl.qcloud.com/4yEoRquq" type="primary" target="_blank"> https://curl.qcloud.com/4yEoRquq </el-link>
           <br />
 
           华为特惠专区，多款产品限时特价
@@ -44,37 +38,17 @@
         </p>
         <p>代码完全免费开源，易读易懂、界面简洁美观，给你的项目多一种选择与参考。</p>
         <p>
-          <b>当前版本:</b> <span>v{{ version }}</span>
-          <el-link
-            class="ml10"
-            type="primary"
-            size="small"
-            icon="Document"
-            plain
-            @click="goTarget('http://www.izhaorui.cn/doc/#/gxrz?id=v' + version)"
-            >更新日志
+          <b>{{ $t('layout.currentVersion') }}:</b> <span>v{{ version }}</span>
+          <el-link class="ml10" type="primary" size="small" icon="Document" plain @click="goTarget('http://www.izhaorui.cn/doc/#/gxrz?id=v' + version)"
+            >{{ $t('layout.changeLog') }}
           </el-link>
         </p>
         <p>
-          <el-button
-            type="primary"
-            size="small"
-            icon="Cloudy"
-            plain
-            @click="goTarget('https://gitee.com/izory/ZrAdminNetCore')"
-            >访问码云
-          </el-button>
-          <el-button
-            type="primary"
-            size="small"
-            icon="Cloudy"
-            plain
-            @click="goTarget('https://github.com/izhaorui/ZrAdmin.NET')"
-            >Github
-          </el-button>
+          <el-button type="primary" size="small" icon="Cloudy" plain @click="goTarget('https://gitee.com/izory/ZrAdminNetCore')">访问码云 </el-button>
+          <el-button type="primary" size="small" icon="Cloudy" plain @click="goTarget('https://github.com/izhaorui/ZrAdmin.NET')">Github </el-button>
         </p>
         <p></p>
-        <h3>如果觉得不错欢迎给个⭐Star⭐收藏一下，这样作者才有继续免费下去的动力，谢谢！</h3>
+        <h3>{{ $t('layout.tip1') }}</h3>
       </el-col>
       <el-col :lg="8" :sm="24">
         <h2>技术选型</h2>
@@ -88,6 +62,8 @@
             <li>MySql</li>
             <li>Mapster</li>
             <li>Epplus</li>
+            <li>Redis</li>
+            <li>Signalr</li>
             <li>...</li>
           </ul>
         </el-col>
@@ -100,8 +76,9 @@
             <li>Axios</li>
             <li>Sass</li>
             <li>Wangeditor</li>
-						<li>Vite</li>
-						<li>Composition api</li>
+            <li>Vite</li>
+            <li>Composition api</li>
+            <li>I18n</li>
             <li>...</li>
           </ul>
         </el-col>
@@ -112,11 +89,22 @@
       <el-col :sm="24" :lg="8">
         <el-card>
           <div class="clearfix">
-            <span>联系信息</span>
+            <span>{{ $t('layout.donationSupport') }}</span>
+          </div>
+          <div class="body">
+            <div style="color: red">打赏作者喝杯咖啡表示鼓励</div>
+            <img src="@/assets/images/reward.jpg" alt="donate" style="width: 100%" />
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :sm="24" :lg="8">
+        <el-card>
+          <div class="clearfix">
+            <span>{{ $t('layout.contactUs') }}</span>
           </div>
           <div class="body">
             <p>
-              <el-icon> <promotion /> </el-icon>官网：
+              <el-icon> <promotion /> </el-icon>{{ $t('layout.officialWebsite') }}：
               <el-link href="http://www.izhaorui.cn/doc" target="_blank"> http://www.izhaorui.cn/doc </el-link>
             </p>
           </div>
@@ -130,17 +118,6 @@
                 191349103
               </el-link>
             </p>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :sm="24" :lg="8">
-        <el-card>
-          <div class="clearfix">
-            <span>捐赠支持</span>
-          </div>
-          <div class="body">
-            <div style="color: red">打赏作者喝杯咖啡表示鼓励</div>
-            <img src="@/assets/images/reward.jpg" alt="donate" style="width: 100%" />
           </div>
         </el-card>
       </el-col>

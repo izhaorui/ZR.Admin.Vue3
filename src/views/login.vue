@@ -4,21 +4,21 @@
     <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form">
       <h3 class="title">{{ defaultSettings.title }}</h3>
       <el-form-item prop="username">
-        <el-input v-model="loginForm.username" type="text" size="large" auto-complete="off" placeholder="账号">
+        <el-input v-model="loginForm.username" type="text" size="large" auto-complete="off" :placeholder="$t('login.account')">
           <template #prefix>
             <svg-icon name="user" class="el-input__icon input-icon" />
           </template>
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input v-model="loginForm.password" type="password" size="large" auto-complete="off" placeholder="密码" @keyup.enter="handleLogin">
+        <el-input v-model="loginForm.password" type="password" size="large" auto-complete="off" :placeholder="$t('login.password')" @keyup.enter="handleLogin">
           <template #prefix>
             <svg-icon name="password" class="el-input__icon input-icon" />
           </template>
         </el-input>
       </el-form-item>
       <el-form-item prop="code" v-if="captchaOnOff != 'off'">
-        <el-input v-model="loginForm.code" size="large" auto-complete="off" placeholder="验证码" style="width: 63%" @keyup.enter="handleLogin">
+        <el-input v-model="loginForm.code" size="large" auto-complete="off" :placeholder="$t('login.captcha')" style="width: 63%" @keyup.enter="handleLogin">
           <template #prefix>
             <svg-icon name="validCode" class="el-input__icon input-icon" />
           </template>
@@ -27,10 +27,12 @@
           <img :src="codeUrl" @click="getCode" class="login-code-img" />
         </div>
       </el-form-item>
-      <el-checkbox v-model="loginForm.rememberMe" style="margin: 0px 0px 25px 0px">记住密码</el-checkbox>
+      <el-form-item>
+        <el-checkbox v-model="loginForm.rememberMe">{{ $t('login.rememberMe') }}</el-checkbox>
+      </el-form-item>
       <el-form-item style="width: 100%">
-        <el-button :loading="loading" size="large" plain type="primary" style="width: 100%" @click.prevent="handleLogin">
-          <span v-if="!loading">登 录</span>
+        <el-button :loading="loading" size="large" type="primary" style="width: 100%" @click.prevent="handleLogin">
+          <span v-if="!loading">{{ $t('login.btnLogin') }}</span>
           <span v-else>登 录 中...</span>
         </el-button>
         <!-- <div style="float: right;" v-if="register">
@@ -38,6 +40,8 @@
         </div> -->
       </el-form-item>
     </el-form>
+
+    <LangSelect title="语音设置" class="langSet" />
     <!--  底部  -->
     <div class="el-login-footer">
       <span>{{ defaultSettings.copyright }}</span>
@@ -51,6 +55,7 @@ import Cookies from 'js-cookie'
 import { encrypt, decrypt } from '@/utils/jsencrypt'
 import defaultSettings from '@/settings'
 import starBackground from '@/views/components/starBackground.vue'
+import LangSelect from '@/components/LangSelect/index.vue'
 
 const store = useStore()
 const router = useRouter()
@@ -103,7 +108,7 @@ function handleLogin() {
       store
         .dispatch('Login', loginForm.value)
         .then(() => {
-          proxy.$modal.msgSuccess('登录成功')
+          proxy.$modal.msgSuccess(proxy.$t('login.loginSuccess'))
           router.push({ path: redirect.value || '/' })
         })
         .catch((error) => {
@@ -167,13 +172,6 @@ getCookie()
   width: 310px;
   padding: 25px 25px 5px 25px;
 
-  .el-input {
-    height: 40px;
-
-    input {
-      height: 40px;
-    }
-  }
 
   .input-icon {
     height: 39px;
@@ -215,5 +213,11 @@ getCookie()
 .login-code-img {
   height: 40px;
   padding-left: 12px;
+}
+.langSet {
+  position: absolute;
+  right: 120px;
+  top: 100px;
+  color: #fff;
 }
 </style>

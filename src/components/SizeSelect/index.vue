@@ -20,9 +20,9 @@ const route = useRoute()
 const router = useRouter()
 const { proxy } = getCurrentInstance()
 const sizeOptions = ref([
-  { label: '较大', value: 'large' },
-  { label: '默认', value: 'default' },
-  { label: '稍小', value: 'small' },
+  { label: proxy.$t('layout.large'), value: 'large' },
+  { label: proxy.$t('layout.default'), value: 'default' },
+  { label: proxy.$t('layout.small'), value: 'small' },
 ])
 
 function refreshView() {
