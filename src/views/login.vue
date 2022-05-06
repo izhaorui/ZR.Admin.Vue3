@@ -41,7 +41,7 @@
       </el-form-item>
     </el-form>
 
-    <LangSelect title="语音设置" class="langSet" />
+    <LangSelect title="多语言设置" class="langSet" />
     <!--  底部  -->
     <div class="el-login-footer">
       <span>{{ defaultSettings.copyright }}</span>
