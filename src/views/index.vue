@@ -88,9 +88,10 @@
     <el-row :gutter="20" class="mt10">
       <el-col :sm="24" :lg="8">
         <el-card>
-          <div class="clearfix">
+          <template #header>
             <span>{{ $t('layout.donationSupport') }}</span>
-          </div>
+          </template>
+
           <div class="body">
             <div style="color: red">打赏作者喝杯咖啡表示鼓励</div>
             <img src="@/assets/images/reward.jpg" alt="donate" style="width: 100%" />
@@ -99,16 +100,14 @@
       </el-col>
       <el-col :sm="24" :lg="8">
         <el-card>
-          <div class="clearfix">
+          <template #header>
             <span>{{ $t('layout.contactUs') }}</span>
-          </div>
+          </template>
           <div class="body">
             <p>
               <el-icon> <promotion /> </el-icon>{{ $t('layout.officialWebsite') }}：
               <el-link href="http://www.izhaorui.cn/doc" target="_blank"> http://www.izhaorui.cn/doc </el-link>
             </p>
-          </div>
-          <div class="body">
             <p>
               <el-icon> <UserFilled /> </el-icon>QQ群：
               <el-link
