@@ -1,6 +1,6 @@
 import { createI18n } from 'vue-i18n';
 import store from '@/store/index';
-
+import { listLangByLocale } from '@/api/system/commonLang'
 import zhCn from './lang/zh-cn';
 import en from './lang/en';
 import zhTw from './lang/zh-tw';
@@ -21,5 +21,14 @@ const i18n = createI18n({
     'en': { ...en, ...pageLoginEn }
   }
 })
+console.log('lang=' + store.getters.language)
 
+listLangByLocale(store.getters.language).then(res => {
+  const { code, data } = res
+  if (code == 200) {
+    i18n.global.mergeLocaleMessage('zh-cn', data.cn)
+    i18n.global.mergeLocaleMessage('zh-tw', data.tw)
+    i18n.global.mergeLocaleMessage('en', data.en)
+  }
+})
 export default i18n;
