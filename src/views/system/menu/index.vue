@@ -117,6 +117,11 @@
             </el-form-item>
           </el-col>
           <el-col :lg="12">
+            <el-form-item label="多语言key" prop="menuNameKey">
+              <el-input v-model="form.menuNameKey" placeholder="请输入多语言菜单key" />
+            </el-form-item>
+          </el-col>
+          <el-col :lg="12">
             <el-form-item label="显示排序" prop="orderNum">
               <el-input-number v-model="form.orderNum" controls-position="right" :min="0" />
             </el-form-item>
@@ -303,6 +308,7 @@ const data = reactive({
   },
   rules: {
     menuName: [{ required: true, message: '菜单名称不能为空', trigger: 'blur' }],
+		menuNameKey: [{ required: true, message: '多语言菜单名称key不能为空', trigger: 'blur' }],
     orderNum: [{ required: true, message: '菜单顺序不能为空', trigger: 'blur' }],
     path: [{ required: true, message: '路由地址不能为空', trigger: 'blur' }],
     visible: [{ required: true, message: '显示状态不能为空', trigger: 'blur' }],
