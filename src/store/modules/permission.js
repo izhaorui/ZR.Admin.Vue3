@@ -11,15 +11,13 @@ const modules =
 const permission = {
   state: {
     routes: [],
-    addRoutes: [],
     defaultRoutes: [],
     topbarRouters: [],
-    sidebarRouters: []
+		sidebarRouters: []
   },
   mutations: {
     SET_ROUTES: (state, routes) => {
-      state.addRoutes = routes
-      state.routes = constantRoutes.concat(routes)
+			state.routes = constantRoutes.concat(routes)
     },
     SET_DEFAULT_ROUTES: (state, routes) => {
       state.defaultRoutes = constantRoutes.concat(routes)
@@ -66,7 +64,7 @@ function filterAsyncRouter(asyncRouterMap, lastRouter = false, type = false) {
         route.component = Layout
       } else if (route.component === 'ParentView') {
         route.component = ParentView
-      } 
+      }
       // else if (route.component === 'InnerLink') {
       //   route.component = InnerLink
       // } 
