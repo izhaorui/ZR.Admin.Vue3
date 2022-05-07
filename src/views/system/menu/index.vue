@@ -284,18 +284,7 @@ import IconSelect from '@/components/IconSelect'
 
 const { proxy } = getCurrentInstance()
 
-var dictParams = [
-  { dictType: 'sys_show_hide', columnName: 'sys_show_hide' },
-  { dictType: 'sys_normal_disable', columnName: 'sys_normal_disable' },
-]
-const sys_show_hide = ref([])
-const sys_normal_disable = ref([])
-proxy.getDicts(dictParams).then((response) => {
-  response.data.forEach((element) => {
-    proxy[element.columnName] = element.list
-  })
-})
-
+var dictParams = [{ dictType: 'sys_show_hide' }, { dictType: 'sys_normal_disable' }]
 const menuList = ref([])
 const open = ref(false)
 const loading = ref(true)
@@ -308,7 +297,7 @@ const showChooseIcon = ref(false)
 const iconSelectRef = ref(null)
 const menuRef = ref(null)
 
-const data = reactive({
+const state = reactive({
   form: {},
   queryParams: {
     menuName: undefined,
@@ -321,9 +310,17 @@ const data = reactive({
     path: [{ required: true, message: '路由地址不能为空', trigger: 'blur' }],
     visible: [{ required: true, message: '显示状态不能为空', trigger: 'blur' }],
   },
+  sys_show_hide: [],
+  sys_normal_disable: [],
 })
 
-const { queryParams, form, rules } = toRefs(data)
+proxy.getDicts(dictParams).then((response) => {
+  response.data.forEach((element) => {
+    state[element.dictType] = element.list
+  })
+})
+
+const { queryParams, form, rules, sys_show_hide, sys_normal_disable } = toRefs(state)
 
 /** 查询菜单列表 */
 function getList() {
