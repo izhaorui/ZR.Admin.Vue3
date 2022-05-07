@@ -198,7 +198,7 @@ const queryParams = reactive({
   langCode: undefined,
   langKey: undefined,
   addtime: undefined,
-  showMode: 1, // 显示模式 1、table显示 2、行列显示
+  showMode: 2, // 显示模式 1、table显示 2、行列显示
 })
 // 弹出层标题
 const title = ref('')
