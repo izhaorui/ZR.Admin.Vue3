@@ -13,6 +13,7 @@
       :data="data"
       :drag="drag"
       :headers="headers"
+      :auto-upload="autoUpload"
       class="upload-file-uploader"
       ref="upload"
     >
@@ -100,7 +101,7 @@ const emit = defineEmits()
 const number = ref(0)
 const uploadList = ref([])
 const baseUrl = import.meta.env.VITE_APP_BASE_API
-const uploadFileUrl = ref(baseUrl + import.meta.env.VITE_APP_UPLOAD_URL ?? '/Common/UploadFile') // 上传的图片服务器地址
+const uploadFileUrl = ref(baseUrl + import.meta.env.VITE_APP_UPLOAD_URL) // 上传的图片服务器地址
 const headers = ref({ Authorization: 'Bearer ' + getToken() })
 const fileList = ref([])
 const showTip = computed(() => props.isShowTip && (props.fileType || props.fileSize))
@@ -187,6 +188,7 @@ function handleUploadSuccess(response, uploadFile) {
     uploadList.value = []
     number.value = 0
     emit('update:modelValue', listToString(fileList.value))
+    emit('success', listToString(fileList.value))
     proxy.$modal.closeLoading()
   }
 }
@@ -215,10 +217,13 @@ function listToString(list, separator) {
   }
   return strs != '' ? strs.substr(0, strs.length - 1) : ''
 }
-// 提交上传
+// 手动提交上传
 function submitUpload() {
-  this.$refs.upload.submit()
+  proxy.$refs.upload.submit()
 }
+defineExpose({
+  submitUpload,
+})
 </script>
 
 <style scoped lang="scss">
