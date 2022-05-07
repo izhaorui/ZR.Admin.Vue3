@@ -89,8 +89,8 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
-          <el-button @click="cancel">取 消</el-button>
+          <el-button type="primary" @click="submitForm">{{$t('btn.submit')}}</el-button>
+          <el-button @click="cancel">{{$t('btn.cancel')}}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -102,8 +102,6 @@ import { listConfig, getConfig, delConfig, addConfig, updateConfig, refreshCache
 
 // 遮罩层
 const loading = ref(true)
-// 导出遮罩层
-const exportLoading = ref(false)
 // 选中数组
 const ids = ref([])
 // 非单个禁用
