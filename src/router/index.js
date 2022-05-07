@@ -62,7 +62,7 @@ export const constantRoutes = [
       path: '/index',
       component: () => import('@/views/index'),
       name: 'Index',
-      meta: { title: '首页', icon: 'dashboard', affix: true }
+      meta: { title: '首页', icon: 'dashboard', affix: true, titleKey: 'menu.home' }
     }]
   },
   {
@@ -75,7 +75,7 @@ export const constantRoutes = [
       path: 'profile',
       component: () => import('@/views/system/user/profile/index'),
       name: 'Profile',
-      meta: { title: '个人中心', icon: 'user' }
+      meta: { title: '个人中心', icon: 'user', titleKey: 'menu.personalCenter' }
     }]
   },
   // 不用可删掉
@@ -89,7 +89,7 @@ export const constantRoutes = [
       path: 'icon',
       component: () => import('@/views/components/icons/index'),
       name: 'icon',
-      meta: { title: '图标icon', icon: 'icon1', noCache: 'fasle' }
+      meta: { title: '图标icon', icon: 'icon1', noCache: 'fasle', titleKey: 'menu.icon' }
     }]
   },
 ];

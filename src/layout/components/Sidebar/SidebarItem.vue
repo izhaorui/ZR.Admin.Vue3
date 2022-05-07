@@ -4,7 +4,10 @@
       <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path, onlyOneChild.query)">
         <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{ 'submenu-title-noDropdown': !isNest }">
           <svg-icon :name="onlyOneChild.meta.icon || (item.meta && item.meta.icon)" />
-          <template v-if="onlyOneChild.meta.title" #title>
+          <template v-if="onlyOneChild.meta.titleKey" #title>
+            <span>{{ $t(onlyOneChild.meta.titleKey) }}</span>
+          </template>
+          <template v-else-if="onlyOneChild.meta.title" #title>
             <span>{{ onlyOneChild.meta.title }}</span>
           </template>
         </el-menu-item>
@@ -14,7 +17,8 @@
     <el-sub-menu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
       <template v-slot:title>
         <svg-icon :name="item.meta && item.meta.icon" />
-        <span v-if="item.meta && item.meta.title">{{ item.meta.title }}</span>
+        <span v-if="item.meta && item.meta.titleKey">{{ $t(item.meta.titleKey) }}</span>
+        <span v-else-if="item.meta && item.meta.title">{{ item.meta.title }}</span>
       </template>
 
       <sidebar-item v-for="child in item.children" :key="child.path" :is-nest="true" :item="child" :base-path="resolvePath(child.path)" class="nest-menu" />

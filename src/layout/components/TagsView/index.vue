@@ -12,19 +12,20 @@
         @click.middle="!isAffix(tag) ? closeSelectedTag(tag) : ''"
         @contextmenu.prevent="openMenu(tag, $event)"
       >
-        {{ tag.title }}
+        <span v-if="tag.meta && tag.meta.titleKey">{{ $t(tag.meta.titleKey) }}</span>
+        <span v-else>{{ tag.title }}</span>
         <span v-if="!isAffix(tag)" @click.prevent.stop="closeSelectedTag(tag)">
           <close class="el-icon-close" style="width: 1em; height: 1em; vertical-align: middle" />
         </span>
       </router-link>
     </scroll-pane>
     <ul v-show="visible" :style="{ left: left + 'px', top: top + 'px' }" class="contextmenu">
-      <li @click="refreshSelectedTag(selectedTag)"><refresh-right style="width: 1em; height: 1em" /> {{$t('tagsView.refresh')}}</li>
-      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)"><close style="width: 1em; height: 1em" /> {{$t('tagsView.close')}}</li>
-      <li @click="closeOthersTags"><circle-close style="width: 1em; height: 1em" /> {{$t('tagsView.closeOther')}}</li>
-      <li v-if="!isFirstView()" @click="closeLeftTags"><back style="width: 1em; height: 1em" /> {{$t('tagsView.closeLeft')}}</li>
-      <li v-if="!isLastView()" @click="closeRightTags"><right style="width: 1em; height: 1em" /> {{$t('tagsView.closeRight')}}</li>
-      <li @click="closeAllTags(selectedTag)"><circle-close style="width: 1em; height: 1em" /> {{$t('tagsView.closeAll')}}</li>
+      <li @click="refreshSelectedTag(selectedTag)"><refresh-right style="width: 1em; height: 1em" /> {{ $t('tagsView.refresh') }}</li>
+      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)"><close style="width: 1em; height: 1em" /> {{ $t('tagsView.close') }}</li>
+      <li @click="closeOthersTags"><circle-close style="width: 1em; height: 1em" /> {{ $t('tagsView.closeOther') }}</li>
+      <li v-if="!isFirstView()" @click="closeLeftTags"><back style="width: 1em; height: 1em" /> {{ $t('tagsView.closeLeft') }}</li>
+      <li v-if="!isLastView()" @click="closeRightTags"><right style="width: 1em; height: 1em" /> {{ $t('tagsView.closeRight') }}</li>
+      <li @click="closeAllTags(selectedTag)"><circle-close style="width: 1em; height: 1em" /> {{ $t('tagsView.closeAll') }}</li>
     </ul>
   </div>
 </template>
