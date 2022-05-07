@@ -17,7 +17,15 @@
         <el-button type="danger" :disabled="multiple" plain icon="delete" @click="handleDelete" v-hasPermi="['tool:gen:remove']"> 删除</el-button>
       </el-col>
     </el-row>
-    <el-table ref="gridtable" v-loading="tableloading" :data="tableList" border @selection-change="handleSelectionChange" highlight-current-row height="480px">
+    <el-table
+      ref="gridtable"
+      v-loading="tableloading"
+      :data="tableList"
+      border
+      @selection-change="handleSelectionChange"
+      highlight-current-row
+      height="480px"
+    >
       <el-table-column type="selection" align="center" width="55"></el-table-column>
       <el-table-column label="序号" type="index" width="50" align="center">
         <template #default="scope">
@@ -47,7 +55,9 @@
     <el-dialog :title="preview.title" v-model="preview.open" width="80%" top="5vh" append-to-body>
       <el-tabs v-model="preview.activeName">
         <el-tab-pane v-for="(item, key) in preview.data" :label="item.title" :name="key.toString()" :key="key">
-          <el-link :underline="false" icon="document-copy" v-clipboard:copy="item.content" v-clipboard:success="clipboardSuccess" style="float: right"> 复制</el-link>
+          <el-link :underline="false" icon="document-copy" v-clipboard:copy="item.content" v-clipboard:success="clipboardSuccess" class="btn-copy">
+            复制
+          </el-link>
           <pre><code class="hljs" v-html="highlightedCode(item.content, item.title)"></code></pre>
         </el-tab-pane>
       </el-tabs>
@@ -232,3 +242,10 @@ function clipboardSuccess() {
 }
 getList()
 </script>
+<style>
+.btn-copy {
+  position: absolute;
+  right: 0;
+  top: -5px;
+}
+</style>
