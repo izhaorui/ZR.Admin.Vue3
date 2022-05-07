@@ -118,6 +118,14 @@
           </el-col>
           <el-col :lg="12">
             <el-form-item label="多语言key" prop="menuNameKey">
+              <template #label>
+                <el-tooltip content="多语言翻译key：eg：menu.system" placement="top">
+                  <el-icon :size="15">
+                    <questionFilled />
+                  </el-icon>
+                </el-tooltip>
+                多语言key
+              </template>
               <el-input v-model="form.menuNameKey" placeholder="请输入多语言菜单key" />
             </el-form-item>
           </el-col>
@@ -308,7 +316,7 @@ const data = reactive({
   },
   rules: {
     menuName: [{ required: true, message: '菜单名称不能为空', trigger: 'blur' }],
-		menuNameKey: [{ required: true, message: '多语言菜单名称key不能为空', trigger: 'blur' }],
+    menuNameKey: [{ pattern: /^[A-Za-z].+$/, message: '输入格式不正确', trigger: 'blur' }],
     orderNum: [{ required: true, message: '菜单顺序不能为空', trigger: 'blur' }],
     path: [{ required: true, message: '路由地址不能为空', trigger: 'blur' }],
     visible: [{ required: true, message: '显示状态不能为空', trigger: 'blur' }],
