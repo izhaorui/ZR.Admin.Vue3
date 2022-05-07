@@ -1,13 +1,19 @@
 <template>
   <div class="app-container">
     <!-- :model属性用于表单验证使用 比如下面的el-form-item 的 prop属性用于对表单值进行验证操作 -->
-    <el-form :model="queryParams" label-position="left" inline ref="queryForm" :label-width="labelWidth" v-show="showSearch" @submit.prevent>
+    <el-form :model="queryParams" label-position="left" inline ref="queryForm" v-show="showSearch" @submit.prevent>
       <el-form-item label="" prop="fileId">
         <el-input v-model="queryParams.fileId" placeholder="请输入文件id" clearable />
       </el-form-item>
       <el-form-item label="">
-        <el-date-picker v-model="dateRangeAddTime" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"
-          placeholder="请选择上传时间"></el-date-picker>
+        <el-date-picker
+          v-model="dateRangeAddTime"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          placeholder="请选择上传时间"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item label="" prop="storeType">
         <el-select v-model="queryParams.storeType" placeholder="请选择存储类型" clearable="">
@@ -15,18 +21,21 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
-        <el-button icon="refresh" @click="resetQuery">重置</el-button>
+        <el-button type="primary" icon="search" @click="handleQuery">{{ $t('btn.search') }}</el-button>
+        <el-button icon="refresh" @click="resetQuery">{{ $t('btn.reset') }}</el-button>
       </el-form-item>
     </el-form>
     <!-- 工具区域 -->
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" v-hasPermi="['tool:file:add']" plain icon="upload" @click="handleAdd">上传文件</el-button>
+        <el-button type="primary" v-hasPermi="['tool:file:add']" plain icon="upload" @click="handleAdd">
+          {{ $t('btn.upload') }}
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" :disabled="multiple" v-hasPermi="['tool:file:delete']" plain icon="delete" @click="handleDelete">
-          删除</el-button>
+          {{ $t('btn.delete') }}
+        </el-button>
       </el-col>
       <right-toolbar :showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -41,9 +50,16 @@
         </template>
       </el-table-column>
       <el-table-column prop="accessUrl" align="center" label="预览图" width="100">
-        <template #default="{row}">
-          <el-image preview-teleported :src="row.accessUrl" :preview-src-list="[row.accessUrl]" :hide-on-click-modal="true" fit="contain" lazy
-            class="el-avatar">
+        <template #default="{ row }">
+          <el-image
+            preview-teleported
+            :src="row.accessUrl"
+            :preview-src-list="[row.accessUrl]"
+            :hide-on-click-modal="true"
+            fit="contain"
+            lazy
+            class="el-avatar"
+          >
             <template #error>
               <i class="document" />
             </template>
@@ -54,7 +70,7 @@
       <el-table-column prop="fileExt" label="扩展名" align="center" :show-overflow-tooltip="true" width="80px" />
       <el-table-column prop="storeType" label="存储类型" align="center">
         <template #default="scope">
-          {{scope.row.storeType}}
+          {{ scope.row.storeType }}
           <!-- <dict-tag :options="storeTypeOptions" :value="parseInt(scope.row.storeType)" /> -->
         </template>
       </el-table-column>
@@ -62,42 +78,40 @@
       <el-table-column prop="create_time" label="创建日期" align="center" width="150" />
       <el-table-column label="操作" align="center" width="200">
         <template #default="scope">
-          <el-button type="text" icon="view" @click="handleView(scope.row)">查看</el-button>
-          <el-button class="copy-btn-main" icon="document-copy" type="text" v-clipboard:copy="scope.row.accessUrl"
-            v-clipboard:success="clipboardSuccess">
-            复制
+          <el-button type="text" icon="view" @click="handleView(scope.row)">{{ $t('btn.view') }}</el-button>
+          <el-button
+            class="copy-btn-main"
+            icon="document-copy"
+            type="text"
+            v-clipboard:copy="scope.row.accessUrl"
+            v-clipboard:success="clipboardSuccess"
+          >
+            {{ $t('btn.copy') }}
           </el-button>
-          <el-button v-hasPermi="['tool:file:delete']" type="text" icon="delete" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button v-hasPermi="['tool:file:delete']" type="text" icon="delete" @click="handleDelete(scope.row)">
+            {{ $t('btn.delete') }}
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination class="mt10" background :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
-      @pagination="getList" />
+    <pagination background :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
 
     <!-- 添加或修改文件存储对话框 -->
     <el-dialog :title="title" :lock-scroll="false" v-model="open" width="400px">
       <template #title>
-        <div v-drag="['.el-dialog', '.el-dialog__header']">{{title}}</div>
+        <div v-drag="['.el-dialog', '.el-dialog__header']">{{ title }}</div>
       </template>
-      <el-form ref="form" :model="form" :rules="rules" label-width="90px" label-position="left">
+      <el-form ref="formRef" :model="form" :rules="rules" label-width="90px" label-position="left">
         <el-row>
           <el-col :lg="24">
             <el-form-item label="存储类型" prop="storeType">
               <el-radio-group v-model="form.storeType" placeholder="请选择存储类型">
                 <el-radio v-for="item in storeTypeOptions" :key="item.dictValue" :label="parseInt(item.dictValue)">
-                  {{item.dictLabel}}
+                  {{ item.dictLabel }}
                 </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <!-- <el-col :lg="24">
-            <el-form-item label="按时间存储" prop="timeStore">
-              <el-radio-group v-model="form.storeType" placeholder="是否按时间(yyyyMMdd)存储">
-                <el-radio :key="1" :label="1">是 </el-radio>
-                <el-radio :key="0" :label="0">否 </el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col> -->
           <el-col :lg="24">
             <el-form-item label="存储文件夹" prop="storePath">
               <el-input v-model="form.storePath" placeholder="请输入存储文件夹" clearable="" auto-complete="" />
@@ -109,247 +123,252 @@
             </el-form-item>
           </el-col>
           <el-col :lg="24">
-            <!-- <el-form-item prop="accessUrl" labelwidth="0px"> -->
-            <UploadFile ref="upload" v-model="form.accessUrl" :fileType="[]" :limit="5" :fileSize="15" :drag="true"
-              :data="{ 'fileDir' :  form.storePath, 'fileName': form.fileName, 'storeType': form.storeType}" :autoUpload="false" column="accessUrl"
-              @success="handleUploadSuccess" />
-            <!-- </el-form-item> -->
+            <UploadFile
+              ref="uploadRef"
+              v-model="form.accessUrl"
+              :fileType="[]"
+              :limit="1"
+              :fileSize="15"
+              :drag="true"
+              :data="uploadData"
+              :autoUpload="false"
+              @success="handleUploadSuccess"
+            />
           </el-col>
         </el-row>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="text" @click="cancel">取 消</el-button>
-          <el-button type="primary" @click="submitUpload">确定上传</el-button>
+          <el-button type="text" @click="cancel">{{ $t('btn.cancel') }}</el-button>
+          <el-button type="primary" @click="submitUpload">{{ $t('btn.submit') }}</el-button>
         </div>
       </template>
     </el-dialog>
 
     <!-- 添加或修改文件存储对话框 -->
     <el-dialog title="查看" :lock-scroll="false" v-model="openView">
-      <el-form ref="form" :model="formView" :rules="rules" :label-width="formLabelWidth">
+      <el-form ref="form" :model="formView" :rules="rules" label-width="100px">
         <el-row>
           <el-col :lg="12">
-            <el-form-item label="文件id">{{formView.id}}</el-form-item>
+            <el-form-item label="文件id">{{ formView.id }}</el-form-item>
           </el-col>
           <el-col :lg="12">
-            <el-form-item label="源文件名">{{formView.realName}}</el-form-item>
+            <el-form-item label="源文件名">{{ formView.realName }}</el-form-item>
           </el-col>
           <el-col :lg="12">
             <el-form-item label="文件类型">
-              <el-tag>{{formView.fileType}}</el-tag>
+              <el-tag>{{ formView.fileType }}</el-tag>
             </el-form-item>
           </el-col>
           <el-col :lg="12">
             <el-form-item label="扩展名">
-              <el-tag>{{formView.fileExt}}</el-tag>
+              <el-tag>{{ formView.fileExt }}</el-tag>
             </el-form-item>
           </el-col>
           <el-col :lg="12">
-            <el-form-item label="文件名">{{formView.fileName}}</el-form-item>
+            <el-form-item label="文件名">{{ formView.fileName }}</el-form-item>
           </el-col>
           <el-col :lg="12">
-            <el-form-item label="仓库位置">{{formView.storePath}}</el-form-item>
+            <el-form-item label="仓库位置">{{ formView.storePath }}</el-form-item>
           </el-col>
           <el-col :lg="12">
-            <el-form-item label="文件大小">{{formView.fileSize}}</el-form-item>
+            <el-form-item label="文件大小">{{ formView.fileSize }}</el-form-item>
           </el-col>
           <el-col :lg="12">
-            <el-form-item label="创建人">{{formView.create_by}}</el-form-item>
+            <el-form-item label="创建人">{{ formView.create_by }}</el-form-item>
           </el-col>
-          <el-col :lg="24" v-if="['.png','.jpg', '.jpeg'].includes(formView.fileExt)">
+          <el-col :lg="24" v-if="['.png', '.jpg', '.jpeg'].includes(formView.fileExt)">
             <el-form-item label="预览">
-              <el-image :src="formView.accessUrl" fit="contain" style="width:100px"></el-image>
+              <el-image :src="formView.accessUrl" fit="contain" style="width: 100px"></el-image>
             </el-form-item>
           </el-col>
           <el-col :lg="24">
-            <el-form-item label="访问路径">{{formView.accessUrl}}
-              <el-button class="copy-btn-main" icon="document-copy" type="text" v-clipboard:copy="formView.accessUrl"
-                v-clipboard:success="clipboardSuccess">
-                复制
+            <el-form-item label="访问路径">
+              {{ formView.accessUrl }}
+              <el-button
+                class="copy-btn-main"
+                icon="document-copy"
+                type="text"
+                v-clipboard:copy="formView.accessUrl"
+                v-clipboard:success="clipboardSuccess"
+              >
+                {{ $t('btn.copy') }}
               </el-button>
             </el-form-item>
           </el-col>
           <el-col :lg="24">
-            <el-form-item label="存储路径">{{formView.fileUrl}}</el-form-item>
+            <el-form-item label="存储路径">{{ formView.fileUrl }}</el-form-item>
           </el-col>
         </el-row>
       </el-form>
     </el-dialog>
   </div>
 </template>
-<script>
+<script setup name="sysfile">
 import { listSysfile, delSysfile, getSysfile } from '@/api/tool/file.js'
+// 选中id数组
+const ids = ref([])
+// 非单个禁用
+const single = ref(true)
+// 非多个禁用
+const multiple = ref(true)
+// 遮罩层
+const loading = ref(true)
+// 显示搜索条件
+const showSearch = ref(true)
+// 弹出层标题
+const title = ref('')
+// 是否显示弹出层
+const open = ref(false)
+const openView = ref(false)
+// 表单
+const formRef = ref(null)
+const formView = ref({})
+const uploadRef = ref(null)
+// 上传时间时间范围
+const dateRangeAddTime = ref([])
+// 存储类型选项列表
+const storeTypeOptions = ref([
+  { dictLabel: '本地存储', dictValue: 1 },
+  { dictLabel: '阿里云存储', dictValue: 2 },
+])
 
-export default {
-  name: 'sysfile',
-  data() {
-    return {
-      labelWidth: '100px',
-      formLabelWidth: '100px',
-      // 选中id数组
-      ids: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
-      // 遮罩层
-      loading: true,
-      // 显示搜索条件
-      showSearch: true,
-      // 查询参数
-      queryParams: {
-        pageNum: 1,
-        pageSize: 20,
-        storeType: 1,
-        fileId: undefined,
+// 数据列表
+const dataList = ref([])
+// 总记录数
+const total = ref(0)
+
+const state = reactive({
+  form: {
+    storeType: 1,
+  },
+  rules: {
+    accessUrl: [
+      {
+        required: true,
+        message: '上传文件不能为空',
+        trigger: 'blur',
       },
-      // 弹出层标题
-      title: '',
-      // 是否显示弹出层
-      open: false,
-      openView: false,
-      // 表单参数
-      form: {},
-      formView: {},
-      columns: [],
-      // 上传时间时间范围
-      dateRangeAddTime: [],
-      // 存储类型选项列表
-      storeTypeOptions: [
-        { dictLabel: '本地存储', dictValue: 1 },
-        { dictLabel: '阿里云存储', dictValue: 2 },
-      ],
-      // 存储类型 1、本地 2、阿里云
-      storeType: 0,
-      fileType: [],
-      // 数据列表
-      dataList: [],
-      // 总记录数
-      total: 0,
-      // 提交按钮是否显示
-      btnSubmitVisible: true,
-      // 表单校验
-      rules: {
-        accessUrl: [
-          {
-            required: true,
-            message: '上传文件不能为空',
-            trigger: 'blur',
-          },
-        ],
-        storeType: [
-          {
-            required: true,
-            message: '存储类型不能为空',
-            trigger: 'blur',
-          },
-        ],
+    ],
+    storeType: [
+      {
+        required: true,
+        message: '存储类型不能为空',
+        trigger: 'blur',
       },
+    ],
+  },
+  queryParams: {
+    pageNum: 1,
+    pageSize: 20,
+    storeType: 1, // 存储类型 1、本地 2、阿里云
+    fileId: undefined,
+  },
+})
+const { queryParams, form, rules } = toRefs(state)
+const { proxy } = getCurrentInstance()
+const uploadData = ref({})
+// 查询数据
+function getList() {
+  proxy.addDateRange(queryParams, dateRangeAddTime.value, 'Create_time')
+  loading.value = true
+  listSysfile(queryParams).then((res) => {
+    if (res.code == 200) {
+      dataList.value = res.data.result
+      total.value = res.data.totalNum
+      loading.value = false
     }
-  },
-  created() {
-    // 列表数据查询
-    this.getList()
-  },
-  methods: {
-    // 查询数据
-    getList() {
-      this.addDateRange(this.queryParams, this.dateRangeAddTime, 'Create_time')
-      this.loading = true
-      listSysfile(this.queryParams).then((res) => {
-        if (res.code == 200) {
-          this.dataList = res.data.result
-          this.total = res.data.totalNum
-          this.loading = false
-        }
-      })
-    },
-    // 取消按钮
-    cancel() {
-      this.open = false
-      this.reset()
-    },
-    // 重置数据表单
-    reset() {
-      this.form = {
-        fileName: '',
-        fileUrl: '',
-        storePath: 'uploads',
-        fileSize: 0,
-        fileExt: '',
-        storeType: 1,
-        accessUrl: '',
-      }
-      this.resetForm('form')
-    },
-    /** 重置查询操作 */
-    resetQuery() {
-      this.timeRange = []
-      // 上传时间时间范围
-      this.dateRangeAddTime = []
-      this.resetForm('queryForm')
-      this.handleQuery()
-    },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map((item) => item.id)
-      this.single = selection.length != 1
-      this.multiple = !selection.length
-    },
-    /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1
-      this.getList()
-    },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset()
-      this.open = true
-      this.title = '上传文件'
-      this.form.storeType = this.queryParams.storeType
-    },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const Ids = row.id || this.ids
-
-      this.$confirm('是否确认删除参数编号为"' + Ids + '"的数据项？')
-        .then(function () {
-          return delSysfile(Ids)
-        })
-        .then(() => {
-          this.handleQuery()
-          this.$modal.msgSuccess('删除成功')
-        })
-        .catch(() => {})
-    },
-    /** 查看按钮操作 */
-    handleView(row) {
-      const id = row.id || this.ids
-      getSysfile(id).then((res) => {
-        const { code, data } = res
-        if (code == 200) {
-          this.openView = true
-          this.formView = data
-        }
-      })
-    },
-    // 上传成功方法
-    handleUploadSuccess(columnName, filelist, data) {
-      this.form[columnName] = filelist
-      this.open = false
-      this.getList()
-    },
-    // 手动上传
-    submitUpload() {
-      this.$refs.upload.submitUpload()
-    },
-    /** 复制代码成功 */
-    clipboardSuccess() {
-      this.$modal.msgSuccess('复制成功')
-    },
-  },
+  })
 }
+// 取消按钮
+function cancel() {
+  open.value = false
+  reset()
+}
+// 重置数据表单
+function reset() {
+  form.value = {
+    fileName: '',
+    fileUrl: '',
+    storePath: 'uploads',
+    fileSize: 0,
+    fileExt: '',
+    storeType: 1,
+    accessUrl: '',
+  }
+  proxy.resetForm('formRef')
+}
+/** 重置查询操作 */
+function resetQuery() {
+  // 上传时间时间范围
+  dateRangeAddTime.value = []
+  proxy.resetForm('queryForm')
+  handleQuery()
+}
+// 多选框选中数据
+function handleSelectionChange(selection) {
+  ids.value = selection.map((item) => item.id)
+  single.value = selection.length != 1
+  multiple.value = !selection.length
+}
+/** 搜索按钮操作 */
+function handleQuery() {
+  queryParams.pageNum = 1
+  getList()
+}
+/** 新增按钮操作 */
+function handleAdd() {
+  reset()
+  open.value = true
+  title.value = '上传文件'
+  // form.value.storeType = queryParams.storeType
+}
+/** 删除按钮操作 */
+function handleDelete(row) {
+  const Ids = row.id || ids.value
+
+  proxy
+    .$confirm('是否确认删除参数编号为"' + Ids + '"的数据项？')
+    .then(function () {
+      return delSysfile(Ids)
+    })
+    .then(() => {
+      handleQuery()
+      proxy.$modal.msgSuccess('删除成功')
+    })
+    .catch(() => {})
+}
+/** 查看按钮操作 */
+function handleView(row) {
+  const id = row.id || ids.value
+  getSysfile(id).then((res) => {
+    const { code, data } = res
+    if (code == 200) {
+      openView.value = true
+      formView.value = data
+    }
+  })
+}
+// 上传成功方法
+function handleUploadSuccess(filelist) {
+  open.value = false
+  getList()
+}
+// 手动上传
+function submitUpload() {
+  uploadData.value = {
+    fileDir: form.value.storePath,
+    fileName: form.value.fileName,
+    storeType: form.value.storeType,
+  }
+  console.log(uploadData.value)
+  proxy.$refs.uploadRef.submitUpload()
+}
+/** 复制代码成功 */
+function clipboardSuccess() {
+  proxy.$modal.msgSuccess('复制成功')
+}
+handleQuery()
 </script>
 <style scoped>
 .el-avatar {
