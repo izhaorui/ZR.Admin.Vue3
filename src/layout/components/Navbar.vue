@@ -1,18 +1,18 @@
 <template>
-  <div class="navbar" :data-theme="sideTheme">
+  <div class="navbar" :data-theme="sideTheme" :class="getters.device">
     <hamburger id="hamburger-container" :is-active="getters.sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" v-if="!$store.state.settings.topNav" />
-    <top-nav id="topmenu-container" class="topmenu-container" v-if="$store.state.settings.topNav" />
+    <template v-if="getters.device != 'mobile'">
+      <breadcrumb id="breadcrumb-container" class="breadcrumb-container" v-if="!$store.state.settings.topNav" />
+      <top-nav id="topmenu-container" class="topmenu-container" v-if="$store.state.settings.topNav" />
+    </template>
 
     <div class="right-menu">
-      <template v-if="getters.device !== 'mobile'">
-        <header-search id="header-search" class="right-menu-item" v-waves="'orange'" />
-        <zr-git title="源码地址" class="right-menu-item" />
-        <zr-doc title="文档地址" class="right-menu-item" />
-        <screenfull title="全屏" class="right-menu-item" />
-        <size-select title="布局大小" class="right-menu-item" />
-        <LangSelect title="语言设置" class="right-menu-item" />
-      </template>
+      <header-search id="header-search" class="right-menu-item" v-if="getters.device != 'mobile'" />
+      <zr-git title="源码地址" class="right-menu-item" />
+      <zr-doc title="文档地址" class="right-menu-item" />
+      <screenfull title="全屏" class="right-menu-item" />
+      <size-select title="布局大小" class="right-menu-item" />
+      <LangSelect title="语言设置" class="right-menu-item" />
       <Notice title="通知" class="right-menu-item" />
 
       <el-dropdown @command="handleCommand" class="right-menu-item avatar-container" trigger="hover">
@@ -123,7 +123,6 @@ function setLayout() {
   .breadcrumb-container {
     float: left;
   }
-
   .topmenu-container {
     position: absolute;
     left: 50px;
