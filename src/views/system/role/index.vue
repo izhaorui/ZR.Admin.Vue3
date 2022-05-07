@@ -13,14 +13,14 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="search" size="small" @click="handleQuery">搜索</el-button>
-        <el-button icon="refresh" size="small" @click="resetQuery">重置</el-button>
+        <el-button type="primary" icon="search" size="small" @click="handleQuery">{{ $t('btn.search') }}</el-button>
+        <el-button icon="refresh" size="small" @click="resetQuery">{{ $t('btn.reset') }}</el-button>
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="plus" size="small" @click="handleAdd" v-hasPermi="['system:role:add']">新增</el-button>
+        <el-button type="primary" plain icon="plus" size="small" @click="handleAdd" v-hasPermi="['system:role:add']">{{ $t('btn.add') }}</el-button>
       </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -33,7 +33,13 @@
       <el-table-column label="权限范围" prop="dataScope" :formatter="dataScopeFormat"></el-table-column>
       <el-table-column label="状态" align="center" width="90">
         <template #default="scope">
-          <el-switch v-model="scope.row.status" :disabled="scope.row.roleKey == 'admin'" active-value="0" inactive-value="1" @change="handleStatusChange(scope.row)"></el-switch>
+          <el-switch
+            v-model="scope.row.status"
+            :disabled="scope.row.roleKey == 'admin'"
+            active-value="0"
+            inactive-value="1"
+            @change="handleStatusChange(scope.row)"
+          ></el-switch>
         </template>
       </el-table-column>
       <el-table-column label="用户个数" align="center" prop="userNum" width="90" />
@@ -42,20 +48,28 @@
       <el-table-column label="操作" align="center" width="200">
         <template #default="scope">
           <div v-if="scope.row.roleKey != 'admin'">
-            <el-button size="small" type="text" icon="edit" @click.stop="handleUpdate(scope.row)" v-hasPermi="['system:role:edit']">修改 </el-button>
-            <el-button size="small" type="text" icon="delete" @click.stop="handleDelete(scope.row)" v-hasPermi="['system:role:remove']">删除 </el-button>
+            <el-button size="small" type="text" icon="edit" @click.stop="handleUpdate(scope.row)" v-hasPermi="['system:role:edit']">
+              {{ $t('btn.edit') }}
+            </el-button>
+            <el-button size="small" type="text" icon="delete" @click.stop="handleDelete(scope.row)" v-hasPermi="['system:role:remove']">
+              {{ $t('btn.delete') }}
+            </el-button>
 
-            <el-dropdown size="small" @command="(command) => handleCommand(command, scope.row)" v-hasPermi="['system:role:edit', 'system:role:authorize', 'system:roleusers:list']">
+            <el-dropdown
+              size="small"
+              @command="(command) => handleCommand(command, scope.row)"
+              v-hasPermi="['system:role:edit', 'system:role:authorize', 'system:roleusers:list']"
+            >
               <span class="el-dropdown-link">
-                更多
+                {{ $t('btn.more') }}
                 <el-icon class="el-icon--right">
                   <arrow-down />
                 </el-icon>
               </span>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item command="handleDataScope" icon="circle-check">菜单权限</el-dropdown-item>
-                  <el-dropdown-item command="handleAuthUser" icon="user">分配用户</el-dropdown-item>
+                  <el-dropdown-item command="handleDataScope" icon="circle-check">{{ $t('menu.menuPermi') }}</el-dropdown-item>
+                  <el-dropdown-item command="handleAuthUser" icon="user">{{ $t('menu.assignUsers') }}</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -93,8 +107,8 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="submitDataScope" v-hasPermi="['system:role:authorize']">保存</el-button>
-          <el-button @click="cancel">取 消</el-button>
+          <el-button type="primary" @click="submitDataScope" v-hasPermi="['system:role:authorize']">{{ $t('btn.save') }}</el-button>
+          <el-button @click="cancel">{{ $t('btn.cancel') }}</el-button>
         </div>
       </template>
     </el-dialog>

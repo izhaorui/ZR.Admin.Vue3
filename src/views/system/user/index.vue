@@ -33,29 +33,44 @@
             </el-select>
           </el-form-item>
           <el-form-item label="创建时间">
-            <el-date-picker v-model="dateRange" style="width: 240px" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+            <el-date-picker
+              v-model="dateRange"
+              style="width: 240px"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            ></el-date-picker>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
-            <el-button icon="refresh" @click="resetQuery">重置</el-button>
+            <el-button type="primary" icon="search" @click="handleQuery">{{ $t('btn.search') }}</el-button>
+            <el-button icon="refresh" @click="resetQuery">{{ $t('btn.reset') }}</el-button>
           </el-form-item>
         </el-form>
 
         <el-row :gutter="10" class="mb8">
           <el-col :span="1.5">
-            <el-button type="primary" plain icon="Plus" @click="handleAdd" v-hasPermi="['system:user:add']">新增</el-button>
+            <el-button type="primary" plain icon="Plus" @click="handleAdd" v-hasPermi="['system:user:add']">
+              {{ $t('btn.add') }}
+            </el-button>
           </el-col>
           <el-col :span="1.5">
-            <el-button type="success" plain icon="Edit" :disabled="single" @click="handleUpdate" v-hasPermi="['system:user:edit']">修改</el-button>
+            <el-button type="success" plain icon="Edit" :disabled="single" @click="handleUpdate" v-hasPermi="['system:user:edit']">
+              {{ $t('btn.edit') }}
+            </el-button>
           </el-col>
           <el-col :span="1.5">
-            <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:user:remove']">删除</el-button>
+            <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:user:remove']">
+              {{ $t('btn.delete') }}
+            </el-button>
           </el-col>
           <!-- <el-col :span="1.5">
             <el-button type="info" plain icon="Upload" @click="handleImport" v-hasPermi="['system:user:import']">导入</el-button>
           </el-col> -->
           <el-col :span="1.5">
-            <el-button type="warning" plain icon="Download" @click="handleExport" v-hasPermi="['system:user:export']">导出</el-button>
+            <el-button type="warning" plain icon="Download" @click="handleExport" v-hasPermi="['system:user:export']">
+              {{ $t('btn.export') }}
+            </el-button>
           </el-col>
 
           <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
@@ -76,13 +91,27 @@
           <el-table-column label="创建时间" align="center" prop="createTime" width="160"></el-table-column>
           <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width">
             <template #default="scope">
-              <el-button v-if="scope.row.userId !== 1" type="text" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:user:edit']"> </el-button>
-              <el-button v-if="scope.row.userId !== 1" type="text" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:user:remove']"> </el-button>
-              <el-button v-if="scope.row.userId !== 1" type="text" icon="Key" @click="handleResetPwd(scope.row)" v-hasPermi="['system:user:resetPwd']"></el-button>
+              <el-button v-if="scope.row.userId !== 1" type="text" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:user:edit']">
+              </el-button>
+              <el-button
+                v-if="scope.row.userId !== 1"
+                type="text"
+                icon="Delete"
+                @click="handleDelete(scope.row)"
+                v-hasPermi="['system:user:remove']"
+              >
+              </el-button>
+              <el-button
+                v-if="scope.row.userId !== 1"
+                type="text"
+                icon="Key"
+                @click="handleResetPwd(scope.row)"
+                v-hasPermi="['system:user:resetPwd']"
+              ></el-button>
             </template>
           </el-table-column>
         </el-table>
-        <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
+        <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
       </el-col>
     </el-row>
 
@@ -144,14 +173,16 @@
           <el-col :lg="24">
             <el-form-item label="岗位">
               <el-select v-model="form.postIds" multiple placeholder="请选择" class="w100">
-                <el-option v-for="item in postOptions" :key="item.postId" :label="item.postName" :value="item.postId" :disabled="item.status == 1"> </el-option>
+                <el-option v-for="item in postOptions" :key="item.postId" :label="item.postName" :value="item.postId" :disabled="item.status == 1">
+                </el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :lg="24">
             <el-form-item label="角色">
               <el-select v-model="form.roleIds" multiple placeholder="请选择" style="width: 100%" @change="selectRole($event)">
-                <el-option v-for="item in roleOptions" :key="item.roleId" :label="item.roleName" :value="item.roleId" :disabled="item.status == 1"> </el-option>
+                <el-option v-for="item in roleOptions" :key="item.roleId" :label="item.roleName" :value="item.roleId" :disabled="item.status == 1">
+                </el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -164,8 +195,8 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
-          <el-button @click="cancel">取 消</el-button>
+          <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
+          <el-button @click="cancel">{{ $t('btn.cancel') }}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -201,8 +232,8 @@
       </el-upload>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="submitFileForm">确 定</el-button>
-          <el-button @click="upload.open = false">取 消</el-button>
+          <el-button type="primary" @click="submitFileForm">{{ $t('btn.submit') }}</el-button>
+          <el-button @click="upload.open = false">{{ $t('btn.cancel') }}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -357,7 +388,7 @@ function handleQuery() {
 function resetQuery() {
   dateRange.value = []
   proxy.resetForm('queryRef')
-	queryParams.value.deptId = undefined
+  queryParams.value.deptId = undefined
   handleQuery()
 }
 /** 删除按钮操作 */
@@ -450,7 +481,9 @@ const handleFileSuccess = (response, file, fileList) => {
   upload.open = false
   upload.isUploading = false
   proxy.$refs['uploadRef'].clearFiles()
-  proxy.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + '</div>', '导入结果', { dangerouslyUseHTMLString: true })
+  proxy.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + '</div>', '导入结果', {
+    dangerouslyUseHTMLString: true,
+  })
   getList()
 }
 /** 提交上传文件 */

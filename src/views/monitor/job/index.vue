@@ -4,24 +4,37 @@
       <el-col>
         <el-form :inline="true" @submit.prevent>
           <el-form-item>
-            <el-input v-model="queryParams.queryText" placeholder="请输入计划任务名称" clearable prefix-icon="el-icon-search" @keyup.enter="handleQuery" @clear="handleQuery" />
+            <el-input
+              v-model="queryParams.queryText"
+              placeholder="请输入计划任务名称"
+              clearable
+              prefix-icon="el-icon-search"
+              @keyup.enter="handleQuery"
+              @clear="handleQuery"
+            />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
-            <el-button icon="refresh" @click="handleReset">重置</el-button>
+            <el-button type="primary" icon="search" @click="handleQuery">{{ $t('btn.search') }}</el-button>
+            <el-button icon="refresh" @click="handleReset">{{ $t('btn.reset') }}</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
     <el-row class="mb8" :gutter="20">
       <el-col :span="1.5">
-        <el-button v-hasPermi="['monitor:job:add']" plain type="primary" icon="plus" @click="handleCreate">新增</el-button>
+        <el-button v-hasPermi="['monitor:job:add']" plain type="primary" icon="plus" @click="handleCreate">
+          {{ $t('btn.add') }}
+        </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['monitor:job:export']">导出</el-button>
+        <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['monitor:job:export']">
+          {{ $t('btn.export') }}
+        </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button plain v-hasPermi="['monitor:job:query']" type="info" icon="operation" @click="handleJobLog()">日志 </el-button>
+        <el-button plain v-hasPermi="['monitor:job:query']" type="info" icon="operation" @click="handleJobLog()">
+          {{ $t('btn.log') }}
+        </el-button>
       </el-col>
       <right-toolbar :showSearch="searchToggle" @queryTable="handleQuery"></right-toolbar>
     </el-row>
@@ -44,20 +57,64 @@
         <el-table-column prop="remark" align="center" label="备注" :show-overflow-tooltip="true" />
         <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
           <template #default="scope">
-            <el-button type="text" icon="view" v-hasPermi="['monitor:job:query']" @click="handleJobLog(scope.row.id, scope.row.name)"> 日志 </el-button>
-            <el-button type="text" v-if="scope.row.isStart" v-hasPermi="['monitor:job:run']" icon="remove" title="运行" @click="handleRun(scope.row)">运行</el-button>
-            <el-button type="text" v-if="scope.row.isStart" v-hasPermi="['monitor:job:stop']" icon="video-pause" style="color: red" title="停止" @click="handleStop(scope.row)">
-              停止
+            <el-button type="text" icon="view" v-hasPermi="['monitor:job:query']" @click="handleJobLog(scope.row.id, scope.row.name)">
+              {{ $t('btn.log') }}
+            </el-button>
+            <el-button
+              type="text"
+              v-if="scope.row.isStart"
+              v-hasPermi="['monitor:job:run']"
+              icon="remove"
+              title="运行"
+              @click="handleRun(scope.row)"
+            >
+              {{ $t('btn.run') }}
+            </el-button>
+            <el-button
+              type="text"
+              v-if="scope.row.isStart"
+              v-hasPermi="['monitor:job:stop']"
+              icon="video-pause"
+              style="color: red"
+              title="停止"
+              @click="handleStop(scope.row)"
+            >
+              {{ $t('btn.stop') }}
             </el-button>
 
-            <el-button type="text" v-if="!scope.row.isStart" v-hasPermi="['monitor:job:start']" icon="video-play" title="启动" @click="handleStart(scope.row)">启动</el-button>
-            <el-button type="text" v-if="!scope.row.isStart" v-hasPermi="['monitor:job:edit']" icon="edit" style="color: gray" title="编辑" @click="handleUpdate(scope.row)"
-              >编辑</el-button
+            <el-button
+              type="text"
+              v-if="!scope.row.isStart"
+              v-hasPermi="['monitor:job:start']"
+              icon="video-play"
+              title="启动"
+              @click="handleStart(scope.row)"
             >
+              {{ $t('btn.start') }}
+            </el-button>
+            <el-button
+              type="text"
+              v-if="!scope.row.isStart"
+              v-hasPermi="['monitor:job:edit']"
+              icon="edit"
+              style="color: gray"
+              title="编辑"
+              @click="handleUpdate(scope.row)"
+            >
+              {{ $t('btn.edit') }}
+            </el-button>
 
-            <el-button type="text" v-if="!scope.row.isStart" v-hasPermi="['monitor:job:delete']" icon="delete" style="color: red" title="删除" @click="handleDelete(scope.row)"
-              >删除</el-button
+            <el-button
+              type="text"
+              v-if="!scope.row.isStart"
+              v-hasPermi="['monitor:job:delete']"
+              icon="delete"
+              style="color: red"
+              title="删除"
+              @click="handleDelete(scope.row)"
             >
+              {{ $t('btn.delete') }}
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -140,7 +197,7 @@
             <el-form-item label="间隔(Cron)" prop="cron">
               <el-input v-model="form.cron" placeholder="请输入cron执行表达式">
                 <template #append>
-                  <el-button type="primary" @click="handleShowCron" style="width: 80px;">
+                  <el-button type="primary" @click="handleShowCron" style="width: 80px">
                     生成表达式
                     <el-icon><time /></el-icon>
                   </el-button>
@@ -182,8 +239,8 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="text" @click="cancel">取 消</el-button>
-          <el-button type="primary" @click="submitForm">确 定</el-button>
+          <el-button type="text" @click="cancel">{{ $t('btn.cancel') }}</el-button>
+          <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -337,7 +394,7 @@ function handleShowCron() {
 /** 确定后回传值 */
 const changeCron = (val) => {
   if (typeof val !== 'string') return false
-	openCron.value = false
+  openCron.value = false
   form.value.cron = val
 }
 // 启动按钮

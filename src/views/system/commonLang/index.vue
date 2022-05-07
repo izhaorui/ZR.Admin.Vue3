@@ -40,23 +40,23 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button icon="search" type="primary" @click="handleQuery">搜索</el-button>
-        <el-button icon="refresh" @click="resetQuery">重置</el-button>
+        <el-button icon="search" type="primary" @click="handleQuery">{{ $t('btn.search') }}</el-button>
+        <el-button icon="refresh" @click="resetQuery">{{ $t('btn.reset') }}</el-button>
       </el-form-item>
     </el-form>
     <!-- 工具区域 -->
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" v-hasPermi="['system:lang:add']" plain icon="plus" @click="handleAdd">新增</el-button>
+        <el-button type="primary" v-hasPermi="['system:lang:add']" plain icon="plus" @click="handleAdd">{{ $t('btn.add') }}</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success" :disabled="single" v-hasPermi="['system:lang:edit']" plain icon="edit" @click="handleUpdate">修改</el-button>
+        <el-button type="success" :disabled="single" v-hasPermi="['system:lang:edit']" plain icon="edit" @click="handleUpdate">{{ $t('btn.edit') }}</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" :disabled="multiple" v-hasPermi="['system:lang:delete']" plain icon="delete" @click="handleDelete">删除</el-button>
+        <el-button type="danger" :disabled="multiple" v-hasPermi="['system:lang:delete']" plain icon="delete" @click="handleDelete">{{ $t('btn.delete') }}</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['system:lang:export']">导出</el-button>
+        <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['system:lang:export']">{{ $t('btn.export') }}</el-button>
       </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -167,8 +167,8 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="text" @click="cancel">取 消</el-button>
-          <el-button type="primary" @click="submitForm">确 定</el-button>
+          <el-button type="text" @click="cancel">{{ $t('btn.cancel') }}</el-button>
+          <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -212,7 +212,7 @@ const state = reactive({
   rules: {
     id: [{ required: true, message: 'id不能为空', trigger: 'blur', type: 'number' }],
     // langCode: [{ required: true, message: '语言code不能为空', trigger: 'change' }],
-    langKey: [{ required: true, message: '语言key不能为空', trigger: 'change' }],
+    langKey: [{ required: true, pattern: /^[A-Za-z].+$/, message: '语言key不能为空', trigger: 'change' }],
     langName: [{ required: true, message: '内容不能为空', trigger: 'blur' }],
     langNameEn: [{ required: true, message: '内容不能为空', trigger: 'blur' }],
     langNameTw: [{ required: true, message: '内容不能为空', trigger: 'blur' }],

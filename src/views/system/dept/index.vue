@@ -10,18 +10,18 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
-        <el-button icon="refresh" @click="resetQuery">重置</el-button>
+        <el-button type="primary" icon="search" @click="handleQuery">{{ $t('btn.search') }}</el-button>
+        <el-button icon="refresh" @click="resetQuery">{{ $t('btn.reset') }}</el-button>
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button plain type="primary" icon="plus" @click="handleAdd" v-hasPermi="['system:dept:add']">新增</el-button>
+        <el-button plain type="primary" icon="plus" @click="handleAdd" v-hasPermi="['system:dept:add']">{{ $t('btn.add') }}</el-button>
       </el-col>
 
       <el-col :span="1.5">
-        <el-button type="info" plain icon="sort" @click="toggleExpandAll">展开/折叠</el-button>
+        <el-button type="info" plain icon="sort" @click="toggleExpandAll">{{ $t('btn.expand') }}/{{ $t('btn.collapse') }}</el-button>
       </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -49,9 +49,11 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template #default="scope">
-          <el-button type="text" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dept:update']">修改</el-button>
-          <el-button type="text" icon="plus" @click="handleAdd(scope.row)" v-hasPermi="['system:dept:add']">新增</el-button>
-          <el-button v-if="scope.row.parentId != 0" type="text" icon="delete" @click="handleDelete(scope.row)" v-hasPermi="['system:dept:remove']">删除 </el-button>
+          <el-button type="text" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dept:update']">{{ $t('btn.edit') }}</el-button>
+          <el-button type="text" icon="plus" @click="handleAdd(scope.row)" v-hasPermi="['system:dept:add']">{{ $t('btn.add') }}</el-button>
+          <el-button v-if="scope.row.parentId != 0" type="text" icon="delete" @click="handleDelete(scope.row)" v-hasPermi="['system:dept:remove']"
+            >{{ $t('btn.delete') }}
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -108,8 +110,8 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="text" @click="cancel">取 消</el-button>
-          <el-button type="primary" @click="submitForm">确 定</el-button>
+          <el-button type="text" @click="cancel">{{ $t('btn.cancel') }}</el-button>
+          <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
         </div>
       </template>
     </el-dialog>

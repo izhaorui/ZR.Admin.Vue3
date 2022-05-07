@@ -30,7 +30,9 @@ export default {
     formBuild: '表單構建',
     officialWebsite: '官網地址',
     fileStorage: '文件存儲',
-    personalCenter: '個人中心'
+    personalCenter: '個人中心',
+    menuPermi: '菜單權限',
+    assignUsers: '分配用戶',
   },
   tagsView: {
     refresh: '重繪',
@@ -89,10 +91,18 @@ export default {
     generateCode: '生成代碼',
     start: '啟動',
     stop: '停止',
+    run: '運行',
     runOnce: '運行一次',
     log: '日誌',
     expand: '展開',
     collapse: '折疊',
-    details: '詳細'
+    details: '詳細',
+    submit: '確定',
+    cancel: '取消',
+    more: '更多',
+    save: '保存',
+    upload: '上傳',
+    view: '查看',
+    copy: '复制',
   }
 };

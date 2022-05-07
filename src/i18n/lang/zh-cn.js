@@ -29,8 +29,10 @@ export default {
     articleList: '文章列表',
     formBuild: '表单构建',
     officialWebsite: '官网地址',
-		fileStorage: '文件存儲',
-		personalCenter: '个人中心'
+    fileStorage: '文件存儲',
+    personalCenter: '个人中心',
+    menuPermi: '菜单权限',
+    assignUsers: '分配用户',
   },
   tagsView: {
     refresh: '刷新页面',
@@ -88,11 +90,22 @@ export default {
     synchronize: '同步',
     generateCode: '生成代码',
     start: '启动',
-    stop: '停止',
+		stop: '停止',
+		run: '运行',
     runOnce: '运行一次',
     log: '日志',
     expand: '展开',
     collapse: '折叠',
-    details: '详细'
+    details: '详细',
+    submit: '确定',
+    cancel: '取消',
+    more: '更多',
+    save: '保存',
+    close: '关闭',
+    authorize: '授权',
+    multi: '批量',
+    upload: '上传',
+    view: '查看',
+    copy: '複製',
   }
 };

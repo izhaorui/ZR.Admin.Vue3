@@ -8,27 +8,45 @@
         <el-input v-model="roleUserQueryParams.roleKey" disabled />
       </el-form-item>
       <el-form-item label="用户名">
-        <el-input v-model="roleUserQueryParams.userName" placeholder="请输入用户名称" clearable prefix-icon="search" @keyup.enter="searchRoleUser" />
+        <el-input
+          v-model="roleUserQueryParams.userName"
+          placeholder="请输入用户名称"
+          clearable
+          prefix-icon="search"
+          @keyup.enter="searchRoleUser"
+        />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="search" @click="searchRoleUser">搜索</el-button>
+        <el-button type="primary" icon="search" @click="searchRoleUser">{{ $t('btn.search') }}</el-button>
         <!-- <el-button icon="refresh"  @click="resetQuery">重置</el-button> -->
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="plus" @click="handleGetUserTable" v-hasPermi="['system:roleusers:add']">添加用户 </el-button>
+        <el-button type="primary" plain icon="plus" @click="handleGetUserTable" v-hasPermi="['system:roleusers:add']">
+          {{ $t('btn.add') }}
+        </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="circle-close" @click="cancelAuthUserAll" v-hasPermi="['system:roleusers:remove']"> 批量取消授权</el-button>
+        <el-button type="danger" plain icon="circle-close" @click="cancelAuthUserAll" v-hasPermi="['system:roleusers:remove']">
+          {{ $t('btn.multi') }}{{ $t('btn.cancel') }}{{ $t('btn.authorize') }}
+        </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="warning" plain icon="close" @click="handleClose">关闭</el-button>
+        <el-button type="warning" plain icon="close" @click="handleClose">{{ $t('btn.close') }}</el-button>
       </el-col>
     </el-row>
 
-    <el-table ref="roleUserTableRef" v-loading="loading" :data="roleUserList" @selection-change="handleCancelSelectionChange" row-key="userId" stripe border>
+    <el-table
+      ref="roleUserTableRef"
+      v-loading="loading"
+      :data="roleUserList"
+      @selection-change="handleCancelSelectionChange"
+      row-key="userId"
+      stripe
+      border
+    >
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column prop="userId" align="center" label="用户Id" width="150" />
       <el-table-column prop="userName" align="center" label="用户名" width="150" />
@@ -41,19 +59,36 @@
       <el-table-column prop="remark" :show-overflow-tooltip="true" align="center" label="备注" />
       <el-table-column align="center" label="操作">
         <template #default="scope">
-          <el-button type="text" icon="el-icon-circle-close" @click="handleCancelPerm(scope.row)" v-if="scope.row.userId != 1" v-hasPermi="['system:roleusers:del']">
-            取消授权
+          <el-button
+            type="text"
+            icon="el-icon-circle-close"
+            @click="handleCancelPerm(scope.row)"
+            v-if="scope.row.userId != 1"
+            v-hasPermi="['system:roleusers:del']"
+          >
+            {{ $t('btn.cancel') }}{{ $t('btn.authorize') }}
           </el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-model:total="roleUserCount" v-model:page="roleUserQueryParams.pageNum" v-model:limit="roleUserQueryParams.pageSize" @pagination="getRoleUser" />
+    <pagination
+      v-model:total="roleUserCount"
+      v-model:page="roleUserQueryParams.pageNum"
+      v-model:limit="roleUserQueryParams.pageSize"
+      @pagination="getRoleUser"
+    />
 
     <!-- 添加或修改菜单对话框 -->
     <el-dialog title="添加用户" v-model="open" append-to-body @close="cancel">
       <el-form :inline="true" @submit.prevent>
         <el-form-item>
-          <el-input v-model="userQueryParams.userName" placeholder="请输入用户名称" clearable prefix-icon="search" @keyup.enter="handleSearchRoleUser" />
+          <el-input
+            v-model="userQueryParams.userName"
+            placeholder="请输入用户名称"
+            clearable
+            prefix-icon="search"
+            @keyup.enter="handleSearchRoleUser"
+          />
         </el-form-item>
       </el-form>
       <el-row>
@@ -78,13 +113,18 @@
               </template>
             </el-table-column>
           </el-table>
-          <pagination :total="dataUserCount" v-model:page="userQueryParams.pageNum" v-model:limit="userQueryParams.pageSize" @pagination="handleGetUserTable" />
+          <pagination
+            :total="dataUserCount"
+            v-model:page="userQueryParams.pageNum"
+            v-model:limit="userQueryParams.pageSize"
+            @pagination="handleGetUserTable"
+          />
         </el-col>
       </el-row>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="handleSubmit">确 定</el-button>
-          <el-button @click="open = false">取 消</el-button>
+          <el-button type="primary" @click="handleSubmit">{{ $t('btn.submit') }}</el-button>
+          <el-button @click="open = false">{{ $t('btn.cancel') }}</el-button>
         </div>
       </template>
     </el-dialog>

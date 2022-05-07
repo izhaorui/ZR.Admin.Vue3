@@ -16,20 +16,22 @@
         <el-date-picker v-model="dateRange" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="search" size="small" @click="handleQuery">搜索</el-button>
-        <el-button icon="refresh" size="small" @click="resetQuery">重置</el-button>
+        <el-button type="primary" icon="search" size="small" @click="handleQuery">{{ $t('btn.search') }}</el-button>
+        <el-button icon="refresh" size="small" @click="resetQuery">{{ $t('btn.reset') }}</el-button>
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="plus" size="small" @click="handleAdd" v-hasPermi="['system:config:add']">新增</el-button>
+        <el-button type="primary" plain icon="plus" size="small" @click="handleAdd" v-hasPermi="['system:config:add']">{{ $t('btn.add') }}</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success" plain icon="edit" size="small" :disabled="single" @click="handleUpdate" v-hasPermi="['system:config:edit']"> 修改</el-button>
+        <el-button type="success" plain icon="edit" size="small" :disabled="single" @click="handleUpdate" v-hasPermi="['system:config:edit']"> {{ $t('btn.edit') }}</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="delete" size="small" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:config:remove']">删除 </el-button>
+        <el-button type="danger" plain icon="delete" size="small" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:config:remove']"
+          >{{ $t('btn.delete') }}
+        </el-button>
       </el-col>
       <!-- <el-col :span="1.5">
         <el-button type="danger" plain icon="refresh" size="small" @click="handleRefreshCache" v-hasPermi="['system:config:remove']">刷新缓存</el-button>
@@ -56,8 +58,8 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button size="small" type="text" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:config:edit']">修改</el-button>
-          <el-button size="small" type="text" icon="delete" @click="handleDelete(scope.row)" v-hasPermi="['system:config:remove']">删除 </el-button>
+          <el-button size="small" type="text" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:config:edit']">{{ $t('btn.edit') }}</el-button>
+          <el-button size="small" type="text" icon="delete" @click="handleDelete(scope.row)" v-hasPermi="['system:config:remove']">{{ $t('btn.delete') }} </el-button>
         </template>
       </el-table-column>
     </el-table>
