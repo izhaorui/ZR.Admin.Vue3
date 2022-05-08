@@ -8,16 +8,16 @@
         <gen-info-form ref="genInfo" :info="info" :tables="tables" :columns="columns" />
       </el-tab-pane>
       <el-tab-pane label="字段信息" name="cloum">
-        <el-table ref="dragTableRef" v-loading="loading" :data="columns" row-key="columnId" :max-height="tableHeight">
-          <el-table-column label="序号" type="index" min-width="5%" class-name="allowDrag" />
-          <el-table-column label="字段列名" prop="columnName" min-width="10%" :show-overflow-tooltip="true" />
-          <el-table-column label="字段描述" min-width="10%">
+        <el-table ref="dragTableRef" v-loading="loading" :data="columns" row-key="columnId" min-height="100px" :max-height="tableHeight">
+          <el-table-column label="序号" type="index" class-name="allowDrag" />
+          <el-table-column label="字段列名" prop="columnName" :show-overflow-tooltip="true" />
+          <el-table-column label="字段描述">
             <template #default="scope">
               <el-input v-model="scope.row.columnComment" :ref="setColumnsRef" @keydown="nextFocus(scope.row, scope.$index, $event)"> </el-input>
             </template>
           </el-table-column>
-          <el-table-column label="物理类型" prop="columnType" min-width="10%" :show-overflow-tooltip="true" />
-          <el-table-column label="C#类型" min-width="11%">
+          <el-table-column label="物理类型" prop="columnType" :show-overflow-tooltip="true" />
+          <el-table-column label="C#类型">
             <template #default="scope">
               <el-select v-model="scope.row.csharpType">
                 <el-option label="int" value="int" />
@@ -30,32 +30,33 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="C#属性" min-width="10%">
+          <el-table-column label="C#属性">
             <template #default="scope">
               <el-input v-model="scope.row.csharpField"></el-input>
             </template>
           </el-table-column>
-          <el-table-column label="插入" min-width="5%" v-if="info.tplCategory != 'select'">
+          <el-table-column label="插入" width="50" align="center" v-if="info.tplCategory != 'select'">
             <template #default="scope">
               <el-checkbox v-model="scope.row.isInsert" :disabled="scope.row.isIncrement"></el-checkbox>
             </template>
           </el-table-column>
-          <el-table-column label="编辑" min-width="5%" v-if="info.tplCategory != 'select'">
+          <el-table-column label="编辑" width="50" align="center" v-if="info.tplCategory != 'select'">
             <template #default="scope">
               <el-checkbox v-model="scope.row.isEdit" :disabled="scope.row.isPk || scope.row.isIncrement"></el-checkbox>
             </template>
           </el-table-column>
-          <el-table-column label="列表" min-width="5%">
+          <el-table-column label="列表" width="50" align="center">
             <template #default="scope">
               <el-checkbox v-model="scope.row.isList"></el-checkbox>
             </template>
           </el-table-column>
-          <el-table-column label="查询" min-width="5%">
+          <el-table-column label="查询" width="50" align="center">
             <template #default="scope">
-              <el-checkbox v-model="scope.row.isQuery" :disabled="scope.row.htmlType == 'imageUpload' || scope.row.htmlType == 'fileUpload'"> </el-checkbox>
+              <el-checkbox v-model="scope.row.isQuery" :disabled="scope.row.htmlType == 'imageUpload' || scope.row.htmlType == 'fileUpload'">
+              </el-checkbox>
             </template>
           </el-table-column>
-          <el-table-column label="查询方式" min-width="10%">
+          <el-table-column label="查询方式">
             <template #default="scope">
               <el-select v-model="scope.row.queryType" :disabled="scope.row.htmlType == 'datetime'" v-if="scope.row.isQuery">
                 <el-option label="=" value="EQ" />
@@ -69,12 +70,12 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="必填" min-width="5%">
+          <el-table-column label="必填" width="60">
             <template #default="scope">
               <el-checkbox v-model="scope.row.isRequired"></el-checkbox>
             </template>
           </el-table-column>
-          <el-table-column label="表单显示类型" min-width="12%">
+          <el-table-column label="表单显示类型">
             <template #default="scope">
               <el-select v-model="scope.row.htmlType">
                 <el-option label="文本框" value="input" />
@@ -91,7 +92,7 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="字典类型" min-width="12%">
+          <el-table-column label="字典类型">
             <template #default="scope">
               <el-select
                 v-model="scope.row.dictType"
@@ -110,13 +111,11 @@
         </el-table>
       </el-tab-pane>
     </el-tabs>
-    <el-form class="mt20">
-      <el-form-item>
-        <el-button type="primary" icon="check" @click="submitForm()">提交</el-button>
-        <el-button type="success" icon="refresh" @click="handleQuery()">刷新</el-button>
-        <el-button icon="back" @click="close()">返回</el-button>
-      </el-form-item>
-    </el-form>
+    <footer class="mt20" style="text-align: center">
+      <el-button type="primary" icon="check" @click="submitForm()">提交</el-button>
+      <el-button type="success" icon="refresh" @click="handleQuery()">刷新</el-button>
+      <el-button icon="back" @click="close()">返回</el-button>
+    </footer>
   </el-card>
 </template>
 <script setup name="genedit">
@@ -224,22 +223,19 @@ const setColumnsRef = (el) => {
   }
 }
 
-/**
- * 回车到下一行
- */
+// 回车到下一行
 function nextFocus(row, index, e) {
   var length = columnRefs.value.length
   var keyCode = e.keyCode || e.which || e.charCode
   if (keyCode === 13) {
     if (length - 1 == index) {
-      console.log('到最后一个了')
+      console.log('到最后一行了')
     } else {
       columnRefs.value[index + 1].focus()
     }
   }
 }
 /*************** table column  回车代码 end *************/
-
 // 拖动排序
 const tableSort = () => {
   const tbody = document.querySelector('.el-table__body > tbody')

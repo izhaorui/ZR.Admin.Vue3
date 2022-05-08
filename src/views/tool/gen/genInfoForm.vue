@@ -8,7 +8,8 @@
             <el-option label="单表（增删改查）" value="crud" />
             <!-- <el-option label="单表查询" value="select" /> -->
             <el-option label="树表（增删改查）" value="tree" />
-            <!-- <el-option label="导航查询" value="subNav"></el-option> -->
+            <el-option label="导航查询(1对1)" value="subNav"></el-option>
+            <el-option label="导航查询(1对多)" value="subNavMore"></el-option>
             <!-- <el-option label="主子表（增删改查）" value="sub" /> -->
           </el-select>
         </el-form-item>
@@ -196,7 +197,12 @@
             </el-tooltip>
           </template>
           <el-select v-model="info.treeCode" placeholder="请选择树编码字段">
-            <el-option v-for="(column, index) in columns" :key="index" :label="column.csharpField + '：' + column.columnComment" :value="column.csharpField"></el-option>
+            <el-option
+              v-for="(column, index) in columns"
+              :key="index"
+              :label="column.csharpField + '：' + column.columnComment"
+              :value="column.csharpField"
+            ></el-option>
           </el-select>
         </el-form-item>
       </el-col>
@@ -211,7 +217,12 @@
             </el-tooltip>
           </template>
           <el-select v-model="info.treeParentCode" placeholder="请选择树父编码字段">
-            <el-option v-for="(column, index) in columns" :key="index" :label="column.csharpField + '：' + column.columnComment" :value="column.csharpField"></el-option>
+            <el-option
+              v-for="(column, index) in columns"
+              :key="index"
+              :label="column.csharpField + '：' + column.columnComment"
+              :value="column.csharpField"
+            ></el-option>
           </el-select>
         </el-form-item>
       </el-col>
@@ -226,13 +237,21 @@
             </el-tooltip>
           </template>
           <el-select v-model="info.treeName" placeholder="请选择树名称字段">
-            <el-option v-for="(column, index) in columns" :key="index" :label="column.csharpField + '：' + column.columnComment" :value="column.csharpField"></el-option>
+            <el-option
+              v-for="(column, index) in columns"
+              :key="index"
+              :label="column.csharpField + '：' + column.columnComment"
+              :value="column.csharpField"
+            ></el-option>
           </el-select>
         </el-form-item>
       </el-col>
     </el-row>
-    <el-row v-show="info.tplCategory == 'sub'">
-      <h4 class="form-header">关联信息</h4>
+    <el-row v-show="info.tplCategory == 'sub' || info.tplCategory == 'subNav' || info.tplCategory == 'subNavMore'">
+      <el-col :lg="24">
+        <h4 class="form-header">关联信息</h4>
+      </el-col>
+
       <el-col :lg="12">
         <el-form-item>
           <template #label>
@@ -244,7 +263,8 @@
             </el-tooltip>
           </template>
           <el-select v-model="info.subTableName" placeholder="请选择" @change="subSelectChange(this)">
-            <el-option v-for="(table, index) in tables" :key="index" :label="table.tableName + '：' + table.tableComment" :value="table.tableName"> </el-option>
+            <el-option v-for="(table, index) in tables" :key="index" :label="table.tableName + '：' + table.tableComment" :value="table.tableName">
+            </el-option>
           </el-select>
         </el-form-item>
       </el-col>
@@ -258,8 +278,16 @@
               </el-icon>
             </el-tooltip>
           </template>
-          <el-select v-model="info.subTableFkName" placeholder="请选择">
-            <el-option v-for="(column, index) in subColumns" :key="index" :label="column.columnName + '：' + column.columnComment" :value="column.columnName"></el-option>
+          <el-select v-model="info.subTableFkName">
+            <el-option
+              v-for="(column, index) in subColumns"
+              :key="index"
+              :label="column.csharpField"
+              :value="column.csharpField"
+            >
+              <span style="float: left">{{ column.csharpField }}</span>
+              <span style="float: right">{{ column.columnComment }}</span>
+            </el-option>
           </el-select>
         </el-form-item>
       </el-col>

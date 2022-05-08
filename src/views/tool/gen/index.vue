@@ -32,13 +32,13 @@
           <span>{{ (queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="dbName" label="数据库名" width="90" />
+      <el-table-column prop="dbName" label="数据库名" width="90" :show-overflow-tooltip="true" />
       <el-table-column prop="tableId" label="表id" width="70" sortable="" />
       <el-table-column prop="tableName" label="表名" width="110" :show-overflow-tooltip="true" />
       <el-table-column prop="tableComment" label="表描述" :show-overflow-tooltip="true" width="120" />
       <el-table-column prop="className" label="实体" :show-overflow-tooltip="true" />
-      <el-table-column prop="createTime" label="创建时间" />
-      <el-table-column prop="updateTime" label="更新时间" />
+      <el-table-column prop="createTime" label="创建时间" sortable />
+      <el-table-column prop="updateTime" label="更新时间" sortable />
       <el-table-column label="操作" align="center" width="320">
         <template #default="scope">
           <el-button type="text" icon="view" @click="handlePreview(scope.row)" v-hasPermi="['tool:gen:preview']">预览</el-button>
