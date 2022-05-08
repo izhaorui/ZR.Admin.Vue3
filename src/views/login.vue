@@ -3,6 +3,8 @@
   <div class="login">
     <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form">
       <h3 class="title">{{ defaultSettings.title }}</h3>
+
+      <LangSelect title="多语言设置" class="langSet" />
       <el-form-item prop="username">
         <el-input v-model="loginForm.username" type="text" size="large" auto-complete="off" :placeholder="$t('login.account')">
           <template #prefix>
@@ -11,14 +13,28 @@
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input v-model="loginForm.password" type="password" size="large" auto-complete="off" :placeholder="$t('login.password')" @keyup.enter="handleLogin">
+        <el-input
+          v-model="loginForm.password"
+          type="password"
+          size="large"
+          auto-complete="off"
+          :placeholder="$t('login.password')"
+          @keyup.enter="handleLogin"
+        >
           <template #prefix>
             <svg-icon name="password" class="el-input__icon input-icon" />
           </template>
         </el-input>
       </el-form-item>
       <el-form-item prop="code" v-if="captchaOnOff != 'off'">
-        <el-input v-model="loginForm.code" size="large" auto-complete="off" :placeholder="$t('login.captcha')" style="width: 63%" @keyup.enter="handleLogin">
+        <el-input
+          v-model="loginForm.code"
+          size="large"
+          auto-complete="off"
+          :placeholder="$t('login.captcha')"
+          style="width: 63%"
+          @keyup.enter="handleLogin"
+        >
           <template #prefix>
             <svg-icon name="validCode" class="el-input__icon input-icon" />
           </template>
@@ -41,7 +57,6 @@
       </el-form-item>
     </el-form>
 
-    <LangSelect title="多语言设置" class="langSet" />
     <!--  底部  -->
     <div class="el-login-footer">
       <span>{{ defaultSettings.copyright }}</span>
@@ -170,8 +185,8 @@ getCookie()
   // background: #ffffff;
   background-color: hsla(0, 0%, 100%, 0.3);
   width: 310px;
-  padding: 25px 25px 5px 25px;
-
+  padding: 25px 15px 5px 15px;
+  position: relative;
 
   .input-icon {
     height: 39px;
@@ -216,8 +231,11 @@ getCookie()
 }
 .langSet {
   position: absolute;
-  right: 120px;
-  top: 100px;
-  color: #fff;
+  right: 20px;
+  top: 10px;
+
+  .svg-icon {
+    color: #fff !important;
+  }
 }
 </style>
