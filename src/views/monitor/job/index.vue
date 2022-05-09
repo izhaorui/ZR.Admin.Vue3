@@ -57,7 +57,7 @@
         <el-table-column prop="remark" align="center" label="备注" :show-overflow-tooltip="true" />
         <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
           <template #default="scope">
-            <el-button type="text" icon="view" v-hasPermi="['monitor:job:query']" @click="handleJobLog(scope.row.id, scope.row.name)">
+            <el-button type="text" icon="view" v-hasPermi="['monitor:job:query']" @click="handleJobLog(scope.row)">
               {{ $t('btn.log') }}
             </el-button>
             <el-button
@@ -251,6 +251,15 @@
     </el-dialog>
 
     <el-drawer :title="logTitle" v-model="drawer">
+      <el-form :inline="true" @submit.prevent>
+        <el-form-item>
+          <el-date-picker v-model="logForm.beginTime" clearable type="date" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="search" @click="handleJobLog">{{ $t('btn.search') }}</el-button>
+        </el-form-item>
+      </el-form>
+
       <el-timeline>
         <el-timeline-item :timestamp="item.createTime" placement="top" v-for="(item, i) in jobLogList" :key="i">
           <h4>{{ item.jobMessage }}</h4>
@@ -373,19 +382,6 @@ function handleUpdate(row) {
   })
 }
 
-/** 任务日志列表查询 */
-function handleJobLog(id, title) {
-  if (id == undefined) {
-    router.push({ path: 'job/log' })
-  } else {
-    drawer.value = true
-    jobLogList.value = []
-    logTitle.value = title
-    listJobLog({ JobId: id }).then((response) => {
-      jobLogList.value = response.data.result
-    })
-  }
-}
 /** cron表达式按钮操作 */
 function handleShowCron() {
   // expression.value = form.value.cron
@@ -545,4 +541,26 @@ watch(
     immediate: true,
   },
 )
+
+/** 任务日志 */
+
+const logForm = reactive({
+  beginTime: undefined,
+  jobId: undefined,
+  title: undefined,
+})
+/** 任务日志列表查询 */
+function handleJobLog(row) {
+  if (undefined != row.id) {
+    logForm.jobId = row.id
+    logForm.title = row.name
+  }
+
+  drawer.value = true
+  jobLogList.value = []
+  logTitle.value = logForm.title
+  listJobLog(logForm).then((response) => {
+    jobLogList.value = response.data.result
+  })
+}
 </script>
