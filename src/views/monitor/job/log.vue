@@ -22,8 +22,7 @@
           type="daterange"
           range-separator="-"
           start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
+          end-placeholder="结束日期"></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
@@ -36,7 +35,9 @@
         <el-button type="danger" plain icon="delete" :disabled="multiple" @click="handleDelete" v-hasPermi="['PRIV_JOBLOG_DELETE']">删除</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="delete" @click="handleClean" :disabled="total <= 0" v-hasPermi="['PRIV_JOBLOG_REMOVE']">清空</el-button>
+        <el-button type="danger" plain icon="delete" @click="handleClean" :disabled="total <= 0" v-hasPermi="['PRIV_JOBLOG_REMOVE']"
+          >清空</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['PRIV_JOBLOG_EXPORT']">导出</el-button>
@@ -54,7 +55,9 @@
       <el-table-column label="执行状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="作业用时" align="center" prop="elapsed">
         <template #default="scope">
-          <span :style="scope.row.elapsed < 1000 ? 'color:green' : scope.row.elapsed < 3000 ? 'color:orange' : 'color:red'">{{ scope.row.elapsed / 1000 }} ms</span>
+          <span :style="scope.row.elapsed < 1000 ? 'color:green' : scope.row.elapsed < 3000 ? 'color:orange' : 'color:red'">
+            {{ Math.floor(scope.row.elapsed) / 1000 }} ms
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="执行时间" align="center" prop="createTime" width="180">
@@ -73,7 +76,7 @@
 
     <!-- 调度日志详细 -->
     <el-dialog title="调度日志详细" v-model="open" width="700px" append-to-body>
-      <el-form ref="form" :model="form" label-width="100px">
+      <el-form ref="formRef" :model="form" label-width="100px">
         <el-row>
           <el-col :span="12">
             <el-form-item label="日志序号：">{{ form.jobLogId }}</el-form-item>
@@ -125,6 +128,7 @@ const open = ref(false)
 const dateRange = ref([])
 const statusOptions = ref([])
 const jobGroupOptions = ref([])
+const formRef = ref()
 
 const data = reactive({
   form: {},
@@ -175,10 +179,24 @@ function handleQuery() {
 /** 重置按钮操作 */
 function resetQuery() {
   dateRange.value = []
-  resetForm('queryForm')
+  proxy.resetForm('queryForm')
   handleQuery()
 }
-
+function reset() {
+  form.value = {
+    createTime: undefined,
+    elapsed: 0,
+    exception: undefined,
+    invokeTarget: undefined,
+    jobGroup: undefined,
+    jobId: 0,
+    jobLogId: 0,
+    jobMessage: undefined,
+    jobName: undefined,
+    status: undefined,
+  }
+  proxy.resetForm('formRef')
+}
 // 多选框选中数据
 function handleSelectionChange(selection) {
   ids.value = selection.map((item) => item.jobLogId)
@@ -186,8 +204,10 @@ function handleSelectionChange(selection) {
 }
 /** 详细按钮操作 */
 function handleView(row) {
+  reset()
   open.value = true
   form.value = row
+  console.log(row)
 }
 /** 删除按钮操作 */
 function handleDelete(row) {

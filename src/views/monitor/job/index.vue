@@ -32,7 +32,7 @@
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button plain v-hasPermi="['monitor:job:query']" type="info" icon="operation" @click="handleJobLog()">
+        <el-button plain v-hasPermi="['monitor:job:query']" type="info" icon="operation" @click="onJobLogView()">
           {{ $t('btn.log') }}
         </el-button>
       </el-col>
@@ -549,6 +549,9 @@ const logForm = reactive({
   jobId: undefined,
   title: undefined,
 })
+function onJobLogView(){
+	router.push({ path: 'job/log' })
+}
 /** 任务日志列表查询 */
 function handleJobLog(row) {
   if (undefined != row.id) {
