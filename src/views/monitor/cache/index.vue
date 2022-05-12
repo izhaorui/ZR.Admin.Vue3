@@ -140,7 +140,6 @@
 <script setup name="cache">
 import { getCache } from '@/api/monitor/cache'
 import * as echarts from 'echarts'
-import { getCurrentInstance } from 'vue-demi'
 // import Gauge from '@/components/Echarts/Gauge.vue'
 
 // 统计命令信息
