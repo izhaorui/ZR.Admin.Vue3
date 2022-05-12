@@ -5,7 +5,6 @@
 </template>
 <script setup>
 import store from '@/store/index'
-import Cookies from 'js-cookie'
 import { ElConfigProvider } from 'element-plus'
 import zh from 'element-plus/lib/locale/lang/zh-cn' // 中文语言
 import en from 'element-plus/lib/locale/lang/en' // 英文语言
@@ -21,10 +20,8 @@ const lang = computed(() => {
   return store.getters.language
 })
 const locale = ref(zh)
-const size = ref('small')
-if (Cookies.get('size')) {
-  size.value = Cookies.get('size')
-}
+const size = ref('default')
+size.value = store.getters.size
 watch(
   token,
   (val) => {
