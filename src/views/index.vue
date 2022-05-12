@@ -1,30 +1,33 @@
 <template>
   <div class="app-container home">
     <el-row :gutter="20">
-      <el-col :sm="24" :lg="8">
+      <el-col :sm="24" :lg="24">
         <blockquote class="text-warning" style="font-size: 14px">
-          领取七牛云通用云产品优惠券
+          【阿里云特惠专区】
+          <el-link href="https://www.aliyun.com/minisite/goods?userCode=uotn5vt1&share_source=copy_link" type="primary" target="_black">
+            ☛☛点我进入☚☚
+          </el-link>
           <br />
-          <el-link href="https://s.qiniu.com/FzEfay" type="primary" target="_blank"> https://s.qiniu.com/FzEfay </el-link>
-          <br />
-
-          领取腾讯云通用云产品新用户专属大礼包2860优惠券，每种代金券限量500张，先到先得。
-          <br />
-          <el-link href="https://curl.qcloud.com/5J4nag8D" type="primary" target="_blank"> https://curl.qcloud.com/5J4nag8D </el-link>
-          <br />
-
-          腾讯云限时秒杀活动<br />
-          <el-link href="https://curl.qcloud.com/4yEoRquq" type="primary" target="_blank"> https://curl.qcloud.com/4yEoRquq </el-link>
+          【领取腾讯云通用云产品新用户专属大礼包2860优惠券，每种代金券限量500张，先到先得。】
+          <el-link href="https://curl.qcloud.com/5J4nag8D" type="primary" target="_blank"> ☛☛点我进入☚☚ </el-link>
           <br />
 
-          华为特惠专区，多款产品限时特价
+          【腾讯云限时秒杀活动】
+          <el-link href="https://curl.qcloud.com/4yEoRquq" type="primary" target="_blank">☛☛点我进入☚☚ </el-link>
+          <br />
+
+          【华为特惠专区，多款产品限时特价】
           <el-link
             href="https://activity.huaweicloud.com/discount_area_v5/index.html?fromacct=a53709d1-149d-49f4-9b89-bf62bd96ef65&utm_source=aGlkX3N0dnZkMWNxejBnOTJ5OA===&utm_medium=cps&utm_campaign=201905"
             type="primary"
-            target="_blank"
-          >
+            target="_blank">
             ☛☛点我进入☚☚
           </el-link>
+          <br />
+          【领取七牛云通用云产品优惠券】
+          <el-link href="https://s.qiniu.com/FzEfay" type="primary" target="_blank"> ☛☛点我进入☚☚ </el-link>
+          <br />
+
           <h4 class="text-danger">云产品通用红包，可叠加官网常规优惠使用。(仅限新用户)</h4>
         </blockquote>
       </el-col>
@@ -39,13 +42,23 @@
         <p>代码完全免费开源，易读易懂、界面简洁美观，给你的项目多一种选择与参考。</p>
         <p>
           <b>{{ $t('layout.currentVersion') }}:</b> <span>v{{ version }}</span>
-          <el-link class="ml10" type="primary" size="small" icon="Document" plain @click="goTarget('http://www.izhaorui.cn/doc/#/gxrz?id=v' + version)"
+          <el-link
+            class="ml10"
+            type="primary"
+            size="small"
+            icon="Document"
+            plain
+            @click="goTarget('http://www.izhaorui.cn/doc/#/gxrz?id=v' + version)"
             >{{ $t('layout.changeLog') }}
           </el-link>
         </p>
         <p>
-          <el-button type="primary" size="small" icon="Cloudy" plain @click="goTarget('https://gitee.com/izory/ZrAdminNetCore')">访问码云 </el-button>
-          <el-button type="primary" size="small" icon="Cloudy" plain @click="goTarget('https://github.com/izhaorui/ZrAdmin.NET')">Github </el-button>
+          <el-button type="primary" size="small" icon="Cloudy" plain @click="goTarget('https://gitee.com/izory/ZrAdminNetCore')"
+            >访问码云
+          </el-button>
+          <el-button type="primary" size="small" icon="Cloudy" plain @click="goTarget('https://github.com/izhaorui/ZrAdmin.NET')"
+            >Github
+          </el-button>
         </p>
         <p></p>
         <h3>{{ $t('layout.tip1') }}</h3>
@@ -112,8 +125,7 @@
               <el-icon> <UserFilled /> </el-icon>QQ群：
               <el-link
                 target="_black"
-                href="https://qm.qq.com/cgi-bin/qm/qr?k=Y__-fTGo_K2UIo3nWz7QnvS8LoRfPWKm&authKey=/ldXxiuolv80PF4yC8VtLk/TvAYbIhm2LKP8YVHCxAk+x2I+iqPAM1H/IsxQ+0gC&noverify=0"
-              >
+                href="https://qm.qq.com/cgi-bin/qm/qr?k=Y__-fTGo_K2UIo3nWz7QnvS8LoRfPWKm&authKey=/ldXxiuolv80PF4yC8VtLk/TvAYbIhm2LKP8YVHCxAk+x2I+iqPAM1H/IsxQ+0gC&noverify=0">
                 191349103
               </el-link>
             </p>
