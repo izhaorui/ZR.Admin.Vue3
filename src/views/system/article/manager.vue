@@ -58,7 +58,7 @@
   </div>
 </template>
 <script setup name="articleindex">
-import { listArticle, delArticle } from '@/api/system/article.js'
+import { listArticle, delArticle } from '@/api/article/article.js'
 const { proxy } = getCurrentInstance()
 const router = useRouter()
 // 显示搜索条件

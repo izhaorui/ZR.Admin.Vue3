@@ -7,22 +7,27 @@
           <el-input v-model="form.title" placeholder="请输入文章标题（必须）" />
         </el-form-item>
 
-        <el-form-item label="文章分类" prop="category_id">
+        <el-form-item label="文章分类" prop="categoryId">
           <el-cascader
             class="w100"
             :options="categoryOptions"
-            :props="{ checkStrictly: true, value: 'category_Id', label: 'name', emitPath: false }"
+            :props="{ checkStrictly: true, value: 'categoryId', label: 'name', emitPath: false }"
             placeholder="请选择文章分类"
             clearable
-            v-model="form.category_Id"
-          />
+            v-model="form.category_Id" />
         </el-form-item>
 
         <el-form-item label="文章标签">
           <el-tag v-for="tag in form.dynamicTags" :key="tag" class="mr10" closable :disable-transitions="false" @close="handleCloseTag(tag)">
             {{ tag }}
           </el-tag>
-          <el-input v-if="inputVisible" ref="inputRef" v-model="inputValue" class="w20" @keyup.enter="handleInputConfirm" @blur="handleInputConfirm" />
+          <el-input
+            v-if="inputVisible"
+            ref="inputRef"
+            v-model="inputValue"
+            class="w20"
+            @keyup.enter="handleInputConfirm"
+            @blur="handleInputConfirm" />
 
           <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 文章标签</el-button>
         </el-form-item>
@@ -42,9 +47,10 @@
   </div>
 </template>
 <script setup name="articlepublish">
-import { addArticle, updateArticle, listArticleCategoryTree, getArticle } from '@/api/system/article.js'
+import { addArticle, updateArticle, getArticle } from '@/api/article/article.js'
+import { treelistArticleCategory } from '@/api/article/articlecategory.js'
 import { upload } from '@/api/common.js'
-import MdEditor from 'md-editor-v3';
+import MdEditor from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 
 const { proxy } = getCurrentInstance()
@@ -77,7 +83,7 @@ form.value.cid = cid
 
 /** 查询菜单下拉树结构 */
 function getCategoryTreeselect() {
-  listArticleCategoryTree().then((res) => {
+  treelistArticleCategory({}).then((res) => {
     if (res.code == 200) {
       categoryOptions.value = res.data
     }

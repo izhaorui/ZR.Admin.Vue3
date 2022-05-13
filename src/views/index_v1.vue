@@ -119,7 +119,7 @@ import RaddarChart from './dashboard/RaddarChart'
 import PieChart from './dashboard/PieChart'
 import BarChart from './dashboard/BarChart'
 import { Vue3SeamlessScroll } from 'vue3-seamless-scroll'
-import { listNewArticle } from '@/api/system/article.js'
+import { listNewArticle } from '@/api/article/article.js'
 
 const data = {
   newVisitis: {
