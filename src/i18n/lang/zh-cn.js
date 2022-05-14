@@ -76,7 +76,13 @@ export default {
   common: {
     ok: '确定',
     cancel: '取消',
-    tips: '提示'
+    tips: '提示',
+    english: '英文',
+    chinese: '中文',
+    traditionalChinese: '繁体',
+		name: '名称',
+		content: '内容',
+    addTime: '添加时间'
   },
   btn: {
     add: '新增',
@@ -90,8 +96,8 @@ export default {
     synchronize: '同步',
     generateCode: '生成代码',
     start: '启动',
-		stop: '停止',
-		run: '运行',
+    stop: '停止',
+    run: '运行',
     runOnce: '运行一次',
     log: '日志',
     expand: '展开',
@@ -107,5 +113,6 @@ export default {
     upload: '上传',
     view: '查看',
     copy: '複製',
+    operate: '操作'
   }
 };

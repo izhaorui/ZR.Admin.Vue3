@@ -1,4 +1,5 @@
-const baseURL = import.meta.env.VITE_APP_BASE_API
+const baseURL =
+  import.meta.env.VITE_APP_BASE_API
 /**
  * 通用js方法封装处理
  * Copyright (c) 2019 ruoyi
@@ -94,7 +95,7 @@ export function selectDictLabel(datas, value) {
 
 // 回显数据字典（字符串数组）
 export function selectDictLabels(datas, value, separator) {
-  if(value === undefined) {
+  if (value === undefined) {
     return "";
   }
   var actions = [];
@@ -118,7 +119,9 @@ export function download(fileName) {
 
 // 字符串格式化(%s )
 export function sprintf(str) {
-  var args = arguments, flag = true, i = 1;
+  var args = arguments,
+    flag = true,
+    i = 1;
   str = str.replace(/%s/g, function () {
     var arg = args[i++];
     if (typeof arg === 'undefined') {
@@ -206,9 +209,9 @@ export function handleTree(data, id, parentId, children) {
 }
 
 /**
-* 参数处理
-* @param {*} params  参数
-*/
+ * 参数处理
+ * @param {*} params  参数
+ */
 export function tansParams(params) {
   let result = ''
   for (const propName of Object.keys(params)) {
@@ -268,4 +271,17 @@ export function praseStrZero(str) {
     return 0;
   }
   return str;
+}
+
+/**
+ * 字符串是否为空
+ * @param {*} obj 
+ * @returns 
+ */
+export function isEmpty(obj) {
+  if (typeof obj == "undefined" || obj == null || obj === "") {
+    return true;
+  } else {
+    return false;
+  }
 }

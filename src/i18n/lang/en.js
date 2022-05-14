@@ -76,7 +76,13 @@ export default {
   common: {
     ok: 'Ok',
     cancel: 'Cancel',
-    tips: 'tips'
+    tips: 'tips',
+    english: 'English',
+    chinese: 'Chinese',
+    traditionalChinese: 'TraditionalChinese',
+    name: 'Name',
+    content: 'Content',
+    addTime: 'AddTime'
   },
   btn: {
     add: 'Add',
@@ -107,5 +113,6 @@ export default {
     upload: 'Upload',
     view: 'To view',
     copy: 'Copy',
+    operate: 'Operate'
   }
 };

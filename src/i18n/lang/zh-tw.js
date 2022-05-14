@@ -76,7 +76,13 @@ export default {
   common: {
     ok: '確定',
     cancel: '取消',
-    tips: '提示'
+    tips: '提示',
+    english: '英文',
+    chinese: '中文簡體',
+    traditionalChinese: '繁體',
+    name: '名稱',
+    content: '內容',
+    addTime: '添加時間'
   },
   btn: {
     add: '新增',
@@ -104,5 +110,6 @@ export default {
     upload: '上傳',
     view: '查看',
     copy: '复制',
+    operate: '操作'
   }
 };
