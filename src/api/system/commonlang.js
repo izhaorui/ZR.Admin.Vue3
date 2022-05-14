@@ -56,6 +56,17 @@ export function getCommonLang(id) {
     method: 'get'
   })
 }
+/**
+ * 获取多语言配置详情
+ * @param {key}
+ */
+export function getCommonLangByKey(key) {
+  return request({
+    url: 'system/CommonLang/key/' + key,
+    method: 'get'
+  })
+}
+
 
 /**
  * 删除多语言配置
