@@ -88,8 +88,8 @@
 
       <el-table-column :label="$t('btn.operate')" align="center" width="140">
         <template #default="scope">
-          <el-button v-hasPermi="['system:lang:edit']" type="success" icon="edit" title="编辑" @click="handleUpdate(scope.row)"></el-button>
-          <el-button v-hasPermi="['system:lang:delete']" type="danger" icon="delete" title="删除" @click="handleDelete(scope.row)"></el-button>
+          <el-button v-hasPermi="['system:lang:edit']" text size="small" icon="edit" title="编辑" @click="handleUpdate(scope.row)"></el-button>
+          <el-button v-hasPermi="['system:lang:delete']" text size="small" icon="delete" title="删除" @click="handleDelete(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -112,7 +112,9 @@
 
       <el-table-column :label="$t('btn.operate')" align="center" width="140">
         <template #default="scope">
-          <el-button v-hasPermi="['system:lang:edit']" type="success" icon="edit" title="编辑" @click="handleUpdateP(scope.row)"></el-button>
+          <el-button v-hasPermi="['system:lang:edit']" text size="small" icon="edit" title="编辑" @click="handleUpdateP(scope.row)">
+            {{ $t('btn.edit') }}
+          </el-button>
           <!-- <el-button v-hasPermi="['system:lang:delete']" type="danger" icon="delete" title="删除" @click="handleDeleteP(scope.row)"></el-button> -->
         </template>
       </el-table-column>
@@ -163,7 +165,7 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="text" @click="cancel">{{ $t('btn.cancel') }}</el-button>
+          <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
           <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
         </div>
       </template>

@@ -32,8 +32,7 @@
       :data="deptList"
       row-key="deptId"
       :default-expand-all="isExpandAll"
-      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-    >
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
       <el-table-column prop="deptName" label="部门名称" width="260"></el-table-column>
       <el-table-column prop="leader" label="负责人" width="100"></el-table-column>
       <el-table-column prop="orderNum" label="排序" width="200"></el-table-column>
@@ -49,10 +48,20 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template #default="scope">
-          <el-button type="text" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dept:update']">{{ $t('btn.edit') }}</el-button>
-          <el-button type="text" icon="plus" @click="handleAdd(scope.row)" v-hasPermi="['system:dept:add']">{{ $t('btn.add') }}</el-button>
-          <el-button v-if="scope.row.parentId != 0" type="text" icon="delete" @click="handleDelete(scope.row)" v-hasPermi="['system:dept:remove']"
-            >{{ $t('btn.delete') }}
+          <el-button text size="small" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dept:update']">
+            {{ $t('btn.edit') }}
+          </el-button>
+          <el-button text size="small" icon="plus" @click="handleAdd(scope.row)" v-hasPermi="['system:dept:add']">
+            {{ $t('btn.add') }}
+          </el-button>
+          <el-button
+            text
+            size="small"
+            v-if="scope.row.parentId != 0"
+            icon="delete"
+            @click="handleDelete(scope.row)"
+            v-hasPermi="['system:dept:remove']">
+            {{ $t('btn.delete') }}
           </el-button>
         </template>
       </el-table-column>
@@ -70,8 +79,7 @@
                 :props="{ value: 'deptId', label: 'deptName', children: 'children' }"
                 value-key="deptId"
                 placeholder="选择上级部门"
-                check-strictly
-              />
+                check-strictly />
             </el-form-item>
           </el-col>
           <el-col :lg="12">
@@ -110,7 +118,7 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="text" @click="cancel">{{ $t('btn.cancel') }}</el-button>
+          <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
           <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
         </div>
       </template>

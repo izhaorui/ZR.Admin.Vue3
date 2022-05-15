@@ -27,7 +27,9 @@
     <el-table-column label="字典标签" align="center" prop="dictLabel">
       <template #default="scope">
         <span v-if="scope.row.listClass == '' || scope.row.listClass == 'default'" :class="scope.row.cssClass">{{ scope.row.dictLabel }}</span>
-        <el-tag v-else :type="scope.row.listClass == 'primary' ? '' : scope.row.listClass" :class="scope.row.cssClass">{{ scope.row.dictLabel }} </el-tag>
+        <el-tag v-else :type="scope.row.listClass == 'primary' ? '' : scope.row.listClass" :class="scope.row.cssClass"
+          >{{ scope.row.dictLabel }}
+        </el-tag>
       </template>
     </el-table-column>
     <el-table-column label="字典键值" align="center" prop="dictValue" />
@@ -40,8 +42,8 @@
     <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
     <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
       <template #default="scope">
-        <el-button type="text" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dict:edit']">编辑</el-button>
-        <el-button type="text" icon="delete" @click="handleDelete(scope.row)" v-hasPermi="['system:dict:remove']">删除</el-button>
+        <el-link size="small" class="ml10" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dict:edit']">编辑</el-link>
+        <el-link size="small" class="ml10" icon="delete" @click="handleDelete(scope.row)" v-hasPermi="['system:dict:remove']">删除</el-link>
       </template>
     </el-table-column>
   </el-table>

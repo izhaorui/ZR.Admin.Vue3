@@ -13,8 +13,7 @@
           placeholder="请输入用户名称"
           clearable
           prefix-icon="search"
-          @keyup.enter="searchRoleUser"
-        />
+          @keyup.enter="searchRoleUser" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="search" @click="searchRoleUser">{{ $t('btn.search') }}</el-button>
@@ -45,8 +44,7 @@
       @selection-change="handleCancelSelectionChange"
       row-key="userId"
       stripe
-      border
-    >
+      border>
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column prop="userId" align="center" label="用户Id" width="150" />
       <el-table-column prop="userName" align="center" label="用户名" width="150" />
@@ -60,12 +58,12 @@
       <el-table-column align="center" label="操作">
         <template #default="scope">
           <el-button
-            type="text"
+            text
+            size="small"
             icon="el-icon-circle-close"
             @click="handleCancelPerm(scope.row)"
             v-if="scope.row.userId != 1"
-            v-hasPermi="['system:roleusers:del']"
-          >
+            v-hasPermi="['system:roleusers:del']">
             {{ $t('btn.cancel') }}{{ $t('btn.authorize') }}
           </el-button>
         </template>
@@ -75,8 +73,7 @@
       v-model:total="roleUserCount"
       v-model:page="roleUserQueryParams.pageNum"
       v-model:limit="roleUserQueryParams.pageSize"
-      @pagination="getRoleUser"
-    />
+      @pagination="getRoleUser" />
 
     <!-- 添加或修改菜单对话框 -->
     <el-dialog title="添加用户" v-model="open" append-to-body @close="cancel">
@@ -87,8 +84,7 @@
             placeholder="请输入用户名称"
             clearable
             prefix-icon="search"
-            @keyup.enter="handleSearchRoleUser"
-          />
+            @keyup.enter="handleSearchRoleUser" />
         </el-form-item>
       </el-form>
       <el-row>
@@ -101,8 +97,7 @@
             row-key="userId"
             stripe
             border
-            :height="tableHeight * 0.5"
-          >
+            :height="tableHeight * 0.5">
             <el-table-column type="selection" width="55" align="center" />
             <el-table-column prop="userId" align="center" label="用户编号" width="150" />
             <el-table-column prop="userName" align="center" label="用户名称" width="150" />
@@ -117,8 +112,7 @@
             :total="dataUserCount"
             v-model:page="userQueryParams.pageNum"
             v-model:limit="userQueryParams.pageSize"
-            @pagination="handleGetUserTable"
-          />
+            @pagination="handleGetUserTable" />
         </el-col>
       </el-row>
       <template #footer>

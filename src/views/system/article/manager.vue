@@ -35,26 +35,26 @@
       <el-table-column prop="content" label="文章内容" :show-overflow-tooltip="true"> </el-table-column>
       <el-table-column sortable prop="status" align="center" label="状态" width="90">
         <template #default="scope">
-          <el-tag :type="scope.row.status == '2' ? 'danger' : 'success'" disable-transitions>{{ scope.row.status == '2' ? "草稿":"已发布" }}
+          <el-tag :type="scope.row.status == '2' ? 'danger' : 'success'" disable-transitions
+            >{{ scope.row.status == '2' ? '草稿' : '已发布' }}
           </el-tag>
         </template>
       </el-table-column>
 
       <el-table-column prop="createTime" label="创建时间" width="128" :show-overflow-tooltip="true"> </el-table-column>
-      <el-table-column label="操作" align="center" width="190">
+      <el-table-column label="操作" align="center" width="230">
         <template #default="scope">
-          <el-button type="text" icon="view" @click="handleView(scope.row)">查看</el-button>
-          <el-button type="text" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:article:update']">编辑</el-button>
-          <el-popconfirm title="确定删除吗？" @onConfirm="handleDelete(scope.row)" style="margin-left:10px">
+          <el-button text size="small" icon="view" @click="handleView(scope.row)">查看</el-button>
+          <el-button text size="small" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:article:update']">编辑</el-button>
+          <el-popconfirm title="确定删除吗？" @onConfirm="handleDelete(scope.row)" style="margin-left: 10px">
             <template #reference>
-              <el-button type="text" icon="delete" v-hasPermi="['system:article:delete']">删除</el-button>
+              <el-button text size="small" icon="delete" v-hasPermi="['system:article:delete']">删除</el-button>
             </template>
           </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
     <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
-
   </div>
 </template>
 <script setup name="articleindex">
@@ -99,7 +99,7 @@ function getList() {
 /** 重置查询操作 */
 function resetQuery() {
   proxy.resetForm('queryForm')
-	handleQuery()
+  handleQuery()
 }
 /** 搜索按钮操作 */
 function handleQuery() {

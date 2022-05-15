@@ -32,14 +32,14 @@
       row-key="menuId"
       :default-expand-all="isExpandAll"
       border
-      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-    >
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
       <el-table-column prop="menuName" label="菜单名称" :show-overflow-tooltip="true" width="160"></el-table-column>
-      <el-table-column prop="icon" label="图标" align="center" width="100">
+      <el-table-column prop="icon" label="图标" align="center" width="60">
         <template #default="scope">
           <svg-icon :name="scope.row.icon" />
         </template>
       </el-table-column>
+      <el-table-column prop="menuId" label="菜单id" :show-overflow-tooltip="true" width="60" align="center"></el-table-column>
       <el-table-column prop="menuType" label="类型" align="center" width="80">
         <template #default="scope">
           <el-tag type="danger" v-if="scope.row.menuType == 'M' && scope.row.isFrame == 1">链接</el-tag>
@@ -52,17 +52,21 @@
       <el-table-column prop="orderNum" label="排序" width="90" sortable align="center">
         <template #default="scope">
           <span v-show="editIndex != scope.$index" @click="editCurrRow(scope.$index)">{{ scope.row.orderNum }}</span>
-          <el-input :id="scope.$index" v-show="editIndex == scope.$index" v-model="scope.row.orderNum" @blur="handleChangeSort(scope.row)"></el-input>
+          <el-input
+            :ref="setColumnsRef"
+            v-show="editIndex == scope.$index"
+            v-model="scope.row.orderNum"
+            @blur="handleChangeSort(scope.row)"></el-input>
         </template>
       </el-table-column>
       <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="visible" label="显示" width="70">
+      <el-table-column prop="visible" label="显示" width="70" align="center">
         <template #default="scope">
           <dict-tag :options="sys_show_hide" :value="scope.row.visible" />
         </template>
       </el-table-column>
-      <el-table-column prop="status" label="状态" width="80">
+      <el-table-column prop="status" label="状态" width="80" align="center">
         <template #default="scope">
           <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
         </template>
@@ -72,11 +76,11 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="170" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button type="text" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:menu:edit']">{{ $t('btn.edit') }}</el-button>
-          <el-button type="text" icon="Plus" @click="handleAdd(scope.row)" v-hasPermi="['system:menu:add']">{{ $t('btn.add') }}</el-button>
-          <el-button type="text" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:menu:remove']">{{ $t('btn.delete') }}</el-button>
+          <el-button text size="small" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:menu:edit']"></el-button>
+          <el-button text size="small" icon="Plus" @click="handleAdd(scope.row)" v-hasPermi="['system:menu:add']"></el-button>
+          <el-button text size="small" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:menu:remove']"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -93,8 +97,7 @@
                 :props="{ checkStrictly: true, value: 'menuId', label: 'menuName', emitPath: false }"
                 placeholder="请选择上级菜单"
                 clearable
-                v-model="form.parentId"
-              >
+                v-model="form.parentId">
                 <template #default="{ node, data }">
                   <span>{{ data.menuName }}</span>
                   <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
@@ -444,14 +447,21 @@ function handleDelete(row) {
     .catch(() => {})
 }
 // ******************自定义编辑 start **********************
-
+// 动态ref设置值
+const columnRefs = ref([])
+const setColumnsRef = (el) => {
+  if (el) {
+    columnRefs.value.push(el)
+  }
+}
 const editIndex = ref(-1)
 // 显示编辑排序
 function editCurrRow(rowId) {
   editIndex.value = rowId
 
   setTimeout(() => {
-    document.getElementById(rowId).focus()
+    // document.getElementById(rowId).focus()
+    columnRefs.value[rowId].focus()
   }, 100)
 }
 // 保存排序

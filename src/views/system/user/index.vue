@@ -14,8 +14,7 @@
             :filter-node-method="filterNode"
             ref="deptTreeRef"
             default-expand-all
-            @node-click="handleNodeClick"
-          />
+            @node-click="handleNodeClick" />
         </div>
       </el-col>
       <!--用户数据-->
@@ -39,8 +38,7 @@
               type="daterange"
               range-separator="-"
               start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            ></el-date-picker>
+              end-placeholder="结束日期"></el-date-picker>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="search" @click="handleQuery">{{ $t('btn.search') }}</el-button>
@@ -91,23 +89,16 @@
           <el-table-column label="创建时间" align="center" prop="createTime" width="160"></el-table-column>
           <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width">
             <template #default="scope">
-              <el-button v-if="scope.row.userId !== 1" type="text" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:user:edit']">
+              <el-button v-if="scope.row.userId !== 1" text icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:user:edit']">
+              </el-button>
+              <el-button v-if="scope.row.userId !== 1" text icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:user:remove']">
               </el-button>
               <el-button
                 v-if="scope.row.userId !== 1"
-                type="text"
-                icon="Delete"
-                @click="handleDelete(scope.row)"
-                v-hasPermi="['system:user:remove']"
-              >
-              </el-button>
-              <el-button
-                v-if="scope.row.userId !== 1"
-                type="text"
+                text
                 icon="Key"
                 @click="handleResetPwd(scope.row)"
-                v-hasPermi="['system:user:resetPwd']"
-              ></el-button>
+                v-hasPermi="['system:user:resetPwd']"></el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -142,8 +133,7 @@
                 :props="{ value: 'id', label: 'label', children: 'children' }"
                 value-key="id"
                 placeholder="请选择归属部门"
-                check-strictly
-              />
+                check-strictly />
             </el-form-item>
           </el-col>
           <el-col :lg="12">
@@ -214,8 +204,7 @@
         :on-progress="handleFileUploadProgress"
         :on-success="handleFileSuccess"
         :auto-upload="false"
-        drag
-      >
+        drag>
         <el-icon class="el-icon--upload">
           <upload-filled />
         </el-icon>

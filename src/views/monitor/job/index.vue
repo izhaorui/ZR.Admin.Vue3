@@ -10,8 +10,7 @@
               clearable
               prefix-icon="el-icon-search"
               @keyup.enter="handleQuery"
-              @clear="handleQuery"
-            />
+              @clear="handleQuery" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="search" @click="handleQuery">{{ $t('btn.search') }}</el-button>
@@ -55,66 +54,66 @@
         </el-table-column>
         <el-table-column prop="lastRunTime" align="center" label="最后运行时间" :show-overflow-tooltip="true" />
         <el-table-column prop="remark" align="center" label="备注" :show-overflow-tooltip="true" />
-        <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+        <el-table-column label="操作" align="center" width="250" class-name="small-padding fixed-width">
           <template #default="scope">
-            <el-button type="text" icon="view" v-hasPermi="['monitor:job:query']" @click="handleJobLog(scope.row)">
+            <el-link size="small" icon="view" v-hasPermi="['monitor:job:query']" @click="handleJobLog(scope.row)">
               {{ $t('btn.log') }}
-            </el-button>
-            <el-button
-              type="text"
+            </el-link>
+            <el-link
+              size="small"
               v-if="scope.row.isStart"
               v-hasPermi="['monitor:job:run']"
               icon="remove"
               title="运行"
-              @click="handleRun(scope.row)"
-            >
+              @click="handleRun(scope.row)">
               {{ $t('btn.run') }}
-            </el-button>
-            <el-button
-              type="text"
+            </el-link>
+            <el-link
+              type="warning"
+              size="small"
               v-if="scope.row.isStart"
               v-hasPermi="['monitor:job:stop']"
               icon="video-pause"
               style="color: red"
               title="停止"
-              @click="handleStop(scope.row)"
-            >
+              @click="handleStop(scope.row)">
               {{ $t('btn.stop') }}
-            </el-button>
+            </el-link>
 
-            <el-button
-              type="text"
+            <el-link
+              type="primary"
+              size="small"
+              class="ml10"
               v-if="!scope.row.isStart"
               v-hasPermi="['monitor:job:start']"
               icon="video-play"
               title="启动"
-              @click="handleStart(scope.row)"
-            >
+              @click="handleStart(scope.row)">
               {{ $t('btn.start') }}
-            </el-button>
-            <el-button
-              type="text"
+            </el-link>
+            <el-link
+              class="ml10"
+              size="small"
+              type="info"
               v-if="!scope.row.isStart"
               v-hasPermi="['monitor:job:edit']"
               icon="edit"
-              style="color: gray"
               title="编辑"
-              @click="handleUpdate(scope.row)"
-            >
+              @click="handleUpdate(scope.row)">
               {{ $t('btn.edit') }}
-            </el-button>
+            </el-link>
 
-            <el-button
-              type="text"
+            <el-link
+              type="danger"
+              class="ml10"
+              size="small"
               v-if="!scope.row.isStart"
               v-hasPermi="['monitor:job:delete']"
               icon="delete"
-              style="color: red"
               title="删除"
-              @click="handleDelete(scope.row)"
-            >
+              @click="handleDelete(scope.row)">
               {{ $t('btn.delete') }}
-            </el-button>
+            </el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -239,7 +238,7 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="text" @click="cancel">{{ $t('btn.cancel') }}</el-button>
+          <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
           <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
         </div>
       </template>
@@ -549,8 +548,8 @@ const logForm = reactive({
   jobId: undefined,
   title: undefined,
 })
-function onJobLogView(){
-	router.push({ path: 'job/log' })
+function onJobLogView() {
+  router.push({ path: 'job/log' })
 }
 /** 任务日志列表查询 */
 function handleJobLog(row) {

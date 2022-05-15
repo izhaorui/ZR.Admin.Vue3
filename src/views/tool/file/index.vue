@@ -12,8 +12,7 @@
           range-separator="-"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          placeholder="请选择上传时间"
-        ></el-date-picker>
+          placeholder="请选择上传时间"></el-date-picker>
       </el-form-item>
       <el-form-item label="" prop="storeType">
         <el-select v-model="queryParams.storeType" placeholder="请选择存储类型" clearable="">
@@ -58,8 +57,7 @@
             :hide-on-click-modal="true"
             fit="contain"
             lazy
-            class="el-avatar"
-          >
+            class="el-avatar">
             <template #error>
               <i class="document" />
             </template>
@@ -76,19 +74,19 @@
       </el-table-column>
       <el-table-column prop="create_by" label="操作人" align="center" />
       <el-table-column prop="create_time" label="创建日期" align="center" width="150" />
-      <el-table-column label="操作" align="center" width="200">
+      <el-table-column label="操作" align="center" width="230">
         <template #default="scope">
-          <el-button type="text" icon="view" @click="handleView(scope.row)">{{ $t('btn.view') }}</el-button>
+          <el-button text size="small" icon="view" @click="handleView(scope.row)">{{ $t('btn.view') }}</el-button>
           <el-button
             class="copy-btn-main"
             icon="document-copy"
-            type="text"
+            text
+            size="small"
             v-clipboard:copy="scope.row.accessUrl"
-            v-clipboard:success="clipboardSuccess"
-          >
+            v-clipboard:success="clipboardSuccess">
             {{ $t('btn.copy') }}
           </el-button>
-          <el-button v-hasPermi="['tool:file:delete']" type="text" icon="delete" @click="handleDelete(scope.row)">
+          <el-button v-hasPermi="['tool:file:delete']" text size="small" icon="delete" @click="handleDelete(scope.row)">
             {{ $t('btn.delete') }}
           </el-button>
         </template>
@@ -132,14 +130,13 @@
               :drag="true"
               :data="uploadData"
               :autoUpload="false"
-              @success="handleUploadSuccess"
-            />
+              @success="handleUploadSuccess" />
           </el-col>
         </el-row>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="text" @click="cancel">{{ $t('btn.cancel') }}</el-button>
+          <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
           <el-button type="primary" @click="submitUpload">{{ $t('btn.submit') }}</el-button>
         </div>
       </template>
@@ -188,10 +185,9 @@
               <el-button
                 class="copy-btn-main"
                 icon="document-copy"
-                type="text"
+                text
                 v-clipboard:copy="formView.accessUrl"
-                v-clipboard:success="clipboardSuccess"
-              >
+                v-clipboard:success="clipboardSuccess">
                 {{ $t('btn.copy') }}
               </el-button>
             </el-form-item>

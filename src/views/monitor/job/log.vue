@@ -67,7 +67,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button type="text" icon="view" @click="handleView(scope.row)">详细</el-button>
+          <el-button text icon="view" @click="handleView(scope.row)">详细</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -106,7 +106,7 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="text" @click="open = false">关 闭</el-button>
+          <el-button text @click="open = false">关 闭</el-button>
         </div>
       </template>
     </el-dialog>

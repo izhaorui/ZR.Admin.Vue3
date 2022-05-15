@@ -18,7 +18,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="操作时间">
-        <el-date-picker v-model="dateRange" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+        <el-date-picker
+          v-model="dateRange"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
@@ -28,14 +33,15 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="delete" :disabled="multiple" @click="handleDelete" v-hasPermi="['monitor:operlog:remove']">删除</el-button>
+        <el-button type="danger" plain icon="delete" :disabled="multiple" @click="handleDelete" v-hasPermi="['monitor:operlog:remove']">
+          删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="delete" @click="handleClean" v-hasPermi="['monitor:operlog:remove']">清空</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['system:operlog:export']">导出
-        </el-button>
+        <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['system:operlog:export']">导出 </el-button>
       </el-col>
       <right-toolbar :showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -54,14 +60,15 @@
       <el-table-column label="主机" align="center" prop="operIp" width="130" :show-overflow-tooltip="true" />
       <el-table-column label="操作地点" align="center" prop="operLocation" :show-overflow-tooltip="true" />
       <el-table-column label="操作状态" align="center" prop="status">
-        <template #default="{row}">
+        <template #default="{ row }">
           <dict-tag :options="statusOptions" :value="row.status"></dict-tag>
         </template>
       </el-table-column>
       <el-table-column label="用时" align="center" prop="elapsed">
         <template #default="scope">
-          <span :style="scope.row.elapsed < 1000 ? 'color:green':scope.row.elapsed <3000 ?'color:orange':'color:red'">{{ scope.row.elapsed }}
-            ms</span>
+          <span :style="scope.row.elapsed < 1000 ? 'color:green' : scope.row.elapsed < 3000 ? 'color:orange' : 'color:red'">
+            {{ scope.row.elapsed }} ms
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="日志内容" align="center" prop="errorMsg" :show-overflow-tooltip="true" />
@@ -72,13 +79,14 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button type="text" icon="view" @click="handleView(scope.row,scope.index)" v-hasPermi="['monitor:operlog:query']">详细
+          <el-button size="small" text icon="view" @click="handleView(scope.row, scope.index)" v-hasPermi="['monitor:operlog:query']">
+            详细
           </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
+    <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
 
     <!-- 操作日志详细 -->
     <el-dialog title="操作日志详细" v-model="open" width="700px" append-to-body>
@@ -126,21 +134,15 @@
           <el-button @click="open = false">关 闭</el-button>
         </div>
       </template>
-
     </el-dialog>
   </div>
 </template>
 
 <script>
-import {
-  list,
-  delOperlog,
-  cleanOperlog,
-  exportOperlog,
-} from "@/api/monitor/operlog";
+import { list, delOperlog, cleanOperlog, exportOperlog } from '@/api/monitor/operlog'
 
 export default {
-  name: "operlog",
+  name: 'operlog',
   data() {
     return {
       // 遮罩层
@@ -174,117 +176,110 @@ export default {
         businessType: undefined,
         status: undefined,
       },
-    };
+    }
   },
   created() {
-    this.getList();
+    this.getList()
     var dictParams = [
-      { dictType: "sys_oper_type", columnName: "businessTypeOptions" },
-      { dictType: "sys_common_status", columnName: "statusOptions" },
-    ];
+      { dictType: 'sys_oper_type', columnName: 'businessTypeOptions' },
+      { dictType: 'sys_common_status', columnName: 'statusOptions' },
+    ]
     this.getDicts(dictParams).then((response) => {
       response.data.forEach((element) => {
-        this[element.columnName] = element.list;
-      });
-    });
+        this[element.columnName] = element.list
+      })
+    })
   },
   methods: {
     /** 查询登录日志 */
     getList() {
-      this.loading = true;
-      list(this.addDateRange(this.queryParams, this.dateRange)).then(
-        (response) => {
-          this.loading = false;
-          if (response.code == 200) {
-            this.list = response.data.result;
-            this.total = response.data.totalNum;
-          } else {
-            this.total = 0;
-            this.list = [];
-          }
+      this.loading = true
+      list(this.addDateRange(this.queryParams, this.dateRange)).then((response) => {
+        this.loading = false
+        if (response.code == 200) {
+          this.list = response.data.result
+          this.total = response.data.totalNum
+        } else {
+          this.total = 0
+          this.list = []
         }
-      );
+      })
     },
     // 操作日志状态字典翻译
     statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
+      return this.selectDictLabel(this.statusOptions, row.status)
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
+      this.queryParams.pageNum = 1
+      this.getList()
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.dateRange = [];
-      this.resetForm("queryForm");
-      this.handleQuery();
+      this.dateRange = []
+      this.resetForm('queryForm')
+      this.handleQuery()
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map((item) => item.operId);
-      this.multiple = !selection.length;
+      this.ids = selection.map((item) => item.operId)
+      this.multiple = !selection.length
     },
     /** 详细按钮操作 */
     handleView(row) {
-      this.open = true;
-      this.form = row;
+      this.open = true
+      this.form = row
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const operIds = row.operId || this.ids;
-      this.$confirm(
-        '是否确认删除日志编号为"' + operIds + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
+      const operIds = row.operId || this.ids
+      this.$confirm('是否确认删除日志编号为"' + operIds + '"的数据项?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
         .then(function () {
-          return delOperlog(operIds);
+          return delOperlog(operIds)
         })
         .then(() => {
-          this.getList();
-          this.$modal.msgSuccess("删除成功");
-        });
+          this.getList()
+          this.$modal.msgSuccess('删除成功')
+        })
     },
     /** 清空按钮操作 */
     handleClean() {
-      this.$confirm("是否确认清空所有操作日志数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('是否确认清空所有操作日志数据项?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
         .then(function () {
-          return cleanOperlog();
+          return cleanOperlog()
         })
         .then(() => {
-          this.getList();
-          this.$modal.msgSuccess("清空成功");
-        });
+          this.getList()
+          this.$modal.msgSuccess('清空成功')
+        })
     },
     /** 导出按钮操作 */
     handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有操作日志?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      const queryParams = this.queryParams
+      this.$confirm('是否确认导出所有操作日志?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       }).then(() => {
         exportOperlog(queryParams).then((response) => {
-          const { code, data } = response;
+          const { code, data } = response
           if (code == 200) {
-            this.$modal.msgSuccess("导出成功");
-            this.download(data.path);
+            this.$modal.msgSuccess('导出成功')
+            this.download(data.path)
           } else {
-            this.$modal.msgError("导出失败");
+            this.$modal.msgError('导出失败')
           }
-        });
-      });
+        })
+      })
     },
   },
-};
+}
 </script>
-

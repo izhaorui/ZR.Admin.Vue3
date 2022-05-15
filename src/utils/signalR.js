@@ -60,7 +60,6 @@ export default {
   },
   // 接收消息处理
   receiveMsg(connection) {
-    console.log(connection)
     connection.on("onlineNum", (data) => {
       store.dispatch("socket/changeOnlineNum", data);
     });

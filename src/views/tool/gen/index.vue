@@ -24,8 +24,7 @@
       border
       @selection-change="handleSelectionChange"
       highlight-current-row
-      height="480px"
-    >
+      height="480px">
       <el-table-column type="selection" align="center" width="55"></el-table-column>
       <el-table-column label="序号" type="index" width="50" align="center">
         <template #default="scope">
@@ -41,11 +40,11 @@
       <el-table-column prop="updateTime" label="更新时间" sortable />
       <el-table-column label="操作" align="center" width="320">
         <template #default="scope">
-          <el-button type="text" icon="view" @click="handlePreview(scope.row)" v-hasPermi="['tool:gen:preview']">预览</el-button>
-          <el-button type="text" icon="edit" @click="handleEditTable(scope.row)" v-hasPermi="['tool:gen:edit']">编辑</el-button>
-          <el-button type="text" icon="delete" @click="handleDelete(scope.row)" v-hasPermi="['tool:gen:remove']">删除</el-button>
-          <el-button type="text" icon="refresh" @click="handleSynchDb(scope.row)" v-hasPermi="['tool:gen:edit']">同步</el-button>
-          <el-button type="text" icon="download" @click="handleGenTable(scope.row)" v-hasPermi="['tool:gen:code']">生成代码 </el-button>
+          <el-link type="primary" icon="view" @click="handlePreview(scope.row)" v-hasPermi="['tool:gen:preview']">预览</el-link>
+          <el-link type="primary" icon="edit" class="ml10" @click="handleEditTable(scope.row)" v-hasPermi="['tool:gen:edit']">编辑</el-link>
+          <el-link type="primary" icon="delete" class="ml10" @click="handleDelete(scope.row)" v-hasPermi="['tool:gen:remove']">删除</el-link>
+          <el-link type="primary" icon="refresh" class="ml10" @click="handleSynchDb(scope.row)" v-hasPermi="['tool:gen:edit']">同步</el-link>
+          <el-link type="primary" icon="download" class="ml10" @click="handleGenTable(scope.row)" v-hasPermi="['tool:gen:code']">生成代码 </el-link>
         </template>
       </el-table-column>
     </el-table>

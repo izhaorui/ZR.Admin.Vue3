@@ -38,8 +38,7 @@
             :disabled="scope.row.roleKey == 'admin'"
             active-value="0"
             inactive-value="1"
-            @change="handleStatusChange(scope.row)"
-          ></el-switch>
+            @change="handleStatusChange(scope.row)"></el-switch>
         </template>
       </el-table-column>
       <el-table-column label="用户个数" align="center" prop="userNum" width="90" />
@@ -48,18 +47,27 @@
       <el-table-column label="操作" align="center" width="200">
         <template #default="scope">
           <div v-if="scope.row.roleKey != 'admin'">
-            <el-button size="small" type="text" icon="edit" @click.stop="handleUpdate(scope.row)" v-hasPermi="['system:role:edit']">
-              {{ $t('btn.edit') }}
+            <el-button
+              size="small"
+              text
+              icon="edit"
+              :title="$t('btn.edit')"
+              @click.stop="handleUpdate(scope.row)"
+              v-hasPermi="['system:role:edit']">
             </el-button>
-            <el-button size="small" type="text" icon="delete" @click.stop="handleDelete(scope.row)" v-hasPermi="['system:role:remove']">
-              {{ $t('btn.delete') }}
+            <el-button
+              size="small"
+              text
+              icon="delete"
+              :title="$t('btn.delete')"
+              @click.stop="handleDelete(scope.row)"
+              v-hasPermi="['system:role:remove']">
             </el-button>
 
             <el-dropdown
               size="small"
               @command="(command) => handleCommand(command, scope.row)"
-              v-hasPermi="['system:role:edit', 'system:role:authorize', 'system:roleusers:list']"
-            >
+              v-hasPermi="['system:role:edit', 'system:role:authorize', 'system:roleusers:list']">
               <span class="el-dropdown-link">
                 {{ $t('btn.more') }}
                 <el-icon class="el-icon--right">
@@ -101,8 +109,7 @@
             :check-strictly="!form.menuCheckStrictly"
             empty-text="加载中，请稍后"
             :filter-node-method="menuFilterNode"
-            :props="defaultProps"
-          ></el-tree>
+            :props="defaultProps"></el-tree>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -160,8 +167,7 @@
                 node-key="id"
                 :check-strictly="!form.deptCheckStrictly"
                 empty-text="加载中，请稍候"
-                :props="defaultProps"
-              ></el-tree>
+                :props="defaultProps"></el-tree>
             </el-form-item>
           </el-col>
           <el-col :lg="24">

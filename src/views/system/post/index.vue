@@ -23,10 +23,14 @@
         <el-button type="primary" plain icon="plus" @click="handleAdd" v-hasPermi="['system:post:add']">{{ $t('btn.add') }}</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success" plain icon="edit" :disabled="single" @click="handleUpdate" v-hasPermi="['system:post:edit']">{{ $t('btn.edit') }}</el-button>
+        <el-button type="success" plain icon="edit" :disabled="single" @click="handleUpdate" v-hasPermi="['system:post:edit']">
+          {{ $t('btn.edit') }}
+        </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="delete" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:post:remove']">{{ $t('btn.delete') }}</el-button>
+        <el-button type="danger" plain icon="delete" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:post:remove']">
+          {{ $t('btn.delete') }}
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['system:post:export']">{{ $t('btn.export') }}</el-button>
@@ -52,8 +56,12 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button type="text" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:post:edit']">{{ $t('btn.edit') }}</el-button>
-          <el-button type="text" icon="delete" @click="handleDelete(scope.row)" v-hasPermi="['system:post:remove']">{{ $t('btn.delete') }}</el-button>
+          <el-button text size="small" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:post:edit']">
+            {{ $t('btn.edit') }}
+          </el-button>
+          <el-button text size="small" icon="delete" @click="handleDelete(scope.row)" v-hasPermi="['system:post:remove']">
+            {{ $t('btn.delete') }}
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
