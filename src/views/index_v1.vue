@@ -65,19 +65,20 @@
           <template #header>
             <div>
               <span>在线用户</span>
-              <el-button class="home-card-more" type="text" @click="onOpenGitee">更多</el-button>
+              <el-button class="home-card-more" text @click="onOpenGitee">更多</el-button>
             </div>
           </template>
           <div class="info">
             <!-- <vue3-seamless-scroll :list="onlineUsers" class="info-scroll" :step="0.2" :limitScrollNum="1"> -->
-            <div class="info-scroll">
-              <ul class="info-ul">
-                <li v-for="(v, k) in onlineUsers" :key="k" class="info-item">
-                  <div class="info-item-left" v-text="v.name"></div>
-                  <div class="info-item-right" v-text="dayjs(v.loginTime).format('HH:mm:ss')"></div>
-                </li>
-              </ul>
-            </div>
+            <el-scrollbar wrap-class="scrollbar-wrapper">
+              <div class="info-scroll">
+                <ul class="info-ul">
+                  <li v-for="(v, k) in onlineUsers" :key="k" class="info-item">
+                    <div class="info-item-left" v-text="v.name"></div>
+                    <div class="info-item-right" v-text="dayjs(v.loginTime).format('HH:mm:ss')"></div>
+                  </li>
+                </ul></div
+            ></el-scrollbar>
             <!-- </vue3-seamless-scroll> -->
           </div>
         </el-card>
@@ -119,8 +120,8 @@ import LineChart from './dashboard/LineChart'
 import RaddarChart from './dashboard/RaddarChart'
 import PieChart from './dashboard/PieChart'
 import BarChart from './dashboard/BarChart'
-import { Vue3SeamlessScroll } from 'vue3-seamless-scroll'
-import { listNewArticle } from '@/api/article/article.js'
+// import { Vue3SeamlessScroll } from 'vue3-seamless-scroll'
+
 import dayjs from 'dayjs'
 
 const data = {
@@ -151,11 +152,7 @@ const currentTime = computed(() => {
 const onlineUsers = computed(() => {
   return proxy.$store.getters.onlineUsers
 })
-let newArticleList = reactive([])
 
-listNewArticle().then((res) => {
-  newArticleList = res.data
-})
 let lineChartData = reactive([])
 const dataType = ref(null)
 function handleSetLineChartData(type) {
@@ -175,12 +172,7 @@ function onOpenGitee() {}
     padding: 3px 0;
     font-size: 13px;
   }
-  .home-card-time {
-    float: right;
-    font-size: 13px;
-    width: 130px;
-    margin-top: -4px;
-  }
+
   .user-item {
     height: 198px;
     display: flex;
@@ -219,7 +211,7 @@ function onOpenGitee() {}
     // overflow-y: scroll;
     .info-scroll {
       height: 100%;
-      overflow-y: scroll;
+      overflow: auto;
       .info-ul {
         list-style: none;
         padding: 0;
@@ -246,101 +238,6 @@ function onOpenGitee() {}
             text-align: right;
             padding-right: 10px;
           }
-        }
-      }
-    }
-  }
-  .home-recommend-row {
-    .home-recommend {
-      position: relative;
-      height: 100px;
-      color: #ffffff;
-      border-radius: 4px;
-      overflow: hidden;
-      cursor: pointer;
-
-      &:hover {
-        i {
-          right: 0px !important;
-          bottom: 0px !important;
-          transition: all ease 0.3s;
-        }
-      }
-
-      i {
-        position: absolute;
-        right: -10px;
-        bottom: -10px;
-        font-size: 70px;
-        transform: rotate(-30deg);
-        transition: all ease 0.3s;
-      }
-
-      .home-recommend-auto {
-        padding: 15px;
-        position: absolute;
-        left: 0;
-        top: 5%;
-        .home-recommend-msg {
-          font-size: 12px;
-          margin-top: 10px;
-        }
-      }
-    }
-  }
-  .charts {
-    width: 100%;
-    height: 282.6px;
-    display: flex;
-    padding: 12px 15px;
-    .charts-left {
-      flex: 1;
-      height: 100%;
-    }
-    .charts-right {
-      flex: 1;
-      height: 100%;
-    }
-  }
-  .home-charts {
-    height: 282.6px;
-    .home-charts-item {
-      background-color: #f5f5f5;
-      padding: 19px 15px;
-      border-radius: 2px;
-      display: flex;
-      align-items: center;
-      margin-bottom: 12px;
-      cursor: pointer;
-
-      &:last-of-type {
-        margin-bottom: 0;
-      }
-
-      &:hover {
-        .home-charts-item-right {
-          i {
-            transform: rotate(45deg);
-            transition: all ease 0.3s;
-          }
-        }
-      }
-      .home-charts-item-left {
-        flex: 1;
-        .home-charts-item-title {
-          font-size: 13px;
-        }
-        .home-charts-item-num {
-          font-size: 20px;
-          margin-top: 5px;
-        }
-      }
-      .home-charts-item-right {
-        i {
-          font-size: 20px;
-          padding: 8px;
-          border-radius: 100%;
-          transition: all ease 0.3s;
         }
       }
     }
