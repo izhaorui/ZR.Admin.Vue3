@@ -94,12 +94,12 @@ function setLayout() {
 </script>
 
 <style lang="scss" scoped>
-.el-menu {
-  // display: inline-table;
-  .el-menu-item {
-    vertical-align: center;
-  }
-}
+// .el-menu {
+//   // display: inline-table;
+//   .el-menu-item {
+//     vertical-align: center;
+//   }
+// }
 .navbar {
   height: 50px;
   overflow: hidden;

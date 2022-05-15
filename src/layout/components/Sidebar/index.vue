@@ -10,8 +10,7 @@
         :active-text-color="theme"
         :collapse-transition="false"
         background-color="transparent"
-        mode="vertical"
-      >
+        mode="vertical">
         <sidebar-item v-for="(route, index) in sidebarRouters" :key="route.path + index" :item="route" :base-path="route.path" />
       </el-menu>
     </el-scrollbar>
@@ -47,7 +46,6 @@ const activeMenu = computed(() => {
 
 .layout-sidebar__container {
   transition: width 0.28s;
-  width: var(--base-sidebar-width);
   background-color: var(--base-menu-background);
   height: 100%;
   position: fixed;
@@ -70,39 +68,13 @@ const activeMenu = computed(() => {
   .el-scrollbar__bar.is-vertical {
     right: 0px;
   }
-
-  a {
-    display: inline-block;
-    width: 100%;
-    overflow: hidden;
-  }
-
+  // 去掉el-menu边框
   .el-menu {
     border: none;
-    height: 100%;
-    width: 100% !important;
   }
-
-  // menu hover
-  .submenu-title-noDropdown,
-  .el-sub-menu__title {
-    &:hover {
-      // background-color: $menuHover !important;
-    }
-  }
-
-  .is-active > .el-sub-menu__title {
-    // color: $subMenuActiveText !important;
-  }
-
-  & .nest-menu .el-sub-menu > .el-sub-menu__title,
-  & .el-sub-menu .el-menu-item {
-    min-width: var(--base-sidebar-width) !important;
-    // background-color: $base-menu-background !important;
-
-    &:hover {
-      // background-color: $base-sub-menu-hover !important;
-    }
+	
+  .el-sub-menu .el-menu-item {
+    padding-right: 0 !important;
   }
 }
 </style>
