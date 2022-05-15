@@ -60,6 +60,7 @@ export default {
   },
   // 接收消息处理
   receiveMsg(connection) {
+    console.log(connection)
     connection.on("onlineNum", (data) => {
       store.dispatch("socket/changeOnlineNum", data);
     });
@@ -83,6 +84,11 @@ export default {
       if (data.code == 200) {
         store.dispatch("socket/getNoticeList", data.data);
       }
+    })
+
+    // 接收在线用户
+    connection.on("onlineUser", (data) => {
+      store.dispatch("socket/getOnlineUsers", data);
     })
   }
 }

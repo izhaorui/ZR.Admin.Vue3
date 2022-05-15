@@ -1,5 +1,6 @@
 const state = {
   onlineNum: 0,
+  onlineUsers: [],
   noticeList: []
 }
 const mutations = {
@@ -8,6 +9,9 @@ const mutations = {
   },
   SET_NOTICE_list: (state, data) => {
     state.noticeList = data;
+  },
+  SET_ONLINE_USERS: (state, data) => {
+    state.onlineUsers = data;
   }
 }
 
@@ -19,6 +23,9 @@ const actions = {
   // 更新系统通知
   getNoticeList({ commit }, data) {
     commit('SET_NOTICE_list', data)
+  },
+  getOnlineUsers({ commit }, data) {
+    commit('SET_ONLINE_USERS', data)
   }
 }
 

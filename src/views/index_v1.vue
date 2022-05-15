@@ -64,20 +64,21 @@
         <el-card shadow="hover">
           <template #header>
             <div>
-              <span>最新文章</span>
+              <span>在线用户</span>
               <el-button class="home-card-more" type="text" @click="onOpenGitee">更多</el-button>
             </div>
           </template>
-
           <div class="info">
-            <vue3-seamless-scroll :list="newArticleList" class="info-scroll" :step="0.2" :limitScrollNum="2">
+            <!-- <vue3-seamless-scroll :list="onlineUsers" class="info-scroll" :step="0.2" :limitScrollNum="1"> -->
+            <div class="info-scroll">
               <ul class="info-ul">
-                <li v-for="(v, k) in newArticleList" :key="k" class="info-item">
-                  <div class="info-item-left" v-text="v.title"></div>
-                  <div class="info-item-right" v-text="parseTime(v.updateTime, '{m}/{d}')"></div>
+                <li v-for="(v, k) in onlineUsers" :key="k" class="info-item">
+                  <div class="info-item-left" v-text="v.name"></div>
+                  <div class="info-item-right" v-text="dayjs(v.loginTime).format('HH:mm:ss')"></div>
                 </li>
               </ul>
-            </vue3-seamless-scroll>
+            </div>
+            <!-- </vue3-seamless-scroll> -->
           </div>
         </el-card>
       </el-col>
@@ -120,6 +121,7 @@ import PieChart from './dashboard/PieChart'
 import BarChart from './dashboard/BarChart'
 import { Vue3SeamlessScroll } from 'vue3-seamless-scroll'
 import { listNewArticle } from '@/api/article/article.js'
+import dayjs from 'dayjs'
 
 const data = {
   newVisitis: {
@@ -145,6 +147,9 @@ const userInfo = computed(() => {
 })
 const currentTime = computed(() => {
   return proxy.parseTime(new Date())
+})
+const onlineUsers = computed(() => {
+  return proxy.$store.getters.onlineUsers
 })
 let newArticleList = reactive([])
 
@@ -210,10 +215,11 @@ function onOpenGitee() {}
     }
   }
   .info {
-    height: 198px;
+    height: 189px;
+    // overflow-y: scroll;
     .info-scroll {
       height: 100%;
-      overflow: hidden;
+      overflow-y: scroll;
       .info-ul {
         list-style: none;
         padding: 0;
@@ -236,8 +242,9 @@ function onOpenGitee() {}
             overflow: hidden;
           }
           .info-item-right {
-            width: 60px;
+            width: 160px;
             text-align: right;
+            padding-right: 10px;
           }
         }
       }

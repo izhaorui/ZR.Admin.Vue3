@@ -18,6 +18,7 @@ const getters = {
   defaultRoutes: state => state.permission.defaultRoutes,
   sidebarRouters: state => state.permission.sidebarRouters,
   onlineUserNum: state => state.socket.onlineNum,
-  noticeList: state => state.socket.noticeList
+  noticeList: state => state.socket.noticeList,
+  onlineUsers: state => state.socket.onlineUsers
 }
 export default getters
