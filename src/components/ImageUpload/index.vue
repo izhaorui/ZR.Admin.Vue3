@@ -16,8 +16,7 @@
       :headers="headers"
       :file-list="fileList"
       :on-preview="handlePictureCardPreview"
-      :class="{ hide: fileList.length >= limit }"
-    >
+      :class="{ hide: fileList.length >= limit }">
       <el-icon class="avatar-uploader-icon"><plus /></el-icon>
     </el-upload>
     <!-- 上传提示 -->
@@ -113,14 +112,20 @@ function handleRemove(file, files) {
 
 // 上传成功回调
 function handleUploadSuccess(res) {
+  if (res.code != 200) {
+    proxy.$modal.msgError(`上传失败，原因:${res.msg}!`)
+    proxy.$modal.closeLoading()
+    fileList.value = []
+    return
+  }
   uploadList.value.push({ name: res.data.fileName, url: res.data.url })
   if (uploadList.value.length === number.value) {
     fileList.value = fileList.value.filter((f) => f.url !== undefined).concat(uploadList.value)
     uploadList.value = []
     number.value = 0
     emit('update:modelValue', listToString(fileList.value))
-    proxy.$modal.closeLoading()
   }
+  proxy.$modal.closeLoading()
 }
 
 // 上传前loading加载
