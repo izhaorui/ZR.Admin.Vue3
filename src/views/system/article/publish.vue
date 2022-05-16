@@ -31,7 +31,9 @@
 
           <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 文章标签</el-button>
         </el-form-item>
-
+        <el-form-item label="文章封面">
+          <UploadImage ref="uploadRef" v-model="form.coverUrl" :limit="1" :fileSize="15" :drag="true" />
+        </el-form-item>
         <el-form-item prop="content" label="文章内容">
           <MdEditor v-model="form.content" :onUploadImg="onUploadImg" />
         </el-form-item>

@@ -48,7 +48,7 @@
             size="small"
             icon="Document"
             plain
-            @click="goTarget('http://www.izhaorui.cn/doc/#/gxrz?id=v' + version)"
+            @click="goTarget('http://www.izhaorui.cn/doc/#/changelog?id=v' + version)"
             >{{ $t('layout.changeLog') }}
           </el-link>
         </p>

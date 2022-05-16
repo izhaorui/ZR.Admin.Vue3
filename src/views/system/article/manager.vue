@@ -27,7 +27,20 @@
 
     <el-table :data="dataList" ref="table" border>
       <el-table-column prop="cid" label="id" width="60" sortable> </el-table-column>
-      <el-table-column prop="title" label="文章标题" width="180" :show-overflow-tooltip="true"> </el-table-column>
+      <el-table-column prop="title" label="文章标题" width="120" :show-overflow-tooltip="true"> </el-table-column>
+      <el-table-column prop="coverUrl" label="文章封面" width="90" :show-overflow-tooltip="true">
+        <template #default="{ row }">
+          <el-image
+            preview-teleported
+            :src="row.coverUrl"
+            :preview-src-list="[row.coverUrl]"
+            :hide-on-click-modal="true"
+            fit="contain"
+            lazy
+            class="el-avatar">
+          </el-image>
+        </template>
+      </el-table-column>
       <el-table-column prop="authorName" label="作者" width="80"> </el-table-column>
       <el-table-column prop="fmt_type" label="编辑器类型" width="100"> </el-table-column>
       <el-table-column prop="tags" label="标签" width="100" :show-overflow-tooltip="true"> </el-table-column>
