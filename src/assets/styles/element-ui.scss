@@ -28,13 +28,6 @@
   }
 }
 
-.fixed-width {
-  .el-button--mini {
-    padding: 7px 10px;
-    width: 60px;
-  }
-}
-
 .status-col {
   .cell {
     padding: 0 10px;
@@ -55,6 +48,14 @@
   vertical-align: middle;
 }
 
+.el-header {
+  --el-header-padding: 0 0px !important;
+  --el-header-height: 50px !important;
+}
+// el 2.2.0 text button
+.el-button.is-text {
+  color: var(--el-color-primary) !important;
+}
 @media screen and (max-width: 500px) {
   .el-message {
     min-width: 300px !important;

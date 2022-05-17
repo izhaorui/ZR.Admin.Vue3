@@ -19,8 +19,7 @@
           size="large"
           auto-complete="off"
           :placeholder="$t('login.password')"
-          @keyup.enter="handleLogin"
-        >
+          @keyup.enter="handleLogin">
           <template #prefix>
             <svg-icon name="password" class="el-input__icon input-icon" />
           </template>
@@ -33,8 +32,7 @@
           auto-complete="off"
           :placeholder="$t('login.captcha')"
           style="width: 63%"
-          @keyup.enter="handleLogin"
-        >
+          @keyup.enter="handleLogin">
           <template #prefix>
             <svg-icon name="validCode" class="el-input__icon input-icon" />
           </template>

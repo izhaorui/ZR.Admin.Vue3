@@ -1,36 +1,50 @@
 <template>
-  <div :class="classObj" class="app-wrapper" :style="{ '--current-color': theme }">
+  <el-container :class="classObj" class="app-layout" :style="{ '--current-color': theme }">
+    <!-- 移动端打开菜单遮罩 -->
     <div v-if="device === 'mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
-    <sidebar class="sidebar-container" v-if="!sidebar.hide" />
-    <div class="main-container" :class="{ hasTagsView: needTagsView, sidebarHide: sidebar.hide }">
-      <div :class="{ 'fixed-header': fixedHeader }">
+    <sidebar v-if="!sidebar.hide" />
+    <el-container class="main-container flex-center" :class="{ hasTagsView: needTagsView, sidebarHide: sidebar.hide }">
+      <el-header :class="{ 'fixed-header': fixedHeader }">
         <navbar @setLayout="setLayout" />
         <tags-view v-if="needTagsView" />
-      </div>
-      <app-main />
+      </el-header>
+      <el-main class="app-main">
+        <router-view v-slot="{ Component, route }" :key="route.path">
+          <transition name="fade-transform" mode="out-in">
+            <keep-alive :include="cachedViews">
+              <component :is="Component" :key="route.path" />
+            </keep-alive>
+          </transition>
+        </router-view>
+      </el-main>
       <settings ref="settingRef" />
-    </div>
-  </div>
+    </el-container>
+  </el-container>
 </template>
 
 <script setup>
 import { useWindowSize } from '@vueuse/core'
 import Sidebar from './components/Sidebar/index.vue'
-import { AppMain, Navbar, Settings, TagsView } from './components'
+import { Navbar, Settings, TagsView } from './components'
 import defaultSettings from '@/settings'
 
 const store = useStore()
 const theme = computed(() => store.state.settings.theme)
-const sideTheme = computed(() => store.state.settings.sideTheme)
+// const sideTheme = computed(() => store.state.settings.sideTheme)
 const sidebar = computed(() => store.state.app.sidebar)
 const device = computed(() => store.state.app.device)
 const needTagsView = computed(() => store.state.settings.tagsView)
 const fixedHeader = computed(() => store.state.settings.fixedHeader)
 
+const route = useRoute()
+store.dispatch('tagsView/addCachedView', route)
+const cachedViews = computed(() => {
+  return store.state.tagsView.cachedViews
+})
+
 const classObj = computed(() => ({
   hideSidebar: !sidebar.value.opened,
   openSidebar: sidebar.value.opened,
-  withoutAnimation: sidebar.value.withoutAnimation,
   mobile: device.value === 'mobile',
 }))
 
@@ -63,17 +77,28 @@ function setLayout() {
 @import '@/assets/styles/mixin.scss';
 @import '@/assets/styles/variables.module.scss';
 
-.app-wrapper {
-  @include clearfix;
+.main-container {
+  min-height: 100%;
+  width: 100%;
+  flex-direction: column;
   position: relative;
+}
+
+.app-layout {
+  @include clearfix;
+  // position: relative;
   height: 100%;
   width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+
   &.mobile.openSidebar {
     position: fixed;
     top: 0;
   }
 }
-
+// 移动端打开菜单背景遮罩
 .drawer-bg {
   background: rgba(0, 0, 0, 0.3);
   width: 100%;
@@ -82,20 +107,36 @@ function setLayout() {
   position: absolute;
   z-index: 999;
 }
-
+// 固定header
 .fixed-header {
-  position: fixed;
-  top: 0;
-  right: 0;
+  position: sticky;
+  position: -webkit-sticky;
   z-index: 9;
-  width: calc(100% - var(--base-sidebar-width));
-  transition: width 0.28s;
-}
-.hideSidebar .fixed-header {
-  width: calc(100% - 54px);
 }
 
 .mobile .fixed-header {
   width: 100%;
+}
+.app-main {
+  /* 50= navbar  50  */
+  // min-height: calc(100vh - 50px);
+  width: 100%;
+  position: relative;
+  height: 100%;
+}
+
+.el-header {
+  --el-header-padding: 0 0px !important;
+  --el-header-height: 50px !important;
+}
+
+.hasTagsView {
+  .app-main {
+    /* 84 = navbar + tags-view = 50 + 34 */
+    min-height: calc(100vh - 84px);
+  }
+  .el-header {
+    --el-header-height: 84px !important;
+  }
 }
 </style>

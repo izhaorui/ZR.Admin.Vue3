@@ -1,29 +1,30 @@
 <template>
-  <div v-if="!item.hidden">
+  <template v-if="!item.hidden">
     <template v-if="hasOneShowingChild(item.children, item) && (!onlyOneChild.children || onlyOneChild.noShowingChildren) && !item.alwaysShow">
       <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path, onlyOneChild.query)">
-        <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{ 'submenu-title-noDropdown': !isNest }">
+        <el-menu-item :index="resolvePath(onlyOneChild.path)">
           <svg-icon :name="onlyOneChild.meta.icon || (item.meta && item.meta.icon)" />
+
           <template v-if="onlyOneChild.meta.titleKey" #title>
-            <span>{{ $t(onlyOneChild.meta.titleKey) }}</span>
+            {{ $t(onlyOneChild.meta.titleKey) }}
           </template>
           <template v-else-if="onlyOneChild.meta.title" #title>
-            <span>{{ onlyOneChild.meta.title }}</span>
+            {{ onlyOneChild.meta.title }}
           </template>
         </el-menu-item>
       </app-link>
     </template>
 
-    <el-sub-menu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
-      <template v-slot:title>
+    <el-sub-menu v-else ref="subMenu" :index="resolvePath(item.path)">
+      <template #title>
         <svg-icon :name="item.meta && item.meta.icon" />
         <span v-if="item.meta && item.meta.titleKey">{{ $t(item.meta.titleKey) }}</span>
         <span v-else-if="item.meta && item.meta.title">{{ item.meta.title }}</span>
       </template>
 
-      <sidebar-item v-for="child in item.children" :key="child.path" :is-nest="true" :item="child" :base-path="resolvePath(child.path)" class="nest-menu" />
+      <sidebar-item v-for="child in item.children" :key="child.path" :is-nest="true" :item="child" :base-path="resolvePath(child.path)" />
     </el-sub-menu>
-  </div>
+  </template>
 </template>
 
 <script setup>

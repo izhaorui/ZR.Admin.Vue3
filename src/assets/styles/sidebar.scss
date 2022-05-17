@@ -1,33 +1,45 @@
 #app {
-  .main-container {
-    min-height: 100%;
-    transition: margin-left 0.28s;
-    margin-left: var(--base-sidebar-width);
+  .layout-sidebar__container {
+    transition: width 0.28s ease;
+    background-color: var(--base-menu-background);
+    height: 100%;
     position: relative;
+    font-size: 0px;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    -webkit-box-shadow: 2px 0 14px rgb(0 21 41 / 10%);
+    box-shadow: 2px 0 14px rgb(0 21 41 / 10%);
+    .scrollbar-wrapper {
+      overflow-x: hidden;
+    }
+
+    .el-scrollbar {
+      flex: 1;
+    }
+
+    .el-scrollbar__bar.is-vertical {
+      right: 0px;
+    }
+    // 去掉el-menu边框
+    .el-menu {
+      border: none;
+    }
   }
 
   // 展开sidebar状态设置svg-icon边距
-  .openSidebar .layout-sidebar__container .svg-icon {
-    margin-right: 10px;
+  .openSidebar {
+    .layout-sidebar__container .svg-icon {
+      margin-right: 10px;
+    }
   }
 
-  .openSidebar .scrollbar-wrapper:not(.el-menu--collapse) {
-    width: var(--base-sidebar-width);
-  }
+  // 隐藏侧边栏样式
   .hideSidebar {
-    .main-container {
-      margin-left: var(--base-sidebar-left);
+    .el-aside {
+      --el-aside-width: 60px;
     }
-
-    .submenu-title-noDropdown {
-      padding: 0 !important;
-      position: relative;
-
-      .el-tooltip {
-        padding: 0 !important;
-      }
-    }
-
+    // 隐藏箭头
     .el-sub-menu {
       overflow: hidden;
 
@@ -47,7 +59,7 @@
       .el-sub-menu {
         & > .el-sub-menu__title {
           & > span {
-            height: 0;
+            height: 3000px;
             width: 0;
             overflow: hidden;
             visibility: hidden;
@@ -66,6 +78,7 @@
 
     .layout-sidebar__container {
       transition: transform 0.28s;
+			position: fixed;
     }
 
     &.hideSidebar {
@@ -74,7 +87,6 @@
       }
     }
   }
-
 }
 
 // when menu collapsed

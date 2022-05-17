@@ -47,12 +47,12 @@
       </span>
     </div>
 
-    <div class="drawer-item">
+    <!-- <div class="drawer-item">
       <span>{{ $t('layout.fixed') }} Header</span>
       <span class="comp-style">
         <el-switch v-model="fixedHeader" class="drawer-switch" />
       </span>
-    </div>
+    </div> -->
 
     <div class="drawer-item">
       <span>{{ $t('layout.show') }} Logo</span>

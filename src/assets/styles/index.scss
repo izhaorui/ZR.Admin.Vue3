@@ -7,10 +7,6 @@
 @import './waves.scss';
 @import './black.scss';
 
-label {
-  font-weight: 700;
-}
-
 html,
 body,
 #app {
@@ -97,22 +93,18 @@ div:focus {
   }
 }
 
-//main-container全局样式
-.app-container {
-  padding: 20px;
-}
-
 .text-center {
   text-align: center;
 }
 
 .link-type,
 .link-type:focus {
-  color: #337ab7;
+  color: var(--el-color-primary);
   cursor: pointer;
 
   &:hover {
-    color: rgb(32, 160, 255);
+    // color: rgb(32, 160, 255);
+		opacity: 0.3;
   }
 }
 
@@ -269,4 +261,9 @@ div:focus {
 
 .table-td-thumb {
   width: 56px;
+}
+
+.flex-center {
+  flex-direction: column;
+  overflow: hidden;
 }

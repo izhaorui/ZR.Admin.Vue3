@@ -1,5 +1,5 @@
 <template>
-  <div :data-theme="sideTheme" class="layout-sidebar__container" :class="{ 'has-logo': showLogo }">
+  <el-aside :data-theme="sideTheme" class="layout-sidebar__container" :class="{ 'has-logo': showLogo }">
     <logo v-if="showLogo" :collapse="isCollapse" />
 
     <el-scrollbar :class="sideTheme" wrap-class="scrollbar-wrapper">
@@ -14,7 +14,7 @@
         <sidebar-item v-for="(route, index) in sidebarRouters" :key="route.path + index" :item="route" :base-path="route.path" />
       </el-menu>
     </el-scrollbar>
-  </div>
+  </el-aside>
 </template>
 
 <script setup>
@@ -43,38 +43,4 @@ const activeMenu = computed(() => {
 
 <style lang="scss">
 @import '@/assets/styles/variables.module.scss';
-
-.layout-sidebar__container {
-  transition: width 0.28s;
-  background-color: var(--base-menu-background);
-  height: 100%;
-  position: fixed;
-  font-size: 0px;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1001;
-  overflow: hidden;
-  -webkit-box-shadow: 2px 0 14px rgb(0 21 41 / 10%);
-  box-shadow: 2px 0 14px rgb(0 21 41 / 10%);
-  .scrollbar-wrapper {
-    overflow-x: hidden;
-  }
-
-  .el-scrollbar {
-    flex: 1;
-  }
-
-  .el-scrollbar__bar.is-vertical {
-    right: 0px;
-  }
-  // 去掉el-menu边框
-  .el-menu {
-    border: none;
-  }
-	
-  .el-sub-menu .el-menu-item {
-    padding-right: 0 !important;
-  }
-}
 </style>
