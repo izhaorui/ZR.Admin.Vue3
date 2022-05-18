@@ -33,6 +33,7 @@ export default {
     personalCenter: '个人中心',
     menuPermi: '菜单权限',
     assignUsers: '分配用户',
+    cacheMonitor: '缓存监控',
   },
   tagsView: {
     refresh: '刷新页面',
@@ -80,8 +81,8 @@ export default {
     english: '英文',
     chinese: '中文',
     traditionalChinese: '繁体',
-		name: '名称',
-		content: '内容',
+    name: '名称',
+    content: '内容',
     addTime: '添加时间'
   },
   btn: {

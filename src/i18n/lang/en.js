@@ -33,6 +33,7 @@ export default {
     personalCenter: 'Personal',
     menuPermi: 'Menu permi',
     assignUsers: 'Assign users',
+    cacheMonitor: 'Cache monitor',
   },
   tagsView: {
     refresh: 'refresh',

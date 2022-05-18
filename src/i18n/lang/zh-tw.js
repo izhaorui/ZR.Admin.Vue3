@@ -33,6 +33,7 @@ export default {
     personalCenter: '個人中心',
     menuPermi: '菜單權限',
     assignUsers: '分配用戶',
+    cacheMonitor: '緩存監控',
   },
   tagsView: {
     refresh: '重繪',
