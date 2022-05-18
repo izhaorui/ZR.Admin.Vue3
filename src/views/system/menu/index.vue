@@ -39,7 +39,7 @@
           <svg-icon :name="scope.row.icon" />
         </template>
       </el-table-column>
-      <el-table-column prop="menuId" label="菜单id" :show-overflow-tooltip="true" width="60" align="center"></el-table-column>
+      <el-table-column prop="menuId" label="菜单id" :show-overflow-tooltip="true" width="80" align="center"></el-table-column>
       <el-table-column prop="menuType" label="类型" align="center" width="80">
         <template #default="scope">
           <el-tag type="danger" v-if="scope.row.menuType == 'M' && scope.row.isFrame == 1">链接</el-tag>

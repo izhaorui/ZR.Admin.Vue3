@@ -4,7 +4,7 @@
       <h3 class="drawer-title">{{ $t('layout.themeStyleSet') }}</h3>
     </div>
     <div class="setting-drawer-block-checbox">
-      <div class="setting-drawer-block-checbox-item" @click="handleTheme('theme-dark')">
+      <!-- <div class="setting-drawer-block-checbox-item" @click="handleTheme('theme-dark')">
         <img src="@/assets/images/dark.svg" alt="dark" />
         <div v-if="sideTheme === 'theme-dark'" class="setting-drawer-block-checbox-selectIcon" style="display: block">
           <el-icon><Check /></el-icon>
@@ -15,15 +15,22 @@
         <div v-if="sideTheme === 'theme-light'" class="setting-drawer-block-checbox-selectIcon" style="display: block">
           <el-icon><Check /></el-icon>
         </div>
-      </div>
-      <div class="setting-drawer-block-checkbox-item drawer-title" @click="handleTheme('theme-black')">
-        <div v-if="sideTheme === 'theme-black'" class="setting-drawer-block-checbox-selectIcon" style="display: block">
-          <el-icon><Check /></el-icon>
-        </div>
-        <el-icon><moon /></el-icon>
-        {{ $t('layout.darkMode') }}
-      </div>
+      </div>-->
     </div>
+    <div class="drawer-item">
+      <el-radio-group v-model="mode" size="small">
+        <el-radio label="dark">{{$t('layout.darkMode')}}</el-radio>
+        <el-radio label="light">{{$t('layout.lightMode')}}</el-radio>
+        <el-radio label="cafe">cafe</el-radio>
+        <!-- <el-radio label="contrast">contrast</el-radio> -->
+      </el-radio-group>
+    </div>
+    <!-- <div class="drawer-item">
+      <span>暗黑模式</span>
+      <span class="comp-style">
+        <el-switch v-model="isDark" class="mt-2" inline-prompt />
+      </span>
+    </div> -->
     <div class="drawer-item">
       <span>{{ $t('layout.themeColor') }}</span>
       <span class="comp-style">
@@ -76,9 +83,9 @@
 </template>
 
 <script setup>
-import variables from '@/assets/styles/variables.module.scss'
-import originElementPlus from 'element-plus/theme-chalk/index.css'
-
+import 'element-plus/theme-chalk/index.css'
+import 'element-plus/theme-chalk/dark/css-vars.css'
+import { useDark, useCycleList, useColorMode } from '@vueuse/core'
 import { useDynamicTitle } from '@/utils/dynamicTitle'
 import { getLightColor } from '@/utils/index'
 
@@ -90,7 +97,16 @@ const sideTheme = ref(store.state.settings.sideTheme)
 const storeSettings = computed(() => store.state.settings)
 const predefineColors = ref(['#409EFF', '#ff4500', '#ff8c00', '#ffd700', '#90ee90', '#00ced1', '#1e90ff', '#c71585'])
 
-const blackTheme = ref(false)
+// 可以手动更改当前值 model.value = 'cafe'
+const mode = useColorMode({
+  modes: {
+    // custom colors
+    contrast: 'dark contrast',
+    cafe: 'cafe',
+  },
+})
+const { next } = useCycleList(['dark', 'light', 'cafe', 'contrast'], { initialValue: mode })
+const isDark = useDark()
 
 /** 是否需要topnav */
 const topNav = computed({
@@ -161,10 +177,12 @@ watch(
 watch(
   () => sideTheme,
   (val) => {
-    console.log(val.value)
     const body = document.documentElement
-    if (val.value == 'theme-black') body.setAttribute('data-theme', 'theme-black')
-    else body.setAttribute('data-theme', '')
+    if (val.value == 'theme-black') {
+      //body.setAttribute('data-theme', 'theme-black')
+    } else {
+      //body.setAttribute('data-theme', '')
+    }
   },
   {
     immediate: true,
@@ -196,8 +214,6 @@ function handleTheme(val) {
   const body = document.documentElement
   if (val == 'theme-black') body.setAttribute('data-theme', 'theme-black')
   else body.setAttribute('data-theme', '')
-  console.log('change ' + val)
-  blackTheme.value = val === 'theme-black'
 }
 function saveSetting() {
   proxy.$modal.loading('正在保存到本地，请稍候...')
@@ -211,7 +227,7 @@ function saveSetting() {
     theme: storeSettings.value.theme,
   }
   localStorage.setItem('layout-setting', JSON.stringify(layoutSetting))
-  setTimeout(proxy.$modal.closeLoading(), 1000)
+  setTimeout(proxy.$modal.closeLoading(), 500)
 }
 function resetSetting() {
   proxy.$modal.loading('正在清除设置缓存并刷新，请稍候...')
@@ -230,7 +246,7 @@ defineExpose({
 <style lang="scss" scoped>
 .setting-drawer-title {
   margin-bottom: 12px;
-  color: rgba(0, 0, 0, 0.85);
+  color: var(--base-text-color-rgba);
   line-height: 22px;
   font-weight: bold;
   .drawer-title {
@@ -244,7 +260,7 @@ defineExpose({
   margin-top: 10px;
   margin-bottom: 20px;
 
-  .setting-drawer-block-checbox-item {
+  .item {
     position: relative;
     margin-right: 16px;
     border-radius: 2px;
@@ -278,7 +294,7 @@ defineExpose({
 }
 
 .drawer-item {
-  color: rgba(0, 0, 0, 0.65);
+  color: var(--base-text-color-rgba);
   padding: 12px 0;
   font-size: 14px;
 

@@ -55,5 +55,5 @@ export default {
 	/**
 	 * 版权信息
 	 */
-  copyright: 'Copyright ©2022 izhaorui.cn All Rights Reserved.'
+  copyright: 'Copyright ©2022 <a target="_black" href="http://www.izhaorui.cn">izhaorui.cn</a> All Rights Reserved.'
 }

@@ -244,7 +244,6 @@ function onOpenGitee() {}
   }
 }
 .dashboard-editor-container {
-  padding: 18px;
   background-color: var(--base-bg-main);
   position: relative;
 

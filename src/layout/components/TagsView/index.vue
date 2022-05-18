@@ -10,8 +10,7 @@
         class="tags-view-item"
         :style="activeStyle(tag)"
         @click.middle="!isAffix(tag) ? closeSelectedTag(tag) : ''"
-        @contextmenu.prevent="openMenu(tag, $event)"
-      >
+        @contextmenu.prevent="openMenu(tag, $event)">
         <span v-if="tag.meta && tag.meta.titleKey">{{ $t(tag.meta.titleKey) }}</span>
         <span v-else>{{ tag.title }}</span>
         <span v-if="!isAffix(tag)" @click.prevent.stop="closeSelectedTag(tag)">
@@ -21,7 +20,9 @@
     </scroll-pane>
     <ul v-show="visible" :style="{ left: left + 'px', top: top + 'px' }" class="contextmenu">
       <li @click="refreshSelectedTag(selectedTag)"><refresh-right style="width: 1em; height: 1em" /> {{ $t('tagsView.refresh') }}</li>
-      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)"><close style="width: 1em; height: 1em" /> {{ $t('tagsView.close') }}</li>
+      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">
+        <close style="width: 1em; height: 1em" /> {{ $t('tagsView.close') }}
+      </li>
       <li @click="closeOthersTags"><circle-close style="width: 1em; height: 1em" /> {{ $t('tagsView.closeOther') }}</li>
       <li v-if="!isFirstView()" @click="closeLeftTags"><back style="width: 1em; height: 1em" /> {{ $t('tagsView.closeLeft') }}</li>
       <li v-if="!isLastView()" @click="closeRightTags"><right style="width: 1em; height: 1em" /> {{ $t('tagsView.closeRight') }}</li>
@@ -237,7 +238,7 @@ function handleScroll() {
       cursor: pointer;
       height: 26px;
       line-height: 26px;
-      border: 1px solid #ccc;
+      // border: 1px solid #ccc;
       color: var(--el-text-color-regular);
       padding: 0 8px;
       font-size: 12px;
@@ -248,6 +249,10 @@ function handleScroll() {
       }
       &:last-of-type {
         margin-right: 15px;
+      }
+      &:hover {
+        background-color: var(--el-color-primary);
+        color: #fff;
       }
       &.active {
         background-color: var(--el-color-primary);

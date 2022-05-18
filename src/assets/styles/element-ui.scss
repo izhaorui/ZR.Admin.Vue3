@@ -1,16 +1,5 @@
 // cover some element-ui styles
 
-.el-breadcrumb__inner,
-.el-breadcrumb__inner a {
-  font-weight: 400 !important;
-}
-
-// .el-upload {
-//   input[type="file"] {
-//     display: none !important;
-//   }
-// }
-
 .el-upload__input {
   display: none;
 }
@@ -21,11 +10,11 @@
   }
 }
 
-.small-padding {
-  .cell {
-    padding-left: 5px;
-    padding-right: 5px;
-  }
+// table 里面操作按钮样式覆盖
+.el-table__cell .cell {
+	.el-button.is-text{
+		padding: 8px 5px;
+	}
 }
 
 .status-col {
@@ -50,7 +39,7 @@
 
 .el-header {
   --el-header-padding: 0 0px !important;
-  --el-header-height: 50px !important;
+  // --el-header-height: 50px !important;
 }
 // el 2.2.0 text button
 .el-button.is-text {

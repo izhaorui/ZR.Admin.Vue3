@@ -17,6 +17,9 @@
           </transition>
         </router-view>
       </el-main>
+      <el-footer>
+        <div v-html="defaultSettings.copyright"></div>
+      </el-footer>
       <settings ref="settingRef" />
     </el-container>
   </el-container>
@@ -53,18 +56,18 @@ const WIDTH = 992 // refer to Bootstrap's responsive design
 
 watchEffect(() => {
   if (device.value === 'mobile' && sidebar.value.opened) {
-    store.dispatch('app/closeSideBar', { withoutAnimation: false })
+    store.dispatch('app/closeSideBar')
   }
   if (width.value - 1 < WIDTH) {
     store.dispatch('app/toggleDevice', 'mobile')
-    store.dispatch('app/closeSideBar', { withoutAnimation: true })
+    store.dispatch('app/closeSideBar')
   } else {
     store.dispatch('app/toggleDevice', 'desktop')
   }
 })
 
 function handleClickOutside() {
-  store.dispatch('app/closeSideBar', { withoutAnimation: false })
+  store.dispatch('app/closeSideBar')
 }
 
 const settingRef = ref(null)
@@ -75,7 +78,6 @@ function setLayout() {
 
 <style lang="scss">
 @import '@/assets/styles/mixin.scss';
-@import '@/assets/styles/variables.module.scss';
 
 .main-container {
   min-height: 100%;
@@ -127,16 +129,20 @@ function setLayout() {
 
 .el-header {
   --el-header-padding: 0 0px !important;
-  --el-header-height: 50px !important;
+  // --el-header-height: 50px !important;
 }
-
+.el-footer {
+  --el-footer-height: var(--base-footer-height);
+  line-height: var(--base-footer-height);
+  text-align: center;
+  color: #ccc;
+}
 .hasTagsView {
-  .app-main {
-    /* 84 = navbar + tags-view = 50 + 34 */
-    min-height: calc(100vh - 84px);
-  }
+  // .app-main {
+  //   min-height: calc(100vh - 84px - var(--base-footer-height));
+  // }
   .el-header {
-    --el-header-height: 84px !important;
+    --el-header-height: var(--el-header-height) + var(--el-tags-height) !important;
   }
 }
 </style>

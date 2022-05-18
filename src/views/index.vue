@@ -140,7 +140,6 @@
         </el-card> -->
       </el-col>
     </el-row>
-    <el-divider />
   </div>
 </template>
 

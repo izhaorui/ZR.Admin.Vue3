@@ -50,8 +50,8 @@ const actions = {
   toggleSideBar({ commit }) {
     commit('TOGGLE_SIDEBAR')
   },
-  closeSideBar({ commit }, { withoutAnimation }) {
-    commit('CLOSE_SIDEBAR', withoutAnimation)
+  closeSideBar({ commit }) {
+    commit('CLOSE_SIDEBAR', '')
   },
   toggleDevice({ commit }, device) {
     commit('TOGGLE_DEVICE', device)

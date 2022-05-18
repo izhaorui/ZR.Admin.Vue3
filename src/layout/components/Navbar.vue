@@ -94,14 +94,15 @@ function setLayout() {
 </script>
 
 <style lang="scss" scoped>
-// .el-menu {
-//   // display: inline-table;
-//   .el-menu-item {
-//     vertical-align: center;
-//   }
-// }
+.el-menu {
+  // display: inline-table;
+	border-bottom: none;
+  .el-menu-item {
+    vertical-align: center;
+  }
+}
 .navbar {
-  height: 50px;
+  // height: 50px;
   overflow: hidden;
   position: relative;
   background: var(--base-topBar-background);
@@ -135,7 +136,7 @@ function setLayout() {
 
   .right-menu {
     height: 100%;
-    line-height: 50px;
+    line-height: 60px;
     display: flex;
     justify-content: flex-end;
     align-items: center;

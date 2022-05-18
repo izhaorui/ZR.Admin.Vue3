@@ -57,7 +57,7 @@
 
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>{{ defaultSettings.copyright }}</span>
+      <div v-html="defaultSettings.copyright"></div>
     </div>
   </div>
 </template>
@@ -231,9 +231,5 @@ getCookie()
   position: absolute;
   right: 20px;
   top: 10px;
-
-  .svg-icon {
-    color: #fff !important;
-  }
 }
 </style>
