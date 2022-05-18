@@ -10,7 +10,6 @@
 * 配套后端代码仓库地址[ZRAdmin.NET](https://gitee.com/izory/ZrAdminNetCore/) 版本。
 * 前端采用Vue3.0、Element UI Plus、vite、compisition api。
 * 支持加载动态权限菜单，多方式轻松权限控制
-* 阿里云优惠券：[点我进入](https://www.aliyun.com/minisite/goods?userCode=uotn5vt1&share_source=copy_link)。
 * 腾讯云秒杀场：[点我进入](https://curl.qcloud.com/4yEoRquq)。
 * 腾讯云优惠券：[点我领取](https://curl.qcloud.com/5J4nag8D)。
 * 七牛云通用云产品优惠券：[点我进入](https://s.qiniu.com/FzEfay)。
