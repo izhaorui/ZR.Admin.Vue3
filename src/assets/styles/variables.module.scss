@@ -18,10 +18,11 @@ $panGreen: #30b08f;
   --base-text-color-rgba: rgba(0, 0, 0, 0.85);
   --base-sidebar-width: 220px;
   --el-aside-width: 220px;
-  --el-header-height: 50px;
   --base-footer-height: 40px;
   --base-tags-height: 34px;
+  --base-header-height: 50px;
 }
+
 /***默认主题颜色配置***/
 [data-theme='theme-light'] {
   // 菜单背景
