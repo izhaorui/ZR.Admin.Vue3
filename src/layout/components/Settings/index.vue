@@ -19,8 +19,8 @@
     </div>
     <div class="drawer-item">
       <el-radio-group v-model="mode" size="small">
-        <el-radio label="dark">{{$t('layout.darkMode')}}</el-radio>
-        <el-radio label="light">{{$t('layout.lightMode')}}</el-radio>
+        <el-radio label="dark">{{ $t('layout.darkMode') }}</el-radio>
+        <el-radio label="light">{{ $t('layout.lightMode') }}</el-radio>
         <el-radio label="cafe">cafe</el-radio>
         <!-- <el-radio label="contrast">contrast</el-radio> -->
       </el-radio-group>
@@ -53,7 +53,12 @@
         <el-switch v-model="tagsView" class="drawer-switch" />
       </span>
     </div>
-
+    <div class="drawer-item">
+      <span>显示底部栏</span>
+      <span class="comp-style">
+        <el-switch v-model="showFooter" class="drawer-switch" />
+      </span>
+    </div>
     <!-- <div class="drawer-item">
       <span>{{ $t('layout.fixed') }} Header</span>
       <span class="comp-style">
@@ -142,6 +147,16 @@ const fixedHeader = computed({
     })
   },
 })
+// 是否显示底部
+const showFooter = computed({
+  get: () => storeSettings.value.showFooter,
+  set: (val) => {
+    store.dispatch('settings/changeSetting', {
+      key: 'showFooter',
+      value: val,
+    })
+  },
+})
 /**是否需要侧边栏的logo */
 const sidebarLogo = computed({
   get: () => storeSettings.value.sidebarLogo,
@@ -225,6 +240,7 @@ function saveSetting() {
     dynamicTitle: storeSettings.value.dynamicTitle,
     sideTheme: storeSettings.value.sideTheme,
     theme: storeSettings.value.theme,
+    showFooter: storeSettings.value.showFooter,
   }
   localStorage.setItem('layout-setting', JSON.stringify(layoutSetting))
   setTimeout(proxy.$modal.closeLoading(), 500)

@@ -17,7 +17,7 @@
           </transition>
         </router-view>
       </el-main>
-      <el-footer>
+      <el-footer v-if="showFooter">
         <div v-html="defaultSettings.copyright"></div>
       </el-footer>
       <settings ref="settingRef" />
@@ -38,6 +38,7 @@ const sidebar = computed(() => store.state.app.sidebar)
 const device = computed(() => store.state.app.device)
 const needTagsView = computed(() => store.state.settings.tagsView)
 const fixedHeader = computed(() => store.state.settings.fixedHeader)
+const showFooter = computed(() => store.state.settings.showFooter)
 
 const route = useRoute()
 store.dispatch('tagsView/addCachedView', route)
