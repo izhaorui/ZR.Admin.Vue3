@@ -56,11 +56,11 @@ const WIDTH = 992 // refer to Bootstrap's responsive design
 
 watchEffect(() => {
   if (device.value === 'mobile' && sidebar.value.opened) {
-    store.dispatch('app/closeSideBar')
+    // store.dispatch('app/closeSideBar')
   }
   if (width.value - 1 < WIDTH) {
     store.dispatch('app/toggleDevice', 'mobile')
-    store.dispatch('app/closeSideBar')
+    // store.dispatch('app/closeSideBar')
   } else {
     store.dispatch('app/toggleDevice', 'desktop')
   }
