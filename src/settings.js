@@ -10,11 +10,11 @@ export default {
   /**
    * 侧边栏主题 深色主题theme-dark，浅色主题theme-light
    */
-	sideTheme: 'theme-dark',
-	/**
-	 * 框架主题颜色值
-	 */
-	theme: '#FF8C00',
+  sideTheme: 'theme-dark',
+  /**
+   * 框架主题颜色值
+   */
+  theme: '#FF8C00',
   /**
    * 是否系统布局配置
    */
@@ -51,9 +51,9 @@ export default {
    * The default is only used in the production env
    * If you want to also use it in dev, you can pass ['production', 'development']
    */
-	errorLog: 'production',
-	/**
-	 * 版权信息
-	 */
-  copyright: 'Copyright ©2022 <a target="_black" href="http://www.izhaorui.cn">izhaorui.cn</a> All Rights Reserved.'
+  errorLog: 'production',
+  /**
+   * 版权信息
+   */
+  copyright: 'Copyright ©2022 <a target="_black" href="http://www.izhaorui.cn">izhaorui.cn</a> All Rights Reserved.',
 }
