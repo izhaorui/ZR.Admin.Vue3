@@ -34,20 +34,17 @@ $panGreen: #30b08f;
 }
 /***深色主题颜色配置***/
 [data-theme='theme-dark'] {
-  // --base-menu-background: #304156;
-  // --base-logo-title-color: #ffffff;
-  // --base-topBar-background: #ffffff;
-
+  --base-menu-background: #304156;
+  --base-logo-title-color: #ffffff;
   // // el-ement ui 设置
   // --el-fill-color-blank: #304156;
-  // --el-text-color-primary: #bfcbd9;
+  --el-text-color-primary: #e5eaf3;
 }
 html.dark {
   /* custom dark bg color */
-  // --el-bg-color: #626aef;
+  // --el-bg-color: #141414;
   --base-color-white: #ffffff;
-  --base-text-color-rgba: #fff;
-  --base-menu-background: var(--el-bg-color);
+  --base-text-color-rgba: #ffffff;
 }
 html.cafe {
   filter: sepia(0.9) hue-rotate(315deg) brightness(0.9);

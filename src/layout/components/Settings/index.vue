@@ -4,18 +4,18 @@
       <h3 class="drawer-title">{{ $t('layout.themeStyleSet') }}</h3>
     </div>
     <div class="setting-drawer-block-checbox">
-      <!-- <div class="setting-drawer-block-checbox-item" @click="handleTheme('theme-dark')">
+      <div class="item" @click="handleTheme('theme-dark')">
         <img src="@/assets/images/dark.svg" alt="dark" />
         <div v-if="sideTheme === 'theme-dark'" class="setting-drawer-block-checbox-selectIcon" style="display: block">
           <el-icon><Check /></el-icon>
         </div>
       </div>
-      <div class="setting-drawer-block-checbox-item" @click="handleTheme('theme-light')">
+      <div class="item" @click="handleTheme('theme-light')">
         <img src="@/assets/images/light.svg" alt="light" />
         <div v-if="sideTheme === 'theme-light'" class="setting-drawer-block-checbox-selectIcon" style="display: block">
           <el-icon><Check /></el-icon>
         </div>
-      </div>-->
+      </div>
     </div>
     <div class="drawer-item">
       <el-radio-group v-model="mode" size="small">
@@ -193,14 +193,23 @@ watch(
   () => sideTheme,
   (val) => {
     const body = document.documentElement
-    if (val.value == 'theme-black') {
-      //body.setAttribute('data-theme', 'theme-black')
-    } else {
-      //body.setAttribute('data-theme', '')
+    body.setAttribute('data-theme', '')
+  },
+  {
+    immediate: true,
+  },
+)
+watch(
+  () => mode,
+  (val) => {
+    console.log(val.value)
+    if (val.value === 'dark') {
+      handleTheme('')
     }
   },
   {
     immediate: true,
+    deep: true,
   },
 )
 /**
@@ -228,7 +237,7 @@ function handleTheme(val) {
   sideTheme.value = val
   const body = document.documentElement
   if (val == 'theme-black') body.setAttribute('data-theme', 'theme-black')
-  else body.setAttribute('data-theme', '')
+  else body.removeAttribute('data-theme')
 }
 function saveSetting() {
   proxy.$modal.loading('正在保存到本地，请稍候...')
