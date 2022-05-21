@@ -75,7 +75,7 @@ const uploadList = ref([])
 const dialogImageUrl = ref('')
 const dialogVisible = ref(false)
 const baseUrl = import.meta.env.VITE_APP_BASE_API
-const uploadImgUrl = ref(baseUrl + import.meta.env.VITE_APP_UPLOAD_URL ?? '/Common/UploadFile') // 上传的图片服务器地址
+const uploadImgUrl = ref(baseUrl + import.meta.env.VITE_APP_UPLOAD_URL) // 上传的图片服务器地址
 const headers = ref({ Authorization: 'Bearer ' + getToken() })
 const fileList = ref([])
 const showTip = computed(() => props.isShowTip && (props.fileType || props.fileSize))
@@ -89,11 +89,11 @@ watch(
       // 然后将数组转为对象数组
       fileList.value = list.map((item) => {
         if (typeof item === 'string') {
-          if (item.indexOf(baseUrl) === -1) {
-            item = { name: baseUrl + item, url: baseUrl + item }
-          } else {
-            item = { name: item, url: item }
-          }
+          // if (item.indexOf(baseUrl) === -1) {
+          //   item = { name: baseUrl + item, url: baseUrl + item }
+          // } else {
+          item = { name: item, url: item }
+          // }
         }
         return item
       })
