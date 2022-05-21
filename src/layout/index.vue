@@ -33,7 +33,6 @@ import defaultSettings from '@/settings'
 
 const store = useStore()
 const theme = computed(() => store.state.settings.theme)
-// const sideTheme = computed(() => store.state.settings.sideTheme)
 const sidebar = computed(() => store.state.app.sidebar)
 const device = computed(() => store.state.app.device)
 const needTagsView = computed(() => store.state.settings.tagsView)
