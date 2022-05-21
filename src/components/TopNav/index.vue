@@ -1,5 +1,11 @@
 <template>
-  <el-menu :default-active="activeMenu" :active-text-color="theme" mode="horizontal" background-color="transparent" @select="handleSelect" :ellipsis="false">
+  <el-menu
+    :default-active="activeMenu"
+    :active-text-color="theme"
+    mode="horizontal"
+    background-color="transparent"
+    @select="handleSelect"
+    :ellipsis="false">
     <template v-for="(item, index) in topMenus">
       <el-menu-item :style="{ '--theme': theme }" :index="item.path" :key="index" v-if="index < visibleNumber">
         <svg-icon :name="item.meta.icon" />
@@ -24,6 +30,7 @@
 import { constantRoutes } from '@/router'
 import { isHttp } from '@/utils/validate'
 import { useRouter } from 'vue-router'
+import { getNormalPath } from '@/utils/ruoyi'
 
 // 顶部栏初始数
 const visibleNumber = ref(5)
@@ -64,10 +71,10 @@ const childrenMenus = computed(() => {
     for (let item in router.children) {
       if (router.children[item].parentPath === undefined) {
         if (router.path === '/') {
-          router.children[item].path = '/redirect/' + router.children[item].path
+          router.children[item].path = getNormalPath('/redirect/' + router.children[item].path)
         } else {
           if (!isHttp(router.children[item].path)) {
-            router.children[item].path = router.path + '/' + router.children[item].path
+            router.children[item].path = getNormalPath(router.path + '/' + router.children[item].path)
           }
         }
         router.children[item].parentPath = router.path
@@ -96,7 +103,6 @@ const activeMenu = computed(() => {
   if (routes.length === 0) {
     activePath = currentIndex.value || defaultRouter.value
 
-    console.log('activePath', activePath)
     activeRoutes(activePath)
   }
   return activePath
@@ -170,12 +176,6 @@ onMounted(() => {
 .el-menu--horizontal > .el-menu-item .svg-icon {
   margin-right: 5px;
 }
-// .topmenu-container.el-menu--horizontal > .el-menu-item.is-active,
-// .el-menu--horizontal > .el-sub-menu.is-active .el-submenu__title {
-//   border-bottom: 0px solid #{"var(--theme)"} !important;
-//   color: #303133;
-// }
-
 /* sub-menu item */
 .topmenu-container.el-menu--horizontal > .el-sub-menu .el-sub-menu__title {
   height: 50px !important;

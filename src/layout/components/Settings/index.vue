@@ -124,6 +124,8 @@ const topNav = computed({
     if (!val) {
       store.dispatch('app/toggleSideBarHide', false)
       store.commit('SET_SIDEBAR_ROUTERS', store.state.permission.defaultRoutes)
+      // TODO 临时解决切换topnav路由跳转问题
+      setTimeout('window.location.reload()', 100)
     }
   },
 })
