@@ -1,8 +1,11 @@
 <template>
   <el-container :class="classObj" class="app-layout" :style="{ '--current-color': theme }">
     <!-- 移动端打开菜单遮罩 -->
-    <div v-if="device === 'mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
-    <sidebar v-if="!sidebar.hide" />
+    <el-drawer v-if="device === 'mobile'" v-model="menuDrawer" :with-header="false" modal-class="sidebar-mobile" direction="ltr">
+      <sidebar />
+    </el-drawer>
+    <sidebar v-else-if="!sidebar.hide" />
+
     <el-container class="main-container flex-center" :class="{ hasTagsView: needTagsView, sidebarHide: sidebar.hide }">
       <el-header :class="{ 'fixed-header': fixedHeader }">
         <navbar @setLayout="setLayout" />
@@ -30,7 +33,12 @@ import { useWindowSize } from '@vueuse/core'
 import Sidebar from './components/Sidebar/index.vue'
 import { Navbar, Settings, TagsView } from './components'
 import defaultSettings from '@/settings'
-
+const menuDrawer = computed({
+  get: () => store.state.app.sidebar.opened,
+  set: (val) => {
+    store.dispatch('app/toggleSideBar')
+  },
+})
 const store = useStore()
 const theme = computed(() => store.state.settings.theme)
 const sidebar = computed(() => store.state.app.sidebar)
@@ -100,15 +108,7 @@ function setLayout() {
     top: 0;
   }
 }
-// 移动端打开菜单背景遮罩
-.drawer-bg {
-  background: rgba(0, 0, 0, 0.3);
-  width: 100%;
-  top: 0;
-  height: 100%;
-  position: absolute;
-  z-index: 999;
-}
+
 // 固定header
 .fixed-header {
   position: sticky;
@@ -125,6 +125,16 @@ function setLayout() {
   width: 100%;
   position: relative;
   height: 100%;
+}
+.sidebar-mobile {
+  .el-drawer__body {
+    padding: 0;
+  }
+  @media screen and (max-width: 700px) {
+    .el-drawer {
+      width: var(--base-sidebar-width) !important;
+    }
+  }
 }
 
 .el-header {

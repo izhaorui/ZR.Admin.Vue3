@@ -1,5 +1,5 @@
 <template>
-  <el-aside :data-theme="sideTheme" class="layout-sidebar__container" :class="{ 'has-logo': showLogo }">
+  <el-aside :data-theme="sideTheme" class="sidebar" :class="{ 'has-logo': showLogo }">
     <logo v-if="showLogo" :collapse="isCollapse" />
 
     <el-scrollbar :class="sideTheme" wrap-class="scrollbar-wrapper">

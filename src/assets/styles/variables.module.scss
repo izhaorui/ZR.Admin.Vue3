@@ -10,11 +10,6 @@ $panGreen: #30b08f;
 
 // 默认菜单主题风格
 :root {
-  // --base-menu-background: #ffffff;
-  // --base-logo-title-color: #ffffff;
-  // --base-topBar-background: #ffffff;
-  // --base-topBar-color: #5a5e66;
-
   --base-text-color-rgba: rgba(0, 0, 0, 0.85);
   --base-sidebar-width: 220px;
   --el-aside-width: 220px;
@@ -23,16 +18,7 @@ $panGreen: #30b08f;
   --base-header-height: 50px;
 }
 
-/***默认主题颜色配置***/
-[data-theme='theme-light'] {
-  // 菜单背景
-  // --base-menu-background: #ffffff;
-  // // logo部分文字颜色
-  // --base-logo-title-color: #001529;
-  // // 顶部导航栏背景色
-  // --base-topBar-background: #ffffff;
-}
-/***深色主题颜色配置***/
+/***侧边栏深色配置***/
 [data-theme='theme-dark'] {
   --base-menu-background: #304156;
   --base-logo-title-color: #ffffff;
