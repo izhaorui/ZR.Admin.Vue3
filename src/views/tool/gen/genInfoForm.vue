@@ -87,8 +87,7 @@
             :props="{ checkStrictly: true, value: 'menuId', label: 'menuName', emitPath: false }"
             placeholder="请选择上级菜单"
             clearable
-            v-model="info.parentMenuId"
-          >
+            v-model="info.parentMenuId">
             <template #default="{ node, data }">
               <span>{{ data.menuName }}</span>
               <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
@@ -97,7 +96,7 @@
         </el-form-item>
       </el-col>
       <el-col :lg="12">
-        <el-form-item label="查询排序字段">
+        <el-form-item label="默认查询排序字段">
           <el-select v-model="info.sortField" placeholder="请选择字段" class="mr10" clearable="">
             <el-option v-for="item in columns" :key="item.columnId" :label="item.csharpField" :value="item.csharpField"> </el-option>
           </el-select>
@@ -164,6 +163,11 @@
           </el-input>
         </el-form-item>
       </el-col>
+      <!-- <el-col :lg="12">
+        <el-form-item prop="vuePath" label="Vue路径">
+          <el-input v-model="info.vuePath" placeholder="Vue项目所在绝对路径到项目根目录，eg：D:/ZRAdmin-vue"></el-input>
+        </el-form-item>
+      </el-col> -->
       <el-col :lg="24" v-show="info.tplCategory != 'select'">
         <el-form-item label="显示按钮">
           <el-checkbox-group v-model="info.checkedBtn" @change="checkedBtnSelect">
@@ -201,8 +205,7 @@
               v-for="(column, index) in columns"
               :key="index"
               :label="column.csharpField + '：' + column.columnComment"
-              :value="column.csharpField"
-            ></el-option>
+              :value="column.csharpField"></el-option>
           </el-select>
         </el-form-item>
       </el-col>
@@ -221,8 +224,7 @@
               v-for="(column, index) in columns"
               :key="index"
               :label="column.csharpField + '：' + column.columnComment"
-              :value="column.csharpField"
-            ></el-option>
+              :value="column.csharpField"></el-option>
           </el-select>
         </el-form-item>
       </el-col>
@@ -241,8 +243,7 @@
               v-for="(column, index) in columns"
               :key="index"
               :label="column.csharpField + '：' + column.columnComment"
-              :value="column.csharpField"
-            ></el-option>
+              :value="column.csharpField"></el-option>
           </el-select>
         </el-form-item>
       </el-col>
@@ -279,12 +280,7 @@
             </el-tooltip>
           </template>
           <el-select v-model="info.subTableFkName">
-            <el-option
-              v-for="(column, index) in subColumns"
-              :key="index"
-              :label="column.csharpField"
-              :value="column.csharpField"
-            >
+            <el-option v-for="(column, index) in subColumns" :key="index" :label="column.csharpField" :value="column.csharpField">
               <span style="float: left">{{ column.csharpField }}</span>
               <span style="float: right">{{ column.columnComment }}</span>
             </el-option>
@@ -301,7 +297,6 @@ import { queryColumnInfo } from '@/api/tool/gen'
 
 const subColumns = ref([])
 const menuOptions = ref([])
-// const checkedBtn = ref([])
 
 const props = defineProps({
   info: {
@@ -361,7 +356,6 @@ function setSubTableColumns(value) {
   for (var item in props.tables) {
     const obj = props.tables[item]
     if (value === obj.tableName) {
-      // subColumns.value = props.tables[item].columns
       queryColumnInfo(obj.tableId).then((res) => {
         if (res.code == 200) {
           subColumns.value = res.data.columns

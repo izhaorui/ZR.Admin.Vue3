@@ -9,15 +9,15 @@
       </el-tab-pane>
       <el-tab-pane label="字段信息" name="cloum">
         <el-table ref="dragTableRef" v-loading="loading" :data="columns" row-key="columnId" min-height="80px" :max-height="tableHeight">
-          <el-table-column label="序号" type="index" class-name="allowDrag" fixed />
-          <el-table-column label="字段列名" prop="columnName" :show-overflow-tooltip="true" fixed />
-          <el-table-column label="字段描述" fixed>
+          <el-table-column label="#" type="index" class-name="allowDrag" width="60" fixed />
+          <el-table-column label="字段列名" prop="columnName" :show-overflow-tooltip="true" width="90" fixed />
+          <el-table-column label="字段描述" fixed width="120">
             <template #default="scope">
               <el-input v-model="scope.row.columnComment" :ref="setColumnsRef" @keydown="nextFocus(scope.row, scope.$index, $event)"> </el-input>
             </template>
           </el-table-column>
-          <el-table-column label="物理类型" prop="columnType" :show-overflow-tooltip="true" />
-          <el-table-column label="C#类型">
+          <el-table-column label="物理类型" prop="columnType" :show-overflow-tooltip="true" width="90" />
+          <el-table-column label="C#类型" width="110">
             <template #default="scope">
               <el-select v-model="scope.row.csharpType">
                 <el-option label="int" value="int" />
@@ -30,7 +30,7 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="C#属性">
+          <el-table-column label="C#属性" width="100">
             <template #default="scope">
               <el-input v-model="scope.row.csharpField"></el-input>
             </template>
@@ -43,6 +43,13 @@
           <el-table-column label="编辑" width="60" align="center" v-if="info.tplCategory != 'select'">
             <template #default="scope">
               <el-checkbox v-model="scope.row.isEdit" :disabled="scope.row.isPk || scope.row.isIncrement"></el-checkbox>
+            </template>
+          </el-table-column>
+          <el-table-column label="排序" width="60" align="center">
+            <template #default="scope">
+              <el-checkbox
+                v-model="scope.row.isSort"
+                :disabled="scope.row.htmlType == 'imageUpload' || scope.row.htmlType == 'fileUpload'"></el-checkbox>
             </template>
           </el-table-column>
           <el-table-column label="列表" width="60" align="center">
@@ -75,7 +82,7 @@
               <el-checkbox v-model="scope.row.isRequired"></el-checkbox>
             </template>
           </el-table-column>
-          <el-table-column label="表单显示类型" width="120">
+          <el-table-column label="表单显示类型" width="140">
             <template #default="scope">
               <el-select v-model="scope.row.htmlType">
                 <el-option label="文本框" value="input" />
@@ -92,7 +99,7 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="字典类型" min-width="100">
+          <el-table-column label="字典类型" min-width="140">
             <template #default="scope">
               <el-select
                 v-model="scope.row.dictType"
@@ -155,7 +162,7 @@ function handleQuery() {
     getGenTable(tableId).then((res) => {
       loading.value = false
       columns.value = res.data.info.columns
-      info.value = res.data.info
+      info.value = { ...res.data.info, ...res.data.info.options }
       tables.value = res.data.tables // 子表
     })
   }
@@ -180,7 +187,7 @@ function submitForm() {
         parentMenuId: info.value.parentMenuId,
         sortField: info.value.sortField,
         sortType: info.value.sortType,
-        checkedBtn: info.value.checkedBtn?.toString(),
+        checkedBtn: info.value.checkedBtn,
         permissionPrefix: info.value.permissionPrefix,
       }
       console.log('genForm', genTable)
