@@ -173,7 +173,7 @@ function openImportTable() {
 function handlePreview(row) {
   proxy.$refs['codeform'].validate((valid) => {
     if (!valid) {
-      proxy.$modal.msgError('请先完成表格')
+      proxy.$modal.msgError('请先完成表格内容')
       return
     }
     proxy.$modal.loading('请稍后...')

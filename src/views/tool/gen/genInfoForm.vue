@@ -168,6 +168,12 @@
           <el-input v-model="info.vuePath" placeholder="Vue项目所在绝对路径到项目根目录，eg：D:/ZRAdmin-vue"></el-input>
         </el-form-item>
       </el-col> -->
+      <el-col :lg="12">
+        <el-form-item prop="colNum" label="一行显示列">
+          <el-radio v-model="info.colNum" :label="12">2列</el-radio>
+          <el-radio v-model="info.colNum" :label="24">1列</el-radio>
+        </el-form-item>
+      </el-col>
       <el-col :lg="24" v-show="info.tplCategory != 'select'">
         <el-form-item label="显示按钮">
           <el-checkbox-group v-model="info.checkedBtn" @change="checkedBtnSelect">

@@ -17,7 +17,7 @@
             </template>
           </el-table-column>
           <el-table-column label="物理类型" prop="columnType" :show-overflow-tooltip="true" width="90" />
-          <el-table-column label="C#类型" width="110">
+          <el-table-column label="C#类型" width="140">
             <template #default="scope">
               <el-select v-model="scope.row.csharpType">
                 <el-option label="int" value="int" />
@@ -63,7 +63,7 @@
               </el-checkbox>
             </template>
           </el-table-column>
-          <el-table-column label="查询方式">
+          <el-table-column label="查询方式" width="90" align="center">
             <template #default="scope">
               <el-select v-model="scope.row.queryType" :disabled="scope.row.htmlType == 'datetime'" v-if="scope.row.isQuery">
                 <el-option label="=" value="EQ" />
@@ -140,7 +140,7 @@ import Sortable from 'sortablejs'
 // 选中选项卡的 name
 const activeName = ref('cloum')
 // 表格的高度
-const tableHeight = ref(document.documentElement.scrollHeight - 245 + 'px')
+const tableHeight = ref(document.documentElement.scrollHeight - 275 + 'px')
 // 表信息
 const tables = ref([])
 // 表列信息
@@ -189,6 +189,7 @@ function submitForm() {
         sortType: info.value.sortType,
         checkedBtn: info.value.checkedBtn,
         permissionPrefix: info.value.permissionPrefix,
+        colNum: info.value.colNum,
       }
       console.log('genForm', genTable)
 
