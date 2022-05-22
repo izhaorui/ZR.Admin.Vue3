@@ -47,6 +47,7 @@ export default {
   },
   layout: {
     tip1: '如果觉得不错欢迎给个⭐Star⭐收藏一下，这样作者才有继续免费下去的动力，谢谢！',
+    rewardUser: '打赏作者喝杯咖啡表示鼓励',
     contactUs: '联系信息',
     donationSupport: '捐贈支持',
     officialWebsite: '官网',
@@ -73,7 +74,17 @@ export default {
     logOutConfirm: '你確定要退出当前登录吗？',
     large: '较大',
     default: '默认',
-    small: '较小'
+    small: '较小',
+    myWorkbench: '我的工作台',
+    onlineUsers: '在线用户',
+    message: '消息',
+    amount: '金额',
+    order: '订单',
+    modifyInformation: '修改信息',
+    technicalSelection: '技术选型',
+    frontendTechnology: '前端技术',
+    backendTechnology: '后端技术',
+    BackstageManagement: '后台管理',
   },
   common: {
     ok: '确定',
@@ -84,7 +95,11 @@ export default {
     traditionalChinese: '繁体',
     name: '名称',
     content: '内容',
-    addTime: '添加时间'
+    addTime: '添加时间',
+    nickName: '昵称',
+    time: '时间',
+    yes: '是',
+    no: '否',
   },
   btn: {
     add: '新增',

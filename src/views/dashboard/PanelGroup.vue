@@ -6,7 +6,7 @@
           <svg-icon name="peoples" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text" v-waves>在线用户</div>
+          <div class="card-panel-text" v-waves>{{$t('layout.onlineUsers')}}</div>
           <div id="onlineNum" class="card-panel-num">{{ state.onlineUserNum }}</div>
         </div>
       </div>
@@ -17,7 +17,7 @@
           <svg-icon name="message" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text" v-waves>消息</div>
+          <div class="card-panel-text" v-waves>{{$t('layout.message')}}</div>
           <div class="card-panel-num" id="messageNum">{{ state.chatNum }}</div>
         </div>
       </div>
@@ -28,7 +28,7 @@
           <svg-icon name="money" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text" v-waves>金额</div>
+          <div class="card-panel-text" v-waves>{{$t('layout.amount')}}</div>
           <div id="amount" class="card-panel-num">{{ state.amount }}</div>
         </div>
       </div>
@@ -39,7 +39,7 @@
           <svg-icon name="shopping" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text" v-waves>订单</div>
+          <div class="card-panel-text" v-waves>{{$t('layout.order')}}</div>
           <div id="order" class="card-panel-num">{{ state.order }}</div>
         </div>
       </div>

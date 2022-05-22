@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch">
-      <el-form-item label="菜单名称" prop="menuName">
+      <el-form-item :label="$t('m.menuName')" prop="menuName">
         <el-input v-model="queryParams.menuName" placeholder="请输入菜单名称" clearable @keyup.enter="handleQuery" />
       </el-form-item>
-      <el-form-item label="状态" prop="status">
+      <el-form-item :label="$t('m.menuState')" prop="status">
         <el-select v-model="queryParams.status" placeholder="菜单状态" clearable>
           <el-option v-for="dict in sys_normal_disable" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
         </el-select>
@@ -33,23 +33,23 @@
       :default-expand-all="isExpandAll"
       border
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
-      <el-table-column prop="menuName" label="菜单名称" :show-overflow-tooltip="true" width="160"></el-table-column>
-      <el-table-column prop="icon" label="图标" align="center" width="60">
+      <el-table-column prop="menuName" :label="$t('m.menuName')" :show-overflow-tooltip="true" width="160"></el-table-column>
+      <el-table-column prop="icon" :label="$t('m.icon')" align="center" width="60">
         <template #default="scope">
           <svg-icon :name="scope.row.icon" />
         </template>
       </el-table-column>
-      <el-table-column prop="menuId" label="菜单id" :show-overflow-tooltip="true" width="80" align="center"></el-table-column>
-      <el-table-column prop="menuType" label="类型" align="center" width="80">
+      <el-table-column prop="menuId" :label="$t('m.menuid')" :show-overflow-tooltip="true" width="80" align="center"></el-table-column>
+      <el-table-column prop="menuType" :label="$t('m.menuType')" align="center" width="80">
         <template #default="scope">
-          <el-tag type="danger" v-if="scope.row.menuType == 'M' && scope.row.isFrame == 1">链接</el-tag>
-          <el-tag v-else-if="scope.row.menuType == 'C'">菜单</el-tag>
-          <el-tag type="success" v-else-if="scope.row.menuType == 'M'">目录</el-tag>
-          <el-tag type="warning" v-else-if="scope.row.menuType == 'F'">按钮</el-tag>
+          <el-tag type="danger" v-if="scope.row.menuType == 'M' && scope.row.isFrame == 1">{{ $t('m.link') }}</el-tag>
+          <el-tag v-else-if="scope.row.menuType == 'C'">{{ $t('m.menu') }}</el-tag>
+          <el-tag type="success" v-else-if="scope.row.menuType == 'M'">{{ $t('m.directory') }}</el-tag>
+          <el-tag type="warning" v-else-if="scope.row.menuType == 'F'">{{ $t('m.button') }}</el-tag>
         </template>
       </el-table-column>
       <!-- <el-table-column prop="orderNum" label="排序" width="60" align="center"></el-table-column> -->
-      <el-table-column prop="orderNum" label="排序" width="90" sortable align="center">
+      <el-table-column prop="orderNum" :label="$t('m.sort')" width="90" sortable align="center">
         <template #default="scope">
           <span v-show="editIndex != scope.$index" @click="editCurrRow(scope.$index)">{{ scope.row.orderNum }}</span>
           <el-input
@@ -59,24 +59,24 @@
             @blur="handleChangeSort(scope.row)"></el-input>
         </template>
       </el-table-column>
-      <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="visible" label="显示" width="70" align="center">
+      <el-table-column prop="perms" :label="$t('m.authorityID')" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="component" :label="$t('m.componentPath')" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="visible" :label="$t('m.isShow')" width="70" align="center">
         <template #default="scope">
           <dict-tag :options="sys_show_hide" :value="scope.row.visible" />
         </template>
       </el-table-column>
-      <el-table-column prop="status" label="状态" width="80" align="center">
+      <el-table-column prop="status" :label="$t('m.menuState')" width="80" align="center">
         <template #default="scope">
           <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime">
+      <el-table-column :label="$t('common.addTime')" align="center" prop="createTime">
         <template #default="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="170" class-name="small-padding fixed-width">
+      <el-table-column :label="$t('btn.operate')" align="center" width="170" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button text size="small" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:menu:edit']"></el-button>
           <el-button text size="small" icon="Plus" @click="handleAdd(scope.row)" v-hasPermi="['system:menu:add']"></el-button>
@@ -90,7 +90,7 @@
       <el-form ref="menuRef" :model="form" :rules="rules" label-width="100px">
         <el-row>
           <el-col :lg="24">
-            <el-form-item label="上级菜单">
+            <el-form-item :label="$t('m.parentMenu')">
               <el-cascader
                 class="w100"
                 :options="menuOptions"
@@ -106,16 +106,16 @@
             </el-form-item>
           </el-col>
           <el-col :lg="24">
-            <el-form-item label="菜单类型" prop="menuType">
+            <el-form-item :label="$t('m.menuType')" prop="menuType">
               <el-radio-group v-model="form.menuType">
-                <el-radio label="M">目录</el-radio>
-                <el-radio label="C">菜单</el-radio>
-                <el-radio label="F">按钮</el-radio>
+                <el-radio label="M">{{ $t('m.directory') }}</el-radio>
+                <el-radio label="C">{{ $t('m.menu') }}</el-radio>
+                <el-radio label="F">{{ $t('m.button') }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :lg="12">
-            <el-form-item label="菜单名称" prop="menuName">
+            <el-form-item :label="$t('m.menuName')" prop="menuName">
               <el-input v-model="form.menuName" placeholder="请输入菜单名称" />
             </el-form-item>
           </el-col>
@@ -127,18 +127,18 @@
                     <questionFilled />
                   </el-icon>
                 </el-tooltip>
-                多语言key
+                {{ $t('languageKey') }}
               </template>
               <el-input v-model="form.menuNameKey" placeholder="请输入多语言菜单key" />
             </el-form-item>
           </el-col>
           <el-col :lg="12">
-            <el-form-item label="显示排序" prop="orderNum">
+            <el-form-item :label="$t('m.sort')" prop="orderNum">
               <el-input-number v-model="form.orderNum" controls-position="right" :min="0" />
             </el-form-item>
           </el-col>
           <el-col :lg="24" v-if="form.menuType != 'F'">
-            <el-form-item label="菜单图标" prop="icon">
+            <el-form-item :label="$t('m.icon')" prop="icon">
               <el-popover placement="bottom-start" :width="540" v-model:visible="showChooseIcon" trigger="click" @show="showSelectIcon">
                 <template #reference>
                   <el-input v-model="form.icon" placeholder="点击选择图标" @click="showSelectIcon" readonly>
@@ -162,11 +162,11 @@
                     <questionFilled />
                   </el-icon>
                 </el-tooltip>
-                是否外链
+                {{ $t('m.isFrame') }}
               </template>
               <el-radio-group v-model="form.isFrame">
-                <el-radio label="1">是</el-radio>
-                <el-radio label="0">否</el-radio>
+                <el-radio label="1">{{ $t('common.yes') }}</el-radio>
+                <el-radio label="0">{{ $t('common.no') }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -178,7 +178,7 @@
                     <questionFilled />
                   </el-icon>
                 </el-tooltip>
-                路由地址
+                {{ $t('m.routePath') }}
               </template>
               <el-input v-model="form.path" placeholder="请输入路由地址" />
             </el-form-item>
@@ -191,7 +191,7 @@
                     <questionFilled />
                   </el-icon>
                 </el-tooltip>
-                组件路径
+                {{ $t('m.componentPath') }}
               </template>
               <el-input v-model="form.component" placeholder="请输入组件路径" />
             </el-form-item>
@@ -205,7 +205,7 @@
                     <questionFilled />
                   </el-icon>
                 </el-tooltip>
-                权限字符
+                {{ $t('m.permissionStr') }}
               </template>
             </el-form-item>
           </el-col>
@@ -230,11 +230,11 @@
                     <questionFilled />
                   </el-icon>
                 </el-tooltip>
-                是否缓存
+                {{ $t('m.isCache') }}
               </template>
               <el-radio-group v-model="form.isCache">
-                <el-radio label="0">缓存</el-radio>
-                <el-radio label="1">不缓存</el-radio>
+                <el-radio label="0">{{ $t('common.yes') }}</el-radio>
+                <el-radio label="1">{{ $t('common.no') }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -246,7 +246,7 @@
                     <questionFilled />
                   </el-icon>
                 </el-tooltip>
-                显示状态
+                {{ $t('m.isShow') }}
               </template>
               <el-radio-group v-model="form.visible">
                 <el-radio v-for="dict in sys_show_hide" :key="dict.dictValue" :label="dict.dictValue">{{ dict.dictLabel }}</el-radio>
@@ -261,7 +261,7 @@
                     <questionFilled />
                   </el-icon>
                 </el-tooltip>
-                菜单状态
+                {{ $t('m.menuState') }}
               </template>
               <el-radio-group v-model="form.status">
                 <el-radio v-for="dict in sys_normal_disable" :key="dict.dictValue" :label="dict.dictValue">{{ dict.dictLabel }}</el-radio>
@@ -393,7 +393,7 @@ function handleAdd(row) {
     form.value.parentId = 0
   }
   open.value = true
-  title.value = '添加菜单'
+  title.value = proxy.$t('btn.add')
 }
 /** 展开/折叠操作 */
 function toggleExpandAll() {
@@ -410,7 +410,7 @@ async function handleUpdate(row) {
   getMenu(row.menuId).then((response) => {
     form.value = response.data
     open.value = true
-    title.value = '修改菜单'
+    title.value = proxy.$t('btn.edit')
   })
 }
 /** 提交按钮 */

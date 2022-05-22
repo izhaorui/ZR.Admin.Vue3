@@ -73,7 +73,17 @@ export default {
     logOutConfirm: '你確定要退出当前登录吗？',
     large: '較大',
     default: '默認',
-    small: '較小'
+    small: '較小',
+    myWorkbench: '我的工作台',
+    onlineUsers: '在線用戶',
+    message: '消息',
+    amount: '金額',
+    order: '訂單',
+    modifyInformation: '修改信息',
+    technicalSelection: '技術選型',
+    frontendTechnology: '前端技術',
+    backendTechnology: '後端技術',
+    BackstageManagement: '後台管理',
   },
   common: {
     ok: '確定',
@@ -84,7 +94,11 @@ export default {
     traditionalChinese: '繁體',
     name: '名稱',
     content: '內容',
-    addTime: '添加時間'
+    addTime: '添加時間',
+    nickName: '暱稱',
+    time: '時間',
+    yes: '是',
+    no: '否',
   },
   btn: {
     add: '新增',

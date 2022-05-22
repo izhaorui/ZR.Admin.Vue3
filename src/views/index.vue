@@ -34,7 +34,7 @@
     </el-row>
     <el-row :gutter="20">
       <el-col :lg="16" :sm="24">
-        <h2>ZRAdmin.NET后台管理框架</h2>
+        <h2>ZRAdmin.NET {{ $t('layout.BackstageManagement') }}</h2>
         <p>
           ZRAdmin.NET借鉴了很多开源项目的优点，让你开发Web管理系统更简单，所以我也把它给开源了（前端
           <code>vue页面</code>主要参考若依，在此表示感谢.)
@@ -53,9 +53,7 @@
           </el-link>
         </p>
         <p>
-          <el-button type="primary" size="small" icon="Cloudy" plain @click="goTarget('https://gitee.com/izory/ZrAdminNetCore')"
-            >访问码云
-          </el-button>
+          <el-button type="primary" size="small" icon="Cloudy" plain @click="goTarget('https://gitee.com/izory/ZrAdminNetCore')">Gitee </el-button>
           <el-button type="primary" size="small" icon="Cloudy" plain @click="goTarget('https://github.com/izhaorui/ZrAdmin.NET')"
             >Github
           </el-button>
@@ -64,9 +62,9 @@
         <h3>{{ $t('layout.tip1') }}</h3>
       </el-col>
       <el-col :lg="8" :sm="24">
-        <h2>技术选型</h2>
+        <h2>{{ $t('layout.technicalSelection') }}</h2>
         <el-col :span="10">
-          <h4>后端技术</h4>
+          <h4>{{ $t('layout.backendTechnology') }}</h4>
           <ul>
             <li>NET6</li>
             <li>JWT</li>
@@ -81,7 +79,7 @@
           </ul>
         </el-col>
         <el-col :span="10">
-          <h4>前端技术</h4>
+          <h4>{{ $t('layout.frontendTechnology') }}</h4>
           <ul>
             <li>Vue3</li>
             <li>Vuex</li>
@@ -106,7 +104,7 @@
           </template>
 
           <div class="body">
-            <div style="color: red">打赏作者喝杯咖啡表示鼓励</div>
+            <div style="color: red">{{ $t('layout.rewardUser') }}</div>
             <img src="@/assets/images/reward.jpg" alt="donate" style="width: 100%" />
           </div>
         </el-card>
@@ -122,7 +120,7 @@
               <el-link href="http://www.izhaorui.cn/doc" target="_blank"> http://www.izhaorui.cn/doc </el-link>
             </p>
             <p>
-              <el-icon> <UserFilled /> </el-icon>QQ群：
+              <el-icon> <UserFilled /> </el-icon>{{ $t('layout.qqGroup') }}：
               <el-link
                 target="_black"
                 href="https://qm.qq.com/cgi-bin/qm/qr?k=Y__-fTGo_K2UIo3nWz7QnvS8LoRfPWKm&authKey=/ldXxiuolv80PF4yC8VtLk/TvAYbIhm2LKP8YVHCxAk+x2I+iqPAM1H/IsxQ+0gC&noverify=0">

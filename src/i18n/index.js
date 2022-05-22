@@ -13,6 +13,10 @@ import pageLangSetCn from './pages/langSet/zh-cn'
 import pageLangSetEn from './pages/langSet/en'
 import pageLangSetTw from './pages/langSet/zh-tw'
 
+import pagemenuCn from './pages/menu/zh-cn'
+import pagemenuEn from './pages/menu/en'
+import pagemenuTw from './pages/menu/zh-tw'
+
 const i18n = createI18n({
   // 全局注入 $t 函数
   globalInjection: true,
@@ -20,9 +24,9 @@ const i18n = createI18n({
   locale: store.getters.language, //默认选择的语言 
   legacy: false, // 使用 Composition API 模式，则需要将其设置为false
   messages: {
-    'zh-cn': { ...zhCn, ...pageLoginCn, ...pageLangSetCn },
-    'zh-tw': { ...zhTw, ...pageLoginTw, ...pageLangSetTw },
-    'en': { ...en, ...pageLoginEn, ...pageLangSetEn }
+    'zh-cn': { ...zhCn, ...pageLoginCn, ...pageLangSetCn, ...pagemenuCn },
+    'zh-tw': { ...zhTw, ...pageLoginTw, ...pageLangSetTw, ...pagemenuTw },
+    'en': { ...en, ...pageLoginEn, ...pageLangSetEn, ...pagemenuEn }
   }
 })
 console.log('lang=' + store.getters.language)
