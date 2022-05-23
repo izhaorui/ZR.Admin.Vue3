@@ -1,5 +1,5 @@
 <template>
-  <el-aside :data-theme="sideTheme" class="layout-sidebar__container" :class="{ 'has-logo': showLogo }">
+  <el-aside :data-theme="sideTheme" class="sidebar" :class="{ 'has-logo': showLogo }">
     <logo v-if="showLogo" :collapse="isCollapse" />
 
     <el-scrollbar :class="sideTheme" wrap-class="scrollbar-wrapper">
@@ -20,7 +20,6 @@
 <script setup>
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
-import variables from '@/assets/styles/variables.module.scss'
 
 const route = useRoute()
 const store = useStore()
@@ -40,7 +39,3 @@ const activeMenu = computed(() => {
   return path
 })
 </script>
-
-<style lang="scss">
-@import '@/assets/styles/variables.module.scss';
-</style>

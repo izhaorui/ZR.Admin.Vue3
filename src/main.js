@@ -2,7 +2,6 @@ import { createApp } from 'vue'
 import Cookies from 'js-cookie'
 
 import ElementPlus from 'element-plus'
-import elZhCn from 'element-plus/lib/locale/lang/zh-cn' // 中文语言
 import 'dayjs/locale/zh-cn'
 import '@/assets/styles/index.scss' // global css
 

@@ -5,7 +5,7 @@
       <el-col :md="24" :lg="16" :xl="16" class="mb10">
         <el-card shadow="hover">
           <template #header>
-            <span>我的工作台</span>
+            <span>{{$t('layout.myWorkbench')}}</span>
           </template>
           <div class="user-item">
             <div class="user-item-left">
@@ -20,7 +20,7 @@
                 <el-col :xs="24" :sm="24" :md="24">
                   <el-row>
                     <el-col :xs="24" :lg="8" class="right-l-v">
-                      <div class="right-label">昵称：</div>
+                      <div class="right-label">{{$t('common.nickName')}}：</div>
                       <div class="right-value">{{ userInfo.nickName }}</div>
                     </el-col>
                     <el-col :xs="24" :lg="16" class="right-l-v">
@@ -42,7 +42,7 @@
                       </div>
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="16" class="right-l-v">
-                      <div class="right-label one-text-overflow">时间：</div>
+                      <div class="right-label one-text-overflow">{{$t('common.time')}}：</div>
                       <div class="right-value one-text-overflow">
                         {{ currentTime }}
                       </div>
@@ -51,7 +51,7 @@
                 </el-col>
                 <el-col :lg="24" class="mt10">
                   <el-button size="small" icon="edit">
-                    <router-link to="/user/profile">修改信息</router-link>
+                    <router-link to="/user/profile">{{$t('layout.modifyInformation')}}</router-link>
                   </el-button>
                   <!-- <el-button size="small" icon="el-icon-position" type="primary">发布活动</el-button> -->
                 </el-col>
@@ -64,8 +64,8 @@
         <el-card shadow="hover">
           <template #header>
             <div>
-              <span>在线用户</span>
-              <el-button class="home-card-more" text @click="onOpenGitee">更多</el-button>
+              <span>{{$t('layout.onlineUsers')}}</span>
+              <el-button class="home-card-more" text @click="onOpenGitee">{{$t('btn.more')}}</el-button>
             </div>
           </template>
           <div class="info">
@@ -75,6 +75,7 @@
                 <ul class="info-ul">
                   <li v-for="(v, k) in onlineUsers" :key="k" class="info-item">
                     <div class="info-item-left" v-text="v.name"></div>
+										<div>{{v.userIP}}</div>
                     <div class="info-item-right" v-text="dayjs(v.loginTime).format('HH:mm:ss')"></div>
                   </li>
                 </ul></div
@@ -165,7 +166,6 @@ function onOpenGitee() {}
 
 <style lang="scss" scoped>
 .home {
-  width: 97%;
   overflow: hidden;
   .home-card-more {
     float: right;
@@ -198,7 +198,7 @@ function onOpenGitee() {}
         display: flex;
         .right-label {
           color: gray;
-          width: 40px;
+          width: 75px;
         }
         .right-value {
           flex: 1;
@@ -244,7 +244,6 @@ function onOpenGitee() {}
   }
 }
 .dashboard-editor-container {
-  padding: 18px;
   background-color: var(--base-bg-main);
   position: relative;
 

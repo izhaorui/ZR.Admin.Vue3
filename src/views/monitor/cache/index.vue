@@ -22,7 +22,7 @@
                     <div class="cell">运行模式</div>
                   </td>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell" v-if="cache.info">{{ cache.info.redis_mode == "standalone" ? "单机" : "集群" }}</div>
+                    <div class="cell" v-if="cache.info">{{ cache.info.redis_mode == 'standalone' ? '单机' : '集群' }}</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div class="cell">端口</div>
@@ -68,7 +68,7 @@
                     <div class="cell">AOF是否开启</div>
                   </td>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell" v-if="cache.info">{{ cache.info.aof_enabled == "0" ? "否" : "是" }}</div>
+                    <div class="cell" v-if="cache.info">{{ cache.info.aof_enabled == '0' ? '否' : '是' }}</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div class="cell">RDB是否成功</div>
@@ -80,13 +80,15 @@
                     <div class="cell">Key数量</div>
                   </td>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell" v-if="cache.dbSize">{{ cache.dbSize }} </div>
+                    <div class="cell" v-if="cache.dbSize">{{ cache.dbSize }}</div>
                   </td>
                   <td class="el-table__cell is-leaf">
                     <div class="cell">网络入口/出口</div>
                   </td>
                   <td class="el-table__cell is-leaf">
-                    <div class="cell" v-if="cache.info">{{ cache.info.instantaneous_input_kbps }}kps/{{cache.info.instantaneous_output_kbps}}kps</div>
+                    <div class="cell" v-if="cache.info">
+                      {{ cache.info.instantaneous_input_kbps }}kps/{{ cache.info.instantaneous_output_kbps }}kps
+                    </div>
                   </td>
                 </tr>
               </tbody>
@@ -116,8 +118,15 @@
             </div>
           </template>
           <div class="el-table el-table--enable-row-hover el-table--medium">
-            <gauge name="内存消耗" :max="100"
-              :data="[{ value: (parseFloat(cache.info.used_memory_human) / parseFloat(cache.info.total_system_memory_human)).toFixed(2), name: '内存消耗'}]" />
+            <gauge
+              name="内存消耗"
+              :max="100"
+              :data="[
+                {
+                  value: (parseFloat(cache.info.used_memory_human) / parseFloat(cache.info.total_system_memory_human)).toFixed(2),
+                  name: '内存消耗',
+                },
+              ]" />
           </div>
         </el-card>
       </el-col>
@@ -129,7 +138,7 @@
             </div>
           </template>
           <div class="el-table el-table--enable-row-hover el-table--medium">
-            <gauge name="CPU" :max="100" :data="[{ value: parseFloat(cache.info.used_cpu_user_children * 100).toFixed(0), name: 'CPU消耗'}]" />
+            <gauge name="CPU" :max="100" :data="[{ value: parseFloat(cache.info.used_cpu_user_children * 100).toFixed(0), name: 'CPU消耗' }]" />
           </div>
         </el-card>
       </el-col>
@@ -140,7 +149,7 @@
 <script setup name="cache">
 import { getCache } from '@/api/monitor/cache'
 import * as echarts from 'echarts'
-// import Gauge from '@/components/Echarts/Gauge.vue'
+import Gauge from '@/components/Echarts/Gauge.vue'
 
 // 统计命令信息
 const commandstats = ref(null)
@@ -180,5 +189,7 @@ function getList() {
   })
 }
 
-getList()
+onMounted(() => {
+  getList()
+})
 </script>

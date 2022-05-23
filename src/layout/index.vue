@@ -1,8 +1,11 @@
 <template>
   <el-container :class="classObj" class="app-layout" :style="{ '--current-color': theme }">
     <!-- 移动端打开菜单遮罩 -->
-    <div v-if="device === 'mobile' && sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
-    <sidebar v-if="!sidebar.hide" />
+    <el-drawer v-if="device === 'mobile'" v-model="menuDrawer" :with-header="false" modal-class="sidebar-mobile" direction="ltr">
+      <sidebar />
+    </el-drawer>
+    <sidebar v-else-if="!sidebar.hide" />
+
     <el-container class="main-container flex-center" :class="{ hasTagsView: needTagsView, sidebarHide: sidebar.hide }">
       <el-header :class="{ 'fixed-header': fixedHeader }">
         <navbar @setLayout="setLayout" />
@@ -17,6 +20,9 @@
           </transition>
         </router-view>
       </el-main>
+      <el-footer v-if="showFooter">
+        <div v-html="defaultSettings.copyright"></div>
+      </el-footer>
       <settings ref="settingRef" />
     </el-container>
   </el-container>
@@ -27,14 +33,19 @@ import { useWindowSize } from '@vueuse/core'
 import Sidebar from './components/Sidebar/index.vue'
 import { Navbar, Settings, TagsView } from './components'
 import defaultSettings from '@/settings'
-
+const menuDrawer = computed({
+  get: () => store.state.app.sidebar.opened,
+  set: (val) => {
+    store.dispatch('app/toggleSideBar')
+  },
+})
 const store = useStore()
 const theme = computed(() => store.state.settings.theme)
-// const sideTheme = computed(() => store.state.settings.sideTheme)
 const sidebar = computed(() => store.state.app.sidebar)
 const device = computed(() => store.state.app.device)
 const needTagsView = computed(() => store.state.settings.tagsView)
 const fixedHeader = computed(() => store.state.settings.fixedHeader)
+const showFooter = computed(() => store.state.settings.showFooter)
 
 const route = useRoute()
 store.dispatch('tagsView/addCachedView', route)
@@ -53,18 +64,18 @@ const WIDTH = 992 // refer to Bootstrap's responsive design
 
 watchEffect(() => {
   if (device.value === 'mobile' && sidebar.value.opened) {
-    store.dispatch('app/closeSideBar', { withoutAnimation: false })
+    // store.dispatch('app/closeSideBar')
   }
   if (width.value - 1 < WIDTH) {
     store.dispatch('app/toggleDevice', 'mobile')
-    store.dispatch('app/closeSideBar', { withoutAnimation: true })
+    // store.dispatch('app/closeSideBar')
   } else {
     store.dispatch('app/toggleDevice', 'desktop')
   }
 })
 
 function handleClickOutside() {
-  store.dispatch('app/closeSideBar', { withoutAnimation: false })
+  store.dispatch('app/closeSideBar')
 }
 
 const settingRef = ref(null)
@@ -75,7 +86,6 @@ function setLayout() {
 
 <style lang="scss">
 @import '@/assets/styles/mixin.scss';
-@import '@/assets/styles/variables.module.scss';
 
 .main-container {
   min-height: 100%;
@@ -98,15 +108,7 @@ function setLayout() {
     top: 0;
   }
 }
-// 移动端打开菜单背景遮罩
-.drawer-bg {
-  background: rgba(0, 0, 0, 0.3);
-  width: 100%;
-  top: 0;
-  height: 100%;
-  position: absolute;
-  z-index: 999;
-}
+
 // 固定header
 .fixed-header {
   position: sticky;
@@ -124,19 +126,33 @@ function setLayout() {
   position: relative;
   height: 100%;
 }
+.sidebar-mobile {
+  .el-drawer__body {
+    padding: 0;
+  }
+  @media screen and (max-width: 700px) {
+    .el-drawer {
+      width: var(--base-sidebar-width) !important;
+    }
+  }
+}
 
 .el-header {
   --el-header-padding: 0 0px !important;
-  --el-header-height: 50px !important;
+  // --el-header-height: 50px !important;
 }
-
+.el-footer {
+  --el-footer-height: var(--base-footer-height);
+  line-height: var(--base-footer-height);
+  text-align: center;
+  color: #ccc;
+}
 .hasTagsView {
-  .app-main {
-    /* 84 = navbar + tags-view = 50 + 34 */
-    min-height: calc(100vh - 84px);
-  }
+  // .app-main {
+  //   min-height: calc(100vh - 84px - var(--base-footer-height));
+  // }
   .el-header {
-    --el-header-height: 84px !important;
+    --el-header-height: var(--el-header-height) + var(--el-tags-height) !important;
   }
 }
 </style>

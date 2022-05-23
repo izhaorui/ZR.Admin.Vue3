@@ -4,26 +4,33 @@
       <h3 class="drawer-title">{{ $t('layout.themeStyleSet') }}</h3>
     </div>
     <div class="setting-drawer-block-checbox">
-      <div class="setting-drawer-block-checbox-item" @click="handleTheme('theme-dark')">
+      <div class="item" @click="handleTheme('theme-dark')">
         <img src="@/assets/images/dark.svg" alt="dark" />
         <div v-if="sideTheme === 'theme-dark'" class="setting-drawer-block-checbox-selectIcon" style="display: block">
           <el-icon><Check /></el-icon>
         </div>
       </div>
-      <div class="setting-drawer-block-checbox-item" @click="handleTheme('theme-light')">
+      <div class="item" @click="handleTheme('theme-light')">
         <img src="@/assets/images/light.svg" alt="light" />
         <div v-if="sideTheme === 'theme-light'" class="setting-drawer-block-checbox-selectIcon" style="display: block">
           <el-icon><Check /></el-icon>
         </div>
       </div>
-      <div class="setting-drawer-block-checkbox-item drawer-title" @click="handleTheme('theme-black')">
-        <div v-if="sideTheme === 'theme-black'" class="setting-drawer-block-checbox-selectIcon" style="display: block">
-          <el-icon><Check /></el-icon>
-        </div>
-        <el-icon><moon /></el-icon>
-        {{ $t('layout.darkMode') }}
-      </div>
     </div>
+    <div class="drawer-item">
+      <el-radio-group v-model="mode" size="small">
+        <el-radio label="dark">{{ $t('layout.darkMode') }}</el-radio>
+        <el-radio label="light">{{ $t('layout.lightMode') }}</el-radio>
+        <el-radio label="cafe">cafe</el-radio>
+        <!-- <el-radio label="contrast">contrast</el-radio> -->
+      </el-radio-group>
+    </div>
+    <!-- <div class="drawer-item">
+      <span>暗黑模式</span>
+      <span class="comp-style">
+        <el-switch v-model="isDark" class="mt-2" inline-prompt />
+      </span>
+    </div> -->
     <div class="drawer-item">
       <span>{{ $t('layout.themeColor') }}</span>
       <span class="comp-style">
@@ -46,7 +53,12 @@
         <el-switch v-model="tagsView" class="drawer-switch" />
       </span>
     </div>
-
+    <div class="drawer-item">
+      <span>显示底部栏</span>
+      <span class="comp-style">
+        <el-switch v-model="showFooter" class="drawer-switch" />
+      </span>
+    </div>
     <!-- <div class="drawer-item">
       <span>{{ $t('layout.fixed') }} Header</span>
       <span class="comp-style">
@@ -76,9 +88,9 @@
 </template>
 
 <script setup>
-import variables from '@/assets/styles/variables.module.scss'
-import originElementPlus from 'element-plus/theme-chalk/index.css'
-
+import 'element-plus/theme-chalk/index.css'
+import 'element-plus/theme-chalk/dark/css-vars.css'
+import { useDark, useCycleList, useColorMode } from '@vueuse/core'
 import { useDynamicTitle } from '@/utils/dynamicTitle'
 import { getLightColor } from '@/utils/index'
 
@@ -90,7 +102,16 @@ const sideTheme = ref(store.state.settings.sideTheme)
 const storeSettings = computed(() => store.state.settings)
 const predefineColors = ref(['#409EFF', '#ff4500', '#ff8c00', '#ffd700', '#90ee90', '#00ced1', '#1e90ff', '#c71585'])
 
-const blackTheme = ref(false)
+// 可以手动更改当前值 model.value = 'cafe'
+const mode = useColorMode({
+  modes: {
+    // custom colors
+    contrast: 'dark contrast',
+    cafe: 'cafe',
+  },
+})
+const { next } = useCycleList(['dark', 'light', 'cafe', 'contrast'], { initialValue: mode })
+const isDark = useDark()
 
 /** 是否需要topnav */
 const topNav = computed({
@@ -103,6 +124,8 @@ const topNav = computed({
     if (!val) {
       store.dispatch('app/toggleSideBarHide', false)
       store.commit('SET_SIDEBAR_ROUTERS', store.state.permission.defaultRoutes)
+      // TODO 临时解决切换topnav路由跳转问题
+      setTimeout('window.location.reload()', 100)
     }
   },
 })
@@ -122,6 +145,16 @@ const fixedHeader = computed({
   set: (val) => {
     store.dispatch('settings/changeSetting', {
       key: 'fixedHeader',
+      value: val,
+    })
+  },
+})
+// 是否显示底部
+const showFooter = computed({
+  get: () => storeSettings.value.showFooter,
+  set: (val) => {
+    store.dispatch('settings/changeSetting', {
+      key: 'showFooter',
       value: val,
     })
   },
@@ -161,13 +194,24 @@ watch(
 watch(
   () => sideTheme,
   (val) => {
-    console.log(val.value)
     const body = document.documentElement
-    if (val.value == 'theme-black') body.setAttribute('data-theme', 'theme-black')
-    else body.setAttribute('data-theme', '')
+    body.setAttribute('data-theme', '')
   },
   {
     immediate: true,
+  },
+)
+watch(
+  () => mode,
+  (val) => {
+    console.log(val.value)
+    if (val.value === 'dark') {
+      handleTheme('')
+    }
+  },
+  {
+    immediate: true,
+    deep: true,
   },
 )
 /**
@@ -195,9 +239,7 @@ function handleTheme(val) {
   sideTheme.value = val
   const body = document.documentElement
   if (val == 'theme-black') body.setAttribute('data-theme', 'theme-black')
-  else body.setAttribute('data-theme', '')
-  console.log('change ' + val)
-  blackTheme.value = val === 'theme-black'
+  else body.removeAttribute('data-theme')
 }
 function saveSetting() {
   proxy.$modal.loading('正在保存到本地，请稍候...')
@@ -209,9 +251,10 @@ function saveSetting() {
     dynamicTitle: storeSettings.value.dynamicTitle,
     sideTheme: storeSettings.value.sideTheme,
     theme: storeSettings.value.theme,
+    showFooter: storeSettings.value.showFooter,
   }
   localStorage.setItem('layout-setting', JSON.stringify(layoutSetting))
-  setTimeout(proxy.$modal.closeLoading(), 1000)
+  setTimeout(proxy.$modal.closeLoading(), 500)
 }
 function resetSetting() {
   proxy.$modal.loading('正在清除设置缓存并刷新，请稍候...')
@@ -230,7 +273,7 @@ defineExpose({
 <style lang="scss" scoped>
 .setting-drawer-title {
   margin-bottom: 12px;
-  color: rgba(0, 0, 0, 0.85);
+  color: var(--base-text-color-rgba);
   line-height: 22px;
   font-weight: bold;
   .drawer-title {
@@ -244,7 +287,7 @@ defineExpose({
   margin-top: 10px;
   margin-bottom: 20px;
 
-  .setting-drawer-block-checbox-item {
+  .item {
     position: relative;
     margin-right: 16px;
     border-radius: 2px;
@@ -278,7 +321,7 @@ defineExpose({
 }
 
 .drawer-item {
-  color: rgba(0, 0, 0, 0.65);
+  color: var(--base-text-color-rgba);
   padding: 12px 0;
   font-size: 14px;
 

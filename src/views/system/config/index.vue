@@ -77,7 +77,7 @@
       </el-table-column>
     </el-table>
 
-    <pagination :total="total" :page="queryParams.pageNum" :limit="queryParams.pageSize" @pagination="getList" />
+    <pagination v-model:total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
 
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>

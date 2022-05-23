@@ -10,18 +10,19 @@
         class="tags-view-item"
         :style="activeStyle(tag)"
         @click.middle="!isAffix(tag) ? closeSelectedTag(tag) : ''"
-        @contextmenu.prevent="openMenu(tag, $event)"
-      >
+        @contextmenu.prevent="openMenu(tag, $event)">
         <span v-if="tag.meta && tag.meta.titleKey">{{ $t(tag.meta.titleKey) }}</span>
         <span v-else>{{ tag.title }}</span>
-        <span v-if="!isAffix(tag)" @click.prevent.stop="closeSelectedTag(tag)">
-          <close class="el-icon-close" style="width: 1em; height: 1em; vertical-align: middle" />
+        <span v-if="!isAffix(tag)" @click.prevent.stop="closeSelectedTag(tag)" style="width: 10px; height: 10px; display: inline-block">
+          <close class="el-icon-close close" style="width: 1em; height: 1em; vertical-align: middle" />
         </span>
       </router-link>
     </scroll-pane>
     <ul v-show="visible" :style="{ left: left + 'px', top: top + 'px' }" class="contextmenu">
       <li @click="refreshSelectedTag(selectedTag)"><refresh-right style="width: 1em; height: 1em" /> {{ $t('tagsView.refresh') }}</li>
-      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)"><close style="width: 1em; height: 1em" /> {{ $t('tagsView.close') }}</li>
+      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">
+        <close style="width: 1em; height: 1em" /> {{ $t('tagsView.close') }}
+      </li>
       <li @click="closeOthersTags"><circle-close style="width: 1em; height: 1em" /> {{ $t('tagsView.closeOther') }}</li>
       <li v-if="!isFirstView()" @click="closeLeftTags"><back style="width: 1em; height: 1em" /> {{ $t('tagsView.closeLeft') }}</li>
       <li v-if="!isLastView()" @click="closeRightTags"><right style="width: 1em; height: 1em" /> {{ $t('tagsView.closeRight') }}</li>
@@ -225,7 +226,7 @@ function handleScroll() {
 
 <style lang="scss" scoped>
 .tags-view-container {
-  height: 34px;
+  height: var(--base-tags-height);
   width: 100%;
   background: var(--base-topBar-background);
   // border-bottom: 1px solid #d8dce5;
@@ -237,22 +238,35 @@ function handleScroll() {
       cursor: pointer;
       height: 26px;
       line-height: 26px;
-      border: 1px solid #ccc;
+      // border: 1px solid #ccc;
       color: var(--el-text-color-regular);
       padding: 0 8px;
       font-size: 12px;
       margin-left: 5px;
       margin-top: 4px;
+      .close {
+        display: none;
+      }
       &:first-of-type {
         margin-left: 15px;
       }
       &:last-of-type {
         margin-right: 15px;
       }
+      &:hover {
+        background-color: var(--el-color-primary);
+        color: #fff;
+        .close {
+          display: inline-block !important;
+        }
+      }
       &.active {
         background-color: var(--el-color-primary);
         border-color: var(--el-color-primary);
         color: #fff;
+        .close {
+          display: inline-block !important;
+        }
         &::before {
           content: '';
           background: #fff;

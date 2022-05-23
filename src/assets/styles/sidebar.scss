@@ -1,22 +1,15 @@
 #app {
-  .layout-sidebar__container {
+  .sidebar {
+    position: relative;
+    overflow-y: hidden;
+    z-index: 1001;
     transition: width 0.28s ease;
     background-color: var(--base-menu-background);
     height: 100%;
-    position: relative;
-    font-size: 0px;
-    z-index: 1001;
     display: flex;
     flex-direction: column;
     -webkit-box-shadow: 2px 0 14px rgb(0 21 41 / 10%);
     box-shadow: 2px 0 14px rgb(0 21 41 / 10%);
-    .scrollbar-wrapper {
-      overflow-x: hidden;
-    }
-
-    .el-scrollbar {
-      flex: 1;
-    }
 
     .el-scrollbar__bar.is-vertical {
       right: 0px;
@@ -29,8 +22,11 @@
 
   // 展开sidebar状态设置svg-icon边距
   .openSidebar {
-    .layout-sidebar__container .svg-icon {
-      margin-right: 10px;
+    .sidebar {
+      transform: translate(0);
+    }
+    .sidebar .svg-icon {
+      margin-right: 5px;
     }
   }
 
@@ -76,13 +72,14 @@
       margin-left: 0px;
     }
 
-    .layout-sidebar__container {
+    .sidebar {
       transition: transform 0.28s;
-			position: fixed;
+      position: fixed;
+      // background: var(--base-menu-background, #fff);
     }
 
     &.hideSidebar {
-      .layout-sidebar__container {
+      .sidebar {
         display: none;
       }
     }

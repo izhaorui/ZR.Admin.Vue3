@@ -29,7 +29,7 @@ export default defineComponent({
           },
           [h(resolveComponent(props.name.replace('ele-', '')))],
         )
-    } else {
+    } else if (props.name != undefined && props.name != '') {
       return () =>
         h(
           'svg',
@@ -44,6 +44,8 @@ export default defineComponent({
             fill: `${props.color}`,
           }),
         )
+    } else {
+      return () => h('i')
     }
   },
 })

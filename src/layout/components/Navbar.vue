@@ -40,7 +40,6 @@
 </template>
 
 <script setup>
-import { ElMessageBox } from 'element-plus'
 import Breadcrumb from '@/components/Breadcrumb'
 import TopNav from '@/components/TopNav'
 import Hamburger from '@/components/Hamburger'
@@ -74,11 +73,12 @@ function handleCommand(command) {
 }
 
 function logout() {
-  ElMessageBox.confirm(proxy.$t('layout.logOutConfirm'), proxy.$t('common.tips'), {
-    confirmButtonText: proxy.$t('common.ok'),
-    cancelButtonText: proxy.$t('common.cancel'),
-    type: 'warning',
-  })
+  proxy
+    .$confirm(proxy.$t('layout.logOutConfirm'), proxy.$t('common.tips'), {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
     .then(() => {
       store.dispatch('LogOut').then(() => {
         location.href = '/index'
@@ -94,21 +94,23 @@ function setLayout() {
 </script>
 
 <style lang="scss" scoped>
-// .el-menu {
-//   // display: inline-table;
-//   .el-menu-item {
-//     vertical-align: center;
-//   }
-// }
+.el-menu {
+  // display: inline-table;
+  border-bottom: none;
+  .el-menu-item {
+    vertical-align: center;
+  }
+}
 .navbar {
-  height: 50px;
+  height: var(--base-header-height);
+  line-height: var(--base-header-height);
   overflow: hidden;
   position: relative;
   background: var(--base-topBar-background);
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  // box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
   .hamburger-container {
-    line-height: 46px;
+    line-height: var(--base-header-height);
     height: 100%;
     float: left;
     cursor: pointer;
@@ -134,8 +136,6 @@ function setLayout() {
   }
 
   .right-menu {
-    height: 100%;
-    line-height: 50px;
     display: flex;
     justify-content: flex-end;
     align-items: center;

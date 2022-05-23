@@ -48,7 +48,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination :page="queryParams.pageNum" v-model:limit="queryParams.pageSize" v-model:total="total" @pagination="getList" />
+    <pagination v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" v-model:total="total" @pagination="getList" />
 
     <!-- 预览界面 -->
     <el-dialog :title="preview.title" v-model="preview.open" width="80%" top="5vh" append-to-body>
@@ -173,7 +173,7 @@ function openImportTable() {
 function handlePreview(row) {
   proxy.$refs['codeform'].validate((valid) => {
     if (!valid) {
-      proxy.$modal.msgError('请先完成表格')
+      proxy.$modal.msgError('请先完成表格内容')
       return
     }
     proxy.$modal.loading('请稍后...')
