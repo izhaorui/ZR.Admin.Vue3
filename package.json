@@ -31,10 +31,10 @@
     "md-editor-v3": "^1.11.11",
     "nprogress": "0.2.0",
     "sortablejs": "^1.15.0",
-    "vue": "3.2.26",
+    "vue": "^3.2.36",
     "vue-cropper": "1.0.2",
     "vue-i18n": "^9.1.10",
-    "vue-router": "4.0.12",
+    "vue-router": "^4.0.15",
     "vue3-seamless-scroll": "^1.2.0",
     "vuex": "4.0.2",
     "wangeditor": "^4.7.15"
