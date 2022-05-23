@@ -20,7 +20,7 @@ const lang = computed(() => {
   return store.getters.language
 })
 const locale = ref(zh)
-const size = ref('default')
+const size = ref('small')
 size.value = store.getters.size
 watch(
   token,
