@@ -1,6 +1,6 @@
 <template>
   <el-main class="app-main">
-    <router-view v-slot="{ Component, route }" :key="route.path">
+    <router-view v-slot="{ Component, route }">
       <transition appear name="fade-transform" mode="out-in">
         <keep-alive :include="cachedViews">
           <component :is="Component" :key="route.path" />

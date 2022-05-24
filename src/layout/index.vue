@@ -12,7 +12,7 @@
         <tags-view v-if="needTagsView" />
       </el-header>
       <el-main class="app-main">
-        <router-view v-slot="{ Component, route }" :key="route.path">
+        <router-view v-slot="{ Component, route }">
           <transition name="fade-transform" mode="out-in">
             <keep-alive :include="cachedViews">
               <component :is="Component" :key="route.path" />
@@ -39,7 +39,7 @@ const menuDrawer = computed({
     store.dispatch('app/toggleSideBar')
   },
 })
-const store = useStore()
+let store = useStore()
 const theme = computed(() => store.state.settings.theme)
 const sidebar = computed(() => store.state.app.sidebar)
 const device = computed(() => store.state.app.device)
@@ -47,11 +47,13 @@ const needTagsView = computed(() => store.state.settings.tagsView)
 const fixedHeader = computed(() => store.state.settings.fixedHeader)
 const showFooter = computed(() => store.state.settings.showFooter)
 
+// appMain 模块 start
 const route = useRoute()
 store.dispatch('tagsView/addCachedView', route)
 const cachedViews = computed(() => {
   return store.state.tagsView.cachedViews
 })
+//appMain 模块结束
 
 const classObj = computed(() => ({
   hideSidebar: !sidebar.value.opened,
