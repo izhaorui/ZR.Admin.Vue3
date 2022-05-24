@@ -9,6 +9,11 @@
           <el-option v-for="dict in sys_normal_disable" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
         </el-select>
       </el-form-item>
+      <el-form-item :label="$t('m.isShow')" prop="visible">
+        <el-select v-model="queryParams.visible" placeholder="显示状态" clearable>
+          <el-option v-for="dict in sys_show_hide" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">{{ $t('btn.search') }}</el-button>
         <el-button icon="Refresh" @click="resetQuery">{{ $t('btn.reset') }}</el-button>
@@ -32,6 +37,8 @@
       row-key="menuId"
       :default-expand-all="isExpandAll"
       border
+      lazy
+      :load="loadMenu"
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
       <el-table-column prop="menuName" :label="$t('m.menuName')" :show-overflow-tooltip="true" width="160"></el-table-column>
       <el-table-column prop="icon" :label="$t('m.icon')" align="center" width="60">
@@ -48,7 +55,6 @@
           <el-tag type="warning" v-else-if="scope.row.menuType == 'F'">{{ $t('m.button') }}</el-tag>
         </template>
       </el-table-column>
-      <!-- <el-table-column prop="orderNum" label="排序" width="60" align="center"></el-table-column> -->
       <el-table-column prop="orderNum" :label="$t('m.sort')" width="90" sortable align="center">
         <template #default="scope">
           <span v-show="editIndex != scope.$index" @click="editCurrRow(scope.$index)">{{ scope.row.orderNum }}</span>
@@ -281,7 +287,7 @@
 </template>
 
 <script setup name="sysmenu">
-import { addMenu, delMenu, getMenu, listMenu, updateMenu, changeMenuSort as changeSort } from '@/api/system/menu'
+import { addMenu, delMenu, getMenu, listMenu, updateMenu, changeMenuSort as changeSort, listMenuById } from '@/api/system/menu'
 import SvgIcon from '@/components/SvgIcon'
 import IconSelect from '@/components/IconSelect'
 
@@ -305,6 +311,7 @@ const state = reactive({
   queryParams: {
     menuName: undefined,
     visible: undefined,
+    menuTypeIds: 'M,C',
   },
   rules: {
     menuName: [{ required: true, message: '菜单名称不能为空', trigger: 'blur' }],
@@ -335,12 +342,8 @@ function getList() {
 }
 /** 查询菜单下拉树结构 */
 function getTreeselect() {
-  listMenu().then((response) => {
+  listMenu({ menuTypeIds: 'M,C,F' }).then((response) => {
     menuOptions.value = response.data
-    // const menu = { menuId: 0, menuName: '根菜单', children: [] }
-
-    // menu.children = response.data
-    // menuOptions.value.push(menu)
   })
 }
 /** 取消按钮 */
@@ -481,5 +484,14 @@ function handleChangeSort(info) {
     })
 }
 // ******************自定义编辑 end **********************
-getList()
+const loadMenu = (row, treeNode, resolve) => {
+  listMenuById(row.menuId).then((res) => {
+    resolve(res.data)
+  })
+}
+// getList()
+listMenuById(0).then((response) => {
+  menuList.value = response.data
+  loading.value = false
+})
 </script>
