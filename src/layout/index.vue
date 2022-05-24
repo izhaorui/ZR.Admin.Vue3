@@ -127,6 +127,7 @@ function setLayout() {
   width: 100%;
   position: relative;
   height: 100%;
+  overflow-x: hidden;
 }
 .sidebar-mobile {
   .el-drawer__body {
