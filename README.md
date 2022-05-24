@@ -19,7 +19,7 @@
 
 ## 🍿在线体验
 - 官方文档：http://www.izhaorui.cn/doc
-- 体验地址：http://www.izhaorui.cn/vue-next-admin
+- 体验地址：http://www.izhaorui.cn/vue3
 - 管理员：admin
 - 密  码：123456
 
@@ -79,6 +79,10 @@ yarn dev
 
 ## 💐 特别鸣谢
 - 👉Ruoyi.vue：[Ruoyi](http://www.ruoyi.vip/)
+
+## 🎧技术交流群
+
+- QQ：191349103
 
 ## 🎀捐赠
 如果这个项目对您有所帮助，请扫下方二维码就当打发要饭的吧。
