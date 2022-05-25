@@ -84,7 +84,7 @@ export default {
     technicalSelection: '技术选型',
     frontendTechnology: '前端技术',
     backendTechnology: '后端技术',
-    BackstageManagement: '后台管理',
+    backstageManagement: '后台管理',
     bottomBar: '底部栏',
   },
   common: {
