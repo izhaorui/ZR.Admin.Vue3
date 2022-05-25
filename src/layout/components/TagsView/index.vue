@@ -5,7 +5,7 @@
         v-for="tag in visitedViews"
         :key="tag.path"
         :data-path="tag.path"
-        :class="isActive(tag) ? 'active' : ''"
+        :class="{ active: isActive(tag) }"
         :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
         class="tags-view-item"
         :style="activeStyle(tag)"
@@ -19,7 +19,10 @@
       </router-link>
     </scroll-pane>
     <ul v-show="visible" :style="{ left: left + 'px', top: top + 'px' }" class="contextmenu">
-      <li @click="refreshSelectedTag(selectedTag)"><refresh-right style="width: 1em; height: 1em" /> {{ $t('tagsView.refresh') }}</li>
+      <li @click="refreshSelectedTag(selectedTag)" v-if="isActive(selectedTag)">
+        <refresh-right style="width: 1em; height: 1em" />
+        {{ $t('tagsView.refresh') }}
+      </li>
       <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">
         <close style="width: 1em; height: 1em" /> {{ $t('tagsView.close') }}
       </li>
@@ -49,7 +52,7 @@ const router = useRouter()
 
 const visitedViews = computed(() => store.state.tagsView.visitedViews)
 const routes = computed(() => store.state.permission.routes)
-const theme = computed(() => store.state.settings.theme)
+// const theme = computed(() => store.state.settings.theme)
 
 watch(route, () => {
   addTags()
@@ -147,7 +150,7 @@ function moveToCurrentTag() {
 }
 function refreshSelectedTag(view) {
   proxy.$tab.refreshPage(view)
-  console.log(view)
+  // In order to make the cached page re-rendered
 }
 function closeSelectedTag(view) {
   proxy.$tab.closePage(view).then(({ visitedViews }) => {

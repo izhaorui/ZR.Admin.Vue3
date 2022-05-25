@@ -1,6 +1,6 @@
 import store from '@/store'
 import router from '@/router'
-import { nextTick } from 'vue'
+
 export default {
   // 刷新当前tab页签
   refreshPage(obj) {
@@ -14,13 +14,11 @@ export default {
         }
       });
     }
-    store.dispatch('tagsView/delCachedView', obj).then(() => {
-      const { fullPath, query } = obj
-      nextTick(() => {
-        router.replace({
-          path: '/redirect' + fullPath,
-          query: query
-        })
+    return store.dispatch('tagsView/delCachedView', obj).then(() => {
+      const { path, query } = obj
+      router.replace({
+        path: '/redirect' + path,
+        query: query
       })
     })
   },
