@@ -21,11 +21,11 @@
 
     <!-- 顶部菜单超出数量折叠 -->
     <el-sub-menu :style="{ '--theme': theme }" index="more" v-if="topMenus.length > visibleNumber">
-      <template #title>更多菜单</template>
+      <template #title>{{ $t('btn.more') }}</template>
       <template v-for="(item, index) in topMenus">
         <el-menu-item :index="item.path" :key="index" v-if="index >= visibleNumber">
           <svg-icon :name="item.meta.icon" />
-          {{ item.meta.title }}
+          <span style="margin-left: 5px">{{ item.meta.title }}</span>
         </el-menu-item>
       </template>
     </el-sub-menu>
