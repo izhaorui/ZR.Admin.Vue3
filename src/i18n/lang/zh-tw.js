@@ -83,7 +83,8 @@ export default {
     technicalSelection: '技術選型',
     frontendTechnology: '前端技術',
     backendTechnology: '後端技術',
-    BackstageManagement: '後台管理',
+    backstageManagement: '後台管理',
+    bottomBar: '底部欄',
   },
   common: {
     ok: '確定',
@@ -125,7 +126,7 @@ export default {
     save: '保存',
     upload: '上傳',
     view: '查看',
-    copy: '复制',
+    copy: '複製',
     operate: '操作'
   }
 };

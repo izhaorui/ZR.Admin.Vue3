@@ -85,6 +85,7 @@ export default {
     frontendTechnology: '前端技术',
     backendTechnology: '后端技术',
     BackstageManagement: '后台管理',
+    bottomBar: '底部栏',
   },
   common: {
     ok: '确定',
@@ -129,7 +130,7 @@ export default {
     multi: '批量',
     upload: '上传',
     view: '查看',
-    copy: '複製',
+    copy: '复制',
     operate: '操作'
   }
 };

@@ -84,7 +84,8 @@ export default {
     technicalSelection: 'Technical selection',
     frontendTechnology: 'Front-end technology',
     backendTechnology: 'Backend technology',
-    BackstageManagement: 'Backstage management',
+    backstageManagement: 'Backstage management',
+    bottomBar: 'Footer',
   },
   common: {
     ok: 'Ok',
