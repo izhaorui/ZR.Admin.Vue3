@@ -9,7 +9,13 @@
     <template v-for="(item, index) in topMenus">
       <el-menu-item :style="{ '--theme': theme }" :index="item.path" :key="index" v-if="index < visibleNumber">
         <svg-icon :name="item.meta.icon" />
-        {{ item.meta.title }}
+        <!-- {{ item.meta.title }} -->
+        <template v-if="item.meta.titleKey" #title>
+          {{ $t(item.meta.titleKey) }}
+        </template>
+        <template v-else-if="item.meta.title" #title>
+          {{ item.meta.title }}
+        </template>
       </el-menu-item>
     </template>
 
