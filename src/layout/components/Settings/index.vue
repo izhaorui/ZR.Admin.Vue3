@@ -124,8 +124,6 @@ const topNav = computed({
     if (!val) {
       store.dispatch('app/toggleSideBarHide', false)
       store.commit('SET_SIDEBAR_ROUTERS', store.state.permission.defaultRoutes)
-      // TODO 临时解决切换topnav路由跳转问题
-      setTimeout('window.location.reload()', 100)
     }
   },
 })
@@ -254,7 +252,8 @@ function saveSetting() {
     showFooter: storeSettings.value.showFooter,
   }
   localStorage.setItem('layout-setting', JSON.stringify(layoutSetting))
-  setTimeout(proxy.$modal.closeLoading(), 500)
+  setTimeout(proxy.$modal.closeLoading(), 100)
+  setTimeout('window.location.reload()', 200)
 }
 function resetSetting() {
   proxy.$modal.loading('正在清除设置缓存并刷新，请稍候...')
