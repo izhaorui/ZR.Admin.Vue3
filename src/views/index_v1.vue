@@ -5,7 +5,7 @@
       <el-col :md="24" :lg="16" :xl="16" class="mb10">
         <el-card shadow="hover">
           <template #header>
-            <span>{{$t('layout.myWorkbench')}}</span>
+            <span>{{ $t('layout.myWorkbench') }}</span>
           </template>
           <div class="user-item">
             <div class="user-item-left">
@@ -20,7 +20,7 @@
                 <el-col :xs="24" :sm="24" :md="24">
                   <el-row>
                     <el-col :xs="24" :lg="8" class="right-l-v">
-                      <div class="right-label">{{$t('common.nickName')}}：</div>
+                      <div class="right-label">{{ $t('common.nickName') }}：</div>
                       <div class="right-value">{{ userInfo.nickName }}</div>
                     </el-col>
                     <el-col :xs="24" :lg="16" class="right-l-v">
@@ -42,7 +42,7 @@
                       </div>
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="16" class="right-l-v">
-                      <div class="right-label one-text-overflow">{{$t('common.time')}}：</div>
+                      <div class="right-label one-text-overflow">{{ $t('common.time') }}：</div>
                       <div class="right-value one-text-overflow">
                         {{ currentTime }}
                       </div>
@@ -51,7 +51,7 @@
                 </el-col>
                 <el-col :lg="24" class="mt10">
                   <el-button size="small" icon="edit">
-                    <router-link to="/user/profile">{{$t('layout.modifyInformation')}}</router-link>
+                    <router-link to="/user/profile">{{ $t('layout.modifyInformation') }}</router-link>
                   </el-button>
                   <!-- <el-button size="small" icon="el-icon-position" type="primary">发布活动</el-button> -->
                 </el-col>
@@ -64,8 +64,8 @@
         <el-card shadow="hover">
           <template #header>
             <div>
-              <span>{{$t('layout.onlineUsers')}}</span>
-              <el-button class="home-card-more" text @click="onOpenGitee">{{$t('btn.more')}}</el-button>
+              <span>{{ $t('layout.onlineUsers') }}</span>
+              <el-button class="home-card-more" text @click="onOpenGitee">{{ $t('btn.more') }}</el-button>
             </div>
           </template>
           <div class="info">
@@ -75,7 +75,7 @@
                 <ul class="info-ul">
                   <li v-for="(v, k) in onlineUsers" :key="k" class="info-item">
                     <div class="info-item-left" v-text="v.name"></div>
-										<div>{{v.userIP}}</div>
+                    <div>{{ v.userIP }}</div>
                     <div class="info-item-right" v-text="dayjs(v.loginTime).format('HH:mm:ss')"></div>
                   </li>
                 </ul></div
@@ -112,6 +112,13 @@
         </div>
       </el-col>
     </el-row>
+    <el-row :gutter="32">
+      <el-col :xs="24" :sm="24" :lg="24">
+        <div class="chart-wrapper">
+          <WordCloudChat :data="data.wordCloud" />
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -121,6 +128,7 @@ import LineChart from './dashboard/LineChart'
 import RaddarChart from './dashboard/RaddarChart'
 import PieChart from './dashboard/PieChart'
 import BarChart from './dashboard/BarChart'
+import WordCloudChat from './dashboard/WordCloud.vue'
 // import { Vue3SeamlessScroll } from 'vue3-seamless-scroll'
 
 import dayjs from 'dayjs'
@@ -142,6 +150,52 @@ const data = {
     expectedData: [130, 140, 141, 142, 145, 150, 160],
     actualData: [120, 82, 91, 154, 162, 140, 130],
   },
+  wordCloud: [
+    {
+      name: 'Vue3',
+      value: 1446,
+    },
+    {
+      name: '.net6',
+      value: 928,
+    },
+    {
+      name: 'Sqlsugar',
+      value: 906,
+    },
+    {
+      name: 'Redis',
+      value: 825,
+    },
+    {
+      name: 'Lover Boy',
+      value: 514,
+    },
+    {
+      name: '开源免费',
+      value: 486,
+    },
+    {
+      name: '音乐',
+      value: 53,
+    },
+    {
+      name: '打赏',
+      value: 163,
+    },
+    {
+      name: '国际化',
+      value: 163,
+    },
+    {
+      name: 'Composition api',
+      value: 1163,
+    },
+    {
+      name: 'Quartz.Net',
+      value: 1,
+    },
+  ],
 }
 const { proxy } = getCurrentInstance()
 const userInfo = computed(() => {
