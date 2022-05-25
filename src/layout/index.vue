@@ -149,6 +149,9 @@ function setLayout() {
   line-height: var(--base-footer-height);
   text-align: center;
   color: #ccc;
+  font-size: 14px;
+  border-top: 1px solid #e7eaec;
+  letter-spacing: 0.1rem;
 }
 .hasTagsView {
   // .app-main {

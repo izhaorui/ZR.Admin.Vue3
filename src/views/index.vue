@@ -34,7 +34,7 @@
     </el-row>
     <el-row :gutter="20">
       <el-col :lg="16" :sm="24">
-        <h2>ZRAdmin.NET {{ $t('layout.BackstageManagement') }}</h2>
+        <h2>ZRAdmin.NET {{ $t('layout.backstageManagement') }}</h2>
         <p>
           ZRAdmin.NET借鉴了很多开源项目的优点，让你开发Web管理系统更简单，所以我也把它给开源了（前端
           <code>vue页面</code>主要参考若依，在此表示感谢.)

@@ -13,7 +13,7 @@ $panGreen: #30b08f;
   --base-text-color-rgba: rgba(0, 0, 0, 0.85);
   --base-sidebar-width: 220px;
   --el-aside-width: 220px;
-  --base-footer-height: 40px;
+  --base-footer-height: 30px;
   --base-tags-height: 34px;
   --base-header-height: 50px;
 }
@@ -25,6 +25,7 @@ $panGreen: #30b08f;
   // // el-ement ui 设置
   // --el-fill-color-blank: #304156;
   --el-text-color-primary: #e5eaf3;
+  --el-menu-text-color: var(--el-text-color-primary);
 }
 html.dark {
   /* custom dark bg color */

@@ -54,7 +54,7 @@
       </span>
     </div>
     <div class="drawer-item">
-      <span>显示底部栏</span>
+      <span>open {{ $t('layout.bottomBar') }}</span>
       <span class="comp-style">
         <el-switch v-model="showFooter" class="drawer-switch" />
       </span>
