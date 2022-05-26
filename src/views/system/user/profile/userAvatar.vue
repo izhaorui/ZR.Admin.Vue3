@@ -14,8 +14,7 @@
           :autoCropHeight="options.autoCropHeight"
           :fixedBox="options.fixedBox"
           @realTime="realTime"
-          v-if="visible"
-        />
+          v-if="visible" />
       </el-col>
       <el-col :xs="24" :md="12" :style="{ height: '350px' }">
         <div class="avatar-upload-preview">
@@ -76,7 +75,7 @@ export default {
     const open = ref(false)
     const visible = ref(false)
     const title = ref('修改头像')
-
+    const fileName = ref('')
     //图片裁剪数据
     const options = reactive({
       img: store.getters.avatar, // 裁剪图片的地址
@@ -115,6 +114,7 @@ export default {
       if (file.type.indexOf('image/') == -1) {
         proxy.$modal.msgError('文件格式错误，请上传图片类型,如：JPG，PNG后缀的文件。')
       } else {
+        fileName.value = file.name
         const reader = new FileReader()
         reader.readAsDataURL(file)
         reader.onload = () => {
@@ -126,7 +126,8 @@ export default {
     function uploadImg() {
       proxy.$refs.cropper.getCropBlob((data) => {
         let formData = new FormData()
-        formData.append('picture', data)
+				var fileOfBlob = new File([data], fileName.value);
+        formData.append('picture', fileOfBlob)
         uploadAvatar(formData).then((response) => {
           open.value = false
           options.img = response.data.imgUrl

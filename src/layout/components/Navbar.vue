@@ -158,7 +158,7 @@ function setLayout() {
           cursor: pointer;
           width: 30px;
           height: 30px;
-          border-radius: 10px;
+          border-radius: 50%;
           vertical-align: middle;
           margin-right: 5px;
         }
