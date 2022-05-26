@@ -115,7 +115,7 @@ function handleUploadSuccess(res) {
   if (res.code != 200) {
     proxy.$modal.msgError(`上传失败，原因:${res.msg}!`)
     proxy.$modal.closeLoading()
-    fileList.value = []
+    fileList.value = fileList.value.slice(0, fileList.value.length - 1)
     return
   }
   uploadList.value.push({ name: res.data.fileName, url: res.data.url })
