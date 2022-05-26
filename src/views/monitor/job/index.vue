@@ -56,11 +56,13 @@
         <el-table-column prop="remark" align="center" label="备注" :show-overflow-tooltip="true" />
         <el-table-column label="操作" align="center" width="250" class-name="small-padding fixed-width">
           <template #default="scope">
-            <el-link size="small" icon="view" v-hasPermi="['monitor:job:query']" @click="handleJobLog(scope.row)">
+            <el-link size="small" class="ml10" icon="view" v-hasPermi="['monitor:job:query']" @click="handleJobLog(scope.row)">
               {{ $t('btn.log') }}
             </el-link>
             <el-link
               size="small"
+              class="ml10"
+              type="primary"
               v-if="scope.row.isStart"
               v-hasPermi="['monitor:job:run']"
               icon="remove"
@@ -71,6 +73,7 @@
             <el-link
               type="warning"
               size="small"
+              class="ml10"
               v-if="scope.row.isStart"
               v-hasPermi="['monitor:job:stop']"
               icon="video-pause"

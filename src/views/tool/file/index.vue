@@ -77,13 +77,7 @@
       <el-table-column label="操作" align="center" width="230">
         <template #default="scope">
           <el-button text size="small" icon="view" @click="handleView(scope.row)">{{ $t('btn.view') }}</el-button>
-          <el-button
-            class="copy-btn-main"
-            icon="document-copy"
-            text
-            size="small"
-            v-clipboard:copy="scope.row.accessUrl"
-            v-clipboard:success="clipboardSuccess">
+          <el-button class="copy-btn-main" icon="document-copy" text size="small" @click="copyText(scope.row.accessUrl)">
             {{ $t('btn.copy') }}
           </el-button>
           <el-button v-hasPermi="['tool:file:delete']" text size="small" icon="delete" @click="handleDelete(scope.row)">
@@ -95,10 +89,7 @@
     <pagination background :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
 
     <!-- 添加或修改文件存储对话框 -->
-    <el-dialog :title="title" :lock-scroll="false" v-model="open" width="400px">
-      <template #title>
-        <div v-drag="['.el-dialog', '.el-dialog__header']">{{ title }}</div>
-      </template>
+    <el-dialog :title="title" :lock-scroll="false" v-model="open" width="400px" draggable>
       <el-form ref="formRef" :model="form" :rules="rules" label-width="90px" label-position="left">
         <el-row>
           <el-col :lg="24">
@@ -182,14 +173,9 @@
           <el-col :lg="24">
             <el-form-item label="访问路径">
               {{ formView.accessUrl }}
-              <el-button
-                class="copy-btn-main"
-                icon="document-copy"
-                text
-                v-clipboard:copy="formView.accessUrl"
-                v-clipboard:success="clipboardSuccess">
+              <!-- <el-button class="copy-btn-main" icon="document-copy" text @click="copyText(formView.accessUrl)">
                 {{ $t('btn.copy') }}
-              </el-button>
+              </el-button> -->
             </el-form-item>
           </el-col>
           <el-col :lg="24">
@@ -202,6 +188,7 @@
 </template>
 <script setup name="sysfile">
 import { listSysfile, delSysfile, getSysfile } from '@/api/tool/file.js'
+import useClipboard from 'vue-clipboard3'
 // 选中id数组
 const ids = ref([])
 // 非单个禁用
@@ -360,9 +347,12 @@ function submitUpload() {
   console.log(uploadData.value)
   proxy.$refs.uploadRef.submitUpload()
 }
-/** 复制代码成功 */
-function clipboardSuccess() {
-  proxy.$modal.msgSuccess('复制成功')
+const { toClipboard } = useClipboard()
+const copyText = async (val) => {
+  try {
+    await toClipboard(val)
+    proxy.$message.success('复制成功！')
+  } catch (e) {}
 }
 handleQuery()
 </script>

@@ -53,10 +53,10 @@
     <!-- 预览界面 -->
     <el-dialog :title="preview.title" v-model="preview.open" width="80%" top="5vh" append-to-body>
       <el-tabs v-model="preview.activeName">
-        <el-tab-pane v-for="(item, key) in preview.data" :label="item.title" :name="key.toString()" :key="key">
-          <el-link :underline="false" icon="document-copy" v-clipboard:copy="item.content" v-clipboard:success="clipboardSuccess" class="btn-copy">
-            复制
-          </el-link>
+        <el-tab-pane v-for="(item, key) in preview.data" :label="item.title" :id="key" :name="key.toString()" :key="key">
+          <!-- <el-link :underline="false" icon="DocumentCopy" v-copyText="item.content" class="btn-copy"
+            >复制
+          </el-link> -->
           <pre><code class="hljs" v-html="highlightedCode(item.content, item.title)"></code></pre>
         </el-tab-pane>
       </el-tabs>
@@ -190,8 +190,6 @@ function handlePreview(row) {
 // 多选框选中数据
 function handleSelectionChange(selection) {
   tableIds.value = selection.map((item) => item.tableId)
-  // tableNames.value = selection.map((item) => item.tableName)
-  // single.value = selection.length != 1
   multiple.value = !selection.length
 }
 /** 编辑表格 */
