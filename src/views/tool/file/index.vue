@@ -253,9 +253,9 @@ const { proxy } = getCurrentInstance()
 const uploadData = ref({})
 // 查询数据
 function getList() {
-  proxy.addDateRange(queryParams, dateRangeAddTime.value, 'Create_time')
+  proxy.addDateRange(queryParams.value, dateRangeAddTime.value, 'Create_time')
   loading.value = true
-  listSysfile(queryParams).then((res) => {
+  listSysfile(queryParams.value).then((res) => {
     if (res.code == 200) {
       dataList.value = res.data.result
       total.value = res.data.totalNum
@@ -344,7 +344,6 @@ function submitUpload() {
     fileName: form.value.fileName,
     storeType: form.value.storeType,
   }
-  console.log(uploadData.value)
   proxy.$refs.uploadRef.submitUpload()
 }
 const { toClipboard } = useClipboard()
