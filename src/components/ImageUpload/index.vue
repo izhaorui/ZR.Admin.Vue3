@@ -182,7 +182,7 @@ function listToString(list, separator) {
   separator = separator || ','
   for (let i in list) {
     if (undefined !== list[i].url && list[i].url.indexOf('blob:') !== 0) {
-      strs += list[i].url.replace(baseUrl, '') + separator
+      strs += list[i].url + separator
     }
   }
   return strs != '' ? strs.substr(0, strs.length - 1) : ''

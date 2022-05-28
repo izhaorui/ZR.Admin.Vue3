@@ -273,7 +273,7 @@ function reset() {
   form.value = {
     fileName: '',
     fileUrl: '',
-    storePath: 'uploads',
+    storePath: '',
     fileSize: 0,
     fileExt: '',
     storeType: 1,
