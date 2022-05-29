@@ -1,22 +1,21 @@
 <template>
   <div class="app-container">
     <el-row>
-      <el-col :lg="24" class="card-box">
+      <el-col :lg="24" class="card-box" v-if="server.cpu">
         <el-card class="box-card">
           <template #header>
             <span>状态</span>
           </template>
 
-          <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
+          <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8" class="mr20">
             <div class="title">CPU使用率</div>
-            <el-tooltip placement="top-end">
-              <div class="content" v-if="server.cpu">
-                <el-progress type="dashboard" :percentage="parseFloat(server.cpu.cpuRate)" />
-              </div>
-            </el-tooltip>
+            <div class="content">
+              <el-progress type="dashboard" :percentage="parseFloat(server.cpu.cpuRate)" />
+            </div>
             <div class="footer" v-if="server.sys">{{ server.sys.cpuNum }} 核心</div>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6" v-if="server.cpu">
+
+          <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
             <div class="title">内存使用率</div>
             <el-tooltip placement="top-end">
               <template #content>
@@ -193,66 +192,50 @@
   </div>
 </template>
 
-<script>
+<script setup name="server">
 import { getServer } from '@/api/monitor/server'
-
-export default {
-  name: 'Server',
-  data() {
-    return {
-      // 加载层信息
-      loading: [],
-      // 服务器信息
-      server: [],
-      intervalId: null,
-    }
-  },
-  created() {
-    this.getList()
-    this.openLoading()
-    this.dataRefreh()
-  },
-  methods: {
-    /** 查询服务器信息 */
-    getList() {
-      getServer()
-        .then((response) => {
-          this.server = response.data
-          this.loading.close()
-        })
-        .catch((err) => {
-          this.loading.close()
-        })
-    },
-    // 打开加载层
-    openLoading() {
-      this.loading = this.$loading({
-        lock: true,
-        text: '拼命读取中',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)',
-      })
-    },
-    dataRefreh() {
-      if (this.intervalId != null) {
-        return
-      }
-      this.intervalId = setInterval(() => {
-        this.getList()
-      }, 10000)
-    },
-    /**
-     * 停止定时器
-     */
-    clear() {
-      clearInterval(this.intervalId)
-      this.intervalId = null
-    },
-  },
-  destroyed() {
-    this.clear()
-  },
+import { onBeforeRouteLeave } from 'vue-router'
+onBeforeRouteLeave((to) => {
+  clear()
+})
+// 服务器信息
+const server = ref([])
+const intervalId = ref(null)
+const { proxy } = getCurrentInstance()
+/** 查询服务器信息 */
+function getList() {
+  getServer()
+    .then((response) => {
+      server.value = response.data
+      proxy.$modal.closeLoading()
+    })
+    .catch((err) => {
+      proxy.$modal.closeLoading()
+    })
 }
+// 打开加载层
+function openLoading() {
+  proxy.$modal.loading('拼命读取中')
+}
+function dataRefreh() {
+  if (intervalId.value != null) {
+    return
+  }
+  intervalId.value = setInterval(() => {
+    getList()
+  }, 10000)
+}
+/**
+ * 停止定时器
+ */
+function clear() {
+  clearInterval(intervalId.value)
+  intervalId.value = null
+}
+
+getList()
+openLoading()
+dataRefreh()
 </script>
 <style scoped>
 table tr {
