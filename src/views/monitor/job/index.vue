@@ -198,12 +198,12 @@
           <el-col :lg="24" v-if="form.triggerType == 1">
             <el-form-item label="间隔(Cron)" prop="cron">
               <el-input v-model="form.cron" placeholder="请输入cron执行表达式">
-                <template #append>
+                <!-- <template #append>
                   <el-button type="primary" @click="handleShowCron" style="width: 80px">
                     生成表达式
                     <el-icon><time /></el-icon>
                   </el-button>
-                </template>
+                </template> -->
               </el-input>
             </el-form-item>
           </el-col>
