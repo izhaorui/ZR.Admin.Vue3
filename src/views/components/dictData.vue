@@ -42,8 +42,8 @@
     <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
     <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
       <template #default="scope">
-        <el-link size="small" class="ml10" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dict:edit']">编辑</el-link>
-        <el-link size="small" class="ml10" icon="delete" @click="handleDelete(scope.row)" v-hasPermi="['system:dict:remove']">删除</el-link>
+        <el-button text size="small" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dict:edit']">编辑</el-button>
+        <el-button text size="small" icon="delete" @click="handleDelete(scope.row)" v-hasPermi="['system:dict:remove']">删除 </el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -105,7 +105,6 @@ const props = defineProps({
 watch(
   () => props.dictId,
   (newVal, oldValue) => {
-    console.log(`监控new=${newVal},old${oldValue}`)
     if (newVal) {
       getTypeInfo(newVal)
       getTypeList()
