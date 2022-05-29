@@ -18,5 +18,6 @@ export default {
     routePath: '路由地址',
     permissionStr: '权限字符',
     isCache: '是否缓存',
+    menuNameKey: '菜单名(key)',
   }
 }

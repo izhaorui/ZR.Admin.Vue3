@@ -85,6 +85,7 @@ export default {
     backendTechnology: '後端技術',
     backstageManagement: '後台管理',
     bottomBar: '底部欄',
+    identity: '身份',
   },
   common: {
     ok: '確定',

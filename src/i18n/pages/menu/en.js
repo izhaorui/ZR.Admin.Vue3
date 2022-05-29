@@ -18,5 +18,6 @@ export default {
     routePath: 'routePath',
     permissionStr: 'permission',
     isCache: 'isCache',
+    menuNameKey: 'menuNameKey',
   }
 }

@@ -24,7 +24,7 @@
                       <div class="right-value">{{ userInfo.nickName }}</div>
                     </el-col>
                     <el-col :xs="24" :lg="16" class="right-l-v">
-                      <div class="right-label">身份：</div>
+                      <div class="right-label">{{ $t('layout.identity') }}：</div>
                       <div class="right-value">
                         <span v-for="item in userInfo.roles" :key="item.roleId">
                           {{ item.roleName }}

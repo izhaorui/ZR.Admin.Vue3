@@ -86,6 +86,7 @@ export default {
     backendTechnology: 'Backend technology',
     backstageManagement: 'Backstage management',
     bottomBar: 'Footer',
+    identity: 'Identity',
   },
   common: {
     ok: 'Ok',

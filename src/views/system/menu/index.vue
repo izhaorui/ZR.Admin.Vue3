@@ -40,7 +40,16 @@
       lazy
       :load="loadMenu"
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
-      <el-table-column prop="menuName" :label="$t('m.menuName')" :show-overflow-tooltip="true" width="160"></el-table-column>
+      <el-table-column prop="menuName" :label="$t('m.menuName')" :show-overflow-tooltip="true" width="160">
+        <template #default="scope">
+          <span v-if="scope.row.menuNameKey">
+            {{ $t(scope.row.menuNameKey) }}
+          </span>
+          <span v-else>
+            {{ scope.row.menuName }}
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column prop="icon" :label="$t('m.icon')" align="center" width="60">
         <template #default="scope">
           <svg-icon :name="scope.row.icon" />
@@ -126,14 +135,16 @@
             </el-form-item>
           </el-col>
           <el-col :lg="12">
-            <el-form-item label="多语言key" prop="menuNameKey">
+            <el-form-item label="菜单名(key)" prop="menuNameKey">
               <template #label>
-                <el-tooltip content="多语言翻译key：eg：menu.system" placement="top">
-                  <el-icon :size="15">
-                    <questionFilled />
-                  </el-icon>
-                </el-tooltip>
-                {{ $t('languageKey') }}
+                <span>
+                  <el-tooltip content="多语言翻译key：eg：menu.system" placement="top">
+                    <el-icon :size="15">
+                      <questionFilled />
+                    </el-icon>
+                  </el-tooltip>
+                  {{ $t('m.menuNameKey') }}
+                </span>
               </template>
               <el-input v-model="form.menuNameKey" placeholder="请输入多语言菜单key" />
             </el-form-item>
@@ -163,12 +174,14 @@
           <el-col :lg="12" v-if="form.menuType != 'F'">
             <el-form-item>
               <template #label>
-                <el-tooltip content="选择是外链则路由地址需要以`http(s)://`开头" placement="top">
-                  <el-icon :size="15">
-                    <questionFilled />
-                  </el-icon>
-                </el-tooltip>
-                {{ $t('m.isFrame') }}
+                <span>
+                  <el-tooltip content="选择是外链则路由地址需要以`http(s)://`开头" placement="top">
+                    <el-icon :size="15">
+                      <questionFilled />
+                    </el-icon>
+                  </el-tooltip>
+                  {{ $t('m.isFrame') }}
+                </span>
               </template>
               <el-radio-group v-model="form.isFrame">
                 <el-radio label="1">{{ $t('common.yes') }}</el-radio>
@@ -179,12 +192,14 @@
           <el-col :lg="12" v-if="form.menuType != 'F'">
             <el-form-item prop="path">
               <template #label>
-                <el-tooltip content="访问的路由地址，如：`user`，如外网地址需内链访问则以`http(s)://`开头" placement="top">
-                  <el-icon :size="15">
-                    <questionFilled />
-                  </el-icon>
-                </el-tooltip>
-                {{ $t('m.routePath') }}
+                <span>
+                  <el-tooltip content="访问的路由地址，如：`user`，如外网地址需内链访问则以`http(s)://`开头" placement="top">
+                    <el-icon :size="15">
+                      <questionFilled />
+                    </el-icon>
+                  </el-tooltip>
+                  {{ $t('m.routePath') }}
+                </span>
               </template>
               <el-input v-model="form.path" placeholder="请输入路由地址" />
             </el-form-item>
@@ -192,12 +207,14 @@
           <el-col :lg="12" v-if="form.menuType == 'C'">
             <el-form-item prop="component">
               <template #label>
-                <el-tooltip content="访问的组件路径，如：`system/user/index`，默认在`views`目录下" placement="top">
-                  <el-icon :size="15">
-                    <questionFilled />
-                  </el-icon>
-                </el-tooltip>
-                {{ $t('m.componentPath') }}
+                <span>
+                  <el-tooltip content="访问的组件路径，如：`system/user/index`，默认在`views`目录下" placement="top">
+                    <el-icon :size="15">
+                      <questionFilled />
+                    </el-icon>
+                  </el-tooltip>
+                  {{ $t('m.componentPath') }}
+                </span>
               </template>
               <el-input v-model="form.component" placeholder="请输入组件路径" />
             </el-form-item>
@@ -206,12 +223,14 @@
             <el-form-item>
               <el-input v-model="form.perms" placeholder="请输入权限标识" maxlength="100" />
               <template #label>
-                <el-tooltip content="控制器中定义的权限字符，如：[ActionPermissionFilter(Permission = 'system:user:delete')])" placement="top">
-                  <el-icon :size="15">
-                    <questionFilled />
-                  </el-icon>
-                </el-tooltip>
-                {{ $t('m.permissionStr') }}
+                <span>
+                  <el-tooltip content="控制器中定义的权限字符，如：[ActionPermissionFilter(Permission = 'system:user:delete')])" placement="top">
+                    <el-icon :size="15">
+                      <questionFilled />
+                    </el-icon>
+                  </el-tooltip>
+                  {{ $t('m.permissionStr') }}
+                </span>
               </template>
             </el-form-item>
           </el-col>
@@ -231,12 +250,14 @@
           <el-col :lg="12" v-if="form.menuType == 'C'">
             <el-form-item prop="isCache">
               <template #label>
-                <el-tooltip content="选择是则会被`keep-alive`缓存，需要匹配组件的`name`和地址保持一致" placement="top">
-                  <el-icon :size="15">
-                    <questionFilled />
-                  </el-icon>
-                </el-tooltip>
-                {{ $t('m.isCache') }}
+                <span>
+                  <el-tooltip content="选择是则会被`keep-alive`缓存，需要匹配组件的`name`和地址保持一致" placement="top">
+                    <el-icon :size="15">
+                      <questionFilled />
+                    </el-icon>
+                  </el-tooltip>
+                  {{ $t('m.isCache') }}
+                </span>
               </template>
               <el-radio-group v-model="form.isCache">
                 <el-radio label="0">{{ $t('common.yes') }}</el-radio>
@@ -247,12 +268,14 @@
           <el-col :lg="12" v-if="form.menuType != 'F'">
             <el-form-item prop="visible">
               <template #label>
-                <el-tooltip content="选择隐藏则路由将不会出现在侧边栏，但仍然可以访问" placement="top">
-                  <el-icon :size="15">
-                    <questionFilled />
-                  </el-icon>
-                </el-tooltip>
-                {{ $t('m.isShow') }}
+                <span>
+                  <el-tooltip content="选择隐藏则路由将不会出现在侧边栏，但仍然可以访问" placement="top">
+                    <el-icon :size="15">
+                      <questionFilled />
+                    </el-icon>
+                  </el-tooltip>
+                  {{ $t('m.isShow') }}
+                </span>
               </template>
               <el-radio-group v-model="form.visible">
                 <el-radio v-for="dict in sys_show_hide" :key="dict.dictValue" :label="dict.dictValue">{{ dict.dictLabel }}</el-radio>
@@ -262,12 +285,14 @@
           <el-col :lg="12" v-if="form.menuType != 'F'">
             <el-form-item>
               <template #label>
-                <el-tooltip content="选择停用则路由将不会出现在侧边栏，也不能被访问" placement="top">
-                  <el-icon :size="15">
-                    <questionFilled />
-                  </el-icon>
-                </el-tooltip>
-                {{ $t('m.menuState') }}
+                <span>
+                  <el-tooltip content="选择停用则路由将不会出现在侧边栏，也不能被访问" placement="top">
+                    <el-icon :size="15">
+                      <questionFilled />
+                    </el-icon>
+                  </el-tooltip>
+                  {{ $t('m.menuState') }}
+                </span>
               </template>
               <el-radio-group v-model="form.status">
                 <el-radio v-for="dict in sys_normal_disable" :key="dict.dictValue" :label="dict.dictValue">{{ dict.dictLabel }}</el-radio>
