@@ -143,31 +143,9 @@
               </el-icon>
             </el-tooltip>
           </template>
-          <el-input v-model="info.genPath">
-            <template #append>
-              <el-dropdown>
-                <el-button type="primary">
-                  最近路径快速选择
-                  <el-icon>
-                    <question-filled />
-                  </el-icon>
-                </el-button>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item @click="info.genPath = '/'">恢复默认的生成基础路径</el-dropdown-item>
-                    <el-dropdown-item @click="info.genPath = ''">本项目</el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </template>
-          </el-input>
+          <el-input v-model="info.genPath"></el-input>
         </el-form-item>
       </el-col>
-      <!-- <el-col :lg="12">
-        <el-form-item prop="vuePath" label="Vue路径">
-          <el-input v-model="info.vuePath" placeholder="Vue项目所在绝对路径到项目根目录，eg：D:/ZRAdmin-vue"></el-input>
-        </el-form-item>
-      </el-col> -->
       <el-col :lg="12">
         <el-form-item prop="colNum" label="一行显示列">
           <el-radio v-model="info.colNum" :label="12">2列</el-radio>

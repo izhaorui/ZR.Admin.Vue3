@@ -1,16 +1,25 @@
 <template>
-  <div :class="{ 'hidden': hidden }" class="pagination-container">
-    <el-pagination small background v-model:current-page="currentPage" v-model:page-size="pageSize" :layout="layout" :page-sizes="pageSizes"
-      :pager-count="pagerCount" :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+  <div :class="{ hidden: hidden }" class="pagination-container">
+    <el-pagination
+      small
+      background
+      v-model:current-page="currentPage"
+      v-model:page-size="pageSize"
+      :layout="layout"
+      :page-sizes="pageSizes"
+      :pager-count="pagerCount"
+      :total="total"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange" />
   </div>
 </template>
 
 <script>
 // import { scrollTo } from "@/utils/scroll-to";
-import { computed } from "vue";
+import { computed } from 'vue'
 export default {
-  name: "pagingation",
-  emits: ["update:page", "update:limit", "pagination"],
+  name: 'pagingation',
+  emits: ['update:page', 'update:limit', 'pagination'],
   props: {
     total: {
       required: true,
@@ -27,7 +36,7 @@ export default {
     pageSizes: {
       type: Array,
       default() {
-        return [10, 20, 30, 50];
+        return [10, 20, 30, 50, 100]
       },
     },
     // 移动端页码按钮的数量端默认值5
@@ -37,7 +46,7 @@ export default {
     },
     layout: {
       type: String,
-      default: "total, sizes, prev, pager, next, jumper",
+      default: 'total, sizes, prev, pager, next, jumper',
     },
     background: {
       type: Boolean,
@@ -52,46 +61,45 @@ export default {
       default: false,
     },
   },
-  setup(props, {ctx, emit }) {
-		
+  setup(props, { ctx, emit }) {
     const currentPage = computed({
       get() {
-        return props.page;
+        return props.page
       },
       set(val) {
-        emit("update:page", val);
+        emit('update:page', val)
       },
-    });
+    })
     const pageSize = computed({
       get() {
-        return props.limit;
+        return props.limit
       },
       set(val) {
-        emit("update:limit", val);
+        emit('update:limit', val)
       },
-    });
+    })
 
     function handleSizeChange(val) {
-      emit("pagination", { page: currentPage.value, limit: val });
+      emit('pagination', { page: currentPage.value, limit: val })
       if (props.autoScroll) {
         // scrollTo(0, 800);
       }
     }
     function handleCurrentChange(val) {
-      emit("pagination", { page: val, limit: pageSize.value });
+      emit('pagination', { page: val, limit: pageSize.value })
       if (props.autoScroll) {
         // scrollTo(0, 800);
       }
     }
 
     return {
-			currentPage,
-			pageSize,
+      currentPage,
+      pageSize,
       handleSizeChange,
       handleCurrentChange,
-    };
+    }
   },
-};
+}
 </script>
 <style scoped>
 .pagination-container {
