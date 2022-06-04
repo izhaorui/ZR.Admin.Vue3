@@ -15,7 +15,7 @@
     <el-tabs v-model="activeName">
       <el-tab-pane label="svg-icon" name="1">
         <div class="icon-list">
-          <div class="icon-item mb10" v-for="(item, index) in iconList" :key="index" @click="selectedIcon(item)">
+          <div class="icon-item mb10" v-for="(item, index) in iconList" :key="index" @click="selectedIcon(item, '')">
             <svg-icon :name="item" style="height: 30px; width: 16px" />
             <div class="name">{{ item }}</div>
           </div>
@@ -54,7 +54,9 @@ function filterIcons() {
 }
 
 function selectedIcon(name, prefix) {
-  emit('selected', prefix != undefined ? prefix + name : name)
+  const iconName = prefix != undefined ? prefix + name : name
+  console.log(iconName)
+  emit('selected', iconName)
   document.body.click()
 }
 

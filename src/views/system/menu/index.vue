@@ -156,12 +156,12 @@
           </el-col>
           <el-col :lg="24" v-if="form.menuType != 'F'">
             <el-form-item :label="$t('m.icon')" prop="icon">
-              <el-popover placement="bottom-start" :width="540" v-model:visible="showChooseIcon" trigger="click" @show="showSelectIcon">
+              <el-popover placement="bottom-start" :teleported="false" :width="540" v-model:visible="showChooseIcon" trigger="click">
                 <template #reference>
                   <el-input v-model="form.icon" placeholder="点击选择图标" @click="showSelectIcon" readonly>
                     <template #prefix>
-                      <svg-icon v-if="form.icon" :name="form.icon" class="el-input__icon" />
-                      <el-icon class="el-input__icon" v-else>
+                      <svg-icon v-if="form.icon" :name="form.icon" />
+                      <el-icon v-else>
                         <search />
                       </el-icon>
                     </template>
