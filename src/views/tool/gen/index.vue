@@ -62,9 +62,7 @@
     <el-dialog :title="preview.title" v-model="preview.open" width="80%" top="5vh" append-to-body>
       <el-tabs v-model="preview.activeName">
         <el-tab-pane v-for="(item, key) in preview.data" :label="item.title" :id="key" :name="key.toString()" :key="key">
-          <!-- <el-link :underline="false" icon="DocumentCopy" v-copyText="item.content" class="btn-copy"
-            >复制
-          </el-link> -->
+          <el-link :underline="false" icon="DocumentCopy" @click="onCopy(item.content)" class="btn-copy">复制 </el-link>
           <pre><code class="hljs" v-html="highlightedCode(item.content, item.title)"></code></pre>
         </el-tab-pane>
       </el-tabs>
@@ -79,7 +77,7 @@ import { useRouter } from 'vue-router'
 import importTable from './importTable'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/dark.css' // 这里有多个样式，自己可以根据需要切换
-
+import { useClipboard } from '@vueuse/core'
 // const route = useRoute()
 const router = useRouter()
 const { proxy } = getCurrentInstance()
@@ -241,9 +239,15 @@ function highlightedCode(code, key) {
   const result = hljs.highlightAuto(code || '')
   return result.value || '&nbsp;'
 }
-/** 复制代码成功 */
-function clipboardSuccess() {
-  proxy.$modal.msgSuccess('复制成功')
+
+const { copy, isSupported } = useClipboard()
+function onCopy(input) {
+  if (isSupported) {
+    copy(input)
+    proxy.$modal.msgSuccess('复制成功！')
+  } else {
+    proxy.$modal.msgError('当前浏览器不支持')
+  }
 }
 getList()
 </script>

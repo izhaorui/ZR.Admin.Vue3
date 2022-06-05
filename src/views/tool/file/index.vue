@@ -173,9 +173,9 @@
           <el-col :lg="24">
             <el-form-item label="访问路径">
               {{ formView.accessUrl }}
-              <!-- <el-button class="copy-btn-main" icon="document-copy" text @click="copyText(formView.accessUrl)">
+              <el-button class="copy-btn-main" icon="document-copy" text @click="copyText(formView.accessUrl)">
                 {{ $t('btn.copy') }}
-              </el-button> -->
+              </el-button>
             </el-form-item>
           </el-col>
           <el-col :lg="24">
@@ -188,7 +188,7 @@
 </template>
 <script setup name="sysfile">
 import { listSysfile, delSysfile, getSysfile } from '@/api/tool/file.js'
-import useClipboard from 'vue-clipboard3'
+import { useClipboard } from '@vueuse/core'
 // 选中id数组
 const ids = ref([])
 // 非单个禁用
@@ -346,12 +346,15 @@ function submitUpload() {
   }
   proxy.$refs.uploadRef.submitUpload()
 }
-const { toClipboard } = useClipboard()
+
+const { copy, isSupported } = useClipboard()
 const copyText = async (val) => {
-  try {
-    await toClipboard(val)
-    proxy.$message.success('复制成功！')
-  } catch (e) {}
+  if (isSupported) {
+    copy(val)
+    proxy.$modal.msgSuccess('复制成功！')
+  } else {
+    proxy.$modal.msgError('当前浏览器不支持')
+  }
 }
 handleQuery()
 </script>
