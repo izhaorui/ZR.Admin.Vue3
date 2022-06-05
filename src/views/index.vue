@@ -27,7 +27,9 @@
           【领取七牛云通用云产品优惠券】
           <el-link href="https://s.qiniu.com/FzEfay" type="primary" target="_blank"> ☛☛点我进入☚☚ </el-link>
           <br />
-
+          【Gitee 企业版优惠专区】
+          <el-link href="https://gitee.com/enterprises?invite_code=Z2l0ZWUtMTI1NzM1OQ%3D%3D" type="primary" target="_blank"> ☛☛点我进入☚☚ </el-link>
+          <br />
           <h4 class="text-danger">云产品通用红包，可叠加官网常规优惠使用。(仅限新用户)</h4>
         </blockquote>
       </el-col>
