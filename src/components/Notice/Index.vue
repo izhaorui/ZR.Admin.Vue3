@@ -1,8 +1,8 @@
 <template>
   <div>
-    <el-popover placement="bottom" trigger="hover" width="400" popper-class="el-popover-pupop-user-news">
+    <el-popover placement="bottom" trigger="hover" width="300px" popper-class="el-popover-pupop-user-news">
       <template #reference>
-        <el-badge :is-dot="newsDot" style="line-height: 18px">
+        <el-badge :is-dot="noticeDot" style="line-height: 18px">
           <el-icon><bell /></el-icon>
         </el-badge>
       </template>
@@ -35,15 +35,18 @@
 <script setup name="noticeIndex">
 const { proxy } = getCurrentInstance()
 // 小红点
-const newsDot = ref(true)
+const newsDot = ref(false)
 
 const noticeList = computed(() => {
   return proxy.$store.getters.noticeList
 })
+const noticeDot = computed(() => {
+  return proxy.$store.getters.noticeDot
+})
 // 全部已读点击
 function onAllReadClick() {
   newsDot.value = false
-  proxy.$modal.msg('敬请期待！！！')
+  proxy.$modal.msg('请自行实现！！！')
 }
 // 前往通知中心点击
 function onGoToGiteeClick() {
