@@ -3,6 +3,7 @@ import * as signalR from '@microsoft/signalr'
 import store from '../store'
 import { getToken } from '@/utils/auth'
 import { ElNotification } from 'element-plus'
+import { useWebNotification } from '@vueuse/core'
 
 export default {
   // signalR对象
@@ -12,7 +13,6 @@ export default {
   baseUrl: '',
   init(url) {
     var socketUrl = window.location.origin + url
-    //console.log(socketUrl)
     const connection = new signalR.HubConnectionBuilder()
       .withUrl(socketUrl, { accessTokenFactory: () => getToken() })
       .withAutomaticReconnect() //自动重新连接
@@ -77,6 +77,16 @@ export default {
         dangerouslyUseHTMLString: true,
         duration: 0
       })
+      const { show, isSupported } = useWebNotification({
+        title: data,
+        dir: 'auto',
+        lang: 'en',
+        renotify: true,
+        tag: 'tag',
+      })
+      if (isSupported) {
+        show()
+      }
     })
     // 接收系统通知/公告
     connection.on("moreNotice", (data) => {
