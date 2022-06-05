@@ -53,7 +53,6 @@
                   <el-button size="small" icon="edit">
                     <router-link to="/user/profile">{{ $t('layout.modifyInformation') }}</router-link>
                   </el-button>
-                  <!-- <el-button size="small" icon="el-icon-position" type="primary">发布活动</el-button> -->
                 </el-col>
               </el-row>
             </div>
@@ -69,18 +68,17 @@
             </div>
           </template>
           <div class="info">
-            <!-- <vue3-seamless-scroll :list="onlineUsers" class="info-scroll" :step="0.2" :limitScrollNum="1"> -->
             <el-scrollbar wrap-class="scrollbar-wrapper">
               <div class="info-scroll">
                 <ul class="info-ul">
                   <li v-for="(v, k) in onlineUsers" :key="k" class="info-item">
                     <div class="info-item-left" v-text="v.name"></div>
-                    <div>{{ v.userIP }}</div>
+                    <div>{{ v.userIP }}({{ v.location }})</div>
                     <div class="info-item-right" v-text="dayjs(v.loginTime).format('HH:mm:ss')"></div>
                   </li>
-                </ul></div
-            ></el-scrollbar>
-            <!-- </vue3-seamless-scroll> -->
+                </ul>
+              </div>
+            </el-scrollbar>
           </div>
         </el-card>
       </el-col>
@@ -122,14 +120,13 @@
   </div>
 </template>
 
-<script setup name="Index">
+<script setup name="index">
 import PanelGroup from './dashboard/PanelGroup'
 import LineChart from './dashboard/LineChart'
 import RaddarChart from './dashboard/RaddarChart'
 import PieChart from './dashboard/PieChart'
 import BarChart from './dashboard/BarChart'
 import WordCloudChat from './dashboard/WordCloud.vue'
-// import { Vue3SeamlessScroll } from 'vue3-seamless-scroll'
 
 import dayjs from 'dayjs'
 
@@ -153,7 +150,7 @@ const data = {
   wordCloud: [
     {
       name: 'Vue3',
-      value: 1446,
+      value: 144,
     },
     {
       name: '.net6',
@@ -168,7 +165,7 @@ const data = {
       value: 825,
     },
     {
-      name: 'Lover Boy',
+      name: '代码生成',
       value: 514,
     },
     {
@@ -176,7 +173,7 @@ const data = {
       value: 486,
     },
     {
-      name: '音乐',
+      name: '代码简单',
       value: 53,
     },
     {
@@ -193,7 +190,11 @@ const data = {
     },
     {
       name: 'Quartz.Net',
-      value: 1,
+      value: 190,
+    },
+    {
+      name: 'Element UI',
+      value: 190,
     },
   ],
 }
