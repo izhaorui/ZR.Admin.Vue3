@@ -43,5 +43,18 @@
         "no-debugger": "off"
       }
     }
-  }
+  },
+  "i18n-ally.displayLanguage": "zh-cn",
+  "i18n-ally.enabledParsers": ["json", "js"],
+  "i18n-ally.localesPaths": [
+    "src/i18n/lang",
+    "src/i18n/pages/menu",
+    "src/i18n/pages/login"
+  ],
+  "i18n-ally.extract.parsers.html": {
+    "attributes": ["text", "title", "alt", "placeholder", "label", "aria-label"],
+    "ignoredTags": ["script", "style"],
+    "vBind": true,
+    "inlineText": true
+  },
 }
