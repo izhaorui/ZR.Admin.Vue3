@@ -1,9 +1,9 @@
 import { createI18n } from 'vue-i18n';
 import store from '@/store/index';
 import { listLangByLocale } from '@/api/system/commonLang'
-import zhCn from './lang/zh-cn';
-import en from './lang/en';
-import zhTw from './lang/zh-tw';
+import zhCn from './lang/zh-cn.json';
+import en from './lang/en.json';
+import zhTw from './lang/zh-tw.json';
 
 import pageLoginCn from './pages/login/zh-cn'
 import pageLoginEn from './pages/login/en'
@@ -29,7 +29,6 @@ const i18n = createI18n({
     'en': { ...en, ...pageLoginEn, ...pageLangSetEn, ...pagemenuEn }
   }
 })
-console.log('lang=' + store.getters.language)
 
 listLangByLocale(store.getters.language).then(res => {
   const { code, data } = res
