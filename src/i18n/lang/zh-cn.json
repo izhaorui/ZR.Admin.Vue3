@@ -85,7 +85,8 @@
     "backendTechnology": "后端技术",
     "backstageManagement": "后台管理",
     "bottomBar": "底部栏",
-    "identity": "身份"
+    "identity": "身份",
+    "content1": "代码完全免费开源，易读易懂、界面简洁美观，给你的项目多一种选择与参考。"
   },
   "common": {
     "ok": "确定",
@@ -100,7 +101,13 @@
     "nickName": "昵称",
     "time": "时间",
     "yes": "是",
-    "no": "否"
+    "no": "否",
+    "yesterday": "昨天",
+    "today": "今天",
+    "thisWeek": "本周",
+    "lastWeek": "上周",
+    "thisMonth": "本月",
+    "lastMonth": "上月"
   },
   "btn": {
     "add": "新增",
@@ -132,5 +139,9 @@
     "view": "查看",
     "copy": "复制",
     "operate": "操作"
-  }
+  },
+  "language": "语言",
+  "languageKey": "语言key",
+  "showWay": "显示方式",
+  "table": "表格"
 }

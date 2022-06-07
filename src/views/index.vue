@@ -41,7 +41,7 @@
           ZRAdmin.NET借鉴了很多开源项目的优点，让你开发Web管理系统更简单，所以我也把它给开源了（前端
           <code>vue页面</code>主要参考若依，在此表示感谢.)
         </p>
-        <p>代码完全免费开源，易读易懂、界面简洁美观，给你的项目多一种选择与参考。</p>
+        <p>{{ $t('layout.content1') }}</p>
         <p>
           <b>{{ $t('layout.currentVersion') }}:</b> <span>v{{ version }}</span>
           <el-link

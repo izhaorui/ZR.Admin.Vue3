@@ -85,7 +85,8 @@
     "backendTechnology": "Backend technology",
     "backstageManagement": "Backstage management",
     "bottomBar": "Footer",
-    "identity": "Identity"
+    "identity": "Identity",
+    "content1": "The code is completely free and open source, easy to read and understand, and the interface is simple and beautiful, giving you one more choice and reference for your project."
   },
   "common": {
     "ok": "Ok",
@@ -99,8 +100,14 @@
     "addTime": "AddTime",
     "nickName": "NickName",
     "time": "Time",
-    "yes": "是",
-    "no": "否"
+    "yes": "Yes",
+    "no": "No",
+    "yesterday": "yesterday",
+    "thisWeek": "this week",
+    "lastWeek": "last week",
+    "thisMonth": "this month",
+    "lastMonth": "last month",
+    "today": "today"
   },
   "btn": {
     "add": "Add",
@@ -132,5 +139,9 @@
     "view": "To view",
     "copy": "Copy",
     "operate": "Operate"
-  }
+  },
+  "language": "Language",
+  "languageKey": "LanguageKey",
+  "showWay": "Show Way",
+  "table": "Table"
 }

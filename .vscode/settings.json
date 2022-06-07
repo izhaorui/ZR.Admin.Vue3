@@ -48,8 +48,8 @@
   "i18n-ally.enabledParsers": ["json", "js"],
   "i18n-ally.localesPaths": [
     "src/i18n/lang",
+    "src/i18n/pages/login",
     "src/i18n/pages/menu",
-    "src/i18n/pages/login"
   ],
   "i18n-ally.extract.parsers.html": {
     "attributes": ["text", "title", "alt", "placeholder", "label", "aria-label"],
@@ -57,4 +57,5 @@
     "vBind": true,
     "inlineText": true
   },
+  "i18n-ally.keystyle": "nested",
 }

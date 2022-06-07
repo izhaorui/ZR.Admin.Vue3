@@ -84,7 +84,9 @@
     "backendTechnology": "後端技術",
     "backstageManagement": "後台管理",
     "bottomBar": "底部欄",
-    "identity": "身份"
+    "identity": "身份",
+    "rewardUser": "打賞作者喝杯咖啡表示鼓勵",
+    "content1": "代碼完全免費開源，易讀易懂、界面簡潔美觀，給你的項目多一種選擇與參考。"
   },
   "common": {
     "ok": "確定",
@@ -99,7 +101,13 @@
     "nickName": "暱稱",
     "time": "時間",
     "yes": "是",
-    "no": "否"
+    "no": "否",
+    "yesterday": "昨天",
+    "thisWeek": "本週",
+    "lastWeek": "上週",
+    "thisMonth": "本月",
+    "lastMonth": "上月",
+    "today": "今天"
   },
   "btn": {
     "add": "新增",
@@ -127,6 +135,13 @@
     "upload": "上傳",
     "view": "查看",
     "copy": "複製",
-    "operate": "操作"
-  }
+    "operate": "操作",
+    "authorize": "授權",
+    "close": "關閉",
+    "multi": "批量"
+  },
+  "language": "語言",
+  "languageKey": "語言key",
+  "showWay": "顯示方式",
+  "table": "表格"
 }

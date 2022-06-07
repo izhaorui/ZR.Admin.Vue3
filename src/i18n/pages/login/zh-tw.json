@@ -1,0 +1,13 @@
+{
+  "login": {
+    "account": "賬號",
+    "password": "密碼",
+    "captcha": "驗證碼",
+    "btnLogin": "登錄",
+    "rememberMe": "記住密碼",
+    "loginSuccess": "登錄成功",
+    "loginTimeOut": "登錄狀態已過期，請重新登錄",
+    "reLogin": "重新登錄",
+    "invalidSession": "無效的會話，或者會話已過期，請重新登錄。"
+  }
+}

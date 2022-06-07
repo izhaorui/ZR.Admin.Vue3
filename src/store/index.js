@@ -13,8 +13,8 @@ const store = createStore({
     user,
     tagsView,
     permission,
-		settings,
-		socket
+    settings,
+    socket
   },
   getters
 });
