@@ -5,7 +5,7 @@
         <el-card class="box-card">
           <template v-slot:header>
             <div class="clearfix">
-              <span>个人信息</span>
+              <span>{{ $t('user.personalInfo') }}</span>
             </div>
           </template>
           <div>
@@ -14,29 +14,29 @@
             </div>
             <ul class="list-group list-group-striped">
               <li class="list-group-item">
-                <svg-icon name="user" />用户名称
+                <svg-icon name="user" />{{ $t('user.userName') }}
                 <div class="pull-right">{{ state.user.userName }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon name="phone" />手机号码
+                <svg-icon name="phone" />{{ $t('user.phoneNumber') }}
                 <div class="pull-right">{{ state.user.phonenumber }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon name="email" />用户邮箱
+                <svg-icon name="email" />{{ $t('user.userEmail') }}
                 <div class="pull-right">{{ state.user.email }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon name="tree" />所属部门
+                <svg-icon name="tree" />{{ $t('user.department') }}
                 <div class="pull-right">{{ state.user.deptName }} / {{ state.postGroup }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon name="peoples" />所属角色
+                <svg-icon name="peoples" />{{ $t('user.role') }}
                 <div class="pull-right">
                   <span v-for="item in state.roles" :key="item">{{ item }}</span>
                 </div>
               </li>
               <li class="list-group-item">
-                <svg-icon name="date" />创建日期
+                <svg-icon name="date" />{{ $t('user.registerTime') }}
                 <div class="pull-right">{{ state.user.createTime }}</div>
               </li>
             </ul>
@@ -47,17 +47,17 @@
         <el-card>
           <template v-slot:header>
             <div class="clearfix">
-              <span>基本资料</span>
+              <span>{{ $t('user.basicInfo') }}</span>
             </div>
           </template>
           <el-tabs v-model="activeTab">
-            <el-tab-pane label="基本资料" name="userinfo">
+            <el-tab-pane :label="$t('user.basicInfo')" name="userinfo">
               <userInfo :user="state.user" />
             </el-tab-pane>
-            <el-tab-pane label="修改密码" name="resetPwd">
+            <el-tab-pane :label="$t('user.changePwd')" name="resetPwd">
               <resetPwd :user="state.user" />
             </el-tab-pane>
-            <el-tab-pane label="操作日志" name="log">
+            <el-tab-pane :label="$t('menu.operLog')" name="log">
               <operLog></operLog>
             </el-tab-pane>
           </el-tabs>

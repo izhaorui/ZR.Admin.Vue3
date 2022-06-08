@@ -107,7 +107,10 @@
     "lastWeek": "上週",
     "thisMonth": "本月",
     "lastMonth": "上月",
-    "today": "今天"
+    "today": "今天",
+    "female": "女",
+    "male": "男",
+    "sex": "性別"
   },
   "btn": {
     "add": "新增",
@@ -143,5 +146,20 @@
   "language": "語言",
   "languageKey": "語言key",
   "showWay": "顯示方式",
-  "table": "表格"
+  "table": "表格",
+  "user": {
+    "phoneNumber": "手機號碼",
+    "registerTime": "創建日期",
+    "department": "所屬部門",
+    "personalInfo": "個人信息",
+    "role": "所屬角色",
+    "userEmail": "用戶郵箱",
+    "basicInfo": "基本資料",
+    "userName": "用戶名稱",
+    "changePwd": "修改密碼",
+    "confirmPwd": "確認密碼",
+    "newPwd": "新密碼",
+    "oldPwd": "舊密碼",
+    "nickName": "用戶暱稱"
+  }
 }

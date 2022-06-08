@@ -1,17 +1,17 @@
 <template>
-  <el-form ref="pwdRef" :model="user" :rules="rules" label-width="80px">
-    <el-form-item label="旧密码" prop="oldPassword">
+  <el-form ref="pwdRef" :model="user" :rules="rules" label-width="130px" label-position="left">
+    <el-form-item :label="$t('user.oldPwd')" prop="oldPassword">
       <el-input v-model="user.oldPassword" placeholder="请输入旧密码" type="password" show-password />
     </el-form-item>
-    <el-form-item label="新密码" prop="newPassword">
+    <el-form-item :label="$t('user.newPwd')" prop="newPassword">
       <el-input v-model="user.newPassword" placeholder="请输入新密码" type="password" show-password />
     </el-form-item>
-    <el-form-item label="确认密码" prop="confirmPassword">
+    <el-form-item :label="$t('user.confirmPwd')" prop="confirmPassword">
       <el-input v-model="user.confirmPassword" placeholder="请确认密码" type="password" show-password />
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="submit">保存</el-button>
-      <el-button type="danger" @click="close">关闭</el-button>
+      <el-button type="primary" icon="Check" @click="submit">{{ $t('btn.save') }}</el-button>
+      <el-button type="danger" icon="Close" @click="close">{{ $t('btn.close') }}</el-button>
     </el-form-item>
   </el-form>
 </template>

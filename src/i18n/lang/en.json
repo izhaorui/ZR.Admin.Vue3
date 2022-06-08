@@ -107,7 +107,10 @@
     "lastWeek": "last week",
     "thisMonth": "this month",
     "lastMonth": "last month",
-    "today": "today"
+    "today": "today",
+    "female": "Female",
+    "male": "male",
+    "sex": "gender"
   },
   "btn": {
     "add": "Add",
@@ -143,5 +146,20 @@
   "language": "Language",
   "languageKey": "LanguageKey",
   "showWay": "Show Way",
-  "table": "Table"
+  "table": "Table",
+  "user": {
+    "phoneNumber": "cellphone number",
+    "registerTime": "Date created",
+    "basicInfo": "basic information",
+    "department": "Department",
+    "personalInfo": "Personal information",
+    "role": "own role",
+    "userEmail": "User mailbox",
+    "userName": "user name",
+    "changePwd": "change Password",
+    "confirmPwd": "Confirm Password",
+    "newPwd": "new password",
+    "oldPwd": "Old Password",
+    "nickName": "User's Nickname"
+  }
 }

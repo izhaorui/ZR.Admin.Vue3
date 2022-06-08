@@ -107,7 +107,10 @@
     "thisWeek": "本周",
     "lastWeek": "上周",
     "thisMonth": "本月",
-    "lastMonth": "上月"
+    "lastMonth": "上月",
+    "sex": "性别",
+    "male": "男",
+    "female": "女"
   },
   "btn": {
     "add": "新增",
@@ -139,6 +142,21 @@
     "view": "查看",
     "copy": "复制",
     "operate": "操作"
+  },
+  "user": {
+    "personalInfo": "个人信息",
+    "userName": "用户名称",
+    "phoneNumber": "手机号码",
+    "userEmail": "用户邮箱",
+    "department": "所属部门",
+    "role": "所属角色",
+    "registerTime": "创建日期",
+    "basicInfo": "基本资料",
+    "changePwd": "修改密码",
+    "oldPwd": "旧密码",
+    "newPwd": "新密码",
+    "confirmPwd": "确认密码",
+    "nickName": "用户昵称"
   },
   "language": "语言",
   "languageKey": "语言key",

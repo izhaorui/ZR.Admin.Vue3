@@ -1,23 +1,23 @@
 <template>
-  <el-form ref="userRef" :model="user" :rules="rules" label-width="80px">
-    <el-form-item label="用户昵称" prop="nickName">
+  <el-form ref="userRef" :model="user" :rules="rules" label-width="130px" label-position="left">
+    <el-form-item :label="$t('user.nickName')" prop="nickName">
       <el-input v-model="user.nickName" maxlength="30" />
     </el-form-item>
-    <el-form-item label="手机号码" prop="phonenumber">
+    <el-form-item :label="$t('user.phoneNumber')" prop="phonenumber">
       <el-input v-model="user.phonenumber" maxlength="11" />
     </el-form-item>
-    <el-form-item label="邮箱" prop="email">
+    <el-form-item :label="$t('user.userEmail')" prop="email">
       <el-input v-model="user.email" maxlength="50" />
     </el-form-item>
-    <el-form-item label="性别">
+    <el-form-item :label="$t('common.sex')">
       <el-radio-group v-model="user.sex">
-        <el-radio label="0">男</el-radio>
-        <el-radio label="1">女</el-radio>
+        <el-radio label="0">{{ $t('common.male') }}</el-radio>
+        <el-radio label="1">{{ $t('common.female') }}</el-radio>
       </el-radio-group>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="submit">{{ $t('btn.save') }}</el-button>
-      <el-button type="danger" @click="close">{{ $t('btn.close') }}</el-button>
+      <el-button type="primary" icon="Check" @click="submit">{{ $t('btn.save') }}</el-button>
+      <el-button type="danger" icon="Close" @click="close">{{ $t('btn.close') }}</el-button>
     </el-form-item>
   </el-form>
 </template>
