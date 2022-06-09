@@ -250,7 +250,7 @@
               </el-icon>
             </el-tooltip>
           </template>
-          <el-select v-model="info.subTableName" placeholder="请选择" @change="subSelectChange(this)">
+          <el-select v-model="info.subTableName" filterable placeholder="请选择" @change="subSelectChange(this)">
             <el-option v-for="(table, index) in tables" :key="index" :label="table.tableName + '：' + table.tableComment" :value="table.tableName">
             </el-option>
           </el-select>
