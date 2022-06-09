@@ -210,7 +210,7 @@ function handleEditTable(row) {
 }
 /** 删除按钮操作 */
 function handleDelete(row) {
-  const tableIds = row.tableId || tableIds.value
+  const Ids = row.tableId || tableIds.value
   proxy
     .$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
       confirmButtonText: '确定',
@@ -218,7 +218,7 @@ function handleDelete(row) {
       type: 'warning',
     })
     .then(() => {
-      delTable(tableIds.toString()).then((res) => {
+      delTable(Ids.toString()).then((res) => {
         if (res.code == 200) {
           proxy.$modal.msgSuccess('删除成功')
 
