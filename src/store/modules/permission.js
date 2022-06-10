@@ -8,30 +8,29 @@ import InnerLink from '@/layout/components/InnerLink'
 const modules =
   import.meta.glob('./../../views/**/*.vue')
 
-const permission = {
-  state: {
+const usePermissionStore = defineStore('permission', {
+  state: () => ({
     routes: [],
     defaultRoutes: [],
     topbarRouters: [],
-		sidebarRouters: []
-  },
-  mutations: {
-    SET_ROUTES: (state, routes) => {
-			state.routes = constantRoutes.concat(routes)
-    },
-    SET_DEFAULT_ROUTES: (state, routes) => {
-      state.defaultRoutes = constantRoutes.concat(routes)
-    },
-    SET_TOPBAR_ROUTES: (state, routes) => {
-      state.topbarRouters = routes
-    },
-    SET_SIDEBAR_ROUTERS: (state, routes) => {
-      state.sidebarRouters = routes
-    },
-  },
+    sidebarRouters: []
+  }),
   actions: {
+    setRoutes(routes) {
+      this.addRoutes = routes
+      this.routes = constantRoutes.concat(routes)
+    },
+    setDefaultRoutes(routes) {
+      this.defaultRoutes = constantRoutes.concat(routes)
+    },
+    setTopbarRoutes(routes) {
+      this.topbarRouters = routes
+    },
+    setSidebarRouters(routes) {
+      this.sidebarRouters = routes
+    },
     // 生成路由
-    GenerateRoutes({ commit }) {
+    generateRoutes() {
       return new Promise(resolve => {
         // 向后端请求路由数据
         getRouters().then(res => {
@@ -41,16 +40,16 @@ const permission = {
           const sidebarRoutes = filterAsyncRouter(sdata)
           const rewriteRoutes = filterAsyncRouter(rdata, false, true)
           //const defaultRoutes = filterAsyncRouter(defaultData)
-          commit('SET_ROUTES', rewriteRoutes)
-          commit('SET_SIDEBAR_ROUTERS', constantRoutes.concat(sidebarRoutes))
-          commit('SET_DEFAULT_ROUTES', sidebarRoutes)
-          commit('SET_TOPBAR_ROUTES', sidebarRoutes)
+          this.setRoutes(rewriteRoutes)
+          this.setSidebarRouters(constantRoutes.concat(sidebarRoutes))
+          this.setDefaultRoutes(sidebarRoutes)
+          this.setTopbarRoutes(sidebarRoutes)
           resolve(rewriteRoutes)
         })
       })
     }
   }
-}
+})
 
 // 遍历后台传来的路由字符串，转换为组件对象
 function filterAsyncRouter(asyncRouterMap, lastRouter = false, type = false) {
@@ -117,4 +116,4 @@ export const loadView = (view) => {
   return res;
 }
 
-export default permission
+export default usePermissionStore

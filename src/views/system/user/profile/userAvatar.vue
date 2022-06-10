@@ -57,6 +57,7 @@
 import 'vue-cropper/dist/index.css'
 import { VueCropper } from 'vue-cropper'
 import { uploadAvatar } from '@/api/system/user'
+import useUserStore from '@/store/modules/user'
 
 export default {
   components: {
@@ -69,7 +70,7 @@ export default {
     },
   },
   setup() {
-    const store = useStore()
+    const useStore = useUserStore()
     const { proxy } = getCurrentInstance()
 
     const open = ref(false)
@@ -78,7 +79,7 @@ export default {
     const fileName = ref('')
     //图片裁剪数据
     const options = reactive({
-      img: store.getters.avatar, // 裁剪图片的地址
+      img: useStore.avatar, // 裁剪图片的地址
       autoCrop: true, // 是否默认生成截图框
       autoCropWidth: 200, // 默认生成截图框宽度
       autoCropHeight: 200, // 默认生成截图框高度
@@ -126,12 +127,12 @@ export default {
     function uploadImg() {
       proxy.$refs.cropper.getCropBlob((data) => {
         let formData = new FormData()
-				var fileOfBlob = new File([data], fileName.value);
+        var fileOfBlob = new File([data], fileName.value)
         formData.append('picture', fileOfBlob)
         uploadAvatar(formData).then((response) => {
           open.value = false
           options.img = response.data.imgUrl
-          store.commit('SET_AVATAR', options.img)
+          useStore.avatar = options.img
           proxy.$modal.msgSuccess('修改成功')
           visible.value = false
         })
@@ -143,7 +144,7 @@ export default {
     }
     /** 关闭窗口 */
     function closeDialog() {
-      options.img = store.getters.avatar
+      options.img = useStore.avatar
       options.visible = false
     }
 

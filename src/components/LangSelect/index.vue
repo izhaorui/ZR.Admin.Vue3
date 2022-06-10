@@ -14,8 +14,9 @@
 </template>
 
 <script setup>
-const store = useStore()
-const lang = computed(() => store.getters.language)
+import useAppStore from '@/store/modules/app'
+const appStore = useAppStore()
+const lang = computed(() => useAppStore().lang)
 
 const { proxy } = getCurrentInstance()
 const langOptions = ref([
@@ -26,7 +27,7 @@ const langOptions = ref([
 
 function handleLanguageChange(lang) {
   proxy.$modal.loading('正在设置语言，请稍候...')
-  store.dispatch('app/setLang', lang)
+  appStore.setLang(lang)
   setTimeout('window.location.reload()', 1000)
 }
 </script>

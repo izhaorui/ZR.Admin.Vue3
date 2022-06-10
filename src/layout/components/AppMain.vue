@@ -10,9 +10,11 @@
   </el-main>
 </template>
 <script setup>
-const route = useRoute()
-const store = useStore()
+import useTagsViewStore from '@/store/modules/tagsView'
+// const route = useRoute()
+const tagsViewStore = useTagsViewStore()
+// tagsViewStore.addCachedView(route)
 const cachedViews = computed(() => {
-  return store.state.tagsView.cachedViews
+  return tagsViewStore.cachedViews
 })
 </script>

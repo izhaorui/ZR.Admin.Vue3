@@ -20,15 +20,20 @@
 <script setup>
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
+import useAppStore from '@/store/modules/app'
+import useSettingsStore from '@/store/modules/settings'
+import usePermissionStore from '@/store/modules/permission'
 
 const route = useRoute()
-const store = useStore()
+const appStore = useAppStore()
+const settingsStore = useSettingsStore()
+const permissionStore = usePermissionStore()
 
-const sidebarRouters = computed(() => store.getters.sidebarRouters)
-const showLogo = computed(() => store.state.settings.sidebarLogo)
-const sideTheme = computed(() => store.state.settings.sideTheme)
-const theme = computed(() => store.state.settings.theme)
-const isCollapse = computed(() => !store.state.app.sidebar.opened)
+const sidebarRouters = computed(() => permissionStore.sidebarRouters)
+const showLogo = computed(() => settingsStore.sidebarLogo)
+const sideTheme = computed(() => settingsStore.sideTheme)
+const theme = computed(() => settingsStore.theme)
+const isCollapse = computed(() => !appStore.sidebar.opened)
 
 const activeMenu = computed(() => {
   const { meta, path } = route

@@ -4,7 +4,8 @@
   </el-config-provider>
 </template>
 <script setup>
-import store from '@/store/index'
+import useUserStore from './store/modules/user'
+import useAppStore from './store/modules/app'
 import { ElConfigProvider } from 'element-plus'
 import zh from 'element-plus/lib/locale/lang/zh-cn' // 中文语言
 import en from 'element-plus/lib/locale/lang/en' // 英文语言
@@ -13,15 +14,15 @@ import tw from 'element-plus/lib/locale/lang/zh-tw' //繁体
 const { proxy } = getCurrentInstance()
 
 const token = computed(() => {
-  return store.getters.token
+  return useUserStore().token
 })
 
 const lang = computed(() => {
-  return store.getters.language
+  return useAppStore().lang
 })
 const locale = ref(zh)
 const size = ref('small')
-size.value = store.getters.size
+size.value = useAppStore().size
 watch(
   token,
   (val) => {

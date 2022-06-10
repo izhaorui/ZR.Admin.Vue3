@@ -33,25 +33,29 @@ import { useWindowSize } from '@vueuse/core'
 import Sidebar from './components/Sidebar/index.vue'
 import { Navbar, Settings, TagsView } from './components'
 import defaultSettings from '@/settings'
+
+import useAppStore from '@/store/modules/app'
+import useSettingsStore from '@/store/modules/settings'
+import useTagsViewStore from '@/store/modules/tagsView'
 const menuDrawer = computed({
-  get: () => store.state.app.sidebar.opened,
+  get: () => useAppStore().sidebar.opened,
   set: (val) => {
-    store.dispatch('app/toggleSideBar')
+    useAppStore().toggleSideBar(val)
   },
 })
-let store = useStore()
-const theme = computed(() => store.state.settings.theme)
-const sidebar = computed(() => store.state.app.sidebar)
-const device = computed(() => store.state.app.device)
-const needTagsView = computed(() => store.state.settings.tagsView)
-const fixedHeader = computed(() => store.state.settings.fixedHeader)
-const showFooter = computed(() => store.state.settings.showFooter)
+const settingsStore = useSettingsStore()
+const theme = computed(() => settingsStore.theme)
+const sidebar = computed(() => useAppStore().sidebar)
+const device = computed(() => useAppStore().device)
+const needTagsView = computed(() => settingsStore.tagsView)
+const fixedHeader = computed(() => settingsStore.fixedHeader)
+const showFooter = computed(() => settingsStore.showFooter)
 
 // appMain 模块 start
 const route = useRoute()
-store.dispatch('tagsView/addCachedView', route)
+useTagsViewStore().addCachedView(route)
 const cachedViews = computed(() => {
-  return store.state.tagsView.cachedViews
+  return useTagsViewStore().cachedViews
 })
 //appMain 模块结束
 
@@ -66,18 +70,18 @@ const WIDTH = 992 // refer to Bootstrap's responsive design
 
 watchEffect(() => {
   if (device.value === 'mobile' && sidebar.value.opened) {
-    // store.dispatch('app/closeSideBar')
+    // useAppStore().closeSideBar()
   }
   if (width.value - 1 < WIDTH) {
-    store.dispatch('app/toggleDevice', 'mobile')
-    // store.dispatch('app/closeSideBar')
+    useAppStore().toggleDevice('mobile')
+    // useAppStore().closeSideBar()
   } else {
-    store.dispatch('app/toggleDevice', 'desktop')
+    useAppStore().toggleDevice('desktop')
   }
 })
 
 function handleClickOutside() {
-  store.dispatch('app/closeSideBar')
+  useAppStore().closeSideBar()
 }
 
 const settingRef = ref(null)

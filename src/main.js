@@ -6,7 +6,6 @@ import 'dayjs/locale/zh-cn'
 import '@/assets/styles/index.scss' // global css
 
 import App from './App'
-import store from './store'
 import router from './router'
 import directive from './directive' // directive
 // 注册指令
@@ -65,6 +64,7 @@ app.component('ImagePreview', ImagePreview)
 app.component('RightToolbar', RightToolbar)
 app.component('svg-icon', SvgIcon)
 
+const store = createPinia()
 app.use(router)
 app.use(store)
 app.use(plugins)

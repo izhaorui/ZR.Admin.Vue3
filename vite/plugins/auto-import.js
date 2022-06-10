@@ -5,9 +5,7 @@ export default function createAutoImport() {
     imports: [
       'vue',
       'vue-router',
-      {
-        'vuex': ['useStore']
-      }
+      'pinia'
     ],
     dts: "src/auto-import.d.ts" // 生成 `auto-import.d.ts` 全局声明
   })

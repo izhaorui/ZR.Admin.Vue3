@@ -1,13 +1,13 @@
 <template>
-  <div class="navbar" :data-theme="sideTheme" :class="getters.device">
-    <hamburger id="hamburger-container" :is-active="getters.sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
-    <template v-if="getters.device != 'mobile'">
-      <breadcrumb id="breadcrumb-container" class="breadcrumb-container" v-if="!$store.state.settings.topNav" />
-      <top-nav id="topmenu-container" class="topmenu-container" v-if="$store.state.settings.topNav" />
+  <div class="navbar" :data-theme="sideTheme" :class="appStore.device">
+    <hamburger id="hamburger-container" :is-active="appStore.sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <template v-if="appStore.device != 'mobile'">
+      <breadcrumb id="breadcrumb-container" class="breadcrumb-container" v-if="!settingsStore.topNav" />
+      <top-nav id="topmenu-container" class="topmenu-container" v-if="settingsStore.topNav" />
     </template>
 
     <div class="right-menu">
-      <header-search id="header-search" class="right-menu-item" v-if="getters.device != 'mobile'" />
+      <header-search id="header-search" class="right-menu-item" v-if="appStore.device != 'mobile'" />
       <zr-git title="源码地址" class="right-menu-item" />
       <zr-doc title="文档地址" class="right-menu-item" />
       <screenfull title="全屏" class="right-menu-item" />
@@ -17,8 +17,8 @@
 
       <el-dropdown @command="handleCommand" class="right-menu-item avatar-container" trigger="hover">
         <span class="avatar-wrapper">
-          <img :src="getters.avatar" class="user-avatar" />
-          <span class="name">{{ getters.name }}</span>
+          <img :src="userStore.avatar" class="user-avatar" />
+          <span class="name">{{ userStore.name }}</span>
           <el-icon><ArrowDown /></el-icon>
         </span>
         <template #dropdown>
@@ -50,13 +50,18 @@ import ZrGit from '@/components/Zr/Git'
 import ZrDoc from '@/components/Zr/Doc'
 import Notice from '@/components/Notice/Index'
 import LangSelect from '@/components/LangSelect/index'
+import useAppStore from '@/store/modules/app'
+import useUserStore from '@/store/modules/user'
+import useSettingsStore from '@/store/modules/settings'
 
 const { proxy } = getCurrentInstance()
-const store = useStore()
-const getters = computed(() => store.getters)
-const sideTheme = computed(() => store.state.settings.sideTheme)
+const appStore = useAppStore()
+const userStore = useUserStore()
+const settingsStore = useSettingsStore()
+
+const sideTheme = computed(() => settingsStore.sideTheme)
 function toggleSideBar() {
-  store.dispatch('app/toggleSideBar')
+  appStore.toggleSideBar()
 }
 
 function handleCommand(command) {
@@ -80,7 +85,7 @@ function logout() {
       type: 'warning',
     })
     .then(() => {
-      store.dispatch('LogOut').then(() => {
+      userStore.logOut().then(() => {
         location.href = '/index'
       })
     })

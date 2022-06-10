@@ -1,10 +1,9 @@
 // 官方文档：https://docs.microsoft.com/zh-cn/aspnet/core/signalr/javascript-client?view=aspnetcore-6.0&viewFallbackFrom=aspnetcore-2.2&tabs=visual-studio
 import * as signalR from '@microsoft/signalr'
-import store from '../store'
 import { getToken } from '@/utils/auth'
 import { ElNotification } from 'element-plus'
 import { useWebNotification } from '@vueuse/core'
-
+import useSocketStore from '@/store/modules/socket'
 export default {
   // signalR对象
   SR: {},
@@ -49,8 +48,8 @@ export default {
       return true
     } catch (error) {
       that.failNum--;
-      console.log(`失败重试剩余次数${that.failNum}`, error)
-      if (that.failNum > 0) {
+      // console.log(`失败重试剩余次数${that.failNum}`, error)
+      if (that.failNum > 0 && this.SR.state.Disconnected) {
         setTimeout(async () => {
           await this.SR.start()
         }, 5000)
@@ -61,11 +60,10 @@ export default {
   // 接收消息处理
   receiveMsg(connection) {
     connection.on("onlineNum", (data) => {
-      store.dispatch("socket/changeOnlineNum", data);
+			useSocketStore().setOnlineUserNum(data)
     });
     // 接收欢迎语
     connection.on("welcome", (data) => {
-      console.log('welcome', data)
       ElNotification.info(data)
     });
     // 接收后台手动推送消息
@@ -91,13 +89,13 @@ export default {
     // 接收系统通知/公告
     connection.on("moreNotice", (data) => {
       if (data.code == 200) {
-        store.dispatch("socket/getNoticeList", data.data);
+				useSocketStore().setNoticeList(data.data)
       }
     })
 
     // 接收在线用户
     connection.on("onlineUser", (data) => {
-      store.dispatch("socket/getOnlineUsers", data);
+			useSocketStore().setOnlineUsers(data)
     })
   }
 }

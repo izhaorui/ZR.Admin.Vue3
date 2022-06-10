@@ -37,6 +37,9 @@ import { constantRoutes } from '@/router'
 import { isHttp } from '@/utils/validate'
 import { useRouter } from 'vue-router'
 import { getNormalPath } from '@/utils/ruoyi'
+import useAppStore from '@/store/modules/app'
+import useSettingsStore from '@/store/modules/settings'
+import usePermissionStore from '@/store/modules/permission'
 
 // 顶部栏初始数
 const visibleNumber = ref(5)
@@ -45,14 +48,16 @@ const isFrist = ref(false)
 // 当前激活菜单的 index
 const currentIndex = ref(undefined)
 
-const store = useStore()
+const appStore = useAppStore()
+const settingsStore = useSettingsStore()
+const permissionStore = usePermissionStore()
 const route = useRoute()
 const router = useRouter()
 
 // 主题颜色
-const theme = computed(() => store.state.settings.theme)
+const theme = computed(() => settingsStore.theme)
 // 所有的路由信息
-const routers = computed(() => store.state.permission.topbarRouters)
+const routers = computed(() => permissionStore.topbarRouters)
 
 // 顶部显示菜单
 const topMenus = computed(() => {
@@ -153,7 +158,7 @@ function activeRoutes(key) {
     })
   }
   if (routes.length > 0) {
-    store.commit('SET_SIDEBAR_ROUTERS', routes)
+    permissionStore.setSidebarRouters(routes)
   }
   return routes
 }

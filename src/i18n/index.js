@@ -1,9 +1,10 @@
 import { createI18n } from 'vue-i18n'
-import store from '@/store/index'
+// import useAppStore from '@/store/modules/app'
 import { listLangByLocale } from '@/api/system/commonLang'
-
+import jsCookie from 'js-cookie'
 const language = computed(() => {
-  return store.getters.language
+  // return useAppStore().lang
+  return jsCookie.get('lang') || 'zh-cn'
 })
 
 import zhCn from './lang/zh-cn.json'
@@ -23,7 +24,7 @@ const i18n = createI18n({
   // 全局注入 $t 函数
   globalInjection: true,
   fallbackLocale: 'zh-cn',
-  locale: store.getters.language, //默认选择的语言 
+  locale: language.value, //默认选择的语言 
   legacy: false, // 使用 Composition API 模式，则需要将其设置为false
   messages: {
     'zh-cn': {

@@ -49,13 +49,14 @@
 
 <script setup>
 import { CountUp } from 'countup.js'
+import useSocketStore from '@/store/modules/socket';
 const emit = defineEmits()
 const { proxy } = getCurrentInstance()
 
 const state = reactive({
   chatNum: 1390,
   onlineNum: computed(() => {
-    return proxy.$store.getters.onlineUserNum
+    return useSocketStore().onlineNum
   }),
   amount: 99998,
   order: 1999,

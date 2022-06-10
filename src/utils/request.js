@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { ElMessageBox, ElMessage } from 'element-plus'
-import store from '@/store'
 import { getToken } from '@/utils/auth'
+import useUserStore from '@/store/modules/user'
 
 // 解决后端跨域获取不到cookie问题
 // axios.defaults.withCredentials = true
@@ -20,7 +20,7 @@ service.interceptors.request.use(config => {
   if (getToken()) {
     //将token放到请求头发送给服务器,将tokenkey放在请求头中
     config.headers['Authorization'] = 'Bearer ' + getToken();
-    config.headers['userid'] = store.getters.userId;
+    config.headers['userid'] = useUserStore().userId;
   }
   return config;
 }, error => {
@@ -46,7 +46,7 @@ service.interceptors.response.use(res => {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        store.dispatch('LogOut').then(() => {
+        useUserStore().logOut().then(() => {
           location.href =
             import.meta.env.VITE_APP_ROUTER_PREFIX + 'index';
         })

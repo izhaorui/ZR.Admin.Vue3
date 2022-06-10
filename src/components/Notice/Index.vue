@@ -33,15 +33,18 @@
 </template>
 
 <script setup name="noticeIndex">
+import useSocketStore from '@/store/modules/socket'
+
 const { proxy } = getCurrentInstance()
+
 // 小红点
 const newsDot = ref(false)
 
 const noticeList = computed(() => {
-  return proxy.$store.getters.noticeList
+  return useSocketStore().noticeList
 })
 const noticeDot = computed(() => {
-  return proxy.$store.getters.noticeDot
+  return useSocketStore().noticeDot
 })
 // 全部已读点击
 function onAllReadClick() {

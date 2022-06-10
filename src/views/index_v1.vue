@@ -130,6 +130,9 @@ import WordCloudChat from './dashboard/WordCloud.vue'
 
 import dayjs from 'dayjs'
 
+import useUserStore from '@/store/modules/user'
+import useSocketStore from '@/store/modules/socket'
+
 const data = {
   newVisitis: {
     expectedData: [100, 120, 161, 134, 105, 160, 165],
@@ -200,13 +203,13 @@ const data = {
 }
 const { proxy } = getCurrentInstance()
 const userInfo = computed(() => {
-  return proxy.$store.getters.userinfo
+  return useUserStore().userInfo
 })
 const currentTime = computed(() => {
   return proxy.parseTime(new Date())
 })
 const onlineUsers = computed(() => {
-  return proxy.$store.getters.onlineUsers
+  return useSocketStore().onlineUsers
 })
 
 let lineChartData = reactive([])

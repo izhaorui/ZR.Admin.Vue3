@@ -69,8 +69,9 @@ import { encrypt, decrypt } from '@/utils/jsencrypt'
 import defaultSettings from '@/settings'
 import starBackground from '@/views/components/starBackground.vue'
 import LangSelect from '@/components/LangSelect/index.vue'
+import useUserStore from '@/store/modules/user'
 
-const store = useStore()
+const userStore = useUserStore()
 const router = useRouter()
 const { proxy } = getCurrentInstance()
 
@@ -118,8 +119,8 @@ function handleLogin() {
         Cookies.remove('rememberMe')
       }
       // 调用action的登录方法
-      store
-        .dispatch('Login', loginForm.value)
+      userStore
+        .login(loginForm.value)
         .then(() => {
           proxy.$modal.msgSuccess(proxy.$t('login.loginSuccess'))
           router.push({ path: redirect.value || '/' })

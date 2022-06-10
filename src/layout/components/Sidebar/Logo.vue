@@ -15,6 +15,7 @@
 
 <script setup>
 import logo from '@/assets/logo/logo.png'
+import useSettingsStore from '@/store/modules/settings'
 
 defineProps({
   collapse: {
@@ -24,8 +25,8 @@ defineProps({
 })
 
 const title = ref(import.meta.env.VITE_APP_TITLE)
-const store = useStore()
-const sideTheme = computed(() => store.state.settings.sideTheme)
+const settingsStore = useSettingsStore();
+const sideTheme = computed(() => settingsStore.sideTheme);
 </script>
 
 <style lang="scss" scoped>
