@@ -15,14 +15,14 @@
     "url": "https://gitee.com/izory/ZrAdminNetCore"
   },
   "dependencies": {
-    "@element-plus/icons-vue": "0.2.4",
+    "@element-plus/icons-vue": "^0.2.7",
     "@microsoft/signalr": "^6.0.4",
     "@vueuse/core": "^8.5.0",
     "axios": "^0.27.1",
     "countup.js": "^2.1.0",
     "echarts": "5.2.2",
     "echarts-wordcloud": "^2.0.0",
-    "element-plus": "^2.2.3",
+    "element-plus": "^2.2.5",
     "file-saver": "2.0.5",
     "fuse.js": "6.4.6",
     "highlight.js": "^11.5.1",
