@@ -8,7 +8,7 @@
 ## 🍟概述
 * 本仓库为前端技术栈 [Vue3](https://v3.cn.vuejs.org) + [Element Plus](https://element-plus.org/zh-CN) + [Vite](https://cn.vitejs.dev) 版本。
 * 配套后端代码仓库地址[ZRAdmin.NET](https://gitee.com/izory/ZrAdminNetCore/) 版本。
-* 前端采用Vue3.0、Element UI Plus、vite、compisition api。
+* 前端采用Vue3.0、Element UI Plus、vite、compisition api、Pinia等。
 * 支持加载动态权限菜单，多方式轻松权限控制
 * 腾讯云秒杀场：[点我进入](https://curl.qcloud.com/4yEoRquq)。
 * 腾讯云优惠券：[点我领取](https://curl.qcloud.com/5J4nag8D)。
@@ -79,10 +79,6 @@ yarn dev
 
 ## 💐 特别鸣谢
 - 👉Ruoyi.vue：[Ruoyi](http://www.ruoyi.vip/)
-
-## 🎧技术交流群
-
-- QQ：191349103
 
 ## 🎀捐赠
 如果这个项目对您有所帮助，请扫下方二维码就当打发要饭的吧。
