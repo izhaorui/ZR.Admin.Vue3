@@ -1,0 +1,11 @@
+/* 主要作用是vscode导入使用别名时可以自动化提示文件路径 */
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist", ".vscode"]
+}
