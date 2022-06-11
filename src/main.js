@@ -13,6 +13,7 @@ import plugins from './plugins' // plugins
 // import { download } from '@/utils/request'
 import signalR from '@/utils/signalR'
 import vueI18n from './i18n/index'
+import pinia from '@/store/index'
 
 // svg图标
 import 'virtual:svg-icons-register'
@@ -64,19 +65,6 @@ app.component('ImagePreview', ImagePreview)
 app.component('RightToolbar', RightToolbar)
 app.component('svg-icon', SvgIcon)
 
-const store = createPinia()
-app.use(router)
-app.use(store)
-app.use(plugins)
-app.use(elementIcons)
-app.use(vueI18n)
-
 directive(app)
-// 使用element-plus 并且设置全局的大小
-app.use(ElementPlus, {
-  // locale: elZhCn,
-  // 支持 large、default、small
-  size: Cookies.get('size') || 'small'
-})
 
-app.mount('#app')
+app.use(pinia).use(router).use(plugins).use(ElementPlus, {}).use(elementIcons).use(vueI18n).mount('#app')
