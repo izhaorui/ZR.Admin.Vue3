@@ -110,7 +110,8 @@
     "today": "today",
     "female": "Female",
     "male": "male",
-    "sex": "gender"
+    "sex": "gender",
+    "systemTips": "system hint"
   },
   "btn": {
     "add": "Add",

@@ -110,7 +110,8 @@
     "lastMonth": "上月",
     "sex": "性别",
     "male": "男",
-    "female": "女"
+    "female": "女",
+    "systemTips": "系统提示"
   },
   "btn": {
     "add": "新增",

@@ -45,7 +45,7 @@ watch(
     } else if (val == 'zh-tw') {
       locale.value = tw
     } else {
-      locale.value = en
+      locale.value = zh
     }
   },
   {

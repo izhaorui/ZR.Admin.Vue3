@@ -110,7 +110,8 @@
     "today": "今天",
     "female": "女",
     "male": "男",
-    "sex": "性別"
+    "sex": "性別",
+    "systemTips": "系統提示"
   },
   "btn": {
     "add": "新增",
