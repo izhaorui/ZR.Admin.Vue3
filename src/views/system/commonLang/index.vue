@@ -12,7 +12,7 @@
     <el-form :model="queryParams" label-position="right" inline ref="queryRef" v-show="showSearch" @submit.prevent>
       <el-form-item :label="$t('language')" prop="langCode">
         <el-select v-model="queryParams.langCode" placeholder="请选择语言code">
-          <el-option v-for="item in sys_lang_type" :key="item.dictValue" :label="item.dictLabel" :value="item.dictValue"></el-option>
+          <el-option v-for="item in options.sys_lang_type" :key="item.dictValue" :label="item.dictLabel" :value="item.dictValue"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item :label="$t('languageKey')" prop="langKey">
@@ -76,7 +76,7 @@
       @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="50" align="center" />
 
-      <!-- <el-table-column prop="id" label="id" align="center" /> -->
+      <el-table-column prop="id" label="id" align="center" />
       <el-table-column prop="langCode" :label="$t('language')" align="center">
         <template #default="scope">
           <dict-tag :options="sys_lang_type" :value="scope.row.langCode" />
@@ -213,9 +213,16 @@ const state = reactive({
     langKey: [{ required: true, pattern: /^[A-Za-z].+$/, message: '语言key不能为空', trigger: 'change' }],
     langName: [{ required: true, message: '内容不能为空', trigger: 'blur' }],
   },
+  options: {},
 })
 
-const { form, rules } = toRefs(state)
+var dictParams = [{ dictType: 'sys_lang_type' }]
+proxy.getDicts(dictParams).then((response) => {
+  response.data.forEach((element) => {
+    state.options[element.dictType] = element.list
+  })
+})
+const { form, rules, options } = toRefs(state)
 // 总记录数
 const total = ref(0)
 const dataList = ref([])
@@ -226,13 +233,6 @@ const sys_lang_type = ref([])
 // 添加时间时间范围
 const dateRangeAddtime = ref([])
 
-var dictParams = [{ dictType: 'sys_lang_type' }]
-
-proxy.getDicts(dictParams).then((response) => {
-  response.data.forEach((element) => {
-    proxy[element.dictType] = element.list
-  })
-})
 watch(
   () => queryParams.showMode,
   () => {

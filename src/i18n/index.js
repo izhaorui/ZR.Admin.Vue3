@@ -41,7 +41,8 @@ const i18n = createI18n({
       ...en,
       ...pageLoginEn,
       ...pagemenuEn
-    }
+    },
+    //... 在这里添加其他语言支持
   }
 })
 
@@ -49,9 +50,7 @@ const loadLocale = () => {
   listLangByLocale(language.value).then(res => {
     const { code, data } = res
     if (code == 200) {
-      i18n.global.mergeLocaleMessage('zh-cn', data.cn)
-      i18n.global.mergeLocaleMessage('zh-tw', data.tw)
-      i18n.global.mergeLocaleMessage('en', data.en)
+      i18n.global.mergeLocaleMessage(language.value, data)
     }
   })
 }

@@ -132,13 +132,6 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :span="10">
-        <!-- <el-card>
-          <div slot="header" class="clearfix">
-            <span></span>
-          </div>
-        </el-card> -->
-      </el-col>
     </el-row>
   </div>
 </template>
