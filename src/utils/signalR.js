@@ -2,8 +2,8 @@
 import * as signalR from '@microsoft/signalr'
 import { getToken } from '@/utils/auth'
 import { ElNotification } from 'element-plus'
-import { useWebNotification } from '@vueuse/core'
 import useSocketStore from '@/store/modules/socket'
+import { webNotify } from './index'
 export default {
   // signalR对象
   SR: {},
@@ -60,7 +60,7 @@ export default {
   // 接收消息处理
   receiveMsg(connection) {
     connection.on("onlineNum", (data) => {
-			useSocketStore().setOnlineUserNum(data)
+      useSocketStore().setOnlineUserNum(data)
     });
     // 接收欢迎语
     connection.on("welcome", (data) => {
@@ -75,27 +75,31 @@ export default {
         dangerouslyUseHTMLString: true,
         duration: 0
       })
-      const { show, isSupported } = useWebNotification({
-        title: data,
-        dir: 'auto',
-        lang: 'en',
-        renotify: true,
-        tag: 'tag',
-      })
-      if (isSupported) {
-        show()
-      }
+      webNotify({ title: title, body: data })
     })
     // 接收系统通知/公告
     connection.on("moreNotice", (data) => {
       if (data.code == 200) {
-				useSocketStore().setNoticeList(data.data)
+        useSocketStore().setNoticeList(data.data)
       }
     })
 
     // 接收在线用户
     connection.on("onlineUser", (data) => {
-			useSocketStore().setOnlineUsers(data)
+      useSocketStore().setOnlineUsers(data)
+    })
+
+    // 接收聊天数据
+    connection.on('receiveChat', (data) => {
+      const title = `来自${data.userName}的消息通知`
+      ElNotification({
+        title: title,
+        message: data.message,
+        type: 'success',
+        duration: 0
+      })
+
+      webNotify({ title: title, body: data.message })
     })
   }
 }

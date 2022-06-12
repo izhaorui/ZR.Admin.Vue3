@@ -1,4 +1,5 @@
 import { parseTime } from './ruoyi'
+import { useWebNotification } from '@vueuse/core'
 
 /**
  * @param {number} time
@@ -359,4 +360,22 @@ export function rgbToHex(r, g, b) {
   for (let i = 0; i < 3; i++)
     if (hexs[i].length == 1) hexs[i] = `0${hexs[i]}`;
   return `#${hexs.join('')}`;
+}
+
+/**
+ * 浏览器Web通知
+ * @param { title: 'title' } optinos
+ */
+export function webNotify(optinos) {
+  const { show, isSupported } = useWebNotification({
+    title: optinos.title,
+    dir: 'auto',
+    lang: 'en',
+    renotify: true,
+    tag: 'tag',
+    body: optinos.body
+  })
+  if (isSupported) {
+    show()
+  }
 }

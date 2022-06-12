@@ -75,6 +75,7 @@
                     <div class="info-item-left" v-text="v.name"></div>
                     <div>{{ v.userIP }}({{ v.location }})</div>
                     <div class="info-item-right" v-text="dayjs(v.loginTime).format('HH:mm:ss')"></div>
+                    <el-button text @click="onChat(v)" icon="bell" v-hasRole="['admin']">通知</el-button>
                   </li>
                 </ul>
               </div>
@@ -220,6 +221,21 @@ function handleSetLineChartData(type) {
 }
 handleSetLineChartData('newVisitis')
 function onOpenGitee() {}
+function onChat(item) {
+  proxy
+    .$prompt('请输入通知内容', '', {
+      confirmButtonText: '发送',
+      cancelButtonText: '取消',
+      inputPattern: /\S/,
+      inputErrorMessage: '消息内容不能为空',
+    })
+    .then(({ value }) => {
+      proxy.signalr.SR.invoke('SendMessage', item.connnectionId, item.name, value).catch(function (err) {
+        console.error(err.toString())
+      })
+    })
+    .catch(() => {})
+}
 </script>
 
 <style lang="scss" scoped>
@@ -292,7 +308,7 @@ function onOpenGitee() {}
             overflow: hidden;
           }
           .info-item-right {
-            width: 160px;
+            width: 100px;
             text-align: right;
             padding-right: 10px;
           }
