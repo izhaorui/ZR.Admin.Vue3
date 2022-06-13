@@ -1,101 +1,90 @@
 <template>
-  <div :class="className" :style="{height:height,width:width}" />
+  <div ref="chartRef" :class="className" :style="{ height: height, width: width }" />
 </template>
 
-<script>
-import * as echarts from 'echarts';
-// import resize from './mixins/resize'
-
+<script setup>
+import * as echarts from 'echarts'
+let chart = null
+const { proxy } = getCurrentInstance()
 const animationDuration = 6000
+const props = defineProps({
+  className: {
+    type: String,
+    default: 'chart',
+  },
+  width: {
+    type: String,
+    default: '100%',
+  },
+  height: {
+    type: String,
+    default: '300px',
+  },
+})
+function initChart() {
+  chart = echarts.init(proxy.$refs.chartRef, 'macarons')
 
-export default {
-  // mixins: [resize],
-  props: {
-    className: {
-      type: String,
-      default: 'chart'
+  chart.setOption({
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        // 坐标轴指示器，坐标轴触发有效
+        type: 'shadow', // 默认为直线，可选为：'line' | 'shadow'
+      },
     },
-    width: {
-      type: String,
-      default: '100%'
+    grid: {
+      top: 10,
+      left: '2%',
+      right: '2%',
+      bottom: '3%',
+      containLabel: true,
     },
-    height: {
-      type: String,
-      default: '300px'
-    }
-  },
-  data() {
-    return {
-      chart: null
-    }
-  },
-  mounted() {
-    this.$nextTick(() => {
-      this.initChart()
-    })
-  },
-  beforeDestroy() {
-    if (!this.chart) {
-      return
-    }
-    this.chart.dispose()
-    this.chart = null
-  },
-  methods: {
-    initChart() {
-      this.chart = echarts.init(this.$el)
-
-      this.chart.setOption({
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: { // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-          }
+    xAxis: [
+      {
+        type: 'category',
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        axisTick: {
+          alignWithLabel: true,
         },
-        grid: {
-          top: 10,
-          left: '2%',
-          right: '2%',
-          bottom: '3%',
-          containLabel: true
+      },
+    ],
+    yAxis: [
+      {
+        type: 'value',
+        axisTick: {
+          show: false,
         },
-        xAxis: [{
-          type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-          axisTick: {
-            alignWithLabel: true
-          }
-        }],
-        yAxis: [{
-          type: 'value',
-          axisTick: {
-            show: false
-          }
-        }],
-        series: [{
-          name: 'pageA',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [79, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }, {
-          name: 'pageB',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [80, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }, {
-          name: 'pageC',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [30, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }]
-      })
-    }
-  }
+      },
+    ],
+    series: [
+      {
+        name: 'pageA',
+        type: 'bar',
+        stack: 'vistors',
+        barWidth: '60%',
+        data: [79, 52, 200, 334, 390, 330, 220],
+        animationDuration,
+      },
+      {
+        name: 'pageB',
+        type: 'bar',
+        stack: 'vistors',
+        barWidth: '60%',
+        data: [80, 52, 200, 334, 390, 330, 220],
+        animationDuration,
+      },
+      {
+        name: 'pageC',
+        type: 'bar',
+        stack: 'vistors',
+        barWidth: '60%',
+        data: [30, 52, 200, 334, 390, 330, 220],
+        animationDuration,
+      },
+    ],
+  })
 }
+onMounted(() => {
+  initChart()
+})
 </script>

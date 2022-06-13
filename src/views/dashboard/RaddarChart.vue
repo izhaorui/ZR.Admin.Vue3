@@ -4,7 +4,6 @@
 
 <script>
 import * as echarts from 'echarts'
-// import resize from './mixins/resize'
 
 const animationDuration = 3000
 

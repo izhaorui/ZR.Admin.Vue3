@@ -5,15 +5,21 @@
         <el-input v-model="queryParams.ipaddr" placeholder="请输入登录地址" clearable @keyup.enter="handleQuery" />
       </el-form-item>
       <el-form-item label="用户名称" prop="userName">
-        <el-input v-model="queryParams.userName" placeholder="请输入用户名称" clearable  @keyup.enter="handleQuery" />
+        <el-input v-model="queryParams.userName" placeholder="请输入用户名称" clearable @keyup.enter="handleQuery" />
       </el-form-item>
       <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="登录状态" clearable  >
+        <el-select v-model="queryParams.status" placeholder="登录状态" clearable>
           <el-option v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
         </el-select>
       </el-form-item>
       <el-form-item label="登录时间">
-        <el-date-picker v-model="dateRange"  style="width: 240px" type="daterange" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
+        <el-date-picker
+          v-model="dateRange"
+          style="width: 240px"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
@@ -23,7 +29,9 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="delete" :disabled="multiple" @click="handleDelete" v-hasPermi="['monitor:logininfor:remove']">删除</el-button>
+        <el-button type="danger" plain icon="delete" :disabled="multiple" @click="handleDelete" v-hasPermi="['monitor:logininfor:remove']"
+          >删除</el-button
+        >
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" plain icon="delete" @click="handleClean" v-hasPermi="['monitor:logininfor:remove']">清空</el-button>
@@ -43,7 +51,7 @@
       <el-table-column label="浏览器" align="center" prop="browser" />
       <el-table-column label="操作系统" align="center" prop="os" />
       <el-table-column label="操作状态" align="center" prop="status">
-        <template #default="{row}">
+        <template #default="{ row }">
           <dict-tag :options="statusOptions" :value="row.status"></dict-tag>
         </template>
       </el-table-column>
@@ -55,142 +63,124 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
+    <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
   </div>
 </template>
 
-<script>
-import {
-  list,
-  delLogininfor,
-  cleanLogininfor,
-  exportLogininfor,
-} from "@/api/monitor/logininfor";
+<script setup name="logininfor">
+import { list as queryList, delLogininfor, cleanLogininfor, exportLogininfor } from '@/api/monitor/logininfor'
 
-export default {
-  name: "logininfor",
-  data() {
-    return {
-      // 遮罩层
-      loading: true,
-      // 选中数组
-      ids: [],
-      // 非多个禁用
-      multiple: true,
-      // 显示搜索条件
-      showSearch: true,
-      // 总条数
-      total: 0,
-      // 表格数据
-      list: [],
-      // 状态数据字典
-      statusOptions: [],
-      // 日期范围
-      dateRange: [],
-      // 查询参数
-      queryParams: {
-        pageNum: 1,
-        pageSize: 10,
-        ipaddr: undefined,
-        userName: undefined,
-        status: undefined,
-      },
-    };
-  },
-  created() {
-    this.getList();
-    this.getDicts("sys_common_status").then((response) => {
-      this.statusOptions = response.data;
-    });
-  },
-  methods: {
-    /** 查询登录日志列表 */
-    getList() {
-      this.loading = true;
-      list(this.addDateRange(this.queryParams, this.dateRange)).then(
-        (response) => {
-          this.loading = false;
-          if (response.code == 200) {
-            this.list = response.data.result;
-            this.total = response.data.totalNum;
-          } else {
-            this.total = 0;
-            this.list = [];
-          }
-        }
-      );
-    },
-    // 登录状态字典翻译
-    statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
-    },
-    /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.dateRange = [];
-      this.resetForm("queryForm");
-      this.handleQuery();
-    },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map((item) => item.infoId);
-      this.multiple = !selection.length;
-    },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const infoIds = row.infoId || this.ids;
-      this.$confirm(
-        '是否确认删除访问编号为"' + infoIds + '"的数据项?',
-        "警告",
-        {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        }
-      )
-        .then(function () {
-          return delLogininfor(infoIds);
-        })
-        .then(() => {
-          this.getList();
-          this.$modal.msgSuccess("删除成功");
-        });
-    },
-    /** 清空按钮操作 */
-    handleClean() {
-      this.$confirm("是否确认清空所有登录日志数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(function () {
-          return cleanLogininfor();
-        })
-        .then(() => {
-          this.getList();
-          this.$modal.msgSuccess("清空成功");
-        });
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams;
-      this.$confirm("是否确认导出所有操作日志数据项?", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(function () {
-          return exportLogininfor(queryParams);
-        })
-        .then((response) => {
-          this.download(response.data.path);
-        });
-    },
-  },
-};
+// 遮罩层
+const loading = ref(true)
+// 选中数组
+const ids = ref([])
+// 非多个禁用
+const multiple = ref(true)
+// 显示搜索条件
+const showSearch = ref(true)
+// 总条数
+const total = ref(0)
+// 表格数据
+const list = ref([])
+// 状态数据字典
+const statusOptions = ref([])
+// 日期范围
+const dateRange = ref([])
+// 查询参数
+const queryParams = reactive({
+  pageNum: 1,
+  pageSize: 10,
+  ipaddr: undefined,
+  userName: undefined,
+  status: undefined,
+})
+
+const { proxy } = getCurrentInstance()
+/** 查询登录日志列表 */
+function getList() {
+  loading.value = true
+  queryList(proxy.addDateRange(queryParams, dateRange.value)).then((response) => {
+    loading.value = false
+    if (response.code == 200) {
+      list.value = response.data.result
+      total.value = response.data.totalNum
+    } else {
+      total.value = 0
+      list.value = []
+    }
+  })
+}
+// 登录状态字典翻译
+function statusFormat(row, column) {
+  return proxy.selectDictLabel(statusOptions.value, row.status)
+}
+getList()
+proxy.getDicts('sys_common_status').then((response) => {
+  statusOptions.value = response.data
+})
+
+/** 搜索按钮操作 */
+function handleQuery() {
+  queryParams.pageNum = 1
+  getList()
+}
+/** 重置按钮操作 */
+function resetQuery() {
+  dateRange.value = []
+  proxy.resetForm('queryForm')
+  handleQuery()
+}
+// 多选框选中数据
+function handleSelectionChange(selection) {
+  ids.value = selection.map((item) => item.infoId)
+  multiple.value = !selection.length
+}
+/** 删除按钮操作 */
+function handleDelete(row) {
+  const infoIds = row.infoId || ids.value
+  proxy
+    .$confirm('是否确认删除访问编号为"' + infoIds + '"的数据项?', '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+    .then(function () {
+      return delLogininfor(infoIds)
+    })
+    .then(() => {
+      getList()
+      proxy.$modal.msgSuccess('删除成功')
+    })
+}
+/** 清空按钮操作 */
+function handleClean() {
+  proxy
+    .$confirm('是否确认清空所有登录日志数据项?', '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+    .then(function () {
+      return cleanLogininfor()
+    })
+    .then(() => {
+      getList()
+      proxy.$modal.msgSuccess('清空成功')
+    })
+}
+/** 导出按钮操作 */
+function handleExport() {
+  proxy
+    .$confirm('是否确认导出所有操作日志数据项?', '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+    .then(function () {
+      return exportLogininfor(queryParams)
+    })
+    .then((response) => {
+      proxy.download(response.data.path)
+    })
+}
 </script>
-

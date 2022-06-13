@@ -90,7 +90,7 @@
 
     <!-- 操作日志详细 -->
     <el-dialog title="操作日志详细" v-model="open" width="700px" append-to-body>
-      <el-form ref="form" :model="form" label-width="100px">
+      <el-form ref="formRef" :model="form" label-width="100px">
         <el-row>
           <el-col :lg="12">
             <el-form-item label="操作模块：">{{ form.title }} </el-form-item>
@@ -136,148 +136,167 @@
   </div>
 </template>
 
-<script>
-import { list, delOperlog, cleanOperlog, exportOperlog } from '@/api/monitor/operlog'
+<script setup name="operlog">
+import { list as listOperLog, delOperlog, cleanOperlog, exportOperlog } from '@/api/monitor/operlog'
 
-export default {
-  name: 'operlog',
-  data() {
-    return {
-      // 遮罩层
-      loading: true,
-      // 选中数组
-      ids: [],
-      // 非多个禁用
-      multiple: true,
-      // 显示搜索条件
-      showSearch: true,
-      // 总条数
-      total: 0,
-      // 表格数据
-      list: [],
-      // 是否显示弹出层
-      open: false,
-      // 类型数据字典
-      statusOptions: [],
-      // 业务类型（0其它 1新增 2修改 3删除）选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
-      businessTypeOptions: [],
-      // 日期范围
-      dateRange: [],
-      // 表单参数
-      form: {},
-      // 查询参数
-      queryParams: {
-        pageNum: 1,
-        pageSize: 20,
-        title: undefined,
-        operName: undefined,
-        businessType: undefined,
-        status: undefined,
-      },
+const { proxy } = getCurrentInstance()
+// 遮罩层
+const loading = ref(true)
+// 选中数组
+const ids = ref([])
+// 非多个禁用
+const multiple = ref(true)
+// 显示搜索条件
+const showSearch = ref(true)
+// 总条数
+const total = ref(0)
+// 表格数据
+const list = ref([])
+// 是否显示弹出层
+const open = ref(false)
+// 类型数据字典
+const statusOptions = ref([])
+// 业务类型（0其它 1新增 2修改 3删除）选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
+const businessTypeOptions = ref([])
+// 日期范围
+const dateRange = ref([])
+
+const state = reactive({
+  form: {},
+  queryParams: {
+    pageNum: 1,
+    pageSize: 20,
+    title: undefined,
+    operName: undefined,
+    businessType: undefined,
+    status: undefined,
+  },
+})
+const { form, queryParams } = toRefs(state)
+var dictParams = [
+  { dictType: 'sys_oper_type', columnName: 'businessTypeOptions' },
+  { dictType: 'sys_common_status', columnName: 'statusOptions' },
+]
+proxy.getDicts(dictParams).then((response) => {
+  response.data.forEach((element) => {
+    proxy[element.columnName] = element.list
+  })
+})
+/** 查询登录日志 */
+function getList() {
+  loading.value = true
+  listOperLog(proxy.addDateRange(queryParams.value, dateRange.value)).then((response) => {
+    loading.value = false
+    if (response.code == 200) {
+      list.value = response.data.result
+      total.value = response.data.totalNum
+    } else {
+      total.value = 0
+      list.value = []
     }
-  },
-  created() {
-    this.getList()
-    var dictParams = [
-      { dictType: 'sys_oper_type', columnName: 'businessTypeOptions' },
-      { dictType: 'sys_common_status', columnName: 'statusOptions' },
-    ]
-    this.getDicts(dictParams).then((response) => {
-      response.data.forEach((element) => {
-        this[element.columnName] = element.list
-      })
+  })
+}
+// 操作日志状态字典翻译
+function statusFormat(row, column) {
+  return proxy.selectDictLabel(statusOptions.value, row.status)
+}
+/** 搜索按钮操作 */
+function handleQuery() {
+  queryParams.value.pageNum = 1
+  getList()
+}
+/** 重置按钮操作 */
+function resetQuery() {
+  dateRange.value = []
+  proxy.resetForm('queryForm')
+  handleQuery()
+}
+// 多选框选中数据
+function handleSelectionChange(selection) {
+  ids.value = selection.map((item) => item.operId)
+  multiple.value = !selection.length
+}
+const formRef = ref()
+/** 重置操作表单 */
+function reset() {
+  form.value = {
+    operId: undefined,
+    title: undefined,
+    businessType: undefined,
+    method: undefined,
+    requestMethod: undefined,
+    operatorType: undefined,
+    deptName: undefined,
+    operUrl: undefined,
+    operIp: undefined,
+    operLocation: undefined,
+    operParam: undefined,
+    jsonResult: undefined,
+    status: 0,
+    errorMsg: undefined,
+    operTime: undefined,
+    elapsed: 0,
+  }
+  proxy.resetForm('formRef')
+}
+/** 详细按钮操作 */
+function handleView(row) {
+  reset()
+  open.value = true
+  form.value = row
+}
+/** 删除按钮操作 */
+function handleDelete(row) {
+  const operIds = row.operId || ids.value
+  proxy
+    .$confirm('是否确认删除日志编号为"' + operIds + '"的数据项?', '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
     })
-  },
-  methods: {
-    /** 查询登录日志 */
-    getList() {
-      this.loading = true
-      list(this.addDateRange(this.queryParams, this.dateRange)).then((response) => {
-        this.loading = false
-        if (response.code == 200) {
-          this.list = response.data.result
-          this.total = response.data.totalNum
+    .then(function () {
+      return delOperlog(operIds)
+    })
+    .then(() => {
+      getList()
+      proxy.$modal.msgSuccess('删除成功')
+    })
+}
+/** 清空按钮操作 */
+function handleClean() {
+  proxy
+    .$confirm('是否确认清空所有操作日志数据项?', '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+    .then(function () {
+      return cleanOperlog()
+    })
+    .then(() => {
+      getList()
+      proxy.$modal.msgSuccess('清空成功')
+    })
+}
+/** 导出按钮操作 */
+function handleExport() {
+  proxy
+    .$confirm('是否确认导出所有操作日志?', '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+    .then(() => {
+      exportOperlog(queryParams.value).then((response) => {
+        const { code, data } = response
+        if (code == 200) {
+          proxy.$modal.msgSuccess('导出成功')
+          proxy.download(data.path)
         } else {
-          this.total = 0
-          this.list = []
+          proxy.$modal.msgError('导出失败')
         }
       })
-    },
-    // 操作日志状态字典翻译
-    statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status)
-    },
-    /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1
-      this.getList()
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.dateRange = []
-      this.resetForm('queryForm')
-      this.handleQuery()
-    },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map((item) => item.operId)
-      this.multiple = !selection.length
-    },
-    /** 详细按钮操作 */
-    handleView(row) {
-      this.open = true
-      this.form = row
-    },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const operIds = row.operId || this.ids
-      this.$confirm('是否确认删除日志编号为"' + operIds + '"的数据项?', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(function () {
-          return delOperlog(operIds)
-        })
-        .then(() => {
-          this.getList()
-          this.$modal.msgSuccess('删除成功')
-        })
-    },
-    /** 清空按钮操作 */
-    handleClean() {
-      this.$confirm('是否确认清空所有操作日志数据项?', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(function () {
-          return cleanOperlog()
-        })
-        .then(() => {
-          this.getList()
-          this.$modal.msgSuccess('清空成功')
-        })
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      const queryParams = this.queryParams
-      this.$confirm('是否确认导出所有操作日志?', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      }).then(() => {
-        exportOperlog(queryParams).then((response) => {
-          const { code, data } = response
-          if (code == 200) {
-            this.$modal.msgSuccess('导出成功')
-            this.download(data.path)
-          } else {
-            this.$modal.msgError('导出失败')
-          }
-        })
-      })
-    },
-  },
+    })
 }
+handleQuery()
 </script>
