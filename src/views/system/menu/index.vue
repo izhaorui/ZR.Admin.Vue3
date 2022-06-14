@@ -86,7 +86,7 @@
           <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column :label="$t('common.addTime')" align="center" prop="createTime">
+      <el-table-column :label="$t('common.addTime')" align="center" prop="createTime" :show-overflow-tooltip="true">
         <template #default="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
