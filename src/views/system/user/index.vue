@@ -184,10 +184,8 @@
         </el-row>
       </el-form>
       <template #footer>
-        <div class="dialog-footer">
-          <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
-          <el-button @click="cancel">{{ $t('btn.cancel') }}</el-button>
-        </div>
+        <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
+        <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
       </template>
     </el-dialog>
 
@@ -220,10 +218,8 @@
         </template>
       </el-upload>
       <template #footer>
-        <div class="dialog-footer">
-          <el-button type="primary" @click="submitFileForm">{{ $t('btn.submit') }}</el-button>
-          <el-button @click="upload.open = false">{{ $t('btn.cancel') }}</el-button>
-        </div>
+        <el-button @click="upload.open = false">{{ $t('btn.cancel') }}</el-button>
+        <el-button type="primary" @click="submitFileForm">{{ $t('btn.submit') }}</el-button>
       </template>
     </el-dialog>
   </div>
