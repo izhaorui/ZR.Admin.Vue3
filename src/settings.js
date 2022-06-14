@@ -59,5 +59,13 @@ export default {
   /**
    * 是否显示底部栏
    */
-  showFooter: true
+  showFooter: true,
+  /**
+   * 是否显示水印
+   */
+  showWatermark: false,
+  /**
+   * 水印文案
+   */
+  watermarkText: 'ZRAdmin.NET'
 }

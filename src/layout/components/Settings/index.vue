@@ -59,6 +59,12 @@
         <el-switch v-model="showFooter" class="drawer-switch" />
       </span>
     </div>
+    <div class="drawer-item">
+      <span>开启水印</span>
+      <span class="comp-style">
+        <el-switch v-model="showWatermark" class="drawer-switch" />
+      </span>
+    </div>
     <!-- <div class="drawer-item">
       <span>{{ $t('layout.fixed') }} Header</span>
       <span class="comp-style">
@@ -93,10 +99,11 @@ import 'element-plus/theme-chalk/dark/css-vars.css'
 import { useDark, useCycleList, useColorMode } from '@vueuse/core'
 import { useDynamicTitle } from '@/utils/dynamicTitle'
 import { getLightColor } from '@/utils/index'
+import { getmark } from '@/utils/wartermark'
 import useAppStore from '@/store/modules/app'
 import useSettingsStore from '@/store/modules/settings'
 import usePermissionStore from '@/store/modules/permission'
-
+import useUserStore from '@/store/modules/user'
 const { proxy } = getCurrentInstance()
 const appStore = useAppStore()
 const settingsStore = useSettingsStore()
@@ -106,7 +113,7 @@ const theme = ref(settingsStore.theme)
 const sideTheme = ref(settingsStore.sideTheme)
 const storeSettings = computed(() => settingsStore)
 const predefineColors = ref(['#409EFF', '#ff4500', '#ff8c00', '#ffd700', '#90ee90', '#00ced1', '#1e90ff', '#c71585'])
-
+const { setWatermark, removeWatermark } = getmark()
 // 可以手动更改当前值 model.value = 'cafe'
 const mode = useColorMode({
   modes: {
@@ -166,6 +173,19 @@ const dynamicTitle = computed({
     useDynamicTitle()
   },
 })
+/**是否显示水印 */
+const showWatermark = computed({
+  get: () => storeSettings.value.showWatermark,
+  set: (val) => {
+    settingsStore.changeSetting({ key: 'showWatermark', value: val })
+    changeWatermark()
+  },
+})
+const changeWatermark = () => {
+  storeSettings.value.showWatermark ? setWatermark(useUserStore().userInfo.userName) : removeWatermark()
+}
+// 开启水印
+changeWatermark()
 // 监控主题颜色
 watch(
   () => theme,
@@ -189,7 +209,6 @@ watch(
 watch(
   () => mode,
   (val) => {
-    console.log(val.value)
     if (val.value === 'dark') {
       handleTheme('')
     }
@@ -231,6 +250,7 @@ function saveSetting() {
     sideTheme: storeSettings.value.sideTheme,
     theme: storeSettings.value.theme,
     showFooter: storeSettings.value.showFooter,
+    showWatermark: storeSettings.value.showWatermark,
   }
   localStorage.setItem('layout-setting', JSON.stringify(layoutSetting))
   setTimeout(proxy.$modal.closeLoading(), 100)
