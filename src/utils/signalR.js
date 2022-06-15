@@ -15,7 +15,7 @@ export default {
     const connection = new signalR.HubConnectionBuilder()
       .withUrl(socketUrl, { accessTokenFactory: () => getToken() })
       .withAutomaticReconnect() //自动重新连接
-      .configureLogging(signalR.LogLevel.Information)
+      .configureLogging(signalR.LogLevel.Warning)
       .build();
     this.SR = connection
     // 断线重连
@@ -44,7 +44,7 @@ export default {
       //使用async和await 或 promise的then 和catch 处理来自服务端的异常
       await this.SR.start()
       //console.assert(this.SR.state === signalR.HubConnectionState.Connected);
-      console.log('signalR 连接成功了', this.SR.state);
+      console.log('signalR', this.SR.state);
       return true
     } catch (error) {
       that.failNum--;
