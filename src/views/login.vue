@@ -49,9 +49,9 @@
           <span v-if="!loading">{{ $t('login.btnLogin') }}</span>
           <span v-else>登 录 中...</span>
         </el-button>
-        <!-- <div style="float: right;" v-if="register">
-          <router-link class="link-type" :to="'/register'">立即注册</router-link>
-        </div> -->
+        <div style="float: right">
+          <router-link class="link-type" :to="'/register'">还没有账号？立即注册</router-link>
+        </div>
       </el-form-item>
     </el-form>
 
@@ -63,7 +63,7 @@
 </template>
 
 <script setup name="login">
-import { getCodeImg } from '@/api/login'
+import { getCodeImg } from '@/api/system/login'
 import Cookies from 'js-cookie'
 import { encrypt, decrypt } from '@/utils/jsencrypt'
 import defaultSettings from '@/settings'
