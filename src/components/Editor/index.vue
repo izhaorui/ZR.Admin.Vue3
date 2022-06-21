@@ -1,74 +1,135 @@
 <template>
-	<div class="editor-container">
-		<div :id="id"></div>
-	</div>
+  <div style="border: 1px solid #ccc">
+    <Toolbar style="border-bottom: 1px solid #ccc" :editor="editorRef" :defaultConfig="toolbarConfig" :mode="mode" />
+    <Editor
+      style="height: 500px; overflow-y: hidden"
+      v-model="valueHtml"
+      :defaultConfig="editorConfig"
+      :mode="mode"
+      @onCreated="handleCreated"
+      @onChange="handleChange" />
+  </div>
 </template>
-
 <script>
-import { toRefs, reactive, onMounted, watch, defineComponent } from 'vue';
-import wangeditor from 'wangeditor';
+import '@wangeditor/editor/dist/css/style.css' // 引入 css
+import { onBeforeUnmount, ref, shallowRef } from 'vue'
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import { getToken } from '@/utils/auth'
+import useUserStore from '@/store/modules/user'
+export default {
+  components: { Editor, Toolbar },
+  props: {
+    placeholder: {
+      type: String,
+      default: () => '请输入内容',
+    },
+    modelValue: String,
+  },
+  setup(props, { emit }) {
+    const editorRef = shallowRef()
+    const valueHtml = ref(props.modelValue)
+    const toolbarConfig = {}
+    const editorConfig = {
+      MENU_CONF: {},
+      placeholder: props.placeholder,
+    }
+    //上传图片
+    editorConfig.MENU_CONF['uploadImage'] = {
+      server: import.meta.env.VITE_APP_BASE_API + '/common/UploadFile',
+      // form-data fieldName ，默认值 'wangeditor-uploaded-image'
+      fieldName: 'file',
+      // 单个文件的最大体积限制，默认为 2M
+      maxFileSize: 1 * 1024 * 1024, // 1M
+      // 最多可上传几个文件，默认为 100
+      maxNumberOfFiles: 10,
+      // 选择文件时的类型限制，默认为 ['image/*'] 。如不想限制，则设置为 []
+      allowedFileTypes: ['image/*'],
+      // 将 meta 拼接到 url 参数中，默认 false
+      metaWithUrl: false,
+      // 自定义增加 http  header
+      headers: {
+        Authorization: 'Bearer ' + getToken(),
+        userid: useUserStore().userId,
+      },
+      // 跨域是否传递 cookie ，默认为 false
+      withCredentials: true,
+      // 超时时间，默认为 10 秒
+      timeout: 5 * 1000, // 5 秒
+      // 自定义插入图片
+      customInsert(res, insertFn) {
+        ;-(
+          // 从 res 中找到 url alt href ，然后插图图片
+          insertFn(res.data.url)
+        )
+      },
+    }
+    //上传视频
+    editorConfig.MENU_CONF['uploadVideo'] = {
+      server: import.meta.env.VITE_APP_BASE_API + '/common/UploadFile',
+      // form-data fieldName ，默认值 'wangeditor-uploaded-video'
+      fieldName: 'file',
 
-export default defineComponent({
-	name: 'wngEditor',
-	props: {
-		// 节点 id
-		id: {
-			type: String,
-			default: () => 'wangeditor',
-		},
-		// 是否禁用
-		isDisable: {
-			type: Boolean,
-			default: () => false,
-		},
-		// 内容框默认 placeholder
-		placeholder: {
-			type: String,
-			default: () => '请输入内容',
-		},
-		// 双向绑定
-		// 双向绑定值，字段名为固定，改了之后将不生效
-		// 参考：https://v3.cn.vuejs.org/guide/migration/v-model.html#%E8%BF%81%E7%A7%BB%E7%AD%96%E7%95%A5
-		modelValue: String,
-	},
-	setup(props, { emit }) {
-		const state = reactive({
-			editor: null,
-		});
-		// 初始化富文本
-		// https://doc.wangeditor.com/
-		const initWangeditor = () => {
-			state.editor = new wangeditor(`#${props.id}`);
-			state.editor.config.zIndex = 1;
-			state.editor.config.placeholder = props.placeholder;
-			state.editor.config.uploadImgShowBase64 = true;
-			state.editor.config.showLinkImg = false;
-			onWangeditorChange();
-			state.editor.create();
-			state.editor.txt.html(props.modelValue);
-			props.isDisable ? state.editor.disable() : state.editor.enable();
-		};
-		// 内容改变时
-		const onWangeditorChange = () => {
-			state.editor.config.onchange = (html) => {
-				emit('update:modelValue', html);
-			};
-		};
-		// 页面加载时
-		onMounted(() => {
-			initWangeditor();
-		});
-		// 监听双向绑定值的改变
-		// https://gitee.com/lyt-top/vue-next-admin/issues/I4LM7I
-		watch(
-			() => props.modelValue,
-			(value) => {
-				state.editor.txt.html(value);
-			}
-		);
-		return {
-			...toRefs(state),
-		};
-	},
-});
+      // 单个文件的最大体积限制，默认为 10M
+      maxFileSize: 5 * 1024 * 1024, // 5M
+
+      // 最多可上传几个文件，默认为 5
+      maxNumberOfFiles: 3,
+
+      // 选择文件时的类型限制，默认为 ['video/*'] 。如不想限制，则设置为 []
+      allowedFileTypes: ['video/*'],
+
+      // 将 meta 拼接到 url 参数中，默认 false
+      metaWithUrl: false,
+
+      // 自定义增加 http  header
+      headers: {
+        Authorization: 'Bearer ' + getToken(),
+        userid: useUserStore().userId,
+      },
+
+      // 跨域是否传递 cookie ，默认为 false
+      withCredentials: true,
+      // 超时时间，默认为 30 秒
+      timeout: 15 * 1000, // 15 秒
+      // 自定义插入视频
+      customInsert(res, insertFn) {
+        ;-(
+          // 从 res 中找到 url alt href ，然后插图图片
+          insertFn(res.data.url)
+        )
+      },
+    }
+    onBeforeUnmount(() => {
+      const editor = editorRef.value
+      if (editor == null) return
+      editor.destroy()
+    })
+    const handleCreated = (editor) => {
+      editorRef.value = editor
+    }
+    const handleChange = (editor) => {
+      emit('update:modelValue', editor.getHtml())
+    }
+    watch(
+      () => props.modelValue,
+      (value) => {
+        const editor = editorRef.value
+        if (value == undefined) {
+          editor.clear()
+          return
+        }
+        valueHtml.value = value;
+      },
+    )
+    return {
+      editorRef,
+      valueHtml,
+      mode: 'default',
+      toolbarConfig,
+      editorConfig,
+      handleCreated,
+      handleChange,
+    }
+  },
+}
 </script>
