@@ -49,3 +49,18 @@ export function register(data) {
     data: data
   })
 }
+
+/**
+ * 三方授权回调
+ * @param {*} data 
+ * @param {*} params
+ * @returns 
+ */
+export function oauthCallback(data, params) {
+  return request({
+    url: '/auth/callback',
+    method: 'post',
+    data: data,
+    params: params
+  })
+}

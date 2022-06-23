@@ -41,17 +41,23 @@
           <img :src="codeUrl" @click="getCode" class="login-code-img" />
         </div>
       </el-form-item>
-      <el-form-item>
+
+      <div style="display: flex; justify-content: space-between">
         <el-checkbox v-model="loginForm.rememberMe">{{ $t('login.rememberMe') }}</el-checkbox>
-      </el-form-item>
+        <router-link class="link-type" :to="'/register'">立即注册</router-link>
+      </div>
+
       <el-form-item style="width: 100%">
         <el-button :loading="loading" size="large" type="primary" style="width: 100%" @click.prevent="handleLogin">
           <span v-if="!loading">{{ $t('login.btnLogin') }}</span>
           <span v-else>登 录 中...</span>
         </el-button>
-        <div style="float: right">
-          <router-link class="link-type" :to="'/register'">还没有账号？立即注册</router-link>
-        </div>
+      </el-form-item>
+      <el-form-item>
+        <img src="../assets/icons/gitee.png" alt="" class="login-icon" @click="onAuth('GITEE')" />
+        <img src="../assets/icons/github.png" alt="" class="login-icon" />
+        <img src="../assets/icons/dingding.png" alt="" class="login-icon" />
+        <img src="../assets/icons/wechat.png" alt="" class="login-icon" />
       </el-form-item>
     </el-form>
 
@@ -108,9 +114,7 @@ function handleLogin() {
       // 勾选了需要记住密码设置在cookie中设置记住用户明和名命
       if (loginForm.value.rememberMe) {
         Cookies.set('username', loginForm.value.username, { expires: 30 })
-        Cookies.set('password', encrypt(loginForm.value.password), {
-          expires: 30,
-        })
+        Cookies.set('password', encrypt(loginForm.value.password), { expires: 30 })
         Cookies.set('rememberMe', loginForm.value.rememberMe, { expires: 30 })
       } else {
         // 否则移除
@@ -155,82 +159,23 @@ function getCookie() {
     rememberMe: rememberMe === undefined ? false : Boolean(rememberMe),
   }
 }
+function onAuth(type) {
+  userStore.setAuthSource(type)
+
+  switch (type) {
+    default:
+      window.location.href = import.meta.env.VITE_APP_BASE_API + '/auth/Authorization?authSource=' + type
+      break
+  }
+}
 getCode()
 getCookie()
 </script>
 
 <style lang="scss" scoped>
-.login {
-  background: radial-gradient(200% 100% at bottom center, #f7f7b6, #e96f92, #1b2947);
-  background: radial-gradient(220% 105% at top center, #1b2947 10%, #75517d 40%, #e96f92 65%, #f7f7b6);
-  background-attachment: fixed;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  // background-image: url('../assets/images/login-background.jpg');
-  background-size: cover;
-}
-
-.title {
-  margin: 0px auto 30px auto;
-  text-align: center;
-  color: #fff;
-}
-
-.login-form {
-  border-radius: 6px;
-  // background: #ffffff;
-  background-color: hsla(0, 0%, 100%, 0.3);
-  width: 310px;
-  padding: 25px 15px 5px 15px;
-  position: relative;
-
-  .input-icon {
-    height: 39px;
-    width: 14px;
-    margin-left: 0px;
-  }
-}
-
-.login-tip {
-  font-size: 13px;
-  text-align: center;
-  color: #bfbfbf;
-}
-
-.login-code {
-  width: 33%;
-  height: 40px;
-  float: right;
-
-  img {
-    cursor: pointer;
-    vertical-align: middle;
-  }
-}
-
-.el-login-footer {
-  height: 40px;
-  line-height: 40px;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  text-align: center;
-  color: #fff;
-  font-family: Arial;
-  font-size: 12px;
-  letter-spacing: 1px;
-}
-
-.login-code-img {
-  height: 40px;
-  padding-left: 12px;
-}
-.langSet {
-  position: absolute;
-  right: 20px;
-  top: 10px;
+@import '@/assets/styles/login.scss';
+.login-icon {
+  width: 30px;
+  margin-right: 10px;
 }
 </style>
