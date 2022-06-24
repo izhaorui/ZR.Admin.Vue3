@@ -447,12 +447,14 @@ function submitForm() {
         updateMenu(form.value).then((response) => {
           proxy.$modal.msgSuccess('修改成功')
           open.value = false
+          menuList.value = []
           getList()
         })
       } else {
         addMenu(form.value).then((response) => {
           proxy.$modal.msgSuccess('新增成功')
           open.value = false
+          menuList.value = []
           getList()
         })
       }
