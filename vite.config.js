@@ -23,7 +23,7 @@ export default defineConfig(({ mode, command }) => {
       alias: alias,
       // 导入时想要省略的扩展名列表
       // https://cn.vitejs.dev/config/#resolve-extensions
-      extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
+      extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue']
     },
     css: {
       devSourcemap: true //开发模式时启用
@@ -37,11 +37,11 @@ export default defineConfig(({ mode, command }) => {
       // 将js、css文件分离到单独文件夹
       rollupOptions: {
         output: {
-          chunkFileNames: "static/js/[name]-[hash].js",
-          entryFileNames: "static/js/[name]-[hash].js",
-          assetFileNames: "static/[ext]/[name]-[hash].[ext]"
+          chunkFileNames: 'static/js/[name]-[hash].js',
+          entryFileNames: 'static/js/[name]-[hash].js',
+          assetFileNames: 'static/[ext]/[name]-[hash].[ext]'
         }
-      },
+      }
     },
     // vite 相关配置
     server: {
@@ -60,7 +60,7 @@ export default defineConfig(({ mode, command }) => {
           ws: true,
           rewrite: (path) => path.replace(/^\/msgHub/, '')
         }
-      },
-    },
+      }
+    }
   }
 })

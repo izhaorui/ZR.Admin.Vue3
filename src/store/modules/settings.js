@@ -1,7 +1,8 @@
 import defaultSettings from '@/settings'
 import { useDynamicTitle } from '@/utils/dynamicTitle'
 
-const { sideTheme, theme, showSettings, topNav, tagsView, fixedHeader, sidebarLogo, dynamicTitle, showFooter, showWatermark, watermarkText } = defaultSettings
+const { sideTheme, theme, showSettings, topNav, tagsView, fixedHeader, sidebarLogo, dynamicTitle, showFooter, showWatermark, watermarkText } =
+  defaultSettings
 
 const storageSetting = JSON.parse(localStorage.getItem('layout-setting')) || ''
 const useSettingsStore = defineStore('settings', {
@@ -30,7 +31,7 @@ const useSettingsStore = defineStore('settings', {
     // 设置网页标题
     setTitle(title) {
       this.title = title
-      useDynamicTitle();
+      useDynamicTitle()
     }
   }
 })
