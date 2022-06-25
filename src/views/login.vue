@@ -56,7 +56,7 @@
       <div class="other-login">
         <el-divider>{{ $t('login.otherLoginWay') }}</el-divider>
         <img src="../assets/icons/gitee-fill-round.png" alt="" class="login-icon" @click="onAuth('GITEE')" />
-        <img src="../assets/icons/github-fill.png" alt="" class="login-icon" />
+        <img src="../assets/icons/github-fill.png" alt="" class="login-icon" @click="onAuth('GITHUB')" />
         <img src="../assets/icons/wechat-fill.png" alt="" class="login-icon" />
       </div>
     </el-form>

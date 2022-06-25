@@ -42,11 +42,12 @@ const useUserStore = defineStore('user', {
     /**
      * 三方授权登录
      * @param {*} data 
+		 * @param { *} param { authSource : ''}
      * @returns 
      */
-    oauthLogin(data) {
+    oauthLogin(data, param) {
       return new Promise((resolve, reject) => {
-        oauthCallback(data, { authSource: this.authSource }).then(res => {
+        oauthCallback(data, param).then(res => {
           const { code, data } = res
           if (code == 200) {
             setToken(data.token)
@@ -59,8 +60,6 @@ const useUserStore = defineStore('user', {
             console.log('login error ', res)
             reject(res) //catch处理
           }
-        }).catch(error => {
-          reject(error)
         })
       })
     },

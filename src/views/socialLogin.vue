@@ -30,18 +30,20 @@ const userStore = useUserStore()
 const loginForm = ref(undefined)
 const callbackQuery = ref(undefined)
 const redirect = ref(undefined)
+const authSource = ref('')
 const loading = ref(false)
 callbackQuery.value = getQueryObject()
 redirect.value = route.query.redirect
+authSource.value = route.query.authSource
+
 const userInfo = computed(() => {
   return userStore.userInfo
 })
-console.log(userInfo.value)
 if (callbackQuery.value && callbackQuery.value.state != null) {
   loading.value = true
   // 调用action的登录方法
   userStore
-    .oauthLogin(callbackQuery.value)
+    .oauthLogin(callbackQuery.value, { authSource: authSource.value })
     .then(() => {
       proxy.$modal.msgSuccess(proxy.$t('login.loginSuccess'))
       router.push({ path: redirect.value || '/' })
@@ -57,6 +59,7 @@ if (callbackQuery.value && callbackQuery.value.state != null) {
 @import '@/assets/styles/login.scss';
 .loading {
   text-align: center;
-  color: #fff;
+  color: #ccc;
+	padding: 10px;
 }
 </style>
