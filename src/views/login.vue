@@ -6,7 +6,7 @@
 
       <LangSelect title="多语言设置" class="langSet" />
       <el-form-item prop="username">
-        <el-input v-model="loginForm.username" type="text" size="large" auto-complete="off" :placeholder="$t('login.account')">
+        <el-input v-model="loginForm.username" type="text" size="default" auto-complete="off" :placeholder="$t('login.account')">
           <template #prefix>
             <svg-icon name="user" class="el-input__icon input-icon" />
           </template>
@@ -16,7 +16,7 @@
         <el-input
           v-model="loginForm.password"
           type="password"
-          size="large"
+          size="default"
           auto-complete="off"
           :placeholder="$t('login.password')"
           @keyup.enter="handleLogin">
@@ -28,7 +28,7 @@
       <el-form-item prop="code" v-if="captchaOnOff != 'off'">
         <el-input
           v-model="loginForm.code"
-          size="large"
+          size="default"
           auto-complete="off"
           :placeholder="$t('login.captcha')"
           style="width: 63%"
@@ -48,7 +48,7 @@
       </div>
 
       <el-form-item style="width: 100%">
-        <el-button :loading="loading" size="large" type="primary" style="width: 100%" @click.prevent="handleLogin">
+        <el-button :loading="loading" size="default" type="primary" style="width: 100%" @click.prevent="handleLogin">
           <span v-if="!loading">{{ $t('login.btnLogin') }}</span>
           <span v-else>登 录 中...</span>
         </el-button>
