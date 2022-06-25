@@ -44,7 +44,7 @@
 
       <div style="display: flex; justify-content: space-between">
         <el-checkbox v-model="loginForm.rememberMe">{{ $t('login.rememberMe') }}</el-checkbox>
-        <router-link class="link-type" :to="'/register'">立即注册</router-link>
+        <router-link class="link-type" :to="'/register'">{{ $t('login.register') }}</router-link>
       </div>
 
       <el-form-item style="width: 100%">
@@ -53,12 +53,12 @@
           <span v-else>登 录 中...</span>
         </el-button>
       </el-form-item>
-      <el-form-item>
-        <img src="../assets/icons/gitee.png" alt="" class="login-icon" @click="onAuth('GITEE')" />
-        <img src="../assets/icons/github.png" alt="" class="login-icon" />
-        <img src="../assets/icons/dingding.png" alt="" class="login-icon" />
-        <img src="../assets/icons/wechat.png" alt="" class="login-icon" />
-      </el-form-item>
+      <div class="other-login">
+        <el-divider>{{ $t('login.otherLoginWay') }}</el-divider>
+        <img src="../assets/icons/gitee-fill-round.png" alt="" class="login-icon" @click="onAuth('GITEE')" />
+        <img src="../assets/icons/github-fill.png" alt="" class="login-icon" />
+        <img src="../assets/icons/wechat-fill.png" alt="" class="login-icon" />
+      </div>
     </el-form>
 
     <!--  底部  -->
@@ -177,5 +177,9 @@ getCookie()
 .login-icon {
   width: 30px;
   margin-right: 10px;
+  cursor: pointer;
+}
+.other-login {
+  padding: 0px 10px 5px;
 }
 </style>

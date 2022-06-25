@@ -8,6 +8,8 @@
     "loginSuccess": "登錄成功",
     "loginTimeOut": "登錄狀態已過期，請重新登錄",
     "reLogin": "重新登錄",
-    "invalidSession": "無效的會話，或者會話已過期，請重新登錄。"
+    "invalidSession": "無效的會話，或者會話已過期，請重新登錄。",
+    "otherLoginWay": "其他登錄方式",
+    "register": "立即註冊"
   }
 }

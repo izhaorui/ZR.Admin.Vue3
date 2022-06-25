@@ -8,6 +8,8 @@
     "loginSuccess": "login success",
     "loginTimeOut": "Login status has expired, please log in again",
     "reLogin": "re-register",
-    "invalidSession": "Invalid session, or session has expired, please log in again."
+    "invalidSession": "Invalid session, or session has expired, please log in again.",
+    "otherLoginWay": "Other",
+    "register": "Sign up now"
   }
 }
