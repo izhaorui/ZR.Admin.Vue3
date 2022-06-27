@@ -206,7 +206,9 @@ div:focus {
 .text-navy {
   color: #1ab394;
 }
-
+.text-pink {
+  color: pink;
+}
 .text-primary {
   color: inherit;
 }
@@ -224,7 +226,7 @@ div:focus {
 }
 
 .text-danger {
-  color: #ed5565;
+  color: #ff0000;
 }
 
 .text-muted {
@@ -232,7 +234,7 @@ div:focus {
 }
 
 .text-orange {
-  color: orangered;
+  color: #ff7d00;
 }
 
 .text-hotpink {
@@ -245,6 +247,9 @@ div:focus {
 
 .text-greenyellow {
   color: greenyellow;
+}
+.text-purple {
+  color: #ff00ff;
 }
 
 /* image */

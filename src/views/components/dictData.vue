@@ -40,7 +40,7 @@
       </template>
     </el-table-column>
     <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
-    <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+    <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="130px">
       <template #default="scope">
         <el-button text size="small" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dict:edit']">编辑</el-button>
         <el-button text size="small" icon="delete" @click="handleDelete(scope.row)" v-hasPermi="['system:dict:remove']">删除 </el-button>
@@ -64,7 +64,12 @@
       <el-form-item label="样式属性" prop="cssClass">
         <!-- <el-input v-model="form.cssClass" placeholder="请输入样式属性" /> -->
         <el-select v-model="form.cssClass" clearable="">
-          <el-option v-for="dict in cssClassOptions" :class="dict.value" :key="dict.value" :label="dict.label" :value="dict.value"></el-option>
+          <el-option
+            v-for="dict in cssClassOptions"
+            :class="dict.value"
+            :key="dict.value"
+            :label="dict.label + '(' + dict.value + ')'"
+            :value="dict.value"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="显示排序" prop="dictSort">
@@ -72,7 +77,11 @@
       </el-form-item>
       <el-form-item label="回显样式" prop="listClass">
         <el-select v-model="form.listClass">
-          <el-option v-for="item in listClassOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          <el-option
+            v-for="item in listClassOptions"
+            :key="item.value"
+            :label="item.label + '(' + item.value + ')'"
+            :value="item.value"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="状态" prop="status">
@@ -86,8 +95,8 @@
     </el-form>
     <template #footer>
       <div class="dialog-footer">
+        <el-button text @click="cancel">取 消</el-button>
         <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
       </div>
     </template>
   </el-dialog>
@@ -99,8 +108,8 @@ const { proxy } = getCurrentInstance()
 const props = defineProps({
   dictId: {
     type: Number,
-    default: 0,
-  },
+    default: 0
+  }
 })
 watch(
   () => props.dictId,
@@ -115,8 +124,8 @@ watch(
   },
   {
     immediate: true,
-    deep: true,
-  },
+    deep: true
+  }
 )
 
 const ids = ref()
@@ -135,71 +144,71 @@ const open = ref(false)
 const listClassOptions = ref([
   {
     value: 'default',
-    label: '默认',
+    label: '默认'
   },
   {
     value: 'primary',
-    label: '主要',
+    label: '主要'
   },
   {
     value: 'success',
-    label: '成功',
+    label: '成功'
   },
   {
     value: 'info',
-    label: '信息',
+    label: '信息'
   },
   {
     value: 'warning',
-    label: '警告',
+    label: '警告'
   },
   {
     value: 'danger',
-    label: '危险',
-  },
+    label: '危险'
+  }
 ])
 
 const cssClassOptions = ref([
   {
     value: 'text-primary',
-    label: 'primary',
-  },
-  {
-    value: 'text-navy',
-    label: 'text-navy',
+    label: '主要'
   },
   {
     value: 'text-success',
-    label: '成功',
+    label: '成功'
   },
   {
     value: 'text-info',
-    label: '信息',
+    label: '信息'
   },
   {
     value: 'text-warning',
-    label: '警告',
+    label: '警告'
   },
   {
     value: 'text-danger',
-    label: '危险',
+    label: '危险'
   },
   {
     value: 'text-orange',
-    label: '橘红色',
+    label: '橘红色'
   },
   {
     value: 'text-hotpink',
-    label: '粉红色',
+    label: '粉红色'
   },
   {
     value: 'text-green',
-    label: '绿色',
+    label: '绿色'
   },
   {
     value: 'text-greenyellow',
-    label: '黄绿色',
+    label: '黄绿色'
   },
+  {
+    value: 'text-purple',
+    label: '紫色'
+  }
 ])
 // 状态数据字典
 const statusOptions = ref([])
@@ -211,7 +220,7 @@ const queryParams = reactive({
   pageSize: 10,
   dictName: undefined,
   dictType: undefined,
-  status: undefined,
+  status: undefined
 })
 // 表单参数
 
@@ -221,8 +230,8 @@ const state = reactive({
   rules: {
     dictLabel: [{ required: true, message: '数据标签不能为空', trigger: 'blur' }],
     dictValue: [{ required: true, message: '数据键值不能为空', trigger: 'blur' }],
-    dictSort: [{ required: true, message: '数据顺序不能为空', trigger: 'blur' }],
-  },
+    dictSort: [{ required: true, message: '数据顺序不能为空', trigger: 'blur' }]
+  }
 })
 
 const { form, rules } = toRefs(state)
@@ -264,7 +273,7 @@ function reset() {
     dictValue: undefined,
     dictSort: 0,
     status: '0',
-    remark: undefined,
+    remark: undefined
   }
   proxy.resetForm('formRef')
 }
@@ -332,7 +341,7 @@ function handleDelete(row) {
     .$confirm('是否确认删除字典编码为"' + dictCodes + '"的数据项?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(function () {
       return delData(dictCodes)
