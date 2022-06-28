@@ -2,7 +2,7 @@
   <div class="dashboard-editor-container home">
     <!-- 用户信息 -->
     <el-row :gutter="15">
-      <el-col :md="24" :lg="16" :xl="16" class="mb10">
+      <el-col :md="24" :lg="14" :xl="14" class="mb10">
         <el-card shadow="hover">
           <template #header>
             <span>{{ $t('layout.myWorkbench') }}</span>
@@ -59,7 +59,7 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :md="24" :lg="8" :xl="8" class="mb10">
+      <el-col :md="24" :lg="10" :xl="10" class="mb10">
         <el-card shadow="hover">
           <template #header>
             <div>
@@ -74,7 +74,7 @@
                   <li v-for="(v, k) in onlineUsers" :key="k" class="info-item">
                     <div class="info-item-left" v-text="v.name"></div>
                     <div>{{ v.userIP }}({{ v.location }})</div>
-                    <div class="info-item-right" v-text="dayjs(v.loginTime).format('HH:mm:ss')"></div>
+                    <div class="info-item-right" v-text="dayjs(v.loginTime).format('MM/DD日HH:mm:ss')"></div>
                     <el-button text @click="onChat(v)" icon="bell" v-hasRole="['admin']">通知</el-button>
                   </li>
                 </ul>
@@ -308,7 +308,7 @@ function onChat(item) {
             overflow: hidden;
           }
           .info-item-right {
-            width: 100px;
+            width: 140px;
             text-align: right;
             padding-right: 10px;
           }
