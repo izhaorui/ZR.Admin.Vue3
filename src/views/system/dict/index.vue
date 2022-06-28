@@ -158,7 +158,7 @@ const dictId = ref(0)
 const state = reactive({
   rules: {
     dictName: [{ required: true, message: '字典名称不能为空', trigger: 'blur' }],
-    dictType: [{ required: true, message: '字典类型不能为空', trigger: 'blur' }],
+    dictType: [{ required: true, message: '字典类型不能为空', trigger: 'blur' }]
   },
   form: {},
   queryParams: {
@@ -166,8 +166,8 @@ const state = reactive({
     pageSize: 10,
     dictName: undefined,
     dictType: undefined,
-    status: undefined,
-  },
+    status: undefined
+  }
 })
 const { rules, form, queryParams } = toRefs(state)
 
@@ -194,7 +194,7 @@ function reset() {
     dictType: undefined,
     status: '0',
     type: 'N',
-    remark: undefined,
+    remark: undefined
   }
   proxy.resetForm('formRef')
 }
@@ -258,7 +258,7 @@ function handleDelete(row) {
     .$confirm('是否确认删除字典编号为"' + dictIds + '"的数据项?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(function () {
       return delType(dictIds)
@@ -274,7 +274,7 @@ function handleExport() {
     .$confirm('是否确认导出所有类型数据项?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(function () {
       return exportType(queryParams.value)

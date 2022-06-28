@@ -117,8 +117,8 @@
       </el-row>
       <template #footer>
         <div class="dialog-footer">
+          <el-button text @click="open = false">{{ $t('btn.cancel') }}</el-button>
           <el-button type="primary" @click="handleSubmit">{{ $t('btn.submit') }}</el-button>
-          <el-button @click="open = false">{{ $t('btn.cancel') }}</el-button>
         </div>
       </template>
     </el-dialog>
