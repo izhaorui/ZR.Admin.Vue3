@@ -18,11 +18,13 @@
     "@element-plus/icons-vue": "^0.2.7",
     "@microsoft/signalr": "^6.0.5",
     "@vueuse/core": "^8.5.0",
+    "@wangeditor/editor": "^5.1.1",
+    "@wangeditor/editor-for-vue": "^5.1.11",
     "axios": "^0.27.2",
     "countup.js": "^2.1.0",
     "echarts": "5.2.2",
     "echarts-wordcloud": "^2.0.0",
-    "element-plus": "^2.2.5",
+    "element-plus": "^2.2.6",
     "file-saver": "2.0.5",
     "fuse.js": "6.4.6",
     "highlight.js": "^11.5.1",
@@ -37,9 +39,7 @@
     "vue-cropper": "1.0.2",
     "vue-i18n": "^9.1.10",
     "vue-router": "^4.0.15",
-    "vue3-seamless-scroll": "^1.2.0",
-    "@wangeditor/editor": "^5.1.1",
-    "@wangeditor/editor-for-vue": "^5.1.11"
+    "vue3-seamless-scroll": "^1.2.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.1",
