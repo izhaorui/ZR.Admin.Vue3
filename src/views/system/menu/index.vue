@@ -334,17 +334,17 @@ const state = reactive({
   queryParams: {
     menuName: undefined,
     visible: undefined,
-    menuTypeIds: 'M,C',
+    menuTypeIds: 'M,C'
   },
   rules: {
     menuName: [{ required: true, message: '菜单名称不能为空', trigger: 'blur' }],
     menuNameKey: [{ pattern: /^[A-Za-z].+$/, message: '输入格式不正确', trigger: 'blur' }],
     orderNum: [{ required: true, message: '菜单顺序不能为空', trigger: 'blur' }],
     path: [{ required: true, message: '路由地址不能为空', trigger: 'blur' }],
-    visible: [{ required: true, message: '显示状态不能为空', trigger: 'blur' }],
+    visible: [{ required: true, message: '显示状态不能为空', trigger: 'blur' }]
   },
   sys_show_hide: [],
-  sys_normal_disable: [],
+  sys_normal_disable: []
 })
 
 proxy.getDicts(dictParams).then((response) => {
@@ -386,7 +386,7 @@ function reset() {
     isFrame: '0',
     isCache: '0',
     visible: '0',
-    status: '0',
+    status: '0'
   }
   proxy.resetForm('menuRef')
 }
@@ -447,12 +447,14 @@ function submitForm() {
         updateMenu(form.value).then((response) => {
           proxy.$modal.msgSuccess('修改成功')
           open.value = false
+          menuList.value = []
           getList()
         })
       } else {
         addMenu(form.value).then((response) => {
           proxy.$modal.msgSuccess('新增成功')
           open.value = false
+          menuList.value = []
           getList()
         })
       }
