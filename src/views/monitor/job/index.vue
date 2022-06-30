@@ -40,7 +40,7 @@
     <el-row>
       <el-table ref="tasks" v-loading="loading" :data="dataTasks" border="" row-key="id" @sort-change="handleSortable">
         <el-table-column type="index" :index="handleIndexCalc" label="#" align="center" />
-        <el-table-column prop="name" :show-overflow-tooltip="true" label="任务名称" width="80" />
+        <el-table-column prop="name" label="任务名称" width="100" />
         <el-table-column prop="jobGroup" :show-overflow-tooltip="true" align="center" label="任务分组" width="80" />
         <el-table-column prop="assemblyName" align="center" label="程序集名称" :show-overflow-tooltip="true" />
         <el-table-column prop="className" align="center" label="任务类名" :show-overflow-tooltip="true" />
@@ -56,6 +56,9 @@
         <el-table-column prop="remark" align="center" label="备注" :show-overflow-tooltip="true" />
         <el-table-column label="操作" align="center" width="250" class-name="small-padding fixed-width">
           <template #default="scope">
+            <el-link size="small" class="ml10" icon="view" v-hasPermi="['monitor:job:query']" @click="handleDetails(scope.row)">
+              {{ $t('btn.details') }}
+            </el-link>
             <el-link size="small" class="ml10" icon="view" v-hasPermi="['monitor:job:query']" @click="handleJobLog(scope.row)">
               {{ $t('btn.log') }}
             </el-link>
@@ -239,7 +242,7 @@
           </el-col>
         </el-row>
       </el-form>
-      <template #footer>
+      <template #footer v-if="btnVisible">
         <div class="dialog-footer">
           <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
           <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
@@ -301,7 +304,7 @@ const queryParams = reactive({
   PageNum: 1,
   pageSize: 10,
   orderby: 'createTime',
-  sort: 'descending',
+  sort: 'descending'
 })
 // 计划任务列表
 const dataTasks = ref([])
@@ -312,7 +315,7 @@ const formRef = ref(null)
 // 任务状态字典
 const isStartOptions = ref([
   { dictLabel: '运行中', dictValue: 'true', listClass: 'success' },
-  { dictLabel: '已停止', dictValue: 'false' },
+  { dictLabel: '已停止', dictValue: 'false' }
 ])
 // 任务组名字典
 const jobGroupOptions = ref([])
@@ -320,12 +323,12 @@ const jobGroupOptions = ref([])
 const triggerTypeOptions = ref([
   {
     label: '[普通]',
-    value: 0,
+    value: 0
   },
   {
     label: '[表达式]',
-    value: 1,
-  },
+    value: 1
+  }
 ])
 const state = reactive({
   form: {},
@@ -340,9 +343,11 @@ const state = reactive({
     cron: [{ required: true, message: '请输入cron表达式', trigger: 'blur' }],
     beginTime: [{ required: false, message: '请选择开始日期', trigger: 'blur' }],
     endTime: [{ required: false, message: '请选择结束日期', trigger: 'blur' }],
-    intervalSecond: [{ message: '请设置执行间隔', type: 'number', trigger: 'blur' }],
-  },
+    intervalSecond: [{ message: '请设置执行间隔', type: 'number', trigger: 'blur' }]
+  }
 })
+// 按钮是否可见
+const btnVisible = ref(true)
 const { rules, form } = toRefs(state)
 // 时间的选择
 // const pickerOptions = reactive({
@@ -370,13 +375,14 @@ function handleReset() {
 /** 新增按钮操作 */
 function handleCreate() {
   reset()
+  btnVisible.value = true
   open.value = true
   title.value = '添加计划任务'
 }
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset()
-
+  btnVisible.value = true
   getTasks(row.id).then((res) => {
     form.value = res.data
     open.value = true
@@ -423,7 +429,7 @@ function handleDelete(row) {
     .$confirm('是否确认删除名称为"' + jobInfo.name + '"的计划任务?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(() => {
       deleteTasks(jobInfo.id).then((response) => {
@@ -443,7 +449,7 @@ function handleRun(row) {
     .$confirm('确认要立即执行一次"' + jobInfo.name + '"任务吗?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then((res) => {
       runTasks(jobInfo.id).then((res) => {
@@ -498,7 +504,7 @@ function reset() {
     endTime: undefined,
     intervalSecond: 1,
     cron: undefined,
-    taskType: 1,
+    taskType: 1
   }
   proxy.resetForm('formRef')
 }
@@ -517,7 +523,7 @@ function handleExport() {
     .$confirm('是否确认导出所有任务?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(() => {
       return exportTasks()
@@ -540,8 +546,8 @@ watch(
   },
   {
     deep: true,
-    immediate: true,
-  },
+    immediate: true
+  }
 )
 
 /** 任务日志 */
@@ -549,7 +555,7 @@ watch(
 const logForm = reactive({
   beginTime: undefined,
   jobId: undefined,
-  title: undefined,
+  title: undefined
 })
 function onJobLogView() {
   router.push({ path: 'job/log' })
@@ -566,6 +572,15 @@ function handleJobLog(row) {
   logTitle.value = logForm.title
   listJobLog(logForm).then((response) => {
     jobLogList.value = response.data.result
+  })
+}
+function handleDetails(row) {
+  reset()
+  getTasks(row.id).then((res) => {
+    form.value = res.data
+    open.value = true
+    title.value = '详情'
+    btnVisible.value = false
   })
 }
 </script>

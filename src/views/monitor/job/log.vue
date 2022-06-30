@@ -75,7 +75,7 @@
     <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
 
     <!-- 调度日志详细 -->
-    <el-dialog title="调度日志详细" v-model="open" width="700px" append-to-body>
+    <el-dialog title="日志详细" v-model="open" width="700px" append-to-body>
       <el-form ref="formRef" :model="form" label-width="100px">
         <el-row>
           <el-col :span="12">
@@ -98,8 +98,7 @@
               <div v-else-if="form.status == 1">失败</div>
             </el-form-item>
           </el-col>
-          <el-col :span="24" v-if="form.status == 1"
-            >>
+          <el-col :span="24" v-if="form.status == 1">
             <el-form-item label="异常信息：">{{ form.exception }}</el-form-item>
           </el-col>
         </el-row>
@@ -138,8 +137,8 @@ const data = reactive({
     jobName: undefined,
     jobGroup: undefined,
     status: undefined,
-    jobId: undefined,
-  },
+    jobId: undefined
+  }
 })
 
 const { form, queryParams } = toRefs(data)
@@ -193,7 +192,7 @@ function reset() {
     jobLogId: 0,
     jobMessage: undefined,
     jobName: undefined,
-    status: undefined,
+    status: undefined
   }
   proxy.resetForm('formRef')
 }
@@ -216,7 +215,7 @@ function handleDelete(row) {
     .$confirm('是否确认删除调度日志编号为"' + jobLogIds + '"的数据项?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(function () {
       return delJobLog(jobLogIds)
@@ -232,7 +231,7 @@ function handleClean() {
     .$confirm('是否确认清空所有调度日志数据项?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(function () {
       return cleanJobLog()
@@ -248,7 +247,7 @@ function handleExport() {
     .$confirm('是否确认导出所有调度日志数据项?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(function () {
       return exportJobLog(queryParams.value)
