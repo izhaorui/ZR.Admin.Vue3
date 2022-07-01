@@ -86,7 +86,7 @@ function logout() {
     })
     .then(() => {
       userStore.logOut().then(() => {
-        location.href = '/index'
+        location.href = import.meta.env.VITE_APP_ROUTER_PREFIX + 'index';
       })
     })
     .catch(() => {})
