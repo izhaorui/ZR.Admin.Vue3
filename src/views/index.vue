@@ -65,7 +65,7 @@
       </el-col>
       <el-col :lg="8" :sm="24">
         <h2>{{ $t('layout.technicalSelection') }}</h2>
-        <el-col :span="10">
+        <div style="float: left; width: 50%">
           <h4>{{ $t('layout.backendTechnology') }}</h4>
           <ul>
             <li>NET6</li>
@@ -79,8 +79,8 @@
             <li>Signalr</li>
             <li>...</li>
           </ul>
-        </el-col>
-        <el-col :span="10">
+        </div>
+        <div style="float: right; width: 50%">
           <h4>{{ $t('layout.frontendTechnology') }}</h4>
           <ul>
             <li>Vue3</li>
@@ -94,7 +94,7 @@
             <li>I18n</li>
             <li>...</li>
           </ul>
-        </el-col>
+        </div>
       </el-col>
     </el-row>
     <el-divider />
