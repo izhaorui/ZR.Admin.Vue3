@@ -41,7 +41,7 @@ const menuDrawer = computed({
   get: () => useAppStore().sidebar.opened,
   set: (val) => {
     useAppStore().toggleSideBar(val)
-  },
+  }
 })
 const settingsStore = useSettingsStore()
 const theme = computed(() => settingsStore.theme)
@@ -62,11 +62,11 @@ const cachedViews = computed(() => {
 const classObj = computed(() => ({
   hideSidebar: !sidebar.value.opened,
   openSidebar: sidebar.value.opened,
-  mobile: device.value === 'mobile',
+  mobile: device.value === 'mobile'
 }))
 
 const { width, height } = useWindowSize()
-const WIDTH = 992 // refer to Bootstrap's responsive design
+const WIDTH = 592 // refer to Bootstrap's responsive design
 
 watchEffect(() => {
   if (device.value === 'mobile' && sidebar.value.opened) {
@@ -79,10 +79,6 @@ watchEffect(() => {
     useAppStore().toggleDevice('desktop')
   }
 })
-
-function handleClickOutside() {
-  useAppStore().closeSideBar()
-}
 
 const settingRef = ref(null)
 function setLayout() {
