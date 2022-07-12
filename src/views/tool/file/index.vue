@@ -107,6 +107,15 @@
             </el-form-item>
           </el-col>
           <el-col :lg="24">
+            <el-form-item label="文件名规则" prop="fileNameType">
+              <el-radio-group v-model="form.fileNameType" placeholder="请选择文件名存储类型">
+                <el-radio v-for="item in fileNameTypeOptions" :key="item.dictValue" :label="parseInt(item.dictValue)">
+                  {{ item.dictLabel }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :lg="24" v-if="form.fileNameType == 2">
             <el-form-item label="自定文件名" prop="fileName">
               <el-input v-model="form.fileName" placeholder="请输入文件名" clearable="" />
             </el-form-item>
@@ -116,8 +125,7 @@
               ref="uploadRef"
               v-model="form.accessUrl"
               :fileType="[]"
-              :limit="1"
-              :fileSize="15"
+              :fileSize="100"
               :drag="true"
               :data="uploadData"
               :autoUpload="false"
@@ -213,9 +221,14 @@ const dateRangeAddTime = ref([])
 // 存储类型选项列表
 const storeTypeOptions = ref([
   { dictLabel: '本地存储', dictValue: 1 },
-  { dictLabel: '阿里云存储', dictValue: 2 },
+  { dictLabel: '阿里云存储', dictValue: 2 }
 ])
-
+//文件名产生选项列表
+const fileNameTypeOptions = ref([
+  { dictLabel: '原文件名', dictValue: 1 },
+  { dictLabel: '自定义', dictValue: 2 },
+  { dictLabel: '自动生成', dictValue: 3 }
+])
 // 数据列表
 const dataList = ref([])
 // 总记录数
@@ -223,30 +236,37 @@ const total = ref(0)
 
 const state = reactive({
   form: {
-    storeType: 1,
+    storeType: 1
   },
   rules: {
     accessUrl: [
       {
         required: true,
         message: '上传文件不能为空',
-        trigger: 'blur',
-      },
+        trigger: 'blur'
+      }
     ],
     storeType: [
       {
         required: true,
         message: '存储类型不能为空',
-        trigger: 'blur',
-      },
+        trigger: 'blur'
+      }
     ],
+    fileName: [
+      {
+        required: true,
+        message: '文件名不能为空',
+        trigger: 'blur'
+      }
+    ]
   },
   queryParams: {
     pageNum: 1,
     pageSize: 20,
     storeType: 1, // 存储类型 1、本地 2、阿里云
-    fileId: undefined,
-  },
+    fileId: undefined
+  }
 })
 const { queryParams, form, rules } = toRefs(state)
 const { proxy } = getCurrentInstance()
@@ -278,6 +298,7 @@ function reset() {
     fileExt: '',
     storeType: 1,
     accessUrl: '',
+    fileNameType: 3
   }
   proxy.resetForm('formRef')
 }
@@ -339,12 +360,17 @@ function handleUploadSuccess(filelist) {
 }
 // 手动上传
 function submitUpload() {
-  uploadData.value = {
-    fileDir: form.value.storePath,
-    fileName: form.value.fileName,
-    storeType: form.value.storeType,
-  }
-  proxy.$refs.uploadRef.submitUpload()
+  proxy.$refs['formRef'].validate((valid) => {
+    if (valid) {
+      uploadData.value = {
+        fileDir: form.value.storePath,
+        fileName: form.value.fileName,
+        storeType: form.value.storeType,
+        fileNameType: form.value.fileNameType
+      }
+      proxy.$refs.uploadRef.submitUpload()
+    }
+  })
 }
 
 const { copy, isSupported } = useClipboard()
