@@ -43,7 +43,7 @@
     <el-table :data="dataList" v-loading="loading" ref="table" border highlight-current-row @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="50" align="center" />
       <el-table-column prop="id" label="文件id" align="center" width="150" />
-      <el-table-column prop="fileName" label="文件名" align="center" width="175" :show-overflow-tooltip="true">
+      <el-table-column prop="fileName" label="文件名" align="left" width="180" :show-overflow-tooltip="true">
         <template #default="scope">
           <el-link type="primary" :href="scope.row.accessUrl" target="_blank">{{ scope.row.fileName }}</el-link>
         </template>
