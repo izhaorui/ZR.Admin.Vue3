@@ -1,6 +1,20 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch">
+      <el-form-item :label="$t('m.parentMenu')" prop="parentId">
+        <el-cascader
+          class="w100"
+          :options="menuQueryOptions"
+          :props="{ checkStrictly: true, value: 'menuId', label: 'menuName', emitPath: false }"
+          placeholder="请选择上级菜单"
+          clearable
+          v-model="queryParams.parentId">
+          <template #default="{ node, data }">
+            <span>{{ data.menuName }}</span>
+            <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+          </template>
+        </el-cascader>
+      </el-form-item>
       <el-form-item :label="$t('m.menuName')" prop="menuName">
         <el-input v-model="queryParams.menuName" placeholder="请输入菜单名称" clearable @keyup.enter="handleQuery" />
       </el-form-item>
@@ -38,6 +52,7 @@
       :default-expand-all="isExpandAll"
       border
       lazy
+      ref="listRef"
       :load="loadMenu"
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
       <el-table-column prop="menuName" :label="$t('m.menuName')" :show-overflow-tooltip="true" width="160">
@@ -323,18 +338,21 @@ const loading = ref(true)
 const showSearch = ref(true)
 const title = ref('')
 const menuOptions = ref([])
+const menuQueryOptions = ref([])
 const isExpandAll = ref(false)
 const refreshTable = ref(true)
 const showChooseIcon = ref(false)
 const iconSelectRef = ref(null)
 const menuRef = ref(null)
-
+const listRef = ref(null)
+const loadNodeMap = new Map()
 const state = reactive({
   form: {},
   queryParams: {
     menuName: undefined,
     visible: undefined,
-    menuTypeIds: 'M,C'
+    menuTypeIds: 'M,C',
+    parentId: undefined
   },
   rules: {
     menuName: [{ required: true, message: '菜单名称不能为空', trigger: 'blur' }],
@@ -358,6 +376,9 @@ const { queryParams, form, rules, sys_show_hide, sys_normal_disable } = toRefs(s
 /** 查询菜单列表 */
 function getList() {
   loading.value = true
+  if (queryParams.value.parentId != undefined) {
+    queryParams.value.menuTypeIds = ''
+  }
   listMenu(queryParams.value).then((response) => {
     menuList.value = response.data
     loading.value = false
@@ -444,18 +465,16 @@ function submitForm() {
   proxy.$refs['menuRef'].validate((valid) => {
     if (valid) {
       if (form.value.menuId != undefined) {
-        updateMenu(form.value).then((response) => {
+        updateMenu(form.value).then(() => {
           proxy.$modal.msgSuccess('修改成功')
           open.value = false
-          menuList.value = []
-          getList()
+          refreshMenu(form.value.parentId)
         })
       } else {
-        addMenu(form.value).then((response) => {
+        addMenu(form.value).then(() => {
           proxy.$modal.msgSuccess('新增成功')
           open.value = false
-          menuList.value = []
-          getList()
+          refreshMenu(form.value.parentId)
         })
       }
     }
@@ -469,7 +488,8 @@ function handleDelete(row) {
       return delMenu(row.menuId)
     })
     .then(() => {
-      getList()
+      // getList()
+      refreshMenu(row.parentId)
       proxy.$modal.msgSuccess('删除成功')
     })
     .catch(() => {})
@@ -488,7 +508,6 @@ function editCurrRow(rowId) {
   editIndex.value = rowId
 
   setTimeout(() => {
-    // document.getElementById(rowId).focus()
     columnRefs.value[rowId].focus()
   }, 100)
 }
@@ -511,12 +530,31 @@ function handleChangeSort(info) {
 // ******************自定义编辑 end **********************
 const loadMenu = (row, treeNode, resolve) => {
   listMenuById(row.menuId).then((res) => {
+    loadNodeMap.set(row.menuId, { row, treeNode, resolve })
     resolve(res.data)
   })
 }
-// getList()
-listMenuById(0).then((response) => {
-  menuList.value = response.data
-  loading.value = false
+// 刷新懒加载后的数据
+function refreshMenu(pid) {
+  loading.value = true
+  // console.log(loadNodeMap)
+  if (loadNodeMap.size > 0) {
+    const hasNode = loadNodeMap.has(pid)
+    if (hasNode) {
+      const { row, treeNode, resolve } = loadNodeMap.get(pid)
+      proxy.$refs.listRef.store.states.lazyTreeNodeMap[pid] = []
+      loadMenu(row, treeNode, resolve)
+    }
+    loading.value = false
+  } else {
+    getList()
+  }
+}
+
+listMenu({ menuTypeIds: 'M,C' }).then((response) => {
+  menuQueryOptions.value = response.data
 })
+
+// 首次列表加载（只加载一层）
+getList()
 </script>
