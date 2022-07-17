@@ -42,12 +42,12 @@
     "vue3-seamless-scroll": "^1.2.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^2.3.1",
+    "@vitejs/plugin-vue": "^2.3.3",
     "@vue/compiler-sfc": "^3.2.33",
     "sass": "1.45.0",
     "unplugin-auto-import": "0.5.3",
-    "vite": "^2.9.5",
-    "vite-plugin-compression": "0.3.6",
+    "vite": "^2.9.14",
+    "vite-plugin-compression": "^0.3.6",
     "vite-plugin-svg-icons": "1.0.5",
     "vite-plugin-vue-setup-extend": "^0.4.0"
   }
