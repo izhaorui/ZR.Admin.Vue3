@@ -70,12 +70,12 @@ const data = reactive({
     tags: undefined,
     cid: undefined,
     content: undefined,
-    status: undefined,
+    status: undefined
   },
   rules: {
     title: [{ required: true, message: '标题不能为空', trigger: 'blur' }],
-    content: [{ required: true, message: '内容不能为空', trigger: 'blur' }],
-  },
+    content: [{ required: true, message: '内容不能为空', trigger: 'blur' }]
+  }
 })
 
 const { form, rules } = toRefs(data)
@@ -104,7 +104,7 @@ async function onUploadImg(files, callback) {
           .then((res) => rev(res))
           .catch((error) => rej(error))
       })
-    }),
+    })
   )
 
   callback(res.map((item) => item.data.url))
@@ -157,7 +157,6 @@ function handleInputConfirm() {
   inputVisible.value = false
   inputValue.value = ''
 }
-getInfo(cid)
 function getInfo(cid) {
   if (!cid || cid == undefined) return
   getArticle(cid).then((res) => {
@@ -169,11 +168,13 @@ function getInfo(cid) {
         title: data.title,
         content: data.content,
         category_Id: data.category_Id,
-        dynamicTags: data.tags != null && data.tags.length > 0 ? data.tags.split(',') : [],
+        coverUrl: data.coverUrl,
+        dynamicTags: data.tags != null && data.tags.length > 0 ? data.tags.split(',') : []
       }
     }
   })
 }
+getInfo(cid)
 getCategoryTreeselect()
 </script>
 <style scoped>
