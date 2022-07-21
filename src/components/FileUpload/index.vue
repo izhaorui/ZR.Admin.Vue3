@@ -196,7 +196,7 @@ function handleUploadSuccess(response, uploadFile) {
 // 删除文件
 function handleDelete(index) {
   fileList.value.splice(index, 1)
-  emit('update:modelValue', listToString(fileList.value))
+  //emit('update:modelValue', listToString(fileList.value))
 }
 
 // 获取文件名称
