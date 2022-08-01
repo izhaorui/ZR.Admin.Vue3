@@ -62,9 +62,9 @@
               {{ $t('btn.delete') }}
             </el-button>
           </el-col>
-          <!-- <el-col :span="1.5">
+          <el-col :span="1.5">
             <el-button type="info" plain icon="Upload" @click="handleImport" v-hasPermi="['system:user:import']">导入</el-button>
-          </el-col> -->
+          </el-col>
           <el-col :span="1.5">
             <el-button type="warning" plain icon="Download" @click="handleExport" v-hasPermi="['system:user:export']">
               {{ $t('btn.export') }}
@@ -268,7 +268,7 @@ const upload = reactive({
   // 设置上传的请求头部
   headers: { Authorization: 'Bearer ' + getToken() },
   // 上传的地址
-  url: import.meta.env.VITE_APP_BASE_API + '/system/user/importData',
+  url: import.meta.env.VITE_APP_BASE_API + '/system/user/importData'
 })
 // 列显隐信息
 const columns = ref([
@@ -278,7 +278,7 @@ const columns = ref([
   { key: 3, label: `部门`, visible: true },
   { key: 4, label: `手机号码`, visible: true },
   { key: 5, label: `状态`, visible: true },
-  { key: 6, label: `创建时间`, visible: true },
+  { key: 6, label: `创建时间`, visible: true }
 ])
 
 const data = reactive({
@@ -289,7 +289,7 @@ const data = reactive({
     userName: undefined,
     phonenumber: undefined,
     status: undefined,
-    deptId: undefined,
+    deptId: undefined
   },
   rules: {
     userName: [
@@ -298,8 +298,8 @@ const data = reactive({
         min: 2,
         max: 20,
         message: '用户名称长度必须介于 2 和 20 之间',
-        trigger: 'blur',
-      },
+        trigger: 'blur'
+      }
     ],
     nickName: [{ required: true, message: '用户昵称不能为空', trigger: 'blur' }],
     password: [
@@ -308,25 +308,25 @@ const data = reactive({
         min: 5,
         max: 20,
         message: '用户密码长度必须介于 5 和 20 之间',
-        trigger: 'blur',
-      },
+        trigger: 'blur'
+      }
     ],
     email: [
       {
         required: true,
         type: 'email',
         message: '请输入正确的邮箱地址',
-        trigger: ['blur', 'change'],
-      },
+        trigger: ['blur', 'change']
+      }
     ],
     phonenumber: [
       {
         pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
         message: '请输入正确的手机号码',
-        trigger: 'blur',
-      },
-    ],
-  },
+        trigger: 'blur'
+      }
+    ]
+  }
 })
 
 const { queryParams, form, rules } = toRefs(data)
@@ -396,7 +396,7 @@ function handleExport() {
     .confirm('是否确认导出所有用户数据项?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(() => {
       exportUser(queryParams.value).then((response) => {
@@ -433,7 +433,7 @@ function handleResetPwd(row) {
       cancelButtonText: '取消',
       closeOnClickModal: false,
       inputPattern: /^.{5,20}$/,
-      inputErrorMessage: '用户密码长度必须介于 5 和 20 之间',
+      inputErrorMessage: '用户密码长度必须介于 5 和 20 之间'
     })
     .then(({ value }) => {
       resetUserPwd(row.userId, value).then((response) => {
@@ -467,7 +467,7 @@ const handleFileSuccess = (response, file, fileList) => {
   upload.isUploading = false
   proxy.$refs['uploadRef'].clearFiles()
   proxy.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + '</div>', '导入结果', {
-    dangerouslyUseHTMLString: true,
+    dangerouslyUseHTMLString: true
   })
   getList()
 }
@@ -498,7 +498,7 @@ function reset() {
     status: '0',
     remark: undefined,
     postIds: [],
-    roleIds: [],
+    roleIds: []
   }
   proxy.resetForm('userRef')
 }
@@ -539,7 +539,7 @@ function handleUpdate(row) {
       status: data.user.status,
       remark: data.user.remark,
       postIds: data.postIds,
-      roleIds: data.roleIds,
+      roleIds: data.roleIds
     }
     roleOptions.value = response.data.roles
     postOptions.value = response.data.posts
