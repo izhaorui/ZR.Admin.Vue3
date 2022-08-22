@@ -32,8 +32,8 @@
         </el-tag>
       </template>
     </el-table-column>
-    <el-table-column label="字典键值" align="center" prop="dictValue" />
-    <el-table-column label="字典排序" align="center" prop="dictSort" />
+    <el-table-column label="字典键值" align="center" prop="dictValue" sortable />
+    <el-table-column label="字典排序" align="center" prop="dictSort" sortable />
     <el-table-column label="状态" align="center" prop="status">
       <template #default="scope">
         <dict-tag :options="statusOptions" :value="scope.row.status" />
