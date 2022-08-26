@@ -29,6 +29,9 @@
             <el-dropdown-item command="setLayout">
               <span>{{ $t('layout.layoutSetting') }}</span>
             </el-dropdown-item>
+            <el-dropdown-item command="copyToken">
+              <span>复制token</span>
+            </el-dropdown-item>
             <el-dropdown-item divided command="logout">
               <span>{{ $t('layout.logOut') }}</span>
             </el-dropdown-item>
@@ -53,7 +56,7 @@ import LangSelect from '@/components/LangSelect/index'
 import useAppStore from '@/store/modules/app'
 import useUserStore from '@/store/modules/user'
 import useSettingsStore from '@/store/modules/settings'
-
+import { useClipboard } from '@vueuse/core'
 const { proxy } = getCurrentInstance()
 const appStore = useAppStore()
 const userStore = useUserStore()
@@ -72,21 +75,34 @@ function handleCommand(command) {
     case 'logout':
       logout()
       break
+    case 'copyToken':
+      copyText(userStore.token)
+      break
     default:
       break
   }
 }
 
+const { copy, isSupported } = useClipboard()
+const copyText = async (val) => {
+  if (isSupported) {
+    copy(val)
+    proxy.$modal.msgSuccess('复制成功！')
+  } else {
+    alert(val)
+    proxy.$modal.msgError('当前浏览器不支持')
+  }
+}
 function logout() {
   proxy
     .$confirm(proxy.$t('layout.logOutConfirm'), proxy.$t('common.tips'), {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(() => {
       userStore.logOut().then(() => {
-        location.href = import.meta.env.VITE_APP_ROUTER_PREFIX + 'index';
+        location.href = import.meta.env.VITE_APP_ROUTER_PREFIX + 'index'
       })
     })
     .catch(() => {})
