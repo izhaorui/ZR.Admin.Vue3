@@ -1,7 +1,7 @@
 <template>
   <el-container :class="classObj" class="app-layout" :style="{ '--current-color': theme }">
     <!-- 移动端打开菜单遮罩 -->
-    <el-drawer v-if="device === 'mobile'" v-model="menuDrawer" :with-header="false" modal-class="sidebar-mobile" direction="ltr">
+    <el-drawer v-if="device === 'mobile'" :size="220" v-model="menuDrawer" :with-header="false" modal-class="sidebar-mobile" direction="ltr">
       <sidebar />
     </el-drawer>
     <sidebar v-else-if="!sidebar.hide" />
@@ -66,7 +66,7 @@ const classObj = computed(() => ({
 }))
 
 const { width, height } = useWindowSize()
-const WIDTH = 592 // refer to Bootstrap's responsive design
+const WIDTH = 792 // refer to Bootstrap's responsive design
 
 watchEffect(() => {
   if (device.value === 'mobile' && sidebar.value.opened) {

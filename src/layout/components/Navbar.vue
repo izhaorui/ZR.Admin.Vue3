@@ -1,16 +1,18 @@
 <template>
   <div class="navbar" :data-theme="sideTheme" :class="appStore.device">
     <hamburger id="hamburger-container" :is-active="appStore.sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
-    <template v-if="appStore.device != 'mobile'">
+    <template v-if="appStore.device == 'desktop'">
       <breadcrumb id="breadcrumb-container" class="breadcrumb-container" v-if="!settingsStore.topNav" />
       <top-nav id="topmenu-container" class="topmenu-container" v-if="settingsStore.topNav" />
     </template>
 
     <div class="right-menu">
-      <header-search id="header-search" class="right-menu-item" v-if="appStore.device != 'mobile'" />
-      <zr-git title="源码地址" class="right-menu-item" v-if="appStore.device != 'mobile'" />
-      <zr-doc title="文档地址" class="right-menu-item" v-if="appStore.device != 'mobile'" />
-      <screenfull title="全屏" class="right-menu-item" v-if="appStore.device != 'mobile'" />
+      <header-search id="header-search" class="right-menu-item" />
+      <template v-if="appStore.device == 'desktop'">
+        <zr-git title="源码地址" class="right-menu-item" />
+        <zr-doc title="文档地址" class="right-menu-item" />
+        <screenfull title="全屏" class="right-menu-item" />
+      </template>
       <size-select title="布局大小" class="right-menu-item" />
       <LangSelect title="语言设置" class="right-menu-item" />
       <Notice title="通知" class="right-menu-item" />
