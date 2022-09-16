@@ -79,7 +79,7 @@
       <el-table-column prop="id" label="id" align="center" />
       <el-table-column prop="langCode" :label="$t('language')" align="center">
         <template #default="scope">
-          <dict-tag :options="sys_lang_type" :value="scope.row.langCode" />
+          <dict-tag :options="options.sys_lang_type" :value="scope.row.langCode" />
         </template>
       </el-table-column>
       <el-table-column prop="langKey" :label="$t('languageKey')" align="center" :show-overflow-tooltip="true" />
