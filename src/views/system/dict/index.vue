@@ -85,7 +85,7 @@
 
     <!-- 添加或修改参数配置对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="formRef" :model="form" :rules="rules" label-width="90px">
         <el-form-item label="字典名称" prop="dictName">
           <el-input v-model="form.dictName" placeholder="请输入字典名称" />
         </el-form-item>
@@ -104,6 +104,19 @@
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
+        </el-form-item>
+        <el-form-item label="自定义sql" prop="customSql">
+          <template #label>
+            <span>
+              <el-tooltip content="格式：SELECT userId as dictValue, userName as dictLabel FROM xxx" placement="top">
+                <el-icon :size="15">
+                  <questionFilled />
+                </el-icon>
+              </el-tooltip>
+              自定义sql
+            </span>
+          </template>
+          <el-input v-model="form.customSql" type="textarea" placeholder="请输入内容"></el-input>
         </el-form-item>
       </el-form>
       <template #footer>
