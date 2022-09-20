@@ -133,7 +133,7 @@
         </el-form-item>
       </el-col>
 
-      <el-col :lg="24" v-if="info.genType == '1'">
+      <el-col :lg="12" v-if="info.genType == '1'">
         <el-form-item prop="genPath">
           <template #label>
             自定义路径
@@ -146,7 +146,7 @@
           <el-input v-model="info.genPath"></el-input>
         </el-form-item>
       </el-col>
-      <el-col :lg="12">
+      <el-col :lg="24">
         <el-form-item prop="colNum" label="一行显示列">
           <el-radio v-model="info.colNum" :label="12">2列</el-radio>
           <el-radio v-model="info.colNum" :label="24">1列</el-radio>
@@ -171,6 +171,14 @@
               <el-tag type="info">查看</el-tag>
             </el-checkbox>
           </el-checkbox-group>
+        </el-form-item>
+      </el-col>
+      <el-col :lg="24">
+        <el-form-item label="是否生成仓储层">
+          <el-radio-group v-model="info.generateRepo">
+            <el-radio :label="1">是</el-radio>
+            <el-radio :label="0">否</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-col>
     </el-row>
@@ -288,18 +296,18 @@ const menuOptions = ref([])
 const props = defineProps({
   info: {
     type: Object,
-    default: null,
+    default: null
   },
   // 字表
   tables: {
     type: Array,
-    default: null,
+    default: null
   },
   // 列
   columns: {
     type: Array,
-    default: [],
-  },
+    default: []
+  }
 })
 // 表单校验
 const rules = ref({
@@ -309,23 +317,23 @@ const rules = ref({
       required: true,
       message: '请输入生成模块名',
       trigger: 'blur',
-      pattern: /^[A-Za-z]+$/,
-    },
+      pattern: /^[A-Za-z]+$/
+    }
   ],
   businessName: [
     {
       required: true,
       message: '请输入生成业务名',
       trigger: 'blur',
-      pattern: /^[A-Za-z]+$/,
-    },
+      pattern: /^[A-Za-z]+$/
+    }
   ],
   functionName: [{ required: true, message: '请输入生成功能名', trigger: 'blur' }],
   permissionPrefix: {
     required: true,
     message: '请输入权限前缀',
-    trigger: 'blur',
-  },
+    trigger: 'blur'
+  }
 })
 function subSelectChange(value) {
   props.info.subTableFkName = ''
@@ -366,7 +374,7 @@ watch(
   () => props.info.subTableName,
   (val) => {
     setSubTableColumns(val)
-  },
+  }
 )
 
 getMenuTreeselect()

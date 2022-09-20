@@ -190,6 +190,7 @@ function submitForm() {
         checkedBtn: info.value.checkedBtn,
         permissionPrefix: info.value.permissionPrefix,
         colNum: info.value.colNum,
+        generateRepo: info.value.generateRepo
       }
       console.log('genForm', genTable)
 
@@ -221,7 +222,7 @@ listType({ pageSize: 100 }).then((response) => {
 function close() {
   const obj = {
     path: '/tool/gen',
-    query: { t: Date.now(), pageNum: route.query.pageNum },
+    query: { t: Date.now(), pageNum: route.query.pageNum }
   }
   proxy.$tab.closeOpenPage(obj)
 }
@@ -262,7 +263,7 @@ const tableSort = () => {
       nextTick(() => {
         console.log(columns.value)
       })
-    },
+    }
   })
 }
 
