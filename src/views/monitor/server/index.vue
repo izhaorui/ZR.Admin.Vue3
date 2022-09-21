@@ -7,15 +7,15 @@
             <span>状态</span>
           </template>
 
-          <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8" class="mr20">
+          <div class="col-item">
             <div class="title">CPU使用率</div>
             <div class="content">
               <el-progress type="dashboard" :percentage="parseFloat(server.cpu.cpuRate)" />
             </div>
             <div class="footer" v-if="server.sys">{{ server.sys.cpuNum }} 核心</div>
-          </el-col>
+          </div>
 
-          <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
+          <div class="col-item">
             <div class="title">内存使用率</div>
             <el-tooltip placement="top-end">
               <template #content>
@@ -31,7 +31,7 @@
               </div>
             </el-tooltip>
             <div class="footer">{{ server.cpu.usedRam }} / {{ server.cpu.totalRAM }}</div>
-          </el-col>
+          </div>
         </el-card>
       </el-col>
 
@@ -40,7 +40,7 @@
           <template #header>
             <span>磁盘状态</span>
           </template>
-          <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6" v-for="sysFile in server.disk" :key="sysFile.diskName">
+          <div class="col-item" v-for="sysFile in server.disk" :key="sysFile.diskName">
             <div class="title">{{ sysFile.diskName }}盘使用率</div>
             <div class="content">
               <el-tooltip placement="top-end">
@@ -57,7 +57,7 @@
               </el-tooltip>
             </div>
             <div class="footer">{{ sysFile.availableFreeSpace }}GB可用，共{{ sysFile.totalSize }}GB</div>
-          </el-col>
+          </div>
         </el-card>
       </el-col>
 
@@ -264,5 +264,9 @@ table tr {
   text-align: center;
   margin-top: 5px;
   margin-bottom: 5px;
+}
+.col-item {
+  width: 200px;
+  display: inline-block;
 }
 </style>

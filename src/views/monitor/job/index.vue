@@ -52,7 +52,7 @@
             <dict-tag :value="scope.row.isStart" :options="isStartOptions"></dict-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="lastRunTime" align="center" label="最后运行时间" :show-overflow-tooltip="true" />
+        <!-- <el-table-column prop="lastRunTime" align="center" label="最后运行时间" :show-overflow-tooltip="true" /> -->
         <el-table-column prop="remark" align="center" label="备注" :show-overflow-tooltip="true" />
         <el-table-column label="操作" align="center" width="250" class-name="small-padding fixed-width">
           <template #default="scope">
@@ -238,6 +238,11 @@
           <el-col :lg="24">
             <el-form-item label="备注" prop="remark">
               <el-input type="textarea" v-model="form.remark" />
+            </el-form-item>
+          </el-col>
+          <el-col :lg="24">
+            <el-form-item label="最后运行时间" prop="lastRunTime">
+              {{ form.lastRunTime }}
             </el-form-item>
           </el-col>
         </el-row>
