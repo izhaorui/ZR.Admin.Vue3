@@ -170,6 +170,9 @@
             <el-checkbox :label="5">
               <el-tag type="info">查看</el-tag>
             </el-checkbox>
+            <el-checkbox :label="6">
+              <el-tag type="danger">清空</el-tag>
+            </el-checkbox>
           </el-checkbox-group>
         </el-form-item>
       </el-col>
