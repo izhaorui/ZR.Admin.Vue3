@@ -5,17 +5,25 @@ const dateOptions = [
   {
     text: '昨天',
     value: () => {
-      const end = dayjs().format('YYYY-MM-DD')
       const start = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
+      const end = start + ' 23:59:59'
 
-      // console.log(dayjs().format('YYYY-MM-DD HH:mm:ss'));
+      return [start, end]
+    }
+  },
+  {
+    text: '今天',
+    value: () => {
+      const start = dayjs().format('YYYY-MM-DD')
+      const end = start + ' 23:59:59'
+
       return [start, end]
     }
   },
   {
     text: '本周',
     value: () => {
-      const end = dayjs().endOf('week').add(1, 'day').format('YYYY-MM-DD')
+      const end = dayjs().endOf('week').add(1, 'day').format('YYYY-MM-DD') + ' 23:59:59'
       const start = dayjs().startOf('week').add(1, 'day').format('YYYY-MM-DD')
       return [start, end]
     }
@@ -24,7 +32,7 @@ const dateOptions = [
     text: '上周',
     value: () => {
       const start = dayjs().add(-1, 'week').startOf('week').add(1, 'day').format('YYYY-MM-DD')
-      const end = dayjs().add(-1, 'week').endOf('week').add(1, 'day').format('YYYY-MM-DD')
+      const end = dayjs().add(-1, 'week').endOf('week').add(1, 'day').format('YYYY-MM-DD') + ' 23:59:59'
       return [start, end]
     }
   },
@@ -49,7 +57,7 @@ const dateOptions = [
   {
     text: '最近一周',
     value: () => {
-      const end = new Date()
+      const end = dayjs().format('YYYY-MM-DD') + ' 23:59:59'
       const start = new Date()
       start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
       return [start, end]
