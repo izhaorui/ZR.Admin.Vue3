@@ -22,8 +22,8 @@ import elementIcons from '@/components/SvgIcon/svgicon'
 
 import './permission' // permission control
 
-import { getConfigKey } from "@/api/system/config";
-import { getDicts } from "@/api/system/dict/data";
+import { getConfigKey } from '@/api/system/config'
+import { getDicts } from '@/api/system/dict/data'
 import { parseTime, resetForm, addDateRange, handleTree, selectDictLabel, download } from '@/utils/ruoyi'
 
 // 分页组件
@@ -31,19 +31,18 @@ import Pagination from '@/components/Pagination'
 // 自定义表格工具组件
 import RightToolbar from '@/components/RightToolbar'
 // 文件上传组件
-import FileUpload from "@/components/FileUpload"
+import FileUpload from '@/components/FileUpload'
 // 图片上传组件
-import ImageUpload from "@/components/ImageUpload"
+import ImageUpload from '@/components/ImageUpload'
 // 图片预览组件
-import ImagePreview from "@/components/ImagePreview"
+import ImagePreview from '@/components/ImagePreview'
 // 字典标签组件
 import DictTag from '@/components/DictTag'
 // el-date-picker 快捷选项
 import dateOptions from '@/utils/dateOptions'
 
 const app = createApp(App)
-signalR.init(
-  import.meta.env.VITE_APP_SOCKET_API)
+signalR.init(import.meta.env.VITE_APP_SOCKET_API)
 app.config.globalProperties.signalr = signalR
 // 全局方法挂载
 app.config.globalProperties.getConfigKey = getConfigKey

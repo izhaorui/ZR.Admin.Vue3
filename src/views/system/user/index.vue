@@ -76,18 +76,65 @@
 
         <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="50" align="center" />
-          <el-table-column label="用户编号" align="center" key="userId" prop="userId" v-if="columns[0].visible" />
-          <el-table-column label="登录名" align="center" key="userName" prop="userName" v-if="columns[1].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="用户昵称" align="center" key="nickName" prop="nickName" v-if="columns[2].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="部门" align="center" key="deptName" prop="deptName" v-if="columns[3].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="手机号码" align="center" key="phonenumber" prop="phonenumber" v-if="columns[4].visible" width="120" />
-          <el-table-column label="状态" align="center" key="status">
+          <el-table-column label="用户编号" align="center" key="userId" prop="userId" v-if="columns.showColumn('userId')" />
+          <el-table-column
+            label="登录名"
+            align="center"
+            key="userName"
+            prop="userName"
+            v-if="columns.showColumn('userName')"
+            :show-overflow-tooltip="true" />
+          <el-table-column
+            label="用户昵称"
+            align="center"
+            key="nickName"
+            prop="nickName"
+            v-if="columns.showColumn('nickName')"
+            :show-overflow-tooltip="true" />
+          <el-table-column
+            label="部门"
+            align="center"
+            key="deptName"
+            prop="deptName"
+            v-if="columns.showColumn('deptName')"
+            :show-overflow-tooltip="true" />
+          <el-table-column
+            label="手机号码"
+            align="center"
+            key="phonenumber"
+            prop="phonenumber"
+            v-if="columns.showColumn('phonenumber')"
+            width="120" />
+          <el-table-column label="状态" align="center" key="status" v-if="columns.showColumn('status')">
             <template #default="scope">
               <el-switch v-model="scope.row.status" active-value="0" inactive-value="1" @change="handleStatusChange(scope.row)"></el-switch>
             </template>
           </el-table-column>
-          <el-table-column label="创建时间" align="center" prop="createTime" width="160"></el-table-column>
-          <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width">
+          <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns.showColumn('createTime')" width="160"></el-table-column>
+          <el-table-column prop="sex" label="性别" align="center" v-if="columns.showColumn('sex')">
+            <template #default="scope">
+              <dict-tag :options="sexOptions" :value="scope.row.sex" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="avatar" label="头像地址" align="center" v-if="columns.showColumn('avatar')">
+            <template #default="scope">
+              <el-image
+                preview-teleported
+                :hide-on-click-modal="true"
+                lazy
+                class="avatar"
+                fit="contain"
+                :src="scope.row.avatar"
+                :preview-src-list="[scope.row.avatar]">
+                <div>
+                  <el-icon :size="15"><document /></el-icon>
+                </div>
+              </el-image>
+            </template>
+          </el-table-column>
+          <el-table-column prop="email" label="用户邮箱" align="center" v-if="columns.showColumn('email')" />
+          <el-table-column prop="loginDate" label="最后登录时间" align="center" v-if="columns.showColumn('loginDate')" />
+          <el-table-column label="操作" align="center" width="110" class-name="small-padding fixed-width">
             <template #default="scope">
               <el-button v-if="scope.row.userId !== 1" text icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:user:edit']">
               </el-button>
@@ -272,13 +319,17 @@ const upload = reactive({
 })
 // 列显隐信息
 const columns = ref([
-  { key: 0, label: `用户编号`, visible: true },
-  { key: 1, label: `用户名称`, visible: true },
-  { key: 2, label: `用户昵称`, visible: true },
-  { key: 3, label: `部门`, visible: true },
-  { key: 4, label: `手机号码`, visible: true },
-  { key: 5, label: `状态`, visible: true },
-  { key: 6, label: `创建时间`, visible: true }
+  { key: 0, label: `用户编号`, visible: true, prop: 'userId' },
+  { key: 1, label: `用户名称`, visible: true, prop: 'userName' },
+  { key: 2, label: `用户昵称`, visible: true, prop: 'nickName' },
+  { key: 3, label: `部门`, visible: true, prop: 'deptName' },
+  { key: 4, label: `手机号码`, visible: true, prop: 'phonenumber' },
+  { key: 5, label: `状态`, visible: true, prop: 'status' },
+  { key: 6, label: `创建时间`, visible: true, prop: 'createTime' },
+  { key: 7, label: `性别`, visible: false, prop: 'sex' },
+  { key: 8, label: `头像`, visible: false, prop: 'avatar' },
+  { key: 9, label: `邮箱`, visible: false, prop: 'email' },
+  { key: 10, label: `最后登录时间`, visible: false, prop: 'loginDate' }
 ])
 
 const data = reactive({
@@ -578,3 +629,8 @@ function selectRole(e) {
 getTreeselect()
 getList()
 </script>
+<style scoped>
+.avatar {
+  width: 40px;
+}
+</style>

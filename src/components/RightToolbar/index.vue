@@ -1,15 +1,17 @@
 <template>
   <div class="top-right-btn">
-    <el-dropdown :hide-on-click="false" style="margin-right: 10px" trigger="click">
-      <el-button circle icon="menu" />
-      <template #dropdown>
-        <el-dropdown-menu>
-          <el-dropdown-item v-for="(item, index) in data" :key="index">
-            <el-checkbox v-model="item.visible" :label="item.label"></el-checkbox>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </template>
-    </el-dropdown>
+    <el-tooltip class="item" effect="dark" content="显隐列" placement="top" v-if="data">
+      <el-dropdown :hide-on-click="false" style="margin-right: 10px" trigger="click">
+        <el-button circle icon="menu" />
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item v-for="(item, index) in data" :key="index">
+              <el-checkbox v-model="item.visible" :label="item.label"></el-checkbox>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+    </el-tooltip>
 
     <el-tooltip class="item" effect="dark" :content="showSearch ? '隐藏搜索' : '显示搜索'" placement="top">
       <el-button circle icon="Search" @click="toggleSearch()" />
@@ -17,6 +19,7 @@
     <el-tooltip class="item" effect="dark" content="刷新" placement="top">
       <el-button circle icon="Refresh" @click="refresh()" />
     </el-tooltip>
+
     <!-- <el-tooltip class="item" effect="dark" content="显隐列" placement="top" v-if="data">
       <el-button circle icon="Menu" @click="showColumn()" />
     </el-tooltip> -->
@@ -89,7 +92,7 @@ const init = () => {
     })
   }
 }
-console.log(data.value)
+
 init()
 </script>
 
