@@ -55,7 +55,7 @@
               <userInfo :user="state.user" />
             </el-tab-pane>
             <el-tab-pane :label="$t('user.changePwd')" name="resetPwd">
-              <resetPwd :user="state.user" />
+              <resetPwd />
             </el-tab-pane>
             <el-tab-pane :label="$t('menu.operLog')" name="log">
               <operLog></operLog>
@@ -79,7 +79,7 @@ const state = reactive({
   user: {},
   roles: [],
   roleGroup: {},
-  postGroup: {},
+  postGroup: {}
 })
 
 function getUser() {
