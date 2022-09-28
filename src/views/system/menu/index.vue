@@ -521,6 +521,7 @@ function handleChangeSort(info) {
     })
     .then(() => {
       handleQuery()
+      refreshMenu(info.parentId)
       proxy.$modal.msgSuccess('修改成功')
     })
     .catch(() => {
