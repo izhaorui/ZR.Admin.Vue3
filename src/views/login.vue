@@ -79,6 +79,7 @@ import useUserStore from '@/store/modules/user'
 
 const userStore = useUserStore()
 const router = useRouter()
+const route = useRoute()
 const { proxy } = getCurrentInstance()
 
 const loginForm = ref({
@@ -86,13 +87,13 @@ const loginForm = ref({
   password: '',
   rememberMe: false,
   code: '',
-  uuid: '',
+  uuid: ''
 })
 
 const loginRules = {
   username: [{ required: true, trigger: 'blur', message: '请输入您的账号' }],
   password: [{ required: true, trigger: 'blur', message: '请输入您的密码' }],
-  code: [{ required: true, trigger: 'change', message: '请输入验证码' }],
+  code: [{ required: true, trigger: 'change', message: '请输入验证码' }]
 }
 
 const codeUrl = ref('')
@@ -101,8 +102,8 @@ const loading = ref(false)
 const captchaOnOff = ref('')
 // 注册开关
 const register = ref(false)
-const redirect = ref(undefined)
-
+const redirect = ref()
+redirect.value = route.query.redirect
 proxy.getConfigKey('sys.account.captchaOnOff').then((response) => {
   captchaOnOff.value = response.data
 })
@@ -156,7 +157,7 @@ function getCookie() {
   loginForm.value = {
     username: username === undefined ? loginForm.value.username : username,
     password: password === undefined ? loginForm.value.password : decrypt(password),
-    rememberMe: rememberMe === undefined ? false : Boolean(rememberMe),
+    rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
   }
 }
 function onAuth(type) {

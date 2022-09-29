@@ -29,16 +29,16 @@ const router = useRouter()
 const userStore = useUserStore()
 const loginForm = ref(undefined)
 const callbackQuery = ref(undefined)
-const redirect = ref(undefined)
+const redirect = ref()
 const authSource = ref('')
 const loading = ref(false)
 callbackQuery.value = getQueryObject()
 redirect.value = route.query.redirect
 authSource.value = route.query.authSource
 
-const userInfo = computed(() => {
-  return userStore.userInfo
-})
+// const userInfo = computed(() => {
+//   return userStore.userInfo
+// })
 if (callbackQuery.value && callbackQuery.value.state != null) {
   loading.value = true
   // 调用action的登录方法
