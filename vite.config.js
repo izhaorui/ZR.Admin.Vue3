@@ -51,12 +51,12 @@ export default defineConfig(({ mode, command }) => {
       proxy: {
         // https://cn.vitejs.dev/config/#server-proxy
         '/dev-api': {
-          target: 'http://localhost:8888',
+          target: env.VITE_APP_API_HOST,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/dev-api/, '')
         },
         '/msghub': {
-          target: 'http://localhost:8888',
+          target: env.VITE_APP_API_HOST,
           ws: true,
           rewrite: (path) => path.replace(/^\/msgHub/, '')
         }
