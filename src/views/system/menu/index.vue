@@ -171,7 +171,7 @@
           </el-col>
           <el-col :lg="24" v-if="form.menuType != 'F'">
             <el-form-item :label="$t('m.icon')" prop="icon">
-              <el-popover placement="bottom-start" :teleported="false" :width="540" v-model:visible="showChooseIcon" trigger="click">
+              <el-popover placement="bottom-start" :teleported="false" :width="540" :visible="showChooseIcon" trigger="click">
                 <template #reference>
                   <el-input v-model="form.icon" placeholder="点击选择图标" @click="showSelectIcon" readonly>
                     <template #prefix>
