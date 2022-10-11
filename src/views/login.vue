@@ -53,7 +53,7 @@
           <span v-else>登 录 中...</span>
         </el-button>
       </el-form-item>
-      <div class="other-login">
+      <div class="other-login" v-if="defaultSettings.showOtherLogin">
         <el-divider>{{ $t('login.otherLoginWay') }}</el-divider>
         <img src="../assets/icons/gitee-fill-round.png" alt="" class="login-icon" @click="onAuth('GITEE')" />
         <img src="../assets/icons/github-fill.png" alt="" class="login-icon" @click="onAuth('GITHUB')" />

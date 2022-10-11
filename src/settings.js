@@ -67,5 +67,9 @@ export default {
   /**
    * 水印文案
    */
-  watermarkText: 'ZRAdmin.NET'
+  watermarkText: 'ZRAdmin.NET',
+  /**
+   * 是否显示其他登录
+   */
+  showOtherLogin: false
 }
