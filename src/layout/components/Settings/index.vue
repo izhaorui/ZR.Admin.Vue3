@@ -119,11 +119,11 @@ const mode = useColorMode({
   modes: {
     // custom colors
     contrast: 'dark contrast',
-    cafe: 'cafe',
-  },
+    cafe: 'cafe'
+  }
 })
-const { next } = useCycleList(['dark', 'light', 'cafe', 'contrast'], { initialValue: mode })
-const isDark = useDark()
+const { next } = useCycleList(['light', 'dark', 'cafe', 'contrast'], { initialValue: mode })
+// const  isDark= useDark()
 
 /** 是否需要topnav */
 const topNav = computed({
@@ -134,35 +134,35 @@ const topNav = computed({
       appStore.toggleSideBarHide(false)
       permissionStore.setSidebarRouters(permissionStore.defaultRoutes)
     }
-  },
+  }
 })
 /** 是否需要tagview */
 const tagsView = computed({
   get: () => storeSettings.value.tagsView,
   set: (val) => {
     settingsStore.changeSetting({ key: 'tagsView', value: val })
-  },
+  }
 })
 /**是否需要固定头部 */
 const fixedHeader = computed({
   get: () => storeSettings.value.fixedHeader,
   set: (val) => {
     settingsStore.changeSetting({ key: 'fixedHeader', value: val })
-  },
+  }
 })
 // 是否显示底部
 const showFooter = computed({
   get: () => storeSettings.value.showFooter,
   set: (val) => {
     settingsStore.changeSetting({ key: 'showFooter', value: val })
-  },
+  }
 })
 /**是否需要侧边栏的logo */
 const sidebarLogo = computed({
   get: () => storeSettings.value.sidebarLogo,
   set: (val) => {
     settingsStore.changeSetting({ key: 'sidebarLogo', value: val })
-  },
+  }
 })
 /**是否需要侧边栏的动态网页的title */
 const dynamicTitle = computed({
@@ -171,7 +171,7 @@ const dynamicTitle = computed({
     settingsStore.changeSetting({ key: 'dynamicTitle', value: val })
     // 动态设置网页标题
     useDynamicTitle()
-  },
+  }
 })
 /**是否显示水印 */
 const showWatermark = computed({
@@ -179,7 +179,7 @@ const showWatermark = computed({
   set: (val) => {
     settingsStore.changeSetting({ key: 'showWatermark', value: val })
     changeWatermark()
-  },
+  }
 })
 const changeWatermark = () => {
   storeSettings.value.showWatermark ? setWatermark(useUserStore().userInfo.userName) : removeWatermark()
@@ -193,8 +193,8 @@ watch(
     themeChange(val.value)
   },
   {
-    immediate: true,
-  },
+    immediate: true
+  }
 )
 watch(
   () => sideTheme,
@@ -203,8 +203,8 @@ watch(
     body.setAttribute('data-theme', '')
   },
   {
-    immediate: true,
-  },
+    immediate: true
+  }
 )
 watch(
   () => mode,
@@ -215,8 +215,8 @@ watch(
   },
   {
     immediate: true,
-    deep: true,
-  },
+    deep: true
+  }
 )
 /**
  * 改变主题颜色
@@ -250,7 +250,7 @@ function saveSetting() {
     sideTheme: storeSettings.value.sideTheme,
     theme: storeSettings.value.theme,
     showFooter: storeSettings.value.showFooter,
-    showWatermark: storeSettings.value.showWatermark,
+    showWatermark: storeSettings.value.showWatermark
   }
   localStorage.setItem('layout-setting', JSON.stringify(layoutSetting))
   setTimeout(proxy.$modal.closeLoading(), 100)
@@ -266,7 +266,7 @@ function openSetting() {
 }
 
 defineExpose({
-  openSetting,
+  openSetting
 })
 </script>
 
