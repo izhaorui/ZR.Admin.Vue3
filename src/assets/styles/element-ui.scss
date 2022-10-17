@@ -12,9 +12,9 @@
 
 // table 里面操作按钮样式覆盖
 .el-table__cell .cell {
-	.el-button.is-text{
-		padding: 8px 5px;
-	}
+  .el-button.is-text {
+    padding: 8px 5px;
+  }
 }
 
 .status-col {
@@ -96,4 +96,13 @@
 // 隐藏picture-card 上传按钮
 .hide .el-upload--picture-card {
   display: none;
+}
+
+// 禁止菜单选中
+.el-sub-menu .el-sub-menu__title span,
+.el-menu .el-menu-item {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
