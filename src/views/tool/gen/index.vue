@@ -78,7 +78,7 @@ import importTable from './importTable'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/dark.css' // 这里有多个样式，自己可以根据需要切换
 import { useClipboard } from '@vueuse/core'
-// const route = useRoute()
+const route = useRoute()
 const router = useRouter()
 const { proxy } = getCurrentInstance()
 
@@ -98,17 +98,28 @@ const data = reactive({
     pageNum: 1,
     pageSize: 10,
     tableName: undefined,
+    t: 0
   },
   preview: {
     open: false,
     title: '代码预览',
     data: {},
-    activeName: '0',
-  },
+    activeName: '0'
+  }
 })
 
 const { queryParams, preview } = toRefs(data)
-
+watch(
+  route,
+  (val) => {
+    if (val) {
+      getList()
+    }
+  },
+  {
+    immediate: true
+  }
+)
 /** 查询表集合 */
 function getList() {
   tableloading.value = true
@@ -137,7 +148,7 @@ function handleGenTable(row) {
       codeGenerator({
         tableId: currentSelected.value.tableId,
         tableName: currentSelected.value.name,
-        VueVersion: 3,
+        VueVersion: 3
       })
         .then((res) => {
           const { data } = res
@@ -205,7 +216,7 @@ function handleEditTable(row) {
 
   router.push({
     path: '/gen/editTable',
-    query: { tableId: row.tableId },
+    query: { tableId: row.tableId }
   })
 }
 /** 删除按钮操作 */
@@ -215,7 +226,7 @@ function handleDelete(row) {
     .$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(() => {
       delTable(Ids.toString()).then((res) => {
@@ -229,7 +240,7 @@ function handleDelete(row) {
     .catch(() => {
       proxy.$message({
         type: 'info',
-        message: '已取消删除',
+        message: '已取消删除'
       })
     })
 }
