@@ -41,7 +41,7 @@
 
     <h3 class="drawer-title">{{ $t('layout.sysLayoutSet') }}</h3>
     <div class="drawer-item">
-      <span>{{ $t('layout.open') }} TopNav</span>
+      <span>{{ $t('layout.open') }} {{ $t('layout.topNav') }}</span>
       <span class="comp-style">
         <el-switch v-model="topNav" class="drawer-switch" />
       </span>
@@ -54,7 +54,7 @@
       </span>
     </div>
     <div class="drawer-item">
-      <span>open {{ $t('layout.bottomBar') }}</span>
+      <span>{{ $t('layout.open') }} {{ $t('layout.bottomBar') }}</span>
       <span class="comp-style">
         <el-switch v-model="showFooter" class="drawer-switch" />
       </span>
