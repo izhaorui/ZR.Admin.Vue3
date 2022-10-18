@@ -89,7 +89,7 @@ const loginForm = ref({
   code: '',
   uuid: ''
 })
-
+const host = window.location.host
 const loginRules = {
   username: [{ required: true, trigger: 'blur', message: '请输入您的账号' }],
   password: [{ required: true, trigger: 'blur', message: '请输入您的密码' }],
@@ -112,11 +112,11 @@ function handleLogin() {
   proxy.$refs.loginRef.validate((valid) => {
     if (valid) {
       loading.value = true
-      // 勾选了需要记住密码设置在cookie中设置记住用户明和名命
+      // 勾选了需要记住密码设置在cookie中设置记住用户名和密码
       if (loginForm.value.rememberMe) {
-        Cookies.set('username', loginForm.value.username, { expires: 30 })
-        Cookies.set('password', encrypt(loginForm.value.password), { expires: 30 })
-        Cookies.set('rememberMe', loginForm.value.rememberMe, { expires: 30 })
+        Cookies.set('username', loginForm.value.username, { expires: 30, path: host })
+        Cookies.set('password', encrypt(loginForm.value.password), { expires: 30, path: host })
+        Cookies.set('rememberMe', loginForm.value.rememberMe, { expires: 30, path: host })
       } else {
         // 否则移除
         Cookies.remove('username')
