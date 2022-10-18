@@ -124,7 +124,7 @@
     </el-dialog>
   </div>
 </template>
-<script setup name="roleusers">
+<script setup name="roleUsers">
 // import { listRole } from "@/api/system/role";
 import { getRole } from '@/api/system/role'
 import { getRoleUsers, createRoleUsers, deleteRoleUsers, getExcludeUsers } from '@/api/system/userRoles'
@@ -153,13 +153,13 @@ const roleUserQueryParams = reactive({
   roleId: undefined,
   userName: undefined,
   roleName: undefined,
-  roleKey: undefined,
+  roleKey: undefined
 })
 const userQueryParams = reactive({
   pageNum: 1,
   pageSize: 10,
   roleId: undefined,
-  userName: undefined,
+  userName: undefined
 })
 // 状态字典
 const statusOptions = ref([])
@@ -172,6 +172,7 @@ proxy.getDicts('sys_normal_disable').then((response) => {
 const role_id = route.query.roleId
 roleUserQueryParams.roleId = role_id
 userQueryParams.roleId = role_id
+
 function init() {
   searchRoleUser()
 
@@ -188,6 +189,7 @@ function searchRoleUser() {
   roleUserQueryParams.pageNum = 1
   getRoleUser()
 }
+
 // 获取角色用户
 function getRoleUser() {
   loading.value = true
@@ -215,17 +217,17 @@ function cancelAuthUserAll() {
     .$confirm('是否确认删除选中的 ' + delSelections.value.length + ' 条数据?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(() => {
       deleteRoleUsers({
         roleId: role_id,
-        userIds: delSelections.value,
+        userIds: delSelections.value
       }).then((response) => {
         if (response.code === 200) {
           proxy.$message({
             message: '成功删除' + response.data + '条数据',
-            type: 'success',
+            type: 'success'
           })
           getRoleUser()
         }
@@ -240,12 +242,12 @@ function handleCancelPerm(row) {
 
   deleteRoleUsers({
     roleId: role_id,
-    userIds: delSelections.value,
+    userIds: delSelections.value
   }).then((response) => {
     if (response.code === 200) {
       proxy.$message({
         message: '成功删除' + response.data + '条数据',
-        type: 'success',
+        type: 'success'
       })
       getRoleUser()
     }
@@ -279,12 +281,12 @@ function handleSubmit() {
   }
   createRoleUsers({
     roleId: role_id,
-    userIds: addSelections.value,
+    userIds: addSelections.value
   }).then((response) => {
     if (response.code === 200) {
       proxy.$message({
         message: '成功添加' + response.data + '条数据',
-        type: 'success',
+        type: 'success'
       })
       getRoleUser()
       open.value = false
