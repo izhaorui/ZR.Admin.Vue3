@@ -16,7 +16,6 @@
               <el-input v-model="scope.row.columnComment" :ref="setColumnsRef" @keydown="nextFocus(scope.row, scope.$index, $event)"> </el-input>
             </template>
           </el-table-column>
-          <el-table-column label="物理类型" prop="columnType" :show-overflow-tooltip="true" width="90" />
           <el-table-column label="C#类型" width="140">
             <template #default="scope">
               <el-select v-model="scope.row.csharpType">
@@ -35,53 +34,65 @@
               <el-input v-model="scope.row.csharpField"></el-input>
             </template>
           </el-table-column>
-          <el-table-column label="插入" width="60" align="center" v-if="info.tplCategory != 'select'">
-            <template #default="scope">
-              <el-checkbox v-model="scope.row.isInsert" :disabled="scope.row.isIncrement"></el-checkbox>
-            </template>
+          <el-table-column label="前端" align="center" label-class-name="text-info">
+            <el-table-column label="列表" width="60" align="center">
+              <template #default="scope">
+                <el-checkbox v-model="scope.row.isList"></el-checkbox>
+              </template>
+            </el-table-column>
+            <el-table-column label="排序" width="60" align="center">
+              <template #default="scope">
+                <el-checkbox
+                  v-model="scope.row.isSort"
+                  :disabled="scope.row.htmlType == 'imageUpload' || scope.row.htmlType == 'fileUpload'"></el-checkbox>
+              </template>
+            </el-table-column>
           </el-table-column>
-          <el-table-column label="编辑" width="60" align="center" v-if="info.tplCategory != 'select'">
-            <template #default="scope">
-              <el-checkbox v-model="scope.row.isEdit" :disabled="scope.row.isPk || scope.row.isIncrement"></el-checkbox>
-            </template>
-          </el-table-column>
-          <el-table-column label="排序" width="60" align="center">
-            <template #default="scope">
-              <el-checkbox
-                v-model="scope.row.isSort"
-                :disabled="scope.row.htmlType == 'imageUpload' || scope.row.htmlType == 'fileUpload'"></el-checkbox>
-            </template>
-          </el-table-column>
-          <el-table-column label="列表" width="60" align="center">
-            <template #default="scope">
-              <el-checkbox v-model="scope.row.isList"></el-checkbox>
-            </template>
-          </el-table-column>
-          <el-table-column label="查询" width="60" align="center">
-            <template #default="scope">
-              <el-checkbox v-model="scope.row.isQuery" :disabled="scope.row.htmlType == 'imageUpload' || scope.row.htmlType == 'fileUpload'">
-              </el-checkbox>
-            </template>
-          </el-table-column>
-          <el-table-column label="查询方式" width="90" align="center">
-            <template #default="scope">
-              <el-select v-model="scope.row.queryType" :disabled="scope.row.htmlType == 'datetime'" v-if="scope.row.isQuery">
-                <el-option label="=" value="EQ" />
-                <el-option label="!=" value="NE" />
-                <el-option label=">" value="GT" />
-                <el-option label=">=" value="GTE" />
-                <el-option label="<" value="LT" />
-                <el-option label="<=" value="LTE" />
-                <el-option label="LIKE" value="LIKE" />
-                <el-option label="BETWEEN" value="BETWEEN" />
-              </el-select>
-            </template>
+          <el-table-column label="后端" align="center" label-class-name="text-hotpink">
+            <el-table-column label="插入" width="60" align="center" v-if="info.tplCategory != 'select'">
+              <template #default="scope">
+                <el-checkbox v-model="scope.row.isInsert" :disabled="scope.row.isIncrement"></el-checkbox>
+              </template>
+            </el-table-column>
+            <el-table-column label="编辑" width="60" align="center" v-if="info.tplCategory != 'select'">
+              <template #default="scope">
+                <el-checkbox v-model="scope.row.isEdit" :disabled="scope.row.isPk || scope.row.isIncrement"></el-checkbox>
+              </template>
+            </el-table-column>
+            <el-table-column label="导出" width="60" align="center">
+              <template #default="scope">
+                <el-checkbox v-model="scope.row.isExport"> </el-checkbox>
+              </template>
+            </el-table-column>
           </el-table-column>
           <el-table-column label="必填" width="60" align="center">
             <template #default="scope">
               <el-checkbox v-model="scope.row.isRequired"></el-checkbox>
             </template>
           </el-table-column>
+          <el-table-column label="查询" align="center">
+            <el-table-column label="查询" width="60" align="center">
+              <template #default="scope">
+                <el-checkbox v-model="scope.row.isQuery" :disabled="scope.row.htmlType == 'imageUpload' || scope.row.htmlType == 'fileUpload'">
+                </el-checkbox>
+              </template>
+            </el-table-column>
+            <el-table-column label="查询方式" width="90" align="center">
+              <template #default="scope">
+                <el-select v-model="scope.row.queryType" :disabled="scope.row.htmlType == 'datetime'" v-if="scope.row.isQuery">
+                  <el-option label="=" value="EQ" />
+                  <el-option label="!=" value="NE" />
+                  <el-option label=">" value="GT" />
+                  <el-option label=">=" value="GTE" />
+                  <el-option label="<" value="LT" />
+                  <el-option label="<=" value="LTE" />
+                  <el-option label="LIKE" value="LIKE" />
+                  <el-option label="BETWEEN" value="BETWEEN" />
+                </el-select>
+              </template>
+            </el-table-column>
+          </el-table-column>
+
           <el-table-column label="表单显示类型" width="140">
             <template #default="scope">
               <el-select v-model="scope.row.htmlType">
@@ -120,6 +131,7 @@
               </el-select>
             </template>
           </el-table-column>
+          <el-table-column label="物理类型" prop="columnType" :show-overflow-tooltip="true" width="90" />
           <el-table-column label="备注" align="center" width="200">
             <template #default="scope">
               <el-input v-model="scope.row.remark"> </el-input>
