@@ -108,15 +108,15 @@
         <el-form-item label="自定义sql" prop="customSql">
           <template #label>
             <span>
-              <el-tooltip content="格式：SELECT userId as dictValue, userName as dictLabel FROM xxx" placement="top">
+              <el-tooltip content="如果从数据库加载数据，请按此格式配置sql语句：SELECT userId as dictValue, userName as dictLabel FROM sys_user" placement="top">
                 <el-icon :size="15">
                   <questionFilled />
                 </el-icon>
               </el-tooltip>
-              自定义sql
+              sql语句
             </span>
           </template>
-          <el-input v-model="form.customSql" type="textarea" placeholder="请输入内容"></el-input>
+          <el-input v-model="form.customSql" type="textarea" placeholder="请输入sql语句"></el-input>
         </el-form-item>
       </el-form>
       <template #footer>
