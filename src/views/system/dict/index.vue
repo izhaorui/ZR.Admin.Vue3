@@ -90,6 +90,18 @@
           <el-input v-model="form.dictName" placeholder="请输入字典名称" />
         </el-form-item>
         <el-form-item label="字典类型" prop="dictType">
+          <template #label>
+            <span>
+              <el-tooltip
+                content="如果从数据库加载数据，请使用sql_开头字符串"
+                placement="top">
+                <el-icon :size="15">
+                  <questionFilled />
+                </el-icon>
+              </el-tooltip>
+              字典类型
+            </span>
+          </template>
           <el-input v-model="form.dictType" placeholder="请输入字典类型" />
         </el-form-item>
         <el-form-item label="字典状态" prop="status">
@@ -108,7 +120,9 @@
         <el-form-item label="自定义sql" prop="customSql">
           <template #label>
             <span>
-              <el-tooltip content="如果从数据库加载数据，请按此格式配置sql语句：SELECT userId as dictValue, userName as dictLabel FROM sys_user" placement="top">
+              <el-tooltip
+                content="如果从数据库加载数据，请按此格式配置sql语句：SELECT userId as dictValue, userName as dictLabel FROM sys_user"
+                placement="top">
                 <el-icon :size="15">
                   <questionFilled />
                 </el-icon>
