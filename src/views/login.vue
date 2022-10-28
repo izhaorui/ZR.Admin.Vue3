@@ -104,9 +104,9 @@ const captchaOnOff = ref('')
 const register = ref(false)
 const redirect = ref()
 redirect.value = route.query.redirect
-proxy.getConfigKey('sys.account.captchaOnOff').then((response) => {
-  captchaOnOff.value = response.data
-})
+// proxy.getConfigKey('sys.account.captchaOnOff').then((response) => {
+//   captchaOnOff.value = response.data
+// })
 
 function handleLogin() {
   proxy.$refs.loginRef.validate((valid) => {
@@ -147,6 +147,7 @@ function getCode() {
   getCodeImg().then((res) => {
     codeUrl.value = 'data:image/gif;base64,' + res.data.img
     loginForm.value.uuid = res.data.uuid
+    captchaOnOff.value = res.data.captchaOff
   })
 }
 

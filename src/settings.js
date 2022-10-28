@@ -71,5 +71,9 @@ export default {
   /**
    * 是否显示其他登录
    */
-  showOtherLogin: false
+  showOtherLogin: false,
+  /**
+   * 默认大小
+   */
+  defaultSize: 'default'
 }
