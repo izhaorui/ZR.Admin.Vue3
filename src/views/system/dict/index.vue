@@ -84,7 +84,7 @@
     <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" v-model="open" width="500px" append-to-body>
+    <el-dialog :title="title" v-model="open" draggable width="500px" append-to-body>
       <el-form ref="formRef" :model="form" :rules="rules" label-width="90px">
         <el-form-item label="字典名称" prop="dictName">
           <el-input v-model="form.dictName" placeholder="请输入字典名称" />
@@ -92,9 +92,7 @@
         <el-form-item label="字典类型" prop="dictType">
           <template #label>
             <span>
-              <el-tooltip
-                content="如果从数据库加载数据，请使用sql_开头字符串"
-                placement="top">
+              <el-tooltip content="如果从数据库加载数据，请使用sql_开头字符串" placement="top">
                 <el-icon :size="15">
                   <questionFilled />
                 </el-icon>
@@ -139,7 +137,7 @@
       </template>
     </el-dialog>
 
-    <el-dialog v-model="dictDataVisible" width="60%" :lock-scroll="false">
+    <el-dialog v-model="dictDataVisible" draggable width="60%" :lock-scroll="false">
       <dict-data v-model:dictId="dictId"></dict-data>
     </el-dialog>
   </div>

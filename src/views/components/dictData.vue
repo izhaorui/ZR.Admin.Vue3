@@ -50,7 +50,7 @@
   <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
 
   <!-- 添加或修改参数配置对话框 -->
-  <el-dialog :title="title" v-model="open" width="500px" append-to-body>
+  <el-dialog :title="title" v-model="open" draggable width="500px" append-to-body>
     <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="字典类型">
         <el-input v-model="form.dictType" :disabled="true" />
