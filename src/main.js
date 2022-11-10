@@ -10,7 +10,7 @@ import router from './router'
 import directive from './directive' // directive
 // 注册指令
 import plugins from './plugins' // plugins
-// import { download } from '@/utils/request'
+import { downFile } from '@/utils/request'
 import signalR from '@/utils/signalR'
 import vueI18n from './i18n/index'
 import pinia from '@/store/index'
@@ -48,6 +48,7 @@ app.config.globalProperties.signalr = signalR
 app.config.globalProperties.getConfigKey = getConfigKey
 app.config.globalProperties.getDicts = getDicts
 app.config.globalProperties.download = download
+app.config.globalProperties.downFile = downFile
 app.config.globalProperties.parseTime = parseTime
 app.config.globalProperties.resetForm = resetForm
 app.config.globalProperties.handleTree = handleTree
