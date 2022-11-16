@@ -1,7 +1,7 @@
 // 官方文档：https://docs.microsoft.com/zh-cn/aspnet/core/signalr/javascript-client?view=aspnetcore-6.0&viewFallbackFrom=aspnetcore-2.2&tabs=visual-studio
 import * as signalR from '@microsoft/signalr'
 import { getToken } from '@/utils/auth'
-import { ElNotification, ElMessageBox } from 'element-plus'
+import { ElNotification, ElMessage } from 'element-plus'
 import useSocketStore from '@/store/modules/socket'
 import { webNotify } from './index'
 export default {
@@ -31,9 +31,11 @@ export default {
     })
 
     connection.onreconnecting(async () => {
-      console.log('断线重新连接中...')
-      ElMessageBox.alert('与服务器通讯断开连接了，请稍后刷新浏览器尝试', '', {
-        confirmButtonText: 'OK'
+      console.log('断线重新连接中... ')
+      ElMessage({
+        message: '与服务器通讯断开连接了，请稍后刷新浏览器尝试',
+        type: 'warning',
+        duration: 3000
       })
       await this.start()
     })
