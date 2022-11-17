@@ -201,12 +201,12 @@
           <el-col :lg="24" v-if="form.triggerType == 1">
             <el-form-item label="间隔(Cron)" prop="cron">
               <el-input v-model="form.cron" placeholder="请输入cron执行表达式">
-                <!-- <template #append>
+                <template #append>
                   <el-button type="primary" @click="handleShowCron" style="width: 80px">
                     生成表达式
                     <el-icon><time /></el-icon>
                   </el-button>
-                </template> -->
+                </template>
               </el-input>
             </el-form-item>
           </el-col>
@@ -255,9 +255,8 @@
       </template>
     </el-dialog>
 
-    <el-dialog title="Cron表达式生成器" v-model="openCron" destroy-on-close>
-      <!-- 使用组件例子 -->
-      <Vue3CronCore i18n="cn" maxHeight="350px" @change="changeCron" v-model:value="form.cron" style="flex: 0.4" />
+    <el-dialog title="Cron表达式生成器" v-model="openCron" append-to-body destroy-on-close>
+      <crontab ref="crontabRef" @hide="openCron = false" @fill="crontabFill" :expression="expression"></crontab>
     </el-dialog>
 
     <el-drawer :title="logTitle" v-model="drawer">
@@ -284,7 +283,8 @@
 <script setup name="job">
 import { queryTasks, getTasks, createTasks, updateTasks, deleteTasks, startTasks, stopTasks, runTasks, exportTasks } from '@/api/monitor/job'
 import { listJobLog } from '@/api/monitor/jobLog'
-import Vue3CronCore from '@/components/vue3-cron-core/Index.vue'
+// import Vue3CronCore from '@/components/vue3-cron-core/Index.vue'
+import Crontab from '@/components/Crontab'
 
 const router = useRouter()
 const { proxy } = getCurrentInstance()
@@ -345,7 +345,7 @@ const state = reactive({
     className: [{ required: true, message: '任务类名不能为空', trigger: 'blur' }],
     triggerType: [{ required: true, message: '请选择触发器类型', trigger: 'blur' }],
     apiUrl: [{ required: true, message: '请输入apiUrl地址', trigger: 'blur' }],
-    cron: [{ required: true, message: '请输入cron表达式', trigger: 'blur' }],
+    cron: [{ required: true, message: 'cron表达式不能为空', trigger: 'change' }],
     beginTime: [{ required: false, message: '请选择开始日期', trigger: 'blur' }],
     endTime: [{ required: false, message: '请选择结束日期', trigger: 'blur' }],
     intervalSecond: [{ message: '请设置执行间隔', type: 'number', trigger: 'blur' }]
@@ -397,15 +397,14 @@ function handleUpdate(row) {
 
 /** cron表达式按钮操作 */
 function handleShowCron() {
-  // expression.value = form.value.cron
+  expression.value = form.value.cron
   openCron.value = true
 }
 /** 确定后回传值 */
-const changeCron = (val) => {
-  if (typeof val !== 'string') return false
-  openCron.value = false
-  form.value.cron = val
+function crontabFill(value) {
+  form.value.cron = value
 }
+
 // 启动按钮
 function handleStart(row) {
   startTasks(row.id).then((response) => {
