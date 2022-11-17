@@ -1,10 +1,11 @@
 import axios from 'axios'
-import { ElMessageBox, ElMessage } from 'element-plus'
+import { ElMessageBox, ElMessage, ElLoading } from 'element-plus'
 import { getToken } from '@/utils/auth'
 import useUserStore from '@/store/modules/user'
 import { tansParams, blobValidate } from '@/utils/ruoyi'
 import { saveAs } from 'file-saver'
 
+let downloadLoadingInstance
 // 解决后端跨域获取不到cookie问题
 // axios.defaults.withCredentials = true
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
@@ -86,7 +87,8 @@ service.interceptors.response.use(
     ElMessage({
       message: message,
       type: 'error',
-      duration: 5 * 1000
+      duration: 3 * 1000,
+      grouping: true
     })
     return Promise.reject(error)
   }
@@ -147,19 +149,18 @@ export function postForm(url, data, config) {
 
 // 通用下载方法
 export function downFile(url, params, filename, config) {
-  //downloadLoadingInstance = Loading.service({ text: '正在下载数据，请稍候', spinner: 'el-icon-loading', background: 'rgba(0, 0, 0, 0.7)' })
+  downloadLoadingInstance = ElLoading.service({ text: '正在下载数据，请稍候', background: 'rgba(0, 0, 0, 0.7)' })
   return service
-    .get(url, params, {
-      transformRequest: [
-        (params) => {
-          return tansParams(params)
-        }
-      ],
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      responseType: 'blob',
-      ...config
-    })
-    .then(async (data) => {
+    .get(
+      url,
+      { params: params },
+      {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        responseType: 'blob',
+        ...config
+      }
+    )
+    .then(async (response) => {
       const isLogin = await blobValidate(data)
       if (isLogin) {
         const blob = new Blob([data])
@@ -174,7 +175,6 @@ export function downFile(url, params, filename, config) {
           type: 'error'
         })
       }
-      // downloadLoadingInstance.close()
     })
     .catch((r) => {
       console.error(r)
@@ -182,7 +182,7 @@ export function downFile(url, params, filename, config) {
         message: '下载文件出现错误，请联系管理员！',
         type: 'error'
       })
-      // downloadLoadingInstance.close()
+      downloadLoadingInstance.close()
     })
 }
 
