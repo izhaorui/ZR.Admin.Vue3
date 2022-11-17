@@ -15,10 +15,11 @@
         <router-view v-slot="{ Component, route }">
           <transition name="fade-transform" mode="out-in">
             <keep-alive :include="cachedViews">
-              <component :is="Component" :key="route.path" />
+              <component v-if="!route.meta.link" :is="Component" :key="route.path" />
             </keep-alive>
           </transition>
         </router-view>
+        <iframe-toggle />
       </el-main>
       <el-footer v-if="showFooter">
         <div v-html="defaultSettings.copyright"></div>
@@ -33,7 +34,7 @@ import { useWindowSize } from '@vueuse/core'
 import Sidebar from './components/Sidebar/index.vue'
 import { Navbar, Settings, TagsView } from './components'
 import defaultSettings from '@/settings'
-
+import iframeToggle from './components/IframeToggle/index'
 import useAppStore from '@/store/modules/app'
 import useSettingsStore from '@/store/modules/settings'
 import useTagsViewStore from '@/store/modules/tagsView'

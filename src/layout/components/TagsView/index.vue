@@ -40,7 +40,7 @@ import { getNormalPath } from '@/utils/ruoyi'
 import useTagsViewStore from '@/store/modules/tagsView'
 // import useSettingsStore from '@/store/modules/settings'
 import usePermissionStore from '@/store/modules/permission'
-
+import { isHttp } from '@/utils/validate'
 const visible = ref(false)
 const top = ref(0)
 const left = ref(0)
@@ -108,7 +108,7 @@ function filterAffixTags(routes, basePath = '') {
         fullPath: tagPath,
         path: tagPath,
         name: route.name,
-        meta: { ...route.meta },
+        meta: { ...route.meta }
       })
     }
     if (route.children) {
@@ -134,6 +134,10 @@ function addTags() {
   const { name } = route
   if (name) {
     useTagsViewStore().addView(route)
+    if (route.meta.link && isHttp(route.meta.link)) {
+      console.log('add link', route.meta.link)
+      useTagsViewStore().addIframeView(route)
+    }
   }
   return false
 }
@@ -152,7 +156,9 @@ function moveToCurrentTag() {
 }
 function refreshSelectedTag(view) {
   proxy.$tab.refreshPage(view)
-  // In order to make the cached page re-rendered
+  if (route.meta.link) {
+    useTagsViewStore().delIframeView(route)
+  }
 }
 function closeSelectedTag(view) {
   proxy.$tab.closePage(view).then(({ visitedViews }) => {
