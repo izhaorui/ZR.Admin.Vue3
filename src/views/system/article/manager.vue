@@ -59,7 +59,7 @@
         <template #default="scope">
           <el-button text size="small" icon="view" @click="handleView(scope.row)">查看</el-button>
           <el-button text size="small" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:article:update']">编辑</el-button>
-          <el-popconfirm title="确定删除吗？" @onConfirm="handleDelete(scope.row)" style="margin-left: 10px">
+          <el-popconfirm title="确定删除吗？" @confirm="handleDelete(scope.row)" style="margin-left: 10px">
             <template #reference>
               <el-button text size="small" icon="delete" v-hasPermi="['system:article:delete']">删除</el-button>
             </template>
