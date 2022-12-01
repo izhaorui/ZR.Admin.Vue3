@@ -4,7 +4,7 @@ export function queryTasks(data) {
   return request({
     url: '/system/tasks/list',
     method: 'get',
-    data
+    params: data
   })
 }
 
@@ -16,9 +16,9 @@ export function getTasks(id) {
 }
 
 /**
- * 
+ *
  * 获取所有任务
- * @returns 
+ * @returns
  */
 export function getAllTasks() {
   return request({
@@ -29,8 +29,8 @@ export function getAllTasks() {
 
 /**
  * 创建任务
- * @param {*} data 
- * @returns 
+ * @param {*} data
+ * @returns
  */
 export function createTasks(data) {
   return request({
@@ -42,8 +42,8 @@ export function createTasks(data) {
 
 /**
  * 更新任务
- * @param {*} data 
- * @returns 
+ * @param {*} data
+ * @returns
  */
 export function updateTasks(data) {
   return request({
@@ -55,8 +55,8 @@ export function updateTasks(data) {
 
 /**
  * 删除任务
- * @param {*} id 
- * @returns 
+ * @param {*} id
+ * @returns
  */
 export function deleteTasks(id) {
   return request({
@@ -67,8 +67,8 @@ export function deleteTasks(id) {
 
 /**
  * 启动任务
- * @param {*} id 
- * @returns 
+ * @param {*} id
+ * @returns
  */
 export function startTasks(id) {
   return request({
@@ -79,8 +79,8 @@ export function startTasks(id) {
 
 /**
  * 停止任务
- * @param {*} id 
- * @returns 
+ * @param {*} id
+ * @returns
  */
 export function stopTasks(id) {
   return request({
@@ -91,8 +91,8 @@ export function stopTasks(id) {
 
 /**
  * 运行一次
- * @param {*} id 
- * @returns 
+ * @param {*} id
+ * @returns
  */
 export function runTasks(id) {
   return request({
@@ -102,7 +102,7 @@ export function runTasks(id) {
 }
 /**
  * 导出
- * @returns 
+ * @returns
  */
 export function exportTasks() {
   return request({
@@ -110,6 +110,5 @@ export function exportTasks() {
     method: 'get'
   })
 }
-
 
 export default { queryTasks, getTasks, getAllTasks, createTasks, updateTasks, deleteTasks, startTasks, stopTasks, runTasks, exportTasks }

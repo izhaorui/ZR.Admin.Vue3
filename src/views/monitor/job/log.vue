@@ -22,7 +22,8 @@
           type="daterange"
           range-separator="-"
           start-placeholder="开始日期"
-          end-placeholder="结束日期"></el-date-picker>
+          end-placeholder="结束日期"
+          :shortcuts="dateOptions"></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
