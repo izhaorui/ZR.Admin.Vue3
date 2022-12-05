@@ -53,7 +53,11 @@
       <el-table-column label="任务组名" align="center" prop="jobGroup" :formatter="jobGroupFormat" :show-overflow-tooltip="true" />
       <el-table-column label="调用目标字符串" align="center" prop="invokeTarget" :show-overflow-tooltip="true" />
       <el-table-column label="日志信息" align="center" prop="jobMessage" :show-overflow-tooltip="true" />
-      <el-table-column label="执行状态" align="center" prop="status" :formatter="statusFormat" />
+      <el-table-column label="执行状态" align="center" prop="status">
+        <template #default="scope">
+          <dict-tag :options="statusOptions" :value="scope.row.status" />
+        </template>
+      </el-table-column>
       <el-table-column label="作业用时" align="center" prop="elapsed">
         <template #default="scope">
           <span :style="scope.row.elapsed < 1000 ? 'color:green' : scope.row.elapsed < 3000 ? 'color:orange' : 'color:red'">
@@ -162,10 +166,6 @@ function getList() {
   })
 }
 
-// 执行状态字典翻译
-function statusFormat(row, column) {
-  return proxy.selectDictLabel(statusOptions.value, row.status)
-}
 // 任务组名字典翻译
 function jobGroupFormat(row, column) {
   return proxy.selectDictLabel(jobGroupOptions.value, row.jobGroup)

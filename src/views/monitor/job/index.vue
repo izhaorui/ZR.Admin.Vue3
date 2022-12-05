@@ -41,7 +41,7 @@
     </el-row>
     <el-row>
       <el-table ref="tasks" v-loading="loading" :data="dataTasks" border="" row-key="id" @sort-change="handleSortable">
-        <el-table-column type="index" :index="handleIndexCalc" label="#" align="center" />
+        <!-- <el-table-column type="index" :index="handleIndexCalc" label="#" align="center" /> -->
         <el-table-column prop="id" label="id" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('id')" />
         <el-table-column prop="name" label="任务名称" width="100" />
         <el-table-column prop="taskType" label="任务类型" align="center" v-if="columns.showColumn('taskType')">
@@ -72,7 +72,7 @@
           label="程序集名称"
           v-if="columns.showColumn('assemblyName')"
           :show-overflow-tooltip="true" />
-        <el-table-column prop="className" align="center" label="任务类名" v-if="columns.showColumn('className')" :show-overflow-tooltip="true" />
+        <el-table-column prop="className" align="center" label="任务类名" v-if="columns.showColumn('className')" />
         <el-table-column prop="runTimes" align="center" label="运行次数" width="80" />
         <el-table-column prop="intervalSecond" align="center" label="执行间隔(s)" v-if="columns.showColumn('intervalSecond')" width="90" />
         <el-table-column prop="cron" align="center" label="运行表达式" v-if="columns.showColumn('cron')" :show-overflow-tooltip="true" />
@@ -96,7 +96,6 @@
             <el-link
               size="small"
               class="ml10"
-              type="primary"
               v-if="scope.row.isStart"
               v-hasPermi="['monitor:job:run']"
               icon="remove"
@@ -105,7 +104,6 @@
               {{ $t('btn.run') }}
             </el-link>
             <el-link
-              type="warning"
               size="small"
               class="ml10"
               v-if="scope.row.isStart"
@@ -118,7 +116,6 @@
             </el-link>
 
             <el-link
-              type="primary"
               size="small"
               class="ml10"
               v-if="!scope.row.isStart"
@@ -131,7 +128,6 @@
             <el-link
               class="ml10"
               size="small"
-              type="info"
               v-if="!scope.row.isStart"
               v-hasPermi="['monitor:job:edit']"
               icon="edit"
@@ -141,7 +137,6 @@
             </el-link>
 
             <el-link
-              type="danger"
               class="ml10"
               size="small"
               v-if="!scope.row.isStart"
@@ -201,7 +196,12 @@
           <el-col :lg="24" v-if="form.taskType == 2">
             <el-form-item label="apiUrl" prop="apiUrl">
               <el-input v-model="form.apiUrl" placeholder="远程调用接口url">
-                <template #prepend>http://</template>
+                <template #prepend>
+                  <el-select v-model="form.requestMethod" placeholder="请选择请求方式" style="width: 125px">
+                    <el-option label="GET" value="GET" />
+                    <el-option label="POST" value="POST" />
+                  </el-select>
+                </template>
               </el-input>
             </el-form-item>
           </el-col>
@@ -383,7 +383,7 @@ const queryRef = ref(null)
 // 任务状态字典
 const isStartOptions = ref([
   { dictLabel: '运行中', dictValue: 'true', listClass: 'success' },
-  { dictLabel: '已停止', dictValue: 'false' }
+  { dictLabel: '已停止', dictValue: 'false', listClass: 'danger' }
 ])
 // 任务组名字典
 const jobGroupOptions = ref([])
@@ -402,7 +402,8 @@ const state = reactive({
     beginTime: [{ required: false, message: '请选择开始日期', trigger: 'blur' }],
     endTime: [{ required: false, message: '请选择结束日期', trigger: 'blur' }],
     intervalSecond: [{ message: '请设置执行间隔', type: 'number', trigger: 'blur' }],
-    sqlText: [{ required: true, message: '请输入sql语句', trigger: 'blur' }]
+    sqlText: [{ required: true, message: '请输入sql语句', trigger: 'blur' }],
+    requestMethod: [{ required: true, message: '请选择请求方式', trigger: 'blur' }]
   },
   options: {
     // 触发器类型
@@ -412,8 +413,8 @@ const state = reactive({
     ],
     taskTypeOptions: [
       { dictLabel: '程序集', dictValue: '1' },
-      { dictLabel: 'api请求', dictValue: '2' },
-      { dictLabel: 'sql脚本', dictValue: '3' }
+      { dictLabel: 'api请求', dictValue: '2', listClass: 'primary' },
+      { dictLabel: 'sql脚本', dictValue: '3', listClass: 'info' }
     ]
   }
 })
@@ -569,14 +570,12 @@ function reset() {
     endTime: undefined,
     intervalSecond: 1,
     cron: undefined,
-    taskType: 1
+    taskType: 1,
+    requestMethod: 'GET'
   }
   proxy.resetForm('formRef')
 }
-// 自动计算分页 Id
-function handleIndexCalc(index) {
-  return (queryParams.PageNum - 1) * queryParams.pageSize + index + 1
-}
+
 // 取消按钮
 function cancel() {
   open.value = false

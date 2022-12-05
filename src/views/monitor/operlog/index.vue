@@ -7,14 +7,14 @@
       <el-form-item label="操作人员" prop="operName">
         <el-input v-model="queryParams.operName" placeholder="请输入操作人员" clearable @keyup.enter="handleQuery" />
       </el-form-item>
-      <el-form-item label="类型" prop="businessType">
+      <el-form-item label="业务类型" prop="businessType">
         <el-select v-model="queryParams.businessType" placeholder="操作类型" clearable>
-          <el-option v-for="dict in businessTypeOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+          <el-option v-for="dict in options.businessTypeOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
         </el-select>
       </el-form-item>
-      <el-form-item label="状态" prop="status">
+      <el-form-item label="操作状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="操作状态" clearable>
-          <el-option v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+          <el-option v-for="dict in options.statusOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
         </el-select>
       </el-form-item>
       <el-form-item label="操作时间">
@@ -23,7 +23,8 @@
           type="daterange"
           range-separator="-"
           start-placeholder="开始日期"
-          end-placeholder="结束日期"></el-date-picker>
+          end-placeholder="结束日期"
+          :shortcuts="dateOptions"></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
@@ -52,7 +53,7 @@
       <el-table-column label="系统模块" align="center" prop="title" :show-overflow-tooltip="true" />
       <el-table-column prop="businessType" label="业务类型" align="center">
         <template #default="scope">
-          <dict-tag :options="businessTypeOptions" :value="scope.row.businessType" />
+          <dict-tag :options="options.businessTypeOptions" :value="scope.row.businessType" />
         </template>
       </el-table-column>
       <el-table-column label="请求方式" align="center" prop="requestMethod" />
@@ -61,7 +62,7 @@
       <el-table-column label="操作地点" align="center" prop="operLocation" :show-overflow-tooltip="true" />
       <el-table-column label="操作状态" align="center" prop="status">
         <template #default="{ row }">
-          <dict-tag :options="statusOptions" :value="row.status"></dict-tag>
+          <dict-tag :options="options.statusOptions" :value="row.status"></dict-tag>
         </template>
       </el-table-column>
       <el-table-column label="用时" align="center" prop="elapsed">
@@ -105,20 +106,22 @@
           </el-col>
           <el-col :lg="12">
             <el-form-item label="操作类型：">
-              <dict-tag :options="businessTypeOptions" :value="form.businessType" />
+              <dict-tag :options="options.businessTypeOptions" :value="form.businessType" />
             </el-form-item>
           </el-col>
           <el-col :lg="24">
-            <el-form-item label="请求参数：">{{ form.operParam }}</el-form-item>
+            <el-form-item label="请求参数：">
+              <el-input type="textarea" disabled rows="5" v-model="form.operParam"> </el-input>
+            </el-form-item>
           </el-col>
           <el-col :lg="24">
             <el-form-item label="返回结果：">
-              {{ form.jsonResult }}
+              <el-input type="textarea" disabled rows="5" v-model="form.jsonResult"> </el-input>
             </el-form-item>
           </el-col>
           <el-col :lg="12">
             <el-form-item label="操作状态：">
-              <dict-tag :options="statusOptions" :value="form.status"></dict-tag>
+              <dict-tag :options="options.statusOptions" :value="form.status"></dict-tag>
             </el-form-item>
           </el-col>
           <el-col :lg="12">
@@ -169,17 +172,22 @@ const state = reactive({
     title: undefined,
     operName: undefined,
     businessType: undefined,
-    status: undefined,
+    status: undefined
   },
+  options: {
+    //业务类型（0其它 1新增 2修改 3删除）选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
+    businessTypeOptions: [],
+    statusOptions: []
+  }
 })
-const { form, queryParams } = toRefs(state)
+const { form, queryParams, options } = toRefs(state)
 var dictParams = [
   { dictType: 'sys_oper_type', columnName: 'businessTypeOptions' },
-  { dictType: 'sys_common_status', columnName: 'statusOptions' },
+  { dictType: 'sys_common_status', columnName: 'statusOptions' }
 ]
 proxy.getDicts(dictParams).then((response) => {
   response.data.forEach((element) => {
-    proxy[element.columnName] = element.list
+    state.options[element.columnName] = element.list
   })
 })
 /** 查询登录日志 */
@@ -235,7 +243,7 @@ function reset() {
     status: 0,
     errorMsg: undefined,
     operTime: undefined,
-    elapsed: 0,
+    elapsed: 0
   }
   proxy.resetForm('formRef')
 }
@@ -252,7 +260,7 @@ function handleDelete(row) {
     .$confirm('是否确认删除日志编号为"' + operIds + '"的数据项?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(function () {
       return delOperlog(operIds)
@@ -268,7 +276,7 @@ function handleClean() {
     .$confirm('是否确认清空所有操作日志数据项?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(function () {
       return cleanOperlog()
@@ -284,7 +292,7 @@ function handleExport() {
     .$confirm('是否确认导出所有操作日志?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(() => {
       exportOperlog(queryParams.value).then((response) => {
