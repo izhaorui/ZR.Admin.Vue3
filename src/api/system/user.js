@@ -1,5 +1,6 @@
 import request from '@/utils/request'
-import { praseStrZero } from "@/utils/ruoyi";
+import { praseStrZero } from '@/utils/ruoyi'
+import { downFile } from '@/utils/request'
 
 // 查询用户列表
 export function listUser(query) {
@@ -45,12 +46,13 @@ export function delUser(userId) {
 }
 
 // 导出用户
-export function exportUser(query) {
-  return request({
-    url: '/system/User/export',
-    method: 'get',
-    params: query
-  })
+export async function exportUser(query) {
+  // return request({
+  //   url: '/system/User/export',
+  //   method: 'get',
+  //   params: query
+  // })
+  await downFile('/system/user/export', { ...query })
 }
 
 // 用户密码重置
@@ -123,6 +125,6 @@ export function importTemplate() {
   return request({
     url: '/system/user/importTemplate',
     method: 'get',
-    responseType: 'blob'//1.首先设置responseType对象格式为 blob:
+    responseType: 'blob' //1.首先设置responseType对象格式为 blob:
   })
 }

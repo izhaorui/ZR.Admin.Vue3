@@ -449,16 +449,8 @@ function handleExport() {
       cancelButtonText: '取消',
       type: 'warning'
     })
-    .then(() => {
-      exportUser(queryParams.value).then((response) => {
-        const { code, data } = response
-        if (code == 200) {
-          proxy.$modal.msgSuccess('导出成功')
-          proxy.download(data.path)
-        } else {
-          proxy.$modal.msgError('导出失败')
-        }
-      })
+    .then(async () => {
+      await exportUser(queryParams.value)
     })
 }
 /** 用户状态修改  */

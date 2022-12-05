@@ -2,7 +2,7 @@ import axios from 'axios'
 import { ElMessageBox, ElMessage, ElLoading } from 'element-plus'
 import { getToken } from '@/utils/auth'
 import useUserStore from '@/store/modules/user'
-import { tansParams, blobValidate } from '@/utils/ruoyi'
+import { blobValidate } from '@/utils/ruoyi'
 import { saveAs } from 'file-saver'
 
 let downloadLoadingInstance
@@ -45,7 +45,7 @@ service.interceptors.response.use(
     const { code, msg } = res.data
     // 二进制数据则直接返回
     if (res.request.responseType === 'blob' || res.request.responseType === 'arraybuffer') {
-      return res.data
+      return res
     }
     if (code == 401) {
       ElMessageBox.confirm('登录状态已过期，请重新登录', '系统提示', {
@@ -147,43 +147,53 @@ export function postForm(url, data, config) {
   })
 }
 
-// 通用下载方法
-export function downFile(url, params, filename, config) {
+/**
+ * 通用下载方法
+ * @param {*} url 请求地址
+ * @param {*} params 请求参数
+ * @param {*} config 配置
+ * @returns
+ */
+export async function downFile(url, params, config) {
   downloadLoadingInstance = ElLoading.service({ text: '正在下载数据，请稍候', background: 'rgba(0, 0, 0, 0.7)' })
-  return service
-    .get(
-      url,
-      { params: params },
-      {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        responseType: 'blob',
-        ...config
-      }
-    )
-    .then(async (response) => {
-      const isLogin = await blobValidate(data)
-      if (isLogin) {
-        const blob = new Blob([data])
-        saveAs(blob, filename)
-      } else {
-        const resText = await data.text()
-        const rspObj = JSON.parse(resText)
-        const errMsg = errorCode[rspObj.code] || rspObj.msg || errorCode['default']
-
-        ElMessage({
-          message: errMsg,
-          type: 'error'
-        })
-      }
+  try {
+    const resp = await service.get(url, {
+      params,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      responseType: 'blob',
+      ...config
     })
-    .catch((r) => {
-      console.error(r)
+    const { data } = resp
+
+    var patt = new RegExp('filename=([^;]+\\.[^\\.;]+);*')
+    var contentDisposition = decodeURI(resp.headers['content-disposition'])
+    var result = patt.exec(contentDisposition)
+    var fileName = result[1]
+    fileName = fileName.replace(/\"/g, '')
+
+    const isLogin = await blobValidate(data)
+    if (isLogin) {
+      const blob = new Blob([data])
+      saveAs(blob, fileName)
+    } else {
+      const resText = await data.text()
+      const rspObj = JSON.parse(resText)
+      const errMsg = errorCode[rspObj.code] || rspObj.msg || errorCode['default']
+
       ElMessage({
-        message: '下载文件出现错误，请联系管理员！',
+        message: errMsg,
         type: 'error'
       })
-      downloadLoadingInstance.close()
+    }
+    downloadLoadingInstance.close()
+  } catch (r) {
+    console.error(r)
+    ElMessage({
+      message: '下载文件出现错误，请联系管理员！',
+      type: 'error'
     })
+    downloadLoadingInstance.close()
+  }
 }
 
 export default service
