@@ -68,11 +68,10 @@
           v-if="columns.showColumn('jobGroup')" />
         <el-table-column
           prop="assemblyName"
-          align="center"
           label="程序集名称"
           v-if="columns.showColumn('assemblyName')"
           :show-overflow-tooltip="true" />
-        <el-table-column prop="className" align="center" label="任务类名" v-if="columns.showColumn('className')" />
+        <el-table-column prop="className" label="任务类名" v-if="columns.showColumn('className')" />
         <el-table-column prop="runTimes" align="center" label="运行次数" width="80" />
         <el-table-column prop="intervalSecond" align="center" label="执行间隔(s)" v-if="columns.showColumn('intervalSecond')" width="90" />
         <el-table-column prop="cron" align="center" label="运行表达式" v-if="columns.showColumn('cron')" :show-overflow-tooltip="true" />
@@ -84,7 +83,7 @@
           align="center"
           :show-overflow-tooltip="true"
           v-if="columns.showColumn('lastRunTime')" />
-
+        <el-table-column prop="apiUrl" label="网络请求地址" v-if="columns.showColumn('apiUrl')" />
         <el-table-column label="操作" width="250" class-name="small-padding fixed-width">
           <template #default="scope">
             <el-link size="small" class="ml10" icon="view" v-hasPermi="['monitor:job:query']" @click="handleDetails(scope.row)">
@@ -99,9 +98,9 @@
               v-if="scope.row.isStart"
               v-hasPermi="['monitor:job:run']"
               icon="remove"
-              title="运行"
+              title="运行一次"
               @click="handleRun(scope.row)">
-              {{ $t('btn.run') }}
+              {{ $t('btn.run') }}一次
             </el-link>
             <el-link
               size="small"
@@ -359,6 +358,7 @@ const columns = ref([
   { visible: true, prop: 'jobGroup', label: '任务分组' },
   { visible: true, prop: 'assemblyName', label: '程序集名称' },
   { visible: true, prop: 'className', label: '类名' },
+  { visible: true, prop: 'lastRunTime', label: '最后运行时间' },
   { visible: false, prop: 'remark', label: '备注' },
   { visible: false, prop: 'id', label: '任务id' },
   { visible: false, prop: 'cron', label: 'cron表达式' },
@@ -368,8 +368,7 @@ const columns = ref([
   { visible: false, prop: 'intervalSecond', label: '执行每隔(s)' },
   // { visible: false, prop: 'isStart', label: '是否启动' },
   { visible: false, prop: 'jobParams', label: '任务参数' },
-  { visible: true, prop: 'lastRunTime', label: '最后运行时间' }
-  // { visible: false, prop: 'apiUrl', label: '网络请求地址' },
+  { visible: false, prop: 'apiUrl', label: '网络请求地址' }
   // { visible: false, prop: 'sqlText', label: 'sql脚本' }
 ])
 // 计划任务列表
