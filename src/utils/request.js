@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { ElMessageBox, ElMessage, ElLoading } from 'element-plus'
 import { getToken } from '@/utils/auth'
+import errorCode from '@/utils/errorCode'
 import useUserStore from '@/store/modules/user'
 import { blobValidate } from '@/utils/ruoyi'
 import { saveAs } from 'file-saver'
@@ -156,44 +157,46 @@ export function postForm(url, data, config) {
  */
 export async function downFile(url, params, config) {
   downloadLoadingInstance = ElLoading.service({ text: '正在下载数据，请稍候', background: 'rgba(0, 0, 0, 0.7)' })
-  try {
-    const resp = await service.get(url, {
+
+  service
+    .get(url, {
       params,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       responseType: 'blob',
       ...config
     })
-    const { data } = resp
+    .then(async (resp) => {
+      const { data } = resp
 
-    var patt = new RegExp('filename=([^;]+\\.[^\\.;]+);*')
-    var contentDisposition = decodeURI(resp.headers['content-disposition'])
-    var result = patt.exec(contentDisposition)
-    var fileName = result[1]
-    fileName = fileName.replace(/\"/g, '')
+      const isLogin = await blobValidate(data)
+      if (isLogin) {
+        var patt = new RegExp('filename=([^;]+\\.[^\\.;]+);*')
+        var contentDisposition = decodeURI(resp.headers['content-disposition'])
+        var result = patt.exec(contentDisposition)
+        var fileName = result[1]
+        fileName = fileName.replace(/\"/g, '')
 
-    const isLogin = await blobValidate(data)
-    if (isLogin) {
-      const blob = new Blob([data])
-      saveAs(blob, fileName)
-    } else {
-      const resText = await data.text()
-      const rspObj = JSON.parse(resText)
-      const errMsg = errorCode[rspObj.code] || rspObj.msg || errorCode['default']
+        const blob = new Blob([data])
+        saveAs(blob, fileName)
+      } else {
+        const resText = await data.text()
+        const rspObj = JSON.parse(resText)
+        const errMsg = errorCode[rspObj.code] || rspObj.msg || errorCode['default']
 
+        ElMessage({
+          message: errMsg,
+          type: 'error'
+        })
+      }
+      downloadLoadingInstance.close()
+    })
+    .catch((err) => {
       ElMessage({
-        message: errMsg,
+        message: '下载文件出现错误，请联系管理员！',
         type: 'error'
       })
-    }
-    downloadLoadingInstance.close()
-  } catch (r) {
-    console.error(r)
-    ElMessage({
-      message: '下载文件出现错误，请联系管理员！',
-      type: 'error'
+      downloadLoadingInstance.close()
     })
-    downloadLoadingInstance.close()
-  }
 }
 
 export default service
