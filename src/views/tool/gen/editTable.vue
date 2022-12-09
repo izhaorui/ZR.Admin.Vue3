@@ -16,6 +16,7 @@
               <el-input v-model="scope.row.columnComment" :ref="setColumnsRef" @keydown="nextFocus(scope.row, scope.$index, $event)"> </el-input>
             </template>
           </el-table-column>
+          <el-table-column label="物理类型" prop="columnType" :show-overflow-tooltip="true" width="90" />
           <el-table-column label="C#类型" width="140">
             <template #default="scope">
               <el-select v-model="scope.row.csharpType">
@@ -131,7 +132,6 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="物理类型" prop="columnType" :show-overflow-tooltip="true" width="90" />
           <el-table-column label="备注" align="center" width="200">
             <template #default="scope">
               <el-input v-model="scope.row.remark"> </el-input>
@@ -141,7 +141,7 @@
       </el-tab-pane>
     </el-tabs>
     <footer class="mt20" style="text-align: center">
-      <el-button type="primary" icon="check" @click="submitForm()">提交</el-button>
+      <el-button type="primary" icon="check" :loading="submitLoading" @click="submitForm()">提交</el-button>
       <el-button type="success" icon="refresh" @click="handleQuery()">刷新</el-button>
       <el-button icon="back" @click="close()">返回</el-button>
     </footer>
@@ -171,7 +171,7 @@ const loading = ref(true)
 const dragTableRef = ref()
 const route = useRoute()
 const { proxy } = getCurrentInstance()
-
+const submitLoading = ref(false)
 function handleQuery() {
   const tableId = route.query && route.query.tableId
 
@@ -187,6 +187,7 @@ function handleQuery() {
 }
 /** 提交按钮 */
 function submitForm() {
+  submitLoading.value = true
   const basicForm = proxy.$refs.basicInfo.$refs.basicInfoForm
   const genForm = proxy.$refs.genInfo.$refs.genInfoForm
 
