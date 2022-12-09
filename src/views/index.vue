@@ -123,10 +123,12 @@
             </p>
             <p>
               <el-icon> <UserFilled /> </el-icon>{{ $t('layout.qqGroup') }}：
+              <s>满191349103</s>
+
               <el-link
                 target="_black"
-                href="https://qm.qq.com/cgi-bin/qm/qr?k=Y__-fTGo_K2UIo3nWz7QnvS8LoRfPWKm&authKey=/ldXxiuolv80PF4yC8VtLk/TvAYbIhm2LKP8YVHCxAk+x2I+iqPAM1H/IsxQ+0gC&noverify=0">
-                191349103
+                href="https://qm.qq.com/cgi-bin/qm/qr?k=kgt4HsckdljU0VM-0kxND6d_igmfuPlL&authKey=r55YUbruiKQ5iwC/folG7KLCmZ++Y4rQVgNlvLbUniUMkbk24Y9+zNuOmOnjAjRc&noverify=0">
+                &nbsp;462862273
               </el-link>
             </p>
           </div>
