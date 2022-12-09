@@ -81,7 +81,7 @@ yarn dev
 - 👉Ruoyi.vue：[Ruoyi](http://www.ruoyi.vip/)
 
 ## 🎀捐赠
-如果这个项目对您有所帮助，请扫下方二维码就当打发要饭的吧。
+如果这个项目对您有所帮助，请扫下方二维码打赏作者喝杯咖啡。
 <img src="https://gitee.com/izory/ZrAdminNetCore/raw/master/document/images/pay.jpg"/>
 
 ## 源码地址
