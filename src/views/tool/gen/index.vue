@@ -38,21 +38,39 @@
       <el-table-column prop="className" label="实体" :show-overflow-tooltip="true" />
       <el-table-column prop="createTime" label="创建时间" sortable />
       <el-table-column prop="updateTime" label="更新时间" sortable />
-      <el-table-column label="操作" align="center" width="320">
+      <el-table-column label="操作" align="center" width="220">
         <template #default="scope">
-          <el-link type="primary" icon="view" :underline="false" @click="handlePreview(scope.row)" v-hasPermi="['tool:gen:preview']">预览</el-link>
-          <el-link type="primary" icon="edit" :underline="false" class="ml10" @click="handleEditTable(scope.row)" v-hasPermi="['tool:gen:edit']">
-            编辑
-          </el-link>
-          <el-link type="primary" icon="delete" :underline="false" class="ml10" @click="handleDelete(scope.row)" v-hasPermi="['tool:gen:remove']">
-            删除
-          </el-link>
-          <el-link type="primary" icon="refresh" :underline="false" class="ml10" @click="handleSynchDb(scope.row)" v-hasPermi="['tool:gen:edit']">
-            同步
-          </el-link>
-          <el-link type="primary" icon="download" :underline="false" class="ml10" @click="handleGenTable(scope.row)" v-hasPermi="['tool:gen:code']">
-            生成代码
-          </el-link>
+          <el-button text icon="view" @click="handlePreview(scope.row)" v-hasPermi="['tool:gen:preview']"> 预览 </el-button>
+          <el-button text icon="edit" @click="handleEditTable(scope.row)" v-hasPermi="['tool:gen:edit']"> 编辑 </el-button>
+
+          <el-dropdown @command="handleCommand($event, scope.row)">
+            <el-button text>
+              {{ $t('btn.more') }}
+              <el-icon class="el-icon--right">
+                <arrow-down />
+              </el-icon>
+            </el-button>
+
+            <template #dropdown>
+              <el-dropdown-menu>
+                <div v-hasPermi="['tool:gen:code']">
+                  <el-dropdown-item command="generate">
+                    <el-button icon="download" link>生成代码</el-button>
+                  </el-dropdown-item>
+                </div>
+                <div v-hasPermi="['tool:gen:edit']">
+                  <el-dropdown-item command="sync">
+                    <el-button icon="refresh" link> 同步 </el-button>
+                  </el-dropdown-item>
+                </div>
+                <div v-hasPermi="['tool:gen:remove']">
+                  <el-dropdown-item command="delete">
+                    <el-button icon="delete" type="danger" link> 删除 </el-button>
+                  </el-dropdown-item>
+                </div>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -260,6 +278,18 @@ function onCopy(input) {
     proxy.$modal.msgError('当前浏览器不支持')
   }
 }
+function handleCommand(command, row) {
+  switch (command) {
+    case 'generate':
+      handleGenTable(row)
+      break
+    case 'delete':
+      handleDelete(row)
+    case 'sync':
+      handleSynchDb(row)
+      break
+  }
+}
 getList()
 </script>
 <style>
@@ -267,5 +297,8 @@ getList()
   position: absolute;
   right: 0;
   top: -5px;
+}
+.el-dropdown {
+  vertical-align: middle;
 }
 </style>
