@@ -17,13 +17,17 @@
           <el-option v-for="dict in options.statusOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
         </el-select>
       </el-form-item>
+      <el-form-item label="请求参数" prop="operParam">
+        <el-input v-model="queryParams.operParam" placeholder="请输入请求参数" clearable @keyup.enter="handleQuery" />
+      </el-form-item>
       <el-form-item label="操作时间">
         <el-date-picker
           v-model="dateRange"
-          type="daterange"
+          type="datetimerange"
           range-separator="-"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          value-format="YYYY-MM-DD HH:mm:ss"
           :shortcuts="dateOptions"></el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -44,40 +48,49 @@
       <el-col :span="1.5">
         <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['system:operlog:export']">导出 </el-button>
       </el-col>
-      <right-toolbar :showSearch="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch="showSearch" :columns="columns" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" border :data="list" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="50" align="center" />
-      <el-table-column label="编号" align="center" prop="operId" width="60px" :show-overflow-tooltip="true" />
-      <el-table-column label="系统模块" align="center" prop="title" :show-overflow-tooltip="true" />
-      <el-table-column prop="businessType" label="业务类型" align="center">
+      <el-table-column label="操作id" align="center" prop="operId" width="60px" :show-overflow-tooltip="true" v-if="columns.showColumn('operId')" />
+      <el-table-column label="系统模块" align="center" prop="title" :show-overflow-tooltip="true" v-if="columns.showColumn('title')" />
+      <el-table-column prop="businessType" label="业务类型" align="center" v-if="columns.showColumn('businessType')">
         <template #default="scope">
           <dict-tag :options="options.businessTypeOptions" :value="scope.row.businessType" />
         </template>
       </el-table-column>
-      <el-table-column label="请求方式" align="center" prop="requestMethod" />
-      <el-table-column label="操作人员" align="center" prop="operName" />
-      <el-table-column label="主机" align="center" prop="operIp" width="130" :show-overflow-tooltip="true" />
-      <el-table-column label="操作地点" align="center" prop="operLocation" :show-overflow-tooltip="true" />
-      <el-table-column label="操作状态" align="center" prop="status">
+      <el-table-column label="请求方法" align="center" prop="requestMethod" v-if="columns.showColumn('requestMethod')" />
+      <el-table-column label="操作人员" align="center" prop="operName" v-if="columns.showColumn('operName')" />
+      <el-table-column label="主机" align="center" prop="operIp" width="130" :show-overflow-tooltip="true" v-if="columns.showColumn('operIP')" />
+      <el-table-column
+        label="操作地点"
+        align="center"
+        prop="operLocation"
+        :show-overflow-tooltip="true"
+        v-if="columns.showColumn('operLocation')" />
+      <el-table-column label="操作状态" align="center" prop="status" v-if="columns.showColumn('status')">
         <template #default="{ row }">
           <dict-tag :options="options.statusOptions" :value="row.status"></dict-tag>
         </template>
       </el-table-column>
-      <el-table-column label="用时" align="center" prop="elapsed">
+      <el-table-column label="用时" align="center" prop="elapsed" v-if="columns.showColumn('elapsed')">
         <template #default="scope">
           <span :style="scope.row.elapsed < 1000 ? 'color:green' : scope.row.elapsed < 3000 ? 'color:orange' : 'color:red'">
             {{ scope.row.elapsed }} ms
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="日志内容" align="center" prop="errorMsg" :show-overflow-tooltip="true" />
-      <el-table-column label="操作日期" align="center" prop="operTime" width="180">
+      <el-table-column label="日志内容" align="center" prop="errorMsg" :show-overflow-tooltip="true" v-if="columns.showColumn('errorMsg')" />
+      <el-table-column label="操作日期" align="center" prop="operTime" width="180" v-if="columns.showColumn('operTime')">
         <template #default="scope">
           <span>{{ scope.row.operTime }}</span>
         </template>
       </el-table-column>
+
+      <el-table-column prop="method" label="操作方法" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('method')" />
+      <el-table-column prop="operParam" label="请求参数" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('operParam')" />
+      <el-table-column prop="jsonResult" label="返回结果" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('jsonResult')" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button size="small" text icon="view" @click="handleView(scope.row, scope.index)" v-hasPermi="['monitor:operlog:query']">
@@ -172,7 +185,8 @@ const state = reactive({
     title: undefined,
     operName: undefined,
     businessType: undefined,
-    status: undefined
+    status: undefined,
+    operParam: undefined
   },
   options: {
     //业务类型（0其它 1新增 2修改 3删除）选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
@@ -180,6 +194,25 @@ const state = reactive({
     statusOptions: []
   }
 })
+const columns = ref([
+  { visible: true, prop: 'operId', label: '操作id' },
+  { visible: true, prop: 'title', label: '系统模块' },
+  { visible: true, prop: 'businessType', label: '业务类型' },
+  { visible: true, prop: 'requestMethod', label: '请求方式' },
+  // { visible: true, prop: 'operatorType', label: '操作类型' },
+  { visible: true, prop: 'operName', label: '操作人员' },
+  // { visible: true, prop: 'deptName', label: '部门' },
+  // { visible: true, prop: 'operUrl', label: '请求地址' },
+  { visible: true, prop: 'operIP', label: '请求IP' },
+  { visible: true, prop: 'status', label: '操作状态' },
+  { visible: true, prop: 'operLocation', label: '操作人地址' },
+  { visible: true, prop: 'operTime', label: '操作时间' },
+  { visible: false, prop: 'method', label: '操作方法' },
+  { visible: false, prop: 'operParam', label: '请求参数' },
+  { visible: false, prop: 'jsonResult', label: '返回结果' },
+  { visible: false, prop: 'errorMsg', label: '错误信息' },
+  { visible: false, prop: 'elapsed', label: '操作用时' }
+])
 const { form, queryParams, options } = toRefs(state)
 var dictParams = [
   { dictType: 'sys_oper_type', columnName: 'businessTypeOptions' },
@@ -294,16 +327,8 @@ function handleExport() {
       cancelButtonText: '取消',
       type: 'warning'
     })
-    .then(() => {
-      exportOperlog(queryParams.value).then((response) => {
-        const { code, data } = response
-        if (code == 200) {
-          proxy.$modal.msgSuccess('导出成功')
-          proxy.download(data.path)
-        } else {
-          proxy.$modal.msgError('导出失败')
-        }
-      })
+    .then(async () => {
+      await proxy.downFile('/monitor/OperLog/export', { ...queryParams.value })
     })
 }
 handleQuery()
