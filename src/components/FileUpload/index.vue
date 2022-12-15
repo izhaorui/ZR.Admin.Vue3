@@ -4,7 +4,7 @@
       multiple
       :action="uploadFileUrl"
       :before-upload="handleBeforeUpload"
-      :file-list="fileList"
+      v-model:file-list="fileList"
       :limit="limit"
       :on-error="handleUploadError"
       :on-exceed="handleExceed"
@@ -15,8 +15,7 @@
       :headers="headers"
       :auto-upload="autoUpload"
       class="upload-file-uploader"
-      ref="upload"
-    >
+      ref="upload">
       <!-- 拖拽上传 -->
       <template v-if="drag">
         <el-icon class="el-icon--upload">
@@ -63,37 +62,37 @@ const props = defineProps({
   // 数量限制
   limit: {
     type: Number,
-    default: 5,
+    default: 5
   },
   // 大小限制(MB)
   fileSize: {
     type: Number,
-    default: 5,
+    default: 5
   },
   // 文件类型, 例如['png', 'jpg', 'jpeg']
   fileType: {
     type: Array,
-    default: () => ['doc', 'xls', 'ppt', 'txt', 'pdf'],
+    default: () => ['doc', 'xls', 'ppt', 'txt', 'pdf']
   },
   // 是否显示提示
   isShowTip: {
     type: Boolean,
-    default: true,
+    default: true
   },
   // 是否拖拽
   drag: {
     type: Boolean,
-    default: false,
+    default: false
   },
   // 自动上传
   autoUpload: {
     type: Boolean,
-    default: true,
+    default: true
   },
   // 上传携带的参数
   data: {
-    type: Object,
-  },
+    type: Object
+  }
 })
 
 const { proxy } = getCurrentInstance()
@@ -128,7 +127,7 @@ watch(
       return []
     }
   },
-  { deep: true, immediate: true },
+  { deep: true, immediate: true }
 )
 
 // 上传前校检格式和大小
@@ -170,6 +169,7 @@ function handleExceed() {
 // 上传失败
 function handleUploadError(err) {
   proxy.$modal.msgError('上传失败')
+  proxy.$modal.closeLoading()
 }
 
 // 上传成功回调
@@ -222,7 +222,7 @@ function submitUpload() {
   proxy.$refs.upload.submit()
 }
 defineExpose({
-  submitUpload,
+  submitUpload
 })
 </script>
 

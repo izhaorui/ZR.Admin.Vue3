@@ -14,7 +14,7 @@
       :on-remove="handleRemove"
       :show-file-list="true"
       :headers="headers"
-      :file-list="fileList"
+      v-model:file-list="fileList"
       :on-preview="handlePictureCardPreview"
       :class="{ hide: fileList.length >= limit }">
       <el-icon class="avatar-uploader-icon"><plus /></el-icon>
