@@ -2,7 +2,7 @@
   <div class="dashboard-editor-container home">
     <!-- 用户信息 -->
     <el-row :gutter="15">
-      <el-col :md="24" :lg="14" :xl="14" class="mb10">
+      <el-col :md="24" :lg="12" :xl="12" class="mb10">
         <el-card shadow="hover">
           <template #header>
             <span>{{ $t('layout.myWorkbench') }}</span>
@@ -59,7 +59,7 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :md="24" :lg="10" :xl="10" class="mb10">
+      <el-col :md="24" :lg="12" :xl="12" class="mb10">
         <el-card shadow="hover">
           <template #header>
             <div>
@@ -252,8 +252,8 @@ function onChat(item) {
     display: flex;
     align-items: center;
     .user-item-left {
-      width: 100px;
-      height: 100px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       overflow: hidden;
       img {
