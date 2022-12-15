@@ -66,11 +66,7 @@
           label="任务分组"
           width="80"
           v-if="columns.showColumn('jobGroup')" />
-        <el-table-column
-          prop="assemblyName"
-          label="程序集名称"
-          v-if="columns.showColumn('assemblyName')"
-          :show-overflow-tooltip="true" />
+        <el-table-column prop="assemblyName" label="程序集名称" v-if="columns.showColumn('assemblyName')" :show-overflow-tooltip="true" />
         <el-table-column prop="className" label="任务类名" v-if="columns.showColumn('className')" />
         <el-table-column prop="runTimes" align="center" label="运行次数" width="80" />
         <el-table-column prop="intervalSecond" align="center" label="执行间隔(s)" v-if="columns.showColumn('intervalSecond')" width="90" />
@@ -84,67 +80,61 @@
           :show-overflow-tooltip="true"
           v-if="columns.showColumn('lastRunTime')" />
         <el-table-column prop="apiUrl" label="网络请求地址" v-if="columns.showColumn('apiUrl')" />
-        <el-table-column label="操作" width="250" class-name="small-padding fixed-width">
+        <el-table-column label="操作" width="190" align="center">
           <template #default="scope">
-            <el-link size="small" class="ml10" icon="view" v-hasPermi="['monitor:job:query']" @click="handleDetails(scope.row)">
+            <el-button text icon="view" v-hasPermi="['monitor:job:query']" @click="handleDetails(scope.row)">
               {{ $t('btn.details') }}
-            </el-link>
-            <el-link size="small" class="ml10" icon="view" v-hasPermi="['monitor:job:query']" @click="handleJobLog(scope.row)">
+            </el-button>
+            <el-button text icon="view" v-hasPermi="['monitor:job:query']" @click="handleJobLog(scope.row)">
               {{ $t('btn.log') }}
-            </el-link>
-            <el-link
-              size="small"
-              class="ml10"
-              v-if="scope.row.isStart"
-              v-hasPermi="['monitor:job:run']"
-              icon="remove"
-              title="运行一次"
-              @click="handleRun(scope.row)">
-              {{ $t('btn.run') }}一次
-            </el-link>
-            <el-link
-              size="small"
-              class="ml10"
-              v-if="scope.row.isStart"
-              v-hasPermi="['monitor:job:stop']"
-              icon="video-pause"
-              style="color: red"
-              title="停止"
-              @click="handleStop(scope.row)">
-              {{ $t('btn.stop') }}
-            </el-link>
+            </el-button>
 
-            <el-link
-              size="small"
-              class="ml10"
-              v-if="!scope.row.isStart"
-              v-hasPermi="['monitor:job:start']"
-              icon="video-play"
-              title="启动"
-              @click="handleStart(scope.row)">
-              {{ $t('btn.start') }}
-            </el-link>
-            <el-link
-              class="ml10"
-              size="small"
-              v-if="!scope.row.isStart"
-              v-hasPermi="['monitor:job:edit']"
-              icon="edit"
-              title="编辑"
-              @click="handleUpdate(scope.row)">
-              {{ $t('btn.edit') }}
-            </el-link>
+            <el-dropdown @command="handleCommand($event, scope.row)">
+              <el-button text class="ml5">
+                {{ $t('btn.more') }}
+                <el-icon class="el-icon--right">
+                  <arrow-down />
+                </el-icon>
+              </el-button>
 
-            <el-link
-              class="ml10"
-              size="small"
-              v-if="!scope.row.isStart"
-              v-hasPermi="['monitor:job:delete']"
-              icon="delete"
-              title="删除"
-              @click="handleDelete(scope.row)">
-              {{ $t('btn.delete') }}
-            </el-link>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <div v-hasPermi="['monitor:job:run']" v-if="scope.row.isStart">
+                    <el-dropdown-item command="run">
+                      <el-button icon="remove" title="运行一次"> {{ $t('btn.run') }}一次 </el-button>
+                    </el-dropdown-item>
+                  </div>
+                  <div v-if="scope.row.isStart" v-hasPermi="['monitor:job:stop']">
+                    <el-dropdown-item command="stop">
+                      <el-button type="danger" icon="video-pause" title="停止">
+                        {{ $t('btn.stop') }}
+                      </el-button>
+                    </el-dropdown-item>
+                  </div>
+                  <div v-if="!scope.row.isStart" v-hasPermi="['monitor:job:start']">
+                    <el-dropdown-item command="start">
+                      <el-button icon="video-play" title="启动">
+                        {{ $t('btn.start') }}
+                      </el-button>
+                    </el-dropdown-item>
+                  </div>
+                  <div v-if="!scope.row.isStart" v-hasPermi="['monitor:job:edit']">
+                    <el-dropdown-item command="update">
+                      <el-button icon="edit" title="编辑">
+                        {{ $t('btn.edit') }}
+                      </el-button>
+                    </el-dropdown-item>
+                  </div>
+                  <div v-if="!scope.row.isStart" v-hasPermi="['monitor:job:delete']">
+                    <el-dropdown-item command="delete">
+                      <el-button icon="delete" title="删除">
+                        {{ $t('btn.delete') }}
+                      </el-button>
+                    </el-dropdown-item>
+                  </div>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
           </template>
         </el-table-column>
       </el-table>
@@ -645,5 +635,26 @@ function handleDetails(row) {
     title.value = '详情'
     btnVisible.value = false
   })
+}
+
+function handleCommand(command, row) {
+  console.log(command, row)
+  switch (command) {
+    case 'update':
+      handleUpdate(row)
+      break
+    case 'start':
+      handleStart(row)
+      break
+    case 'stop':
+      handleStop(row)
+      break
+    case 'delete':
+      handleDelete(row)
+      break
+    case 'run':
+      handleRun(row)
+      break
+  }
 }
 </script>
