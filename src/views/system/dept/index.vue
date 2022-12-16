@@ -34,8 +34,9 @@
       :default-expand-all="isExpandAll"
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
       <el-table-column prop="deptName" label="部门名称" width="260"></el-table-column>
+      <el-table-column prop="deptId" label="部门id"></el-table-column>
       <el-table-column prop="leader" label="负责人" width="100"></el-table-column>
-      <el-table-column prop="orderNum" label="排序" width="200"></el-table-column>
+      <el-table-column prop="orderNum" label="排序"></el-table-column>
       <el-table-column label="状态" align="center" prop="status">
         <template #default="scope">
           <dict-tag :options="statusOptions" :value="scope.row.status" />
@@ -46,7 +47,7 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center">
+      <el-table-column label="操作" align="center" width="200">
         <template #default="scope">
           <el-button text size="small" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dept:update']">
             {{ $t('btn.edit') }}
@@ -79,7 +80,8 @@
                 :props="{ value: 'deptId', label: 'deptName', children: 'children' }"
                 value-key="deptId"
                 placeholder="选择上级部门"
-                check-strictly />
+                check-strictly
+                :render-after-expand="false" />
             </el-form-item>
           </el-col>
           <el-col :lg="12">
@@ -147,7 +149,7 @@ const statusOptions = ref([])
 // 查询参数
 const queryParams = reactive({
   deptName: undefined,
-  status: undefined,
+  status: undefined
 })
 const state = reactive({
   // 表单参数
@@ -161,17 +163,17 @@ const state = reactive({
       {
         type: 'email',
         message: '请输入正确的邮箱地址',
-        trigger: ['blur', 'change'],
-      },
+        trigger: ['blur', 'change']
+      }
     ],
     phone: [
       {
         pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
         message: '请输入正确的手机号码',
-        trigger: 'blur',
-      },
-    ],
-  },
+        trigger: 'blur'
+      }
+    ]
+  }
 })
 const formRef = ref()
 const { form, rules } = toRefs(state)
@@ -199,7 +201,7 @@ function reset() {
     leader: undefined,
     phone: undefined,
     email: undefined,
-    status: '0',
+    status: '0'
   }
   proxy.resetForm('formRef')
 }
@@ -262,7 +264,7 @@ function handleDelete(row) {
     .$confirm('是否确认删除名称为"' + row.deptName + '"的数据项?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(function () {
       return delDept(row.deptId)
