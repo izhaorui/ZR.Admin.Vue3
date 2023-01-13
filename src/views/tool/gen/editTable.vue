@@ -196,7 +196,7 @@ function submitForm() {
 
     if (validateResult) {
       const genTable = Object.assign({}, info.value)
-      genTable.columns = this.columns
+      genTable.columns = columns.value
 
       // 额外参数拼接
       genTable.params = {
