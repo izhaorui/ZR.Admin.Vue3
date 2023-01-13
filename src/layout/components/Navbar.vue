@@ -58,7 +58,9 @@ import LangSelect from '@/components/LangSelect/index'
 import useAppStore from '@/store/modules/app'
 import useUserStore from '@/store/modules/user'
 import useSettingsStore from '@/store/modules/settings'
-import { useClipboard } from '@vueuse/core'
+// import { useClipboard } from '@vueuse/core'
+import useClipboard from 'vue-clipboard3'
+const { toClipboard } = useClipboard()
 const { proxy } = getCurrentInstance()
 const appStore = useAppStore()
 const userStore = useUserStore()
@@ -85,13 +87,12 @@ function handleCommand(command) {
   }
 }
 
-const { copy, isSupported } = useClipboard()
 const copyText = async (val) => {
-  if (isSupported) {
-    copy(val)
+  try {
+    await toClipboard(val)
     proxy.$modal.msgSuccess('复制成功！')
-  } else {
-    alert(val)
+  } catch (e) {
+    console.log(e)
     proxy.$modal.msgError('当前浏览器不支持')
   }
 }
