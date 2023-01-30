@@ -123,7 +123,7 @@ let queryParams = reactive({
   pageSize: 10,
   postCode: undefined,
   postName: undefined,
-  status: undefined,
+  status: undefined
 })
 // 表单校验
 
@@ -132,8 +132,8 @@ const state = reactive({
   rules: {
     postName: [{ required: true, message: '岗位名称不能为空', trigger: 'blur' }],
     postCode: [{ required: true, message: '岗位编码不能为空', trigger: 'blur' }],
-    postSort: [{ required: true, message: '岗位顺序不能为空', trigger: 'blur' }],
-  },
+    postSort: [{ required: true, message: '岗位顺序不能为空', trigger: 'blur' }]
+  }
 })
 const formRef = ref(null)
 const { form, rules } = toRefs(state)
@@ -159,7 +159,7 @@ function reset() {
     postName: undefined,
     postSort: 0,
     status: '0',
-    remark: undefined,
+    remark: undefined
   }
   proxy.resetForm('formRef')
 }
@@ -225,7 +225,7 @@ function handleDelete(row) {
     .$confirm('是否确认删除岗位编号为"' + postIds + '"的数据项?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(function () {
       return delPost(postIds)
@@ -237,16 +237,14 @@ function handleDelete(row) {
 }
 /** 导出按钮操作 */
 function handleExport() {
-  this.$confirm('是否确认导出所有岗位数据项?', '警告', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  })
-    .then(function () {
-      return exportPost(queryParams)
+  proxy
+    .$confirm('是否确认导出所有岗位数据项?', '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
     })
-    .then((response) => {
-      proxy.download(response.data.path)
+    .then(async () => {
+      await exportPost(queryParams)
     })
 }
 handleQuery()

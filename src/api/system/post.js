@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-
+import { downFile } from '@/utils/request'
 // 查询岗位列表
 export function listPost(query) {
   return request({
@@ -44,10 +44,11 @@ export function delPost(postId) {
 }
 
 // 导出岗位
-export function exportPost(query) {
-  return request({
-    url: '/system/post/export',
-    method: 'get',
-    params: query
-  })
+export async function exportPost(query) {
+  // return request({
+  //   url: '/system/post/export',
+  //   method: 'get',
+  //   params: query
+  // })
+  await downFile('/system/post/export', query)
 }
