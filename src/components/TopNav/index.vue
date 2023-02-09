@@ -43,10 +43,10 @@ import usePermissionStore from '@/store/modules/permission'
 
 // 顶部栏初始数
 const visibleNumber = ref(5)
-// 是否为首次加载
-const isFrist = ref(false)
 // 当前激活菜单的 index
 const currentIndex = ref(undefined)
+// 隐藏侧边栏路由
+const hideList = ['/index', '/user/profile']
 
 const appStore = useAppStore()
 const settingsStore = useSettingsStore()
@@ -82,10 +82,10 @@ const childrenMenus = computed(() => {
     for (let item in router.children) {
       if (router.children[item].parentPath === undefined) {
         if (router.path === '/') {
-          router.children[item].path = getNormalPath('/redirect/' + router.children[item].path)
+          router.children[item].path = '/' + router.children[item].path
         } else {
           if (!isHttp(router.children[item].path)) {
-            router.children[item].path = getNormalPath(router.path + '/' + router.children[item].path)
+            router.children[item].path = router.path + '/' + router.children[item].path
           }
         }
         router.children[item].parentPath = router.path
@@ -99,52 +99,39 @@ const childrenMenus = computed(() => {
 // 默认激活的菜单
 const activeMenu = computed(() => {
   const path = route.path
-  let activePath = defaultRouter.value
-  if (path.lastIndexOf('/') > 0) {
+  let activePath = path
+  if (path !== undefined && path.lastIndexOf('/') > 0 && hideList.indexOf(path) === -1) {
     const tmpPath = path.substring(1, path.length)
     activePath = '/' + tmpPath.substring(0, tmpPath.indexOf('/'))
-  } else if ('/index' == path || '' == path) {
-    if (!isFrist.value) {
-      isFrist.value = true
-    } else {
-      activePath = 'index'
+    if (!route.meta.link) {
+      appStore.toggleSideBarHide(false)
     }
+  } else if (!route.children) {
+    activePath = path
+    appStore.toggleSideBarHide(true)
   }
-  let routes = activeRoutes(activePath)
-  if (routes.length === 0) {
-    activePath = currentIndex.value || defaultRouter.value
-
-    activeRoutes(activePath)
-  }
+  activeRoutes(activePath)
   return activePath
 })
-// 默认激活的路由
-const defaultRouter = computed(() => {
-  let router
-  Object.keys(routers.value).some((key) => {
-    if (!routers.value[key].hidden) {
-      router = routers.value[key].path
-      return true
-    }
-  })
 
-  return router
-})
 function setVisibleNumber() {
   const width = document.body.getBoundingClientRect().width / 3
   visibleNumber.value = parseInt(width / 85)
 }
 function handleSelect(key, keyPath) {
   currentIndex.value = key
+  const route = routers.value.find((item) => item.path === key)
   if (isHttp(key)) {
     // http(s):// 路径新窗口打开
     window.open(key, '_blank')
-  } else if (key.indexOf('/redirect') !== -1) {
-    // /redirect 路径内部打开
-    router.push({ path: key.replace('/redirect', '') }).catch((err) => {})
+  } else if (!route || !route.children) {
+    // 没有子路由路径内部打开
+    router.push({ path: key })
+    appStore.toggleSideBarHide(true)
   } else {
     // 显示左侧联动菜单
     activeRoutes(key)
+    appStore.toggleSideBarHide(false)
   }
 }
 // 当前激活的路由
@@ -159,6 +146,8 @@ function activeRoutes(key) {
   }
   if (routes.length > 0) {
     permissionStore.setSidebarRouters(routes)
+  } else {
+    // appStore.toggleSideBarHide(true)
   }
   return routes
 }
