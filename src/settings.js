@@ -55,7 +55,7 @@ export default {
   /**
    * 版权信息
    */
-  copyright: 'Copyright ©2022 <a target="_black" href="http://www.izhaorui.cn/doc">ZRAdmin.NET</a> All Rights Reserved.',
+  copyright: 'Copyright ©2023 <a target="_black" href="http://www.izhaorui.cn/doc">ZRAdmin.NET</a> All Rights Reserved.',
   /**
    * 是否显示底部栏
    */
