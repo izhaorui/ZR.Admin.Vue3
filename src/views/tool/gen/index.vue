@@ -285,6 +285,7 @@ function handleCommand(command, row) {
       break
     case 'delete':
       handleDelete(row)
+      break
     case 'sync':
       handleSynchDb(row)
       break
