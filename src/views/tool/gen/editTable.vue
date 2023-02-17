@@ -17,7 +17,7 @@
             </template>
           </el-table-column>
           <el-table-column label="物理类型" prop="columnType" :show-overflow-tooltip="true" width="90" />
-          <el-table-column label="C#类型" width="140">
+          <el-table-column label="C#类型" width="100">
             <template #default="scope">
               <el-select v-model="scope.row.csharpType">
                 <el-option label="int" value="int" />
@@ -50,14 +50,24 @@
             </el-table-column>
           </el-table-column>
           <el-table-column label="后端" align="center" label-class-name="text-hotpink">
-            <el-table-column label="插入" width="60" align="center" v-if="info.tplCategory != 'select'">
+            <!-- <el-table-column label="插入" width="60" align="center" v-if="info.tplCategory != 'select'">
               <template #default="scope">
                 <el-checkbox v-model="scope.row.isInsert" :disabled="scope.row.isIncrement"></el-checkbox>
               </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column label="编辑" width="60" align="center" v-if="info.tplCategory != 'select'">
               <template #default="scope">
                 <el-checkbox v-model="scope.row.isEdit" :disabled="scope.row.isPk || scope.row.isIncrement"></el-checkbox>
+              </template>
+            </el-table-column>
+            <el-table-column label="自动填充" width="90" align="center">
+              <template #default="scope">
+                <el-select v-model="scope.row.autoFillType">
+                  <el-option label=" " :value="0" />
+                  <el-option label="插入" :value="1" />
+                  <el-option label="编辑" :value="2" />
+                  <el-option label="插入编辑" :value="3" />
+                </el-select>
               </template>
             </el-table-column>
             <el-table-column label="导出" width="60" align="center">
@@ -107,8 +117,9 @@
                 <el-option label="日期控件" value="datetime" />
                 <el-option label="图片上传" value="imageUpload" />
                 <el-option label="文件上传" value="fileUpload" />
-                <!-- <el-option label="富文本控件" value="editor" /> -->
+                <el-option label="富文本控件" value="editor" />
                 <el-option label="自定义输入框" value="customInput" />
+                <el-option label="下拉单选组合" title="查询下拉,表单单选" value="selectRadio" />
               </el-select>
             </template>
           </el-table-column>
@@ -123,7 +134,8 @@
                   scope.row.htmlType == 'selectMulti' ||
                   scope.row.htmlType == 'select' ||
                   scope.row.htmlType == 'radio' ||
-                  scope.row.htmlType == 'checkbox'
+                  scope.row.htmlType == 'checkbox' ||
+                  scope.row.htmlType == 'selectRadio'
                 ">
                 <el-option v-for="dict in dictOptions" :key="dict.dictType" :label="dict.dictName" :value="dict.dictType">
                   <span style="float: left">{{ dict.dictName }}</span>
