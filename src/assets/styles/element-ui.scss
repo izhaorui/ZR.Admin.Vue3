@@ -106,3 +106,8 @@
   -ms-user-select: none;
   user-select: none;
 }
+
+// fix 侧边栏二级导航缩小图标消失问题
+.el-sub-menu__title {
+  padding-right: unset !important;
+}

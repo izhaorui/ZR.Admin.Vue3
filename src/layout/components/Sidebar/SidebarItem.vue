@@ -36,16 +36,16 @@ const props = defineProps({
   // route object
   item: {
     type: Object,
-    required: true,
+    required: true
   },
   isNest: {
     type: Boolean,
-    default: false,
+    default: false
   },
   basePath: {
     type: String,
-    default: '',
-  },
+    default: ''
+  }
 })
 
 const onlyOneChild = ref({})
@@ -89,7 +89,7 @@ function resolvePath(routePath, routeQuery) {
     let query = JSON.parse(routeQuery)
     return {
       path: getNormalPath(props.basePath + '/' + routePath),
-      query: query,
+      query: query
     }
   }
   return getNormalPath(props.basePath + '/' + routePath)
