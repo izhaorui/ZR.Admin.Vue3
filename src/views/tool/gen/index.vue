@@ -24,7 +24,7 @@
       border
       @selection-change="handleSelectionChange"
       highlight-current-row
-      height="480px">
+      height="400px">
       <el-table-column type="selection" align="center" width="55"></el-table-column>
       <el-table-column label="#" type="index" width="50" align="center">
         <template #default="scope">
