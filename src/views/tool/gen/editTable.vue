@@ -120,6 +120,7 @@
                 <el-option label="富文本控件" value="editor" />
                 <el-option label="自定义输入框" value="customInput" />
                 <el-option label="下拉单选组合" title="查询下拉,表单单选" value="selectRadio" />
+                <el-option label="颜色选择器" value="colorPicker" />
               </el-select>
             </template>
           </el-table-column>
