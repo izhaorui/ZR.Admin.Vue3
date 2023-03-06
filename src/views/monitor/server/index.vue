@@ -4,7 +4,7 @@
       <el-col :lg="24" class="card-box" v-if="server.cpu">
         <el-card class="box-card">
           <template #header>
-            <span>状态</span>
+            <Cpu style="width: 1em; height: 1em; vertical-align: middle" /> <span style="vertical-align: middle">CPU/内存</span>
           </template>
 
           <div class="col-item">
@@ -38,7 +38,7 @@
       <el-col :lg="24" class="card-box">
         <el-card>
           <template #header>
-            <span>磁盘状态</span>
+            <Files style="width: 1em; height: 1em; vertical-align: middle" /> <span style="vertical-align: middle">磁盘状态</span>
           </template>
           <div class="col-item" v-for="sysFile in server.disk" :key="sysFile.diskName">
             <div class="title">{{ sysFile.diskName }}盘使用率</div>
@@ -64,9 +64,7 @@
       <el-col :lg="24" class="card-box">
         <el-card>
           <template #header>
-            <div class="card-header">
-              <span>服务器信息</span>
-            </div>
+            <Monitor style="width: 1em; height: 1em; vertical-align: middle" /> <span style="vertical-align: middle">服务器信息</span>
           </template>
           <div class="el-table el-table--enable-row-hover el-table--medium">
             <table cellspacing="0" style="width: 100%" v-if="server.sys">
@@ -122,7 +120,7 @@
       <el-col :lg="24" class="card-box">
         <el-card>
           <template #header>
-            <span>.NET Core信息</span>
+            <Platform style="width: 1em; height: 1em; vertical-align: middle" /> <span style="vertical-align: middle">.NET信息</span>
           </template>
           <div class="el-table el-table--enable-row-hover el-table--medium">
             <table cellspacing="0" style="width: 100%">
