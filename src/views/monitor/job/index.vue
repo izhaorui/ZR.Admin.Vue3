@@ -402,7 +402,7 @@ const state = reactive({
     ],
     taskTypeOptions: [
       { dictLabel: '程序集', dictValue: '1' },
-      { dictLabel: 'api请求', dictValue: '2', listClass: 'primary' },
+      { dictLabel: 'api请求', dictValue: '2', listClass: 'danger' },
       { dictLabel: 'sql脚本', dictValue: '3', listClass: 'info' }
     ]
   }
