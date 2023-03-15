@@ -6,7 +6,6 @@
         <el-form-item label="文章标题" prop="title">
           <el-input v-model="form.title" placeholder="请输入文章标题（必须）" />
         </el-form-item>
-
         <el-form-item label="文章分类" prop="categoryId">
           <el-cascader
             class="w100"
@@ -14,7 +13,7 @@
             :props="{ checkStrictly: true, value: 'categoryId', label: 'name', emitPath: false }"
             placeholder="请选择文章分类"
             clearable
-            v-model="form.category_Id" />
+            v-model="form.categoryId" />
         </el-form-item>
 
         <el-form-item label="文章标签">
@@ -66,11 +65,12 @@ const inputRef = ref()
 const data = reactive({
   form: {
     dynamicTags: [],
-    fmt_type: 'markdown',
+    fmtType: 'markdown',
     tags: undefined,
     cid: undefined,
     content: undefined,
-    status: undefined
+    status: undefined,
+    categoryId: undefined
   },
   rules: {
     title: [{ required: true, message: '标题不能为空', trigger: 'blur' }],
@@ -163,12 +163,7 @@ function getInfo(cid) {
     if (res.code == 200) {
       var data = res.data
       form.value = {
-        fmt_type: data.fmt_type,
-        cid: parseInt(cid),
-        title: data.title,
-        content: data.content,
-        category_Id: data.category_Id,
-        coverUrl: data.coverUrl,
+        ...data,
         dynamicTags: data.tags != null && data.tags.length > 0 ? data.tags.split(',') : []
       }
     }

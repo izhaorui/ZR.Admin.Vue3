@@ -28,6 +28,7 @@
     <el-table :data="dataList" ref="table" border>
       <el-table-column prop="cid" label="id" width="60" sortable> </el-table-column>
       <el-table-column prop="title" label="文章标题" width="120" :show-overflow-tooltip="true"> </el-table-column>
+      <el-table-column prop="articleCategoryNav.name" label="文章目录"> </el-table-column>
       <el-table-column prop="coverUrl" label="文章封面" width="90" :show-overflow-tooltip="true">
         <template #default="{ row }">
           <el-image
@@ -87,7 +88,7 @@ const previewUrl = ref('')
 
 const data = reactive({
   form: {},
-  queryParams: {},
+  queryParams: {}
 })
 
 const { queryParams } = toRefs(data)
