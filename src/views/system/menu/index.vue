@@ -153,7 +153,7 @@
             <el-form-item label="菜单名(key)" prop="menuNameKey">
               <template #label>
                 <span>
-                  <el-tooltip content="多语言翻译key：eg：menu.system" placement="top">
+                  <el-tooltip content="多语言翻译key：eg：menu.system，不需要多语言的可不用填写" placement="top">
                     <el-icon :size="15">
                       <questionFilled />
                     </el-icon>

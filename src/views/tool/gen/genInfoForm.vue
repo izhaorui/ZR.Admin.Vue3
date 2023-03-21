@@ -178,6 +178,14 @@
       </el-col>
       <el-col :lg="24">
         <el-form-item label="是否生成仓储层">
+          <template #label>
+            是否生成仓储层
+            <el-tooltip content="不勾选代码将不会生成对应的ZR.Repository代码" placement="top">
+              <el-icon>
+                <question-filled />
+              </el-icon>
+            </el-tooltip>
+          </template>
           <el-radio-group v-model="info.generateRepo">
             <el-radio :label="1">是</el-radio>
             <el-radio :label="0">否</el-radio>
