@@ -6,8 +6,9 @@
           <svg-icon name="peoples" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text" v-waves>{{$t('layout.onlineUsers')}}</div>
-          <div id="onlineNum" class="card-panel-num">{{ state.onlineUserNum }}</div>
+          <!-- <div class="card-panel-text" v-waves>{{$t('layout.onlineUsers')}}</div>
+          <div id="onlineNum" class="card-panel-num">{{ state.onlineUserNum }}</div> -->
+          <el-statistic :title="$t('layout.onlineUsers')" :value="state.onlineNum" />
         </div>
       </div>
     </el-col>
@@ -17,8 +18,9 @@
           <svg-icon name="message" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text" v-waves>{{$t('layout.message')}}</div>
-          <div class="card-panel-num" id="messageNum">{{ state.chatNum }}</div>
+          <!-- <div class="card-panel-text" v-waves>{{ $t('layout.message') }}</div>
+          <div class="card-panel-num" id="messageNum">{{ state.chatNum }}</div> -->
+          <el-statistic :value="state.order" :title="$t('layout.message')"> </el-statistic>
         </div>
       </div>
     </el-col>
@@ -28,8 +30,13 @@
           <svg-icon name="money" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text" v-waves>{{$t('layout.amount')}}</div>
-          <div id="amount" class="card-panel-num">{{ state.amount }}</div>
+          <!-- <div class="card-panel-text" v-waves>{{ $t('layout.amount') }}</div>
+          <div id="amount" class="card-panel-num">{{ state.amount }}</div> -->
+          <el-statistic :value="state.order" v-waves :title="$t('layout.amount')">
+            <template #title>
+              <div style="display: inline-flex; align-items: center">{{ $t('layout.amount') }}</div>
+            </template>
+          </el-statistic>
         </div>
       </div>
     </el-col>
@@ -39,8 +46,24 @@
           <svg-icon name="shopping" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text" v-waves>{{$t('layout.order')}}</div>
-          <div id="order" class="card-panel-num">{{ state.order }}</div>
+          <!-- <div class="card-panel-text" v-waves>{{ $t('layout.order') }}</div>
+          <div id="order" class="card-panel-num">{{ state.order }}</div> -->
+          <el-statistic :value="state.order" :title="$t('layout.order')">
+            <template #title>
+              <div style="display: inline-flex; align-items: center">{{ $t('layout.order') }}</div>
+            </template>
+          </el-statistic>
+          <div class="statistic-footer">
+            <div class="footer-item">
+              <span>than yesterday</span>
+              <span style="color: green">
+                16%
+                <el-icon>
+                  <CaretTop />
+                </el-icon>
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </el-col>
@@ -49,7 +72,7 @@
 
 <script setup>
 import { CountUp } from 'countup.js'
-import useSocketStore from '@/store/modules/socket';
+import useSocketStore from '@/store/modules/socket'
 const emit = defineEmits()
 const { proxy } = getCurrentInstance()
 
@@ -59,7 +82,7 @@ const state = reactive({
     return useSocketStore().onlineNum
   }),
   amount: 99998,
-  order: 1999,
+  order: 1999
 })
 onMounted(() => {
   new CountUp('messageNum', state.chatNum).start(),
