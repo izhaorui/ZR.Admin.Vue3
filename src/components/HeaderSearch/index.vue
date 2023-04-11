@@ -1,18 +1,29 @@
 <template>
-  <div :class="{ show: show }" class="header-search">
+  <div class="header-search">
     <svg-icon class-name="search-icon" name="search" @click.stop="click" />
-    <el-select
-      ref="headerSearchSelectRef"
-      v-model="search"
-      :remote-method="querySearch"
-      filterable
-      default-first-option
-      remote
-      placeholder="Search"
-      class="header-search-select"
-      @change="change">
-      <el-option v-for="option in options" :key="option.item.path" :value="option.item" :label="option.item.title.join(' > ')" />
-    </el-select>
+    <el-dialog title="搜索" v-model="open" append-to-body width="500" @close="close" draggable="">
+      <el-select
+        style="width: 95%"
+        ref="headerSearchSelectRef"
+        size="large"
+        v-model="search"
+        :remote-method="querySearch"
+        filterable
+        default-first-option
+        remote
+        placeholder="搜索，支持标题、URL模糊查询"
+        @change="change">
+        <template #prefix>
+          <el-icon color="#409EFC" class="no-inherit">
+            <Search />
+          </el-icon>
+        </template>
+        <el-option v-for="option in options" :key="option.item.path" :value="option.item" :label="option.item.title.join(' > ')">
+          <span style="float: left">{{ option.item.title.join(' > ') }}</span>
+          <span style="float: right; color: var(--el-text-color-secondary); font-size: 13px">{{ option.item.path }}</span>
+        </el-option>
+      </el-select>
+    </el-dialog>
   </div>
 </template>
 
@@ -26,21 +37,26 @@ const search = ref('')
 const options = ref([])
 const searchPool = ref([])
 const show = ref(false)
+const open = ref(false)
 const fuse = ref(undefined)
 const headerSearchSelectRef = ref(null)
 const router = useRouter()
 const routes = computed(() => usePermissionStore().routes)
 
 function click() {
+  open.value = !open.value
   show.value = !show.value
-  if (show.value) {
-    headerSearchSelectRef.value && headerSearchSelectRef.value.focus()
+  if (open.value) {
+    setTimeout(() => {
+      headerSearchSelectRef.value && headerSearchSelectRef.value.focus()
+    }, 1)
   }
 }
 function close() {
   headerSearchSelectRef.value && headerSearchSelectRef.value.blur()
   options.value = []
   show.value = false
+  open.value = false
 }
 function change(val) {
   const path = val.path
@@ -56,6 +72,7 @@ function change(val) {
   options.value = []
   nextTick(() => {
     show.value = false
+    open.value = false
   })
 }
 function initFuse(list) {
@@ -144,40 +161,12 @@ watch(searchPool, (list) => {
 
 <style lang="scss" scoped>
 .header-search {
-  font-size: 0 !important;
+  // font-size: 0 !important;
 
   .search-icon {
     cursor: pointer;
     font-size: 18px;
     vertical-align: middle;
-  }
-
-  .header-search-select {
-    font-size: 18px;
-    transition: width 0.2s;
-    width: 0;
-    overflow: hidden;
-    background: transparent;
-    border-radius: 0;
-    display: inline-block;
-    vertical-align: middle;
-
-    :deep(.el-input__inner) {
-      border-radius: 0;
-      border: 0;
-      padding-left: 0;
-      padding-right: 0;
-      box-shadow: none !important;
-      border-bottom: 1px solid #d9d9d9;
-      vertical-align: middle;
-    }
-  }
-
-  &.show {
-    .header-search-select {
-      width: 210px;
-      margin-left: 10px;
-    }
   }
 }
 </style>
