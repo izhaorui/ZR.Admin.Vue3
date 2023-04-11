@@ -11,7 +11,7 @@
 
     <el-row :gutter="10" class="mb10">
       <el-col :span="1.5">
-        <el-button type="info" plain icon="upload" @click="openImportTable" v-hasPermi="['tool:gen:import']">导入</el-button>
+        <el-button type="info" plain icon="upload" @click="openImportTable" v-hasPermi="['tool:gen:import']">导入数据表</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="danger" :disabled="multiple" plain icon="delete" @click="handleDelete" v-hasPermi="['tool:gen:remove']"> 删除</el-button>
