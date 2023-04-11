@@ -84,6 +84,18 @@
         </el-card>
       </el-col>
     </el-row>
+
+    <el-row :gutter="15">
+      <el-col :md="24" :lg="24" :xl="24" class="mb10">
+        <el-card shadow="hover">
+          <template #header>
+            <span>常用功能</span>
+          </template>
+
+          <CommonMenu></CommonMenu>
+        </el-card>
+      </el-col>
+    </el-row>
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
     <el-row :gutter="32">
@@ -128,6 +140,7 @@ import RaddarChart from './dashboard/RaddarChart'
 import PieChart from './dashboard/PieChart'
 import BarChart from './dashboard/BarChart'
 import WordCloudChat from './dashboard/WordCloud.vue'
+import CommonMenu from './components/CommonMenu'
 
 import dayjs from 'dayjs'
 
