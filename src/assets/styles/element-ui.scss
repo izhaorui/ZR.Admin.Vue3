@@ -69,11 +69,11 @@
 @media screen and (max-width: 700px) {
   .el-dialog {
     --el-dialog-width: 100% !important;
-    --el-dialog-margin-top: 0 !important;
+    // --el-dialog-margin-top: 0 !important;
   }
-  .el-dialog:not(.is-fullscreen) {
-    margin-top: 0 !important;
-  }
+  // .el-dialog:not(.is-fullscreen) {
+  //   margin-top: 0 !important;
+  // }
   .el-drawer {
     width: 85% !important;
   }

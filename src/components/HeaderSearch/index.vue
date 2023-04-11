@@ -1,9 +1,9 @@
 <template>
   <div class="header-search">
     <svg-icon class-name="search-icon" name="search" @click.stop="click" />
-    <el-dialog title="搜索" v-model="open" append-to-body width="500" @close="close" draggable="">
+    <el-dialog v-model="open" width="500" @close="close">
       <el-select
-        style="width: 95%"
+        style="width: 100%"
         ref="headerSearchSelectRef"
         size="large"
         v-model="search"
@@ -11,7 +11,8 @@
         filterable
         default-first-option
         remote
-        placeholder="搜索，支持标题、URL模糊查询"
+        class="header_search_select"
+        placeholder="菜单搜索，支持标题、URL模糊查询"
         @change="change">
         <template #prefix>
           <el-icon color="#409EFC" class="no-inherit">
@@ -161,7 +162,29 @@ watch(searchPool, (list) => {
 
 <style lang="scss" scoped>
 .header-search {
-  // font-size: 0 !important;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  :deep(.el-dialog) {
+    .el-dialog__header {
+      display: none !important;
+    }
+
+    --el-dialog-bg-color: #00000;
+    .el-dialog__body {
+      padding: 0;
+    }
+  }
+
+  .header_search_select {
+    height: 50px;
+
+    :deep(.el-input__wrapper) {
+      height: 50px;
+    }
+  }
 
   .search-icon {
     cursor: pointer;
