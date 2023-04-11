@@ -24,7 +24,7 @@
     "countup.js": "^2.1.0",
     "echarts": "5.2.2",
     "echarts-wordcloud": "^2.0.0",
-    "element-plus": "^2.2.32",
+    "element-plus": "^2.3.2",
     "file-saver": "2.0.5",
     "fuse.js": "6.4.6",
     "highlight.js": "^11.5.1",
@@ -32,7 +32,7 @@
     "jsencrypt": "3.2.1",
     "md-editor-v3": "^1.11.11",
     "nprogress": "0.2.0",
-    "pinia": "^2.0.25",
+    "pinia": "^2.0.33",
     "qs": "^6.11.0",
     "sortablejs": "^1.15.0",
     "vue": "^3.2.47",
@@ -43,11 +43,11 @@
     "vue3-seamless-scroll": "^1.2.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^2.3.3",
-    "@vue/compiler-sfc": "^3.2.33",
+    "@vitejs/plugin-vue": "^4.1.0",
+    "@vue/compiler-sfc": "^3.2.47",
     "sass": "1.45.0",
     "unplugin-auto-import": "0.5.3",
-    "vite": "^2.9.15",
+    "vite": "^4.2.1",
     "vite-plugin-compression": "^0.3.6",
     "vite-plugin-svg-icons": "1.0.5",
     "vite-plugin-vue-setup-extend": "^0.4.0"
