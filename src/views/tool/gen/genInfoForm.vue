@@ -19,11 +19,13 @@
         <el-form-item prop="baseNameSpace">
           <template #label>
             生成命名空间前缀
-            <el-tooltip content="比如 ZR." placement="top">
-              <el-icon>
-                <question-filled />
-              </el-icon>
-            </el-tooltip>
+            <span>
+              <el-tooltip content="比如 ZR." placement="top">
+                <el-icon>
+                  <question-filled />
+                </el-icon>
+              </el-tooltip>
+            </span>
           </template>
           <el-input v-model="info.baseNameSpace" />
         </el-form-item>
@@ -33,11 +35,13 @@
         <el-form-item prop="moduleName">
           <template #label>
             生成模块名
-            <el-tooltip content="可理解为子系统名，例如 system、user、tool（一般文件夹归类）" placement="top">
-              <el-icon>
-                <question-filled />
-              </el-icon>
-            </el-tooltip>
+            <span>
+              <el-tooltip content="可理解为子系统名，例如 system、user、tool（一般文件夹归类）" placement="top">
+                <el-icon>
+                  <question-filled />
+                </el-icon>
+              </el-tooltip>
+            </span>
           </template>
           <el-input v-model="info.moduleName" auto-complete="" />
         </el-form-item>
@@ -47,11 +51,13 @@
         <el-form-item prop="businessName">
           <template #label>
             生成业务名
-            <el-tooltip content="可理解为功能英文名，例如 user" placement="top">
-              <el-icon>
-                <question-filled />
-              </el-icon>
-            </el-tooltip>
+            <span>
+              <el-tooltip content="可理解为功能英文名，例如 user" placement="top">
+                <el-icon>
+                  <question-filled />
+                </el-icon>
+              </el-tooltip>
+            </span>
           </template>
           <el-input v-model="info.businessName" />
         </el-form-item>
@@ -61,11 +67,13 @@
         <el-form-item prop="functionName">
           <template #label>
             生成功能名
-            <el-tooltip content="用作类描述，例如 用户,代码生成,文章系统" placement="top">
-              <el-icon>
-                <question-filled />
-              </el-icon>
-            </el-tooltip>
+            <span>
+              <el-tooltip content="用作类描述，例如 用户,代码生成,文章系统" placement="top">
+                <el-icon>
+                  <question-filled />
+                </el-icon>
+              </el-tooltip>
+            </span>
           </template>
           <el-input v-model="info.functionName" />
         </el-form-item>
@@ -75,11 +83,13 @@
         <el-form-item>
           <template #label>
             上级菜单
-            <el-tooltip content="分配到指定菜单下，例如 系统管理" placement="top">
-              <el-icon>
-                <question-filled />
-              </el-icon>
-            </el-tooltip>
+            <span>
+              <el-tooltip content="分配到指定菜单下，例如 系统管理" placement="top">
+                <el-icon>
+                  <question-filled />
+                </el-icon>
+              </el-tooltip>
+            </span>
           </template>
           <el-cascader
             class="w100"
@@ -109,11 +119,13 @@
         <el-form-item prop="permissionPrefix">
           <template #label>
             权限前缀
-            <el-tooltip content="eg：system:user:add中的'system:user'" placement="top">
-              <el-icon>
-                <question-filled />
-              </el-icon>
-            </el-tooltip>
+            <span>
+              <el-tooltip content="eg：system:user:add中的'system:user'" placement="top">
+                <el-icon>
+                  <question-filled />
+                </el-icon>
+              </el-tooltip>
+            </span>
           </template>
           <el-input v-model="info.permissionPrefix" placeholder="请输入权限前缀"></el-input>
         </el-form-item>
@@ -122,11 +134,13 @@
         <el-form-item prop="genType">
           <template #label>
             生成代码方式
-            <el-tooltip content="默认为zip压缩包下载" placement="top">
-              <el-icon>
-                <question-filled />
-              </el-icon>
-            </el-tooltip>
+            <span>
+              <el-tooltip content="默认为zip压缩包下载" placement="top">
+                <el-icon>
+                  <question-filled />
+                </el-icon>
+              </el-tooltip>
+            </span>
           </template>
           <el-radio v-model="info.genType" label="0">zip压缩包</el-radio>
           <el-radio v-model="info.genType" label="1">自定义路径</el-radio>
@@ -137,11 +151,13 @@
         <el-form-item prop="genPath">
           <template #label>
             自定义路径
-            <el-tooltip content="填写磁盘绝对路径，若不填写，则生成到当前Web项目下" placement="top">
-              <el-icon>
-                <question-filled />
-              </el-icon>
-            </el-tooltip>
+            <span>
+              <el-tooltip content="填写磁盘绝对路径，若不填写，则生成到当前Web项目下" placement="top">
+                <el-icon>
+                  <question-filled />
+                </el-icon>
+              </el-tooltip>
+            </span>
           </template>
           <el-input v-model="info.genPath"></el-input>
         </el-form-item>
@@ -180,11 +196,13 @@
         <el-form-item label="是否生成仓储层">
           <template #label>
             是否生成仓储层
-            <el-tooltip content="不勾选代码将不会生成对应的ZR.Repository代码" placement="top">
-              <el-icon>
-                <question-filled />
-              </el-icon>
-            </el-tooltip>
+            <span>
+              <el-tooltip content="不勾选代码将不会生成对应的ZR.Repository代码" placement="top">
+                <el-icon>
+                  <question-filled />
+                </el-icon>
+              </el-tooltip>
+            </span>
           </template>
           <el-radio-group v-model="info.generateRepo">
             <el-radio :label="1">是</el-radio>
@@ -200,11 +218,13 @@
         <el-form-item>
           <template #label>
             树编码字段
-            <el-tooltip content="树显示的编码字段名， 如：dept_id" placement="top">
-              <el-icon>
-                <question-filled />
-              </el-icon>
-            </el-tooltip>
+            <span>
+              <el-tooltip content="树显示的编码字段名， 如：dept_id" placement="top">
+                <el-icon>
+                  <question-filled />
+                </el-icon>
+              </el-tooltip>
+            </span>
           </template>
           <el-select v-model="info.treeCode" placeholder="请选择树编码字段">
             <el-option
@@ -219,11 +239,13 @@
         <el-form-item>
           <template #label>
             树父编码字段
-            <el-tooltip content="树显示的父编码字段名， 如：parent_Id" placement="top">
-              <el-icon>
-                <question-filled />
-              </el-icon>
-            </el-tooltip>
+            <span>
+              <el-tooltip content="树显示的父编码字段名， 如：parent_Id" placement="top">
+                <el-icon>
+                  <question-filled />
+                </el-icon>
+              </el-tooltip>
+            </span>
           </template>
           <el-select v-model="info.treeParentCode" placeholder="请选择树父编码字段">
             <el-option
@@ -238,11 +260,13 @@
         <el-form-item>
           <template #label>
             树名称字段
-            <el-tooltip content="树节点的显示名称字段名， 如：dept_name" placement="top">
-              <el-icon>
-                <question-filled />
-              </el-icon>
-            </el-tooltip>
+            <span>
+              <el-tooltip content="树节点的显示名称字段名， 如：dept_name" placement="top">
+                <el-icon>
+                  <question-filled />
+                </el-icon>
+              </el-tooltip>
+            </span>
           </template>
           <el-select v-model="info.treeName" placeholder="请选择树名称字段">
             <el-option
@@ -263,11 +287,13 @@
         <el-form-item>
           <template #label>
             关联子表的表名
-            <el-tooltip content="关联子表的表名， 如：sys_user" placement="top">
-              <el-icon>
-                <question-filled />
-              </el-icon>
-            </el-tooltip>
+            <span>
+              <el-tooltip content="关联子表的表名， 如：sys_user" placement="top">
+                <el-icon>
+                  <question-filled />
+                </el-icon>
+              </el-tooltip>
+            </span>
           </template>
           <el-select v-model="info.subTableName" filterable placeholder="请选择" @change="subSelectChange(this)">
             <el-option v-for="(table, index) in tables" :key="index" :label="table.tableName + '：' + table.tableComment" :value="table.tableName">
@@ -279,11 +305,13 @@
         <el-form-item>
           <template #label>
             子表关联的外键名
-            <el-tooltip content="子表关联的外键名， 如：user_id" placement="top">
-              <el-icon>
-                <question-filled />
-              </el-icon>
-            </el-tooltip>
+            <span>
+              <el-tooltip content="子表关联的外键名， 如：user_id" placement="top">
+                <el-icon>
+                  <question-filled />
+                </el-icon>
+              </el-tooltip>
+            </span>
           </template>
           <el-select v-model="info.subTableFkName">
             <el-option v-for="(column, index) in subColumns" :key="index" :label="column.csharpField" :value="column.csharpField">

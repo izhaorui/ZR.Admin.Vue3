@@ -35,6 +35,11 @@
               <el-input v-model="scope.row.csharpField"></el-input>
             </template>
           </el-table-column>
+          <el-table-column label="必填" width="60" align="center">
+            <template #default="scope">
+              <el-checkbox v-model="scope.row.isRequired"></el-checkbox>
+            </template>
+          </el-table-column>
           <el-table-column label="前端" align="center" label-class-name="text-info">
             <el-table-column label="列表" width="60" align="center">
               <template #default="scope">
@@ -76,12 +81,7 @@
               </template>
             </el-table-column>
           </el-table-column>
-          <el-table-column label="必填" width="60" align="center">
-            <template #default="scope">
-              <el-checkbox v-model="scope.row.isRequired"></el-checkbox>
-            </template>
-          </el-table-column>
-          <el-table-column label="查询" align="center">
+          <el-table-column label="查询" align="center" label-class-name="text-green">
             <el-table-column label="查询" width="60" align="center">
               <template #default="scope">
                 <el-checkbox v-model="scope.row.isQuery" :disabled="scope.row.htmlType == 'imageUpload' || scope.row.htmlType == 'fileUpload'">
