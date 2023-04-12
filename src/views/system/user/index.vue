@@ -146,6 +146,7 @@
                 v-if="scope.row.userId !== 1"
                 text
                 icon="Key"
+                title="重置密码"
                 @click="handleResetPwd(scope.row)"
                 v-hasPermi="['system:user:resetPwd']"></el-button>
             </template>
@@ -222,6 +223,8 @@
             <el-form-item label="角色">
               <el-select v-model="form.roleIds" multiple placeholder="请选择" style="width: 100%" @change="selectRole($event)">
                 <el-option v-for="item in roleOptions" :key="item.roleId" :label="item.roleName" :value="item.roleId" :disabled="item.status == 1">
+                  <span style="float: left">{{ item.roleName }}</span>
+                  <span style="float: right">{{ item.roleKey }}</span>
                 </el-option>
               </el-select>
             </el-form-item>
