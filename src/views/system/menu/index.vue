@@ -379,8 +379,10 @@ const { queryParams, form, rules, sys_show_hide, sys_normal_disable } = toRefs(s
 /** 查询菜单列表 */
 function getList() {
   loading.value = true
-  if (queryParams.value.parentId != undefined) {
+  if (queryParams.value.parentId != undefined || queryParams.value.menuName != undefined) {
     queryParams.value.menuTypeIds = ''
+  } else {
+    queryParams.value.menuTypeIds = 'M,C'
   }
   listMenu(queryParams.value).then((response) => {
     menuList.value = response.data
