@@ -12,7 +12,8 @@ const useUserStore = defineStore('user', {
     roles: [],
     permissions: [],
     userId: 0,
-    authSource: ''
+    authSource: '',
+    userName: ''
   }),
   actions: {
     setAuthSource(source) {
@@ -85,6 +86,7 @@ const useUserStore = defineStore('user', {
             this.avatar = avatar
             this.userInfo = data.user //新加
             this.userId = data.user.userId //新加
+            this.userName = data.user.userName //新加
             resolve(res)
           })
           .catch((error) => {
