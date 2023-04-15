@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import Cookies from 'js-cookie'
+// import Cookies from 'js-cookie'
 
 import ElementPlus from 'element-plus'
 import 'dayjs/locale/zh-cn'
@@ -16,6 +16,7 @@ import vueI18n from './i18n/index'
 import pinia from '@/store/index'
 
 // svg图标
+import '@/assets/iconfont/iconfont.js' //iconfont
 import 'virtual:svg-icons-register'
 import SvgIcon from '@/components/SvgIcon/index.vue'
 import elementIcons from '@/components/SvgIcon/svgicon'
