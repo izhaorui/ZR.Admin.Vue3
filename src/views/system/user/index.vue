@@ -60,7 +60,7 @@
             </el-button>
           </el-col>
           <el-col :span="1.5">
-            <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:user:remove']">
+            <el-button type="danger" plain icon="Delete" :disabled="single" @click="handleDelete" v-hasPermi="['system:user:remove']">
               {{ $t('btn.delete') }}
             </el-button>
           </el-col>
