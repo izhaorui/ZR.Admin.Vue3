@@ -159,7 +159,7 @@
               </el-tooltip>
             </span>
           </template>
-          <el-input v-model="info.genPath"></el-input>
+          <el-input v-model="info.genPath" placeholder="前端代码路径在后端配置文件gen->vuePath下配置"></el-input>
         </el-form-item>
       </el-col>
       <el-col :lg="24">

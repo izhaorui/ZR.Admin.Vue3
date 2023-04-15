@@ -1,5 +1,8 @@
 <template>
   <div class="app-container">
+    <el-row :gutter="24" class="mb10">
+      <el-alert title="本项目文章管理只提供基础的后端文章管理模块，文章的浏览自行实现。文章浏览地址在'系统管理->参数配置'" type="success"
+    /></el-row>
     <el-row :gutter="24">
       <!-- :model属性用于表单验证使用 比如下面的el-form-item 的 prop属性用于对表单值进行验证操作 -->
       <el-form :model="queryParams" label-position="left" inline ref="queryForm" label-width="100px" v-show="showSearch" @submit.prevent>

@@ -50,7 +50,7 @@
                   </el-row>
                 </el-col>
                 <el-col :lg="24" class="mt10">
-                  <el-button size="small" icon="edit">
+                  <el-button icon="edit">
                     <router-link to="/user/profile">{{ $t('layout.modifyInformation') }}</router-link>
                   </el-button>
                 </el-col>
