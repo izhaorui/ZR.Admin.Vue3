@@ -48,7 +48,7 @@
           <el-link type="primary" :href="scope.row.accessUrl" target="_blank">{{ scope.row.fileName }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="accessUrl" align="center" label="预览图" width="100">
+      <el-table-column prop="accessUrl" align="center" label="预览图" width="80">
         <template #default="{ row }">
           <el-image
             preview-teleported
@@ -59,30 +59,26 @@
             lazy
             class="el-avatar">
             <template #error>
-              <i class="document" />
+              <el-icon><document /></el-icon>
             </template>
           </el-image>
         </template>
       </el-table-column>
       <el-table-column prop="fileSize" label="文件大小" align="center" :show-overflow-tooltip="true" />
       <el-table-column prop="fileExt" label="扩展名" align="center" :show-overflow-tooltip="true" width="80px" />
-      <el-table-column prop="storeType" label="存储类型" align="center">
+      <!-- <el-table-column prop="storeType" label="存储类型" align="center">
         <template #default="scope">
-          {{ scope.row.storeType }}
-          <!-- <dict-tag :options="storeTypeOptions" :value="parseInt(scope.row.storeType)" /> -->
+          <dict-tag :options="storeTypeOptions" :value="parseInt(scope.row.storeType)" />
         </template>
-      </el-table-column>
+      </el-table-column> -->
+      <el-table-column prop="storePath" label="存储目录"></el-table-column>
       <el-table-column prop="create_by" label="操作人" align="center" />
       <el-table-column prop="create_time" label="创建日期" align="center" width="150" />
-      <el-table-column label="操作" align="center" width="230">
+      <el-table-column label="操作" align="center" width="120">
         <template #default="scope">
-          <el-button text size="small" icon="view" @click="handleView(scope.row)">{{ $t('btn.view') }}</el-button>
-          <el-button class="copy-btn-main" icon="document-copy" text size="small" @click="copyText(scope.row.accessUrl)">
-            {{ $t('btn.copy') }}
-          </el-button>
-          <el-button v-hasPermi="['tool:file:delete']" text size="small" icon="delete" @click="handleDelete(scope.row)">
-            {{ $t('btn.delete') }}
-          </el-button>
+          <el-button text size="small" icon="view" title="查看" @click="handleView(scope.row)"></el-button>
+          <el-button class="copy-btn-main" icon="document-copy" title="复制" text size="small" @click="copyText(scope.row.accessUrl)"> </el-button>
+          <el-button v-hasPermi="['tool:file:delete']" title="删除" text size="small" icon="delete" @click="handleDelete(scope.row)"> </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -102,8 +98,18 @@
             </el-form-item>
           </el-col>
           <el-col :lg="24">
-            <el-form-item label="存储文件夹" prop="storePath">
-              <el-input v-model="form.storePath" placeholder="请输入存储文件夹" clearable="" auto-complete="" />
+            <el-form-item label="文件目录" prop="storePath">
+              <template #label>
+                <span>
+                  <el-tooltip content="文件目录不填则默认使用本地上次格式：uploads/yyyyMMdd" placement="top">
+                    <el-icon :size="15">
+                      <questionFilled />
+                    </el-icon>
+                  </el-tooltip>
+                  文件目录
+                </span>
+              </template>
+              <el-input v-model="form.storePath" placeholder="请输入文件目录" clearable="" auto-complete="" />
             </el-form-item>
           </el-col>
           <el-col :lg="24">
@@ -187,7 +193,11 @@
             </el-form-item>
           </el-col>
           <el-col :lg="24">
-            <el-form-item label="存储路径">{{ formView.fileUrl }}</el-form-item>
+            <el-form-item label="存储路径">
+              <div>
+                {{ formView.fileUrl }}
+              </div>
+            </el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -270,7 +280,7 @@ const state = reactive({
 })
 const { queryParams, form, rules } = toRefs(state)
 const { proxy } = getCurrentInstance()
-const uploadData = ref({})
+const uploadData = ref()
 // 查询数据
 function getList() {
   proxy.addDateRange(queryParams.value, dateRangeAddTime.value, 'Create_time')
@@ -362,13 +372,19 @@ function handleUploadSuccess(filelist) {
 function submitUpload() {
   proxy.$refs['formRef'].validate((valid) => {
     if (valid) {
-      uploadData.value = {
-        fileDir: form.value.storePath,
-        fileName: form.value.fileName,
-        storeType: form.value.storeType,
-        fileNameType: form.value.fileNameType
-      }
-      proxy.$refs.uploadRef.submitUpload()
+      var result = new Promise((resolve) => {
+        uploadData.value = {
+          fileDir: form.value.storePath,
+          fileName: form.value.fileName,
+          storeType: form.value.storeType,
+          fileNameType: form.value.fileNameType
+        }
+        resolve(true)
+      })
+      //使用异步解决第一次上次获取不到表单的值
+      result.then(() => {
+        proxy.$refs.uploadRef.submitUpload()
+      })
     }
   })
 }

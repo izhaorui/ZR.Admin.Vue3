@@ -10,12 +10,12 @@
       :on-exceed="handleExceed"
       :on-success="handleUploadSuccess"
       :show-file-list="false"
-      :data="data"
+      :data="uploadData"
       :drag="drag"
       :headers="headers"
       :auto-upload="autoUpload"
       class="upload-file-uploader"
-      ref="upload">
+      ref="fileUpload">
       <!-- 拖拽上传 -->
       <template v-if="drag">
         <el-icon class="el-icon--upload">
@@ -104,6 +104,7 @@ const uploadFileUrl = ref(baseUrl + import.meta.env.VITE_APP_UPLOAD_URL) // 上�
 const headers = ref({ Authorization: 'Bearer ' + getToken() })
 const fileList = ref([])
 const showTip = computed(() => props.isShowTip && (props.fileType || props.fileSize))
+const uploadData = computed(() => props.data)
 
 watch(
   () => props.modelValue,
@@ -121,7 +122,6 @@ watch(
         item.uid = item.uid || new Date().getTime() + temp++
         return item
       })
-      // uploadList.value = fileList
     } else {
       fileList.value = []
       return []
@@ -183,7 +183,7 @@ function handleUploadSuccess(response, uploadFile) {
   const { fileName, url, fileId } = response.data
   const tempFile = { name: fileName, url: url }
   uploadList.value.push(tempFile)
-  if (uploadList.value.length === number.value) {
+  if (number.value > 0 && uploadList.value.length === number.value) {
     fileList.value = fileList.value.filter((f) => f.url !== undefined).concat(uploadList.value)
     uploadList.value = []
     number.value = 0
@@ -219,7 +219,7 @@ function listToString(list, separator) {
 }
 // 手动提交上传
 function submitUpload() {
-  proxy.$refs.upload.submit()
+  proxy.$refs.fileUpload.submit()
 }
 defineExpose({
   submitUpload
