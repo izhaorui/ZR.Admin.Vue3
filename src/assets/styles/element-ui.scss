@@ -111,3 +111,8 @@
 .el-sub-menu__title {
   padding-right: unset !important;
 }
+
+// fix 顶部导航更多样式问题
+.el-menu--horizontal .el-sub-menu .el-sub-menu__icon-arrow {
+  right: calc(0px - var(--el-menu-base-level-padding)) !important;
+}
