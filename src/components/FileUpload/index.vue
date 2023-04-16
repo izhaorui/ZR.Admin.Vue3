@@ -212,9 +212,12 @@ function getFileName(name) {
 function listToString(list, separator) {
   let strs = ''
   separator = separator || ','
-  for (let i in list) {
-    strs += list[i].url + separator
-  }
+
+  list.forEach((element) => {
+    if (element) {
+      strs += element.url + separator
+    }
+  })
   return strs != '' ? strs.substr(0, strs.length - 1) : ''
 }
 // 手动提交上传
