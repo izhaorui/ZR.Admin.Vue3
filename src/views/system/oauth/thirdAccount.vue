@@ -156,7 +156,7 @@ import {
   delThirdAccount,
   updateThirdAccount,
   getThirdAccount,
-  exportThirdAccount,
+  exportThirdAccount
 } from '@/api/system/thirdaccount.js'
 
 const { proxy } = getCurrentInstance()
@@ -176,7 +176,7 @@ const queryParams = reactive({
   userId: undefined,
   thirdUniqueAcount: undefined,
   accountType: undefined,
-  addTime: undefined,
+  addTime: undefined
 })
 
 const title = ref('')
@@ -189,12 +189,12 @@ const state = reactive({
     id: [{ required: true, message: 'id不能为空', trigger: 'blur', type: 'number' }],
     userId: [{ required: true, message: '用户id不能为空', trigger: 'blur', type: 'number' }],
     thirdUniqueAcount: [{ required: true, message: '三方唯一id不能为空', trigger: 'blur' }],
-    accountType: [{ required: true, message: '账号类型不能为空', trigger: 'change' }],
+    accountType: [{ required: true, message: '账号类型不能为空', trigger: 'change' }]
   },
   options: {
     //  账号类型 选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
-    accountTypeOptions: [],
-  },
+    accountTypeOptions: []
+  }
 })
 
 const { form, rules, options } = toRefs(state)
@@ -208,7 +208,7 @@ const dateRangeAddTime = ref([])
 var dictParams = []
 
 function getList() {
-  proxy.addDateRange(queryParams, proxy.dateRangeAddTime, 'AddTime')
+  proxy.addDateRange(queryParams, dateRangeAddTime.value, 'AddTime')
   loading.value = true
   listThirdAccount(queryParams).then((res) => {
     if (res.code == 200) {
@@ -232,7 +232,7 @@ function reset() {
     userId: undefined,
     thirdUniqueAcount: undefined,
     accountType: undefined,
-    addTime: undefined,
+    addTime: undefined
   }
   proxy.resetForm('formRef')
 }
@@ -279,7 +279,7 @@ function handleUpdate(row) {
       opertype.value = 2
 
       form.value = {
-        ...data,
+        ...data
       }
     }
   })
@@ -325,7 +325,7 @@ function handleExport() {
     .$confirm('是否确认导出所有三方账号绑定数据项?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(function () {
       return exportThirdAccount(queryParams)
