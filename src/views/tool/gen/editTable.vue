@@ -224,15 +224,19 @@ function submitForm() {
         colNum: info.value.colNum,
         generateRepo: info.value.generateRepo
       }
-      console.log('genForm', genTable)
 
-      updateGenTable(genTable).then((res) => {
-        proxy.$modal.msgSuccess(res.msg)
-        if (res.code === 200) {
-          close()
-        }
-      })
+      updateGenTable(genTable)
+        .then((res) => {
+          proxy.$modal.msgSuccess(res.msg)
+          if (res.code === 200) {
+            close()
+          }
+        })
+        .catch(() => {
+          submitLoading.value = false
+        })
     } else {
+      submitLoading.value = false
       proxy.$modal.msgError('表单校验未通过，请重新检查提交内容')
     }
   })
