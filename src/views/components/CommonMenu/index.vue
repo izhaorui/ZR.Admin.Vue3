@@ -11,21 +11,20 @@
   </div>
 </template>
 <script setup>
-import { getCurrentInstance } from 'vue'
-
 const { proxy } = getCurrentInstance()
 const menuList = ref([
+  { path: '/dashboard', title: '控制台', color: '#40c9c6', name: 'dashboard' },
   { path: '/tool/gen', title: '代码生成', color: '#40c9c6', name: 'code', perms: ['tool:gen:list'] },
   { path: '/tool/file', title: '文件存储', color: '#6A5ACD', name: 'upload', perms: ['tool:file:list'] },
   // // { path: '/system/user', title: '角色管理', color: '#7FFF00', name: 'peoples' },
   { path: '/system/dict', title: '字典管理', color: '#B0E0E6', name: 'dict', perms: ['system:dict:list'] },
   { path: '/monitor/job', title: '定时任务', color: '#D2691E', name: 'job', perms: ['monitor:job:list'] },
-  { path: '/system/log/operlog', title: '操作日志', color: '#D2691E', name: 'form', perms: ['monitor:operlog:list'] },
+  { path: '/system/log/operlog', title: '操作日志', color: '#D2691E', name: 'form', perms: ['monitor:operlog:list'] }
   // { path: '/system/log/logininfor', title: '登录日志', color: '#D2691E', name: 'logininfor' }
 ])
 
 function checkPermi(v) {
-  if (v && v.permi) {
+  if (v && v.perms) {
     return proxy.$auth.hasPermiOr(v.perms)
   }
   return true
@@ -34,12 +33,13 @@ function checkPermi(v) {
 <style lang="scss" scoped>
 .tool-wrap {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
 
   .tool-item {
-    display: flex;
-    flex-direction: column;
     text-align: center;
-    width: 110px;
+    width: 100px;
+    margin-bottom: 30px;
 
     .card-panel-icon {
       width: 30px;

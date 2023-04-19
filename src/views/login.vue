@@ -55,9 +55,9 @@
       </el-form-item>
       <div class="other-login" v-if="defaultSettings.showOtherLogin">
         <el-divider>{{ $t('login.otherLoginWay') }}</el-divider>
-        <img src="../assets/icons/gitee-fill-round.png" alt="" class="login-icon" @click="onAuth('GITEE')" />
-        <img src="../assets/icons/github-fill.png" alt="" class="login-icon" @click="onAuth('GITHUB')" />
-        <img src="../assets/icons/wechat-fill.png" alt="" class="login-icon" />
+
+        <span @click="onAuth('GITHUB')" title="github"><svg-icon name="github" className="login-icon"></svg-icon></span>
+        <span @click="onAuth('GITEE')" title="gitee"><svg-icon name="gitee" className="login-icon"></svg-icon></span>
       </div>
     </el-form>
 

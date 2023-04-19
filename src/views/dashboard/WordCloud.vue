@@ -6,7 +6,7 @@
 import * as echarts from 'echarts'
 
 import { useDebounceFn } from '@vueuse/core'
-import 'echarts-wordcloud'
+// import 'echarts-wordcloud'
 
 const { proxy } = getCurrentInstance()
 

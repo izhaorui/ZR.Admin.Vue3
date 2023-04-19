@@ -32,7 +32,7 @@
         <div class="card-panel-description">
           <!-- <div class="card-panel-text" v-waves>{{ $t('layout.amount') }}</div>
           <div id="amount" class="card-panel-num">{{ state.amount }}</div> -->
-          <el-statistic :value="state.order" v-waves :title="$t('layout.amount')">
+          <el-statistic :value="state.order" :title="$t('layout.amount')">
             <template #title>
               <div style="display: inline-flex; align-items: center">{{ $t('layout.amount') }}</div>
             </template>
@@ -55,11 +55,19 @@
           </el-statistic>
           <div class="statistic-footer">
             <div class="footer-item">
-              <span>than yesterday</span>
+              <span>环比</span>
               <span style="color: green">
                 16%
                 <el-icon>
                   <CaretTop />
+                </el-icon>
+              </span>
+
+              <span>同比</span>
+              <span style="color: red">
+                -16%
+                <el-icon>
+                  <CaretBottom />
                 </el-icon>
               </span>
             </div>
@@ -104,15 +112,18 @@ function handleSetLineChartData(type) {
   }
 
   .card-panel {
-    height: 108px;
+    height: 90px;
     cursor: pointer;
     font-size: 12px;
     position: relative;
     overflow: hidden;
     color: #666;
-    background: var(--base-bg-main);
+    // background: var(--base-bg-main);
     box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.05);
     border-color: rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
     &:hover {
       .card-panel-icon-wrapper {
@@ -153,8 +164,8 @@ function handleSetLineChartData(type) {
     }
 
     .card-panel-icon-wrapper {
-      float: left;
-      margin: 14px 0 0 14px;
+      // float: left;
+      margin: 0px 0 0 14px;
       padding: 16px;
       transition: all 0.38s ease-out;
       border-radius: 6px;
@@ -162,13 +173,13 @@ function handleSetLineChartData(type) {
 
     .card-panel-icon {
       float: left;
-      font-size: 48px;
+      font-size: 28px;
     }
 
     .card-panel-description {
-      float: right;
+      // float: right;
       font-weight: bold;
-      margin: 26px;
+      margin-right: 20px;
       margin-left: 0px;
 
       .card-panel-text {

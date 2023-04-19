@@ -122,16 +122,6 @@
               <dict-tag :options="options.businessTypeOptions" :value="form.businessType" />
             </el-form-item>
           </el-col>
-          <el-col :lg="24">
-            <el-form-item label="请求参数：">
-              <el-input type="textarea" disabled rows="5" v-model="form.operParam"> </el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :lg="24">
-            <el-form-item label="返回结果：">
-              <el-input type="textarea" disabled rows="5" v-model="form.jsonResult"> </el-input>
-            </el-form-item>
-          </el-col>
           <el-col :lg="12">
             <el-form-item label="操作状态：">
               <dict-tag :options="options.statusOptions" :value="form.status"></dict-tag>
@@ -139,6 +129,16 @@
           </el-col>
           <el-col :lg="12">
             <el-form-item label="操作时间：">{{ parseTime(form.operTime) }}</el-form-item>
+          </el-col>
+          <el-col :lg="24">
+            <el-form-item label="请求参数：">
+              <el-input type="textarea" rows="5" v-model="form.operParam"> </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :lg="24">
+            <el-form-item label="返回结果：">
+              <el-input type="textarea" rows="10" v-model="form.jsonResult"> </el-input>
+            </el-form-item>
           </el-col>
           <el-col :lg="24">
             <el-form-item label="异常信息：" v-if="form.status === 1">{{ form.errorMsg }}</el-form-item>

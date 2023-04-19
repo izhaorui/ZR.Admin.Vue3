@@ -4,7 +4,10 @@
       <el-col :lg="24" class="card-box" v-if="server.cpu">
         <el-card class="box-card">
           <template #header>
-            <Cpu style="width: 1em; height: 1em; vertical-align: middle" /> <span style="vertical-align: middle">CPU/内存</span>
+            <div class="card-header">
+              <div><Cpu style="width: 1em; height: 1em; vertical-align: middle" /> <span style="vertical-align: middle">CPU/内存</span></div>
+              <el-button text @click="getList()">刷新</el-button>
+            </div>
           </template>
 
           <div class="col-item">
@@ -31,6 +34,14 @@
               </div>
             </el-tooltip>
             <div class="footer">{{ server.cpu.usedRam }} / {{ server.cpu.totalRAM }}</div>
+          </div>
+
+          <div class="col-item">
+            <div class="title">.NETCore服务</div>
+            <div class="content">
+              <el-progress type="dashboard" :percentage="parseFloat(appPercent)" />
+            </div>
+            <div class="footer" v-if="server.app">{{ server.app.appRAM }}</div>
           </div>
         </el-card>
       </el-col>
@@ -130,13 +141,13 @@
                     <div class="cell">环境变量</div>
                   </td>
                   <td>
-                    <div class="cell" v-if="server.app">{{ server.app.name }}</div>
+                    <div v-if="server.app">{{ server.app.name }}</div>
                   </td>
                   <td>
                     <div class="cell">.Net版本</div>
                   </td>
                   <td>
-                    <div class="cell" v-if="server.app">{{ server.app.version }}</div>
+                    <div v-if="server.app">{{ server.app.version }}</div>
                   </td>
                 </tr>
                 <tr>
@@ -144,13 +155,13 @@
                     <div class="cell">启动时间</div>
                   </td>
                   <td>
-                    <div class="cell" v-if="server.app">{{ server.app.startTime }}</div>
+                    <div v-if="server.app">{{ server.app.startTime }}</div>
                   </td>
                   <td>
                     <div class="cell">运行时长</div>
                   </td>
                   <td>
-                    <div class="cell" v-if="server.app">{{ server.app.runTime }}</div>
+                    <div v-if="server.app">{{ server.app.runTime }}</div>
                   </td>
                 </tr>
                 <tr>
@@ -158,13 +169,13 @@
                     <div class="cell">占用内存</div>
                   </td>
                   <td>
-                    <div class="cell" v-if="server.app">{{ server.app.appRAM }}</div>
+                    <div v-if="server.app">{{ server.app.appRAM }}</div>
                   </td>
                   <td>
                     <div class="cell">启动地址</div>
                   </td>
                   <td>
-                    <div class="cell" v-if="server.app">{{ server.app.host }}</div>
+                    <div v-if="server.app">{{ server.app.host }}</div>
                   </td>
                 </tr>
                 <tr>
@@ -172,13 +183,13 @@
                     <div class="cell">ContentRootPath</div>
                   </td>
                   <td>
-                    <div class="cell" v-if="server.app">{{ server.app.rootPath }}</div>
+                    <div v-if="server.app">{{ server.app.rootPath }}</div>
                   </td>
                   <td>
                     <div class="cell">webPath</div>
                   </td>
                   <td>
-                    <div class="cell" v-if="server.app">{{ server.app.webRootPath }}</div>
+                    <div v-if="server.app">{{ server.app.webRootPath }}</div>
                   </td>
                 </tr>
               </tbody>
@@ -196,6 +207,7 @@ import { onBeforeRouteLeave } from 'vue-router'
 onBeforeRouteLeave((to) => {
   clear()
 })
+const appPercent = ref(0)
 // 服务器信息
 const server = ref([])
 const intervalId = ref(null)
@@ -230,7 +242,19 @@ function clear() {
   clearInterval(intervalId.value)
   intervalId.value = null
 }
+watch(
+  () => server.value,
+  (val) => {
+    if (val && val.app) {
+      const appRam = val.app.appRAM.replace(' MB', '')
+      const totalRam = val.cpu.totalRAM.replace('GB', '') * 1024
 
+      const p = appRam / totalRam
+      appPercent.value = p.toFixed(2)
+    }
+  },
+  { immediate: true }
+)
 getList()
 openLoading()
 dataRefreh()
@@ -266,5 +290,10 @@ table tr {
 .col-item {
   width: 200px;
   display: inline-block;
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

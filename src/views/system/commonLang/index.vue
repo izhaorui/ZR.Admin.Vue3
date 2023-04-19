@@ -136,11 +136,13 @@
           <el-col :lg="24">
             <el-form-item prop="langKey">
               <template #label>
-                <el-tooltip content="翻译key，eg：message.title" placement="top">
-                  <el-icon :size="15">
-                    <questionFilled />
-                  </el-icon>
-                </el-tooltip>
+                <span>
+                  <el-tooltip content="翻译key，eg：message.title" placement="top">
+                    <el-icon :size="15">
+                      <questionFilled />
+                    </el-icon>
+                  </el-tooltip>
+                </span>
                 {{ $t('languageKey') }}
               </template>
               <el-input v-model="form.langKey" placeholder="请输入语言key" />
@@ -194,7 +196,7 @@ const queryParams = reactive({
   langCode: undefined,
   langKey: undefined,
   addtime: undefined,
-  showMode: 2, // 显示模式 1、table显示 2、行列显示
+  showMode: 2 // 显示模式 1、table显示 2、行列显示
 })
 // 弹出层标题
 const title = ref('')
@@ -209,9 +211,9 @@ const state = reactive({
     id: [{ required: true, message: 'id不能为空', trigger: 'blur', type: 'number' }],
     // langCode: [{ required: true, message: '语言code不能为空', trigger: 'change' }],
     langKey: [{ required: true, pattern: /^[A-Za-z].+$/, message: '语言key不能为空', trigger: 'change' }],
-    langName: [{ required: true, message: '内容不能为空', trigger: 'blur' }],
+    langName: [{ required: true, message: '内容不能为空', trigger: 'blur' }]
   },
-  options: {},
+  options: {}
 })
 
 var dictParams = [{ dictType: 'sys_lang_type' }]
@@ -236,7 +238,7 @@ watch(
   () => {
     getList()
   },
-  { immediate: true },
+  { immediate: true }
 )
 function getList() {
   proxy.addDateRange(queryParams, proxy.dateRangeAddtime, 'Addtime')
@@ -264,19 +266,19 @@ function reset() {
       {
         langCode: 'zh-cn',
         label: proxy.$t('common.chinese'),
-        langName: undefined,
+        langName: undefined
       },
       {
         langCode: 'zh-tw',
         label: proxy.$t('common.traditionalChinese'),
-        langName: undefined,
+        langName: undefined
       },
       {
         langCode: 'en',
         label: proxy.$t('common.english'),
-        langName: undefined,
-      },
-    ],
+        langName: undefined
+      }
+    ]
   }
   proxy.resetForm('formRef')
 }
@@ -323,7 +325,7 @@ function handleUpdate(row) {
       opertype.value = 2
 
       form.value = {
-        ...data,
+        ...data
       }
     }
   })
@@ -338,7 +340,7 @@ function handleUpdateP(row) {
       opertype.value = 2
 
       form.value = {
-        ...data,
+        ...data
       }
     }
   })
@@ -382,7 +384,7 @@ function handleExport() {
     .$confirm('是否确认导出所有多语言配置数据项?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(function () {
       return exportCommonLang(queryParams)

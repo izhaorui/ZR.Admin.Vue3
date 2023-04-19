@@ -1,98 +1,60 @@
 <template>
-  <div class="dashboard-editor-container home">
+  <div class="home">
     <!-- 用户信息 -->
     <el-row :gutter="15">
-      <el-col :md="24" :lg="12" :xl="12" class="mb10">
+      <el-col :md="24" :lg="24" :xl="24" class="mb10">
         <el-card shadow="hover">
-          <template #header>
-            <span>{{ $t('layout.myWorkbench') }}</span>
-          </template>
           <div class="user-item">
             <div class="user-item-left">
               <img :src="userInfo.avatar" />
             </div>
 
-            <div class="user-item-right overflow">
+            <div class="user-item-right">
               <el-row>
                 <el-col :xs="24" :md="24" class="right-title mb20 one-text-overflow">
-                  {{ userInfo.welcomeMessage + ',' + userInfo.nickName + ' ,' + userInfo.welcomeContent }}
-                </el-col>
-                <el-col :xs="24" :sm="24" :md="24">
-                  <el-row>
-                    <el-col :xs="24" :lg="8" class="right-l-v">
-                      <div class="right-label">{{ $t('common.nickName') }}：</div>
-                      <div class="right-value">{{ userInfo.nickName }}</div>
-                    </el-col>
-                    <el-col :xs="24" :lg="16" class="right-l-v">
-                      <div class="right-label">{{ $t('layout.identity') }}：</div>
-                      <div class="right-value">
-                        <span v-for="item in userInfo.roles" :key="item.roleId">
-                          {{ item.roleName }}
-                        </span>
-                      </div>
-                    </el-col>
-                  </el-row>
-                </el-col>
-                <el-col :md="24" class="mt10">
-                  <el-row>
-                    <el-col :xs="24" :sm="12" :md="8" class="right-l-v">
-                      <div class="right-label one-text-overflow">IP：</div>
-                      <div class="right-value one-text-overflow">
-                        {{ userInfo.loginIP }}
-                      </div>
-                    </el-col>
-                    <el-col :xs="24" :sm="12" :md="16" class="right-l-v">
-                      <div class="right-label one-text-overflow">{{ $t('common.time') }}：</div>
-                      <div class="right-value one-text-overflow">
-                        {{ currentTime }}
-                      </div>
-                    </el-col>
-                  </el-row>
-                </el-col>
-                <el-col :lg="24" class="mt10">
-                  <el-button icon="edit">
-                    <router-link to="/user/profile">{{ $t('layout.modifyInformation') }}</router-link>
-                  </el-button>
+                  {{ userInfo.welcomeMessage }} <strong>{{ userInfo.nickName }}</strong> {{ userInfo.welcomeContent }}
                 </el-col>
               </el-row>
+              <el-row>
+                <el-button icon="edit">
+                  <router-link to="/user/profile">{{ $t('layout.modifyInformation') }}</router-link>
+                </el-button>
+              </el-row>
             </div>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :md="24" :lg="12" :xl="12" class="mb10">
-        <el-card shadow="hover">
-          <template #header>
-            <div>
-              <span>{{ $t('layout.onlineUsers') }}</span>
-              <el-button class="home-card-more" text @click="onOpenGitee">{{ $t('btn.more') }}</el-button>
-            </div>
-          </template>
-          <div class="info">
-            <el-scrollbar wrap-class="scrollbar-wrapper">
-              <div class="info-scroll">
-                <ul class="info-ul">
-                  <li v-for="(v, k) in onlineUsers" :key="k" class="info-item">
-                    <div class="info-item-left" v-text="v.name"></div>
-                    <div>{{ v.userIP }}({{ v.location }})</div>
-                    <div class="info-item-right" v-text="dayjs(v.loginTime).format('MM/DD日HH:mm:ss')"></div>
-                    <el-button text @click="onChat(v)" icon="bell" v-hasRole="['admin']">通知</el-button>
-                  </li>
-                </ul>
-              </div>
-            </el-scrollbar>
           </div>
         </el-card>
       </el-col>
     </el-row>
 
     <el-row :gutter="15">
-      <el-col :md="24" :lg="24" :xl="24" class="mb10">
+      <el-col :md="12" :lg="12" :xl="12" class="mb10">
         <el-card shadow="hover">
           <template #header>
-            <span>常用功能</span>
+            <div>
+              <span><svg-icon name="peoples" />{{ $t('layout.onlineUsers') }}</span>
+              <el-button class="home-card-more" text @click="onOpenGitee">{{ $t('btn.more') }}</el-button>
+            </div>
           </template>
-
-          <CommonMenu></CommonMenu>
+          <div class="info">
+            <el-scrollbar wrap-class="scrollbar-wrapper">
+              <div v-for="(v, k) in onlineUsers" :key="k" class="info-item">
+                <div class="info-item-left" v-text="v.name"></div>
+                <div>{{ v.userIP }}({{ v.location }})</div>
+                <div class="info-item-right" v-text="dayjs(v.loginTime).format('MM/DD日HH:mm:ss')"></div>
+                <el-button text @click="onChat(v)" icon="bell" v-hasRole="['admin']">通知</el-button>
+              </div>
+            </el-scrollbar>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :md="12" :lg="12" :xl="12" class="mb10">
+        <el-card shadow="hover">
+          <template #header>
+            <span><svg-icon name="tool" /> 常用功能</span>
+          </template>
+          <div class="info">
+            <el-scrollbar wrap-class="scrollbar-wrapper"> <CommonMenu></CommonMenu></el-scrollbar>
+          </div>
         </el-card>
       </el-col>
     </el-row>
@@ -123,13 +85,13 @@
         </div>
       </el-col>
     </el-row>
-    <el-row :gutter="32">
+    <!-- <el-row :gutter="32">
       <el-col :xs="24" :sm="24" :lg="24">
         <div class="chart-wrapper">
           <WordCloudChat :data="data.wordCloud" />
         </div>
       </el-col>
-    </el-row>
+    </el-row> -->
   </div>
 </template>
 
@@ -139,7 +101,7 @@ import LineChart from './dashboard/LineChart'
 import RaddarChart from './dashboard/RaddarChart'
 import PieChart from './dashboard/PieChart'
 import BarChart from './dashboard/BarChart'
-import WordCloudChat from './dashboard/WordCloud.vue'
+// import WordCloudChat from './dashboard/WordCloud.vue'
 import CommonMenu from './components/CommonMenu'
 
 import dayjs from 'dayjs'
@@ -253,7 +215,6 @@ function onChat(item) {
 
 <style lang="scss" scoped>
 .home {
-  overflow: hidden;
   .home-card-more {
     float: right;
     padding: 3px 0;
@@ -261,7 +222,7 @@ function onChat(item) {
   }
 
   .user-item {
-    height: 198px;
+    // height: 198px;
     display: flex;
     align-items: center;
     .user-item-left {
@@ -269,6 +230,7 @@ function onChat(item) {
       height: 60px;
       border-radius: 50%;
       overflow: hidden;
+      margin-right: 10px;
       img {
         width: 100%;
         height: 100%;
@@ -276,69 +238,46 @@ function onChat(item) {
     }
     .user-item-right {
       flex: 1;
-      padding: 15px;
       .right-title {
         font-size: 20px;
-      }
-      .right-l-v {
-        font-size: 13px;
-        display: flex;
-        .right-label {
-          color: gray;
-          width: 75px;
-        }
-        .right-value {
-          flex: 1;
-        }
       }
     }
   }
   .info {
-    height: 189px;
+    height: 200px;
     // overflow-y: scroll;
-    .info-scroll {
-      height: 100%;
-      overflow: auto;
-      .info-ul {
-        list-style: none;
-        padding: 0;
-        .info-item {
-          display: flex;
-          font-size: 13px;
-          color: gray;
-          height: 28px;
-          line-height: 28px;
 
-          &:hover {
-            color: var(--color-primary);
-            cursor: pointer;
-          }
-          .info-item-left {
-            flex: 1;
-            flex-shrink: 0;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-          }
-          .info-item-right {
-            width: 140px;
-            text-align: right;
-            padding-right: 10px;
-          }
-        }
+    .info-item {
+      display: flex;
+      font-size: 13px;
+      color: gray;
+      height: 28px;
+      line-height: 28px;
+
+      &:hover {
+        color: var(--color-primary);
+        cursor: pointer;
+      }
+      .info-item-left {
+        flex: 1;
+        flex-shrink: 0;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        margin-right: 10px;
+      }
+      .info-item-right {
+        width: 140px;
+        text-align: right;
+        padding-right: 10px;
       }
     }
   }
 }
-.dashboard-editor-container {
-  background-color: var(--base-bg-main);
-  position: relative;
-
-  .chart-wrapper {
-    background: var(--base-bg-main);
-    padding: 16px 16px 0;
-    margin-bottom: 32px;
-  }
+.chart-wrapper {
+  background: var(--base-bg-main);
+  padding: 16px 16px 0;
+  margin-bottom: 32px;
 }
 
 @media (max-width: 1024px) {
