@@ -51,9 +51,10 @@
         <el-card shadow="hover">
           <template #header>
             <span><svg-icon name="tool" /> 常用功能</span>
+            <el-button class="home-card-more" text @click="showEdit = !showEdit">{{ $t('btn.edit') }}</el-button>
           </template>
           <div class="info">
-            <el-scrollbar wrap-class="scrollbar-wrapper"> <CommonMenu></CommonMenu></el-scrollbar>
+            <el-scrollbar wrap-class="scrollbar-wrapper"> <CommonMenu v-model="showEdit"></CommonMenu></el-scrollbar>
           </div>
         </el-card>
       </el-col>
@@ -108,7 +109,7 @@ import dayjs from 'dayjs'
 
 import useUserStore from '@/store/modules/user'
 import useSocketStore from '@/store/modules/socket'
-
+const showEdit = ref(false)
 const data = {
   newVisitis: {
     expectedData: [100, 120, 161, 134, 105, 160, 165],

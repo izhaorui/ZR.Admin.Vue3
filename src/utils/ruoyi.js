@@ -257,3 +257,28 @@ export function isEmpty(obj) {
     return false
   }
 }
+
+/**
+ * 查找对象的唯一键值对（比如id）去判断是否存在某个数据中
+ * @param {*} arr 数组
+ * @param {*} key 对象键值名
+ * @param {*} val
+ * @returns
+ */
+export function findItem(arr, key, val) {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i][key] == val) {
+      return i
+    }
+  }
+  return -1
+}
+
+export function color16() {
+  //十六进制颜色随机
+  const r = Math.floor(Math.random() * 256)
+  const g = Math.floor(Math.random() * 256)
+  const b = Math.floor(Math.random() * 256)
+  const color = `#${r.toString(16)}${g.toString(16)}${b.toString(16)}`
+  return color
+}

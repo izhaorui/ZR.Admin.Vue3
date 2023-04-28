@@ -116,3 +116,15 @@
 .el-menu--horizontal .el-sub-menu .el-sub-menu__icon-arrow {
   right: calc(0px - var(--el-menu-base-level-padding)) !important;
 }
+
+// 弹出搜索框
+.header-search-select {
+  .el-select-dropdown__item {
+    height: unset !important;
+    line-height: unset !important;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

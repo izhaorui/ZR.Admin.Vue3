@@ -3,6 +3,7 @@ import { getRouters } from '@/api/system/menu'
 import Layout from '@/layout/index'
 import ParentView from '@/components/ParentView'
 import InnerLink from '@/layout/components/InnerLink'
+import cache from '@/plugins/cache'
 
 // 匹配views里面所有的.vue文件
 const modules = import.meta.glob('./../../views/**/*.vue')
@@ -12,7 +13,8 @@ const usePermissionStore = defineStore('permission', {
     routes: [],
     defaultRoutes: [],
     topbarRouters: [],
-    sidebarRouters: []
+    sidebarRouters: [],
+    commonlyUsedRoutes: [] //常用路由
   }),
   actions: {
     setRoutes(routes) {
@@ -43,9 +45,23 @@ const usePermissionStore = defineStore('permission', {
           this.setSidebarRouters(constantRoutes.concat(sidebarRoutes))
           this.setDefaultRoutes(sidebarRoutes)
           this.setTopbarRoutes(defaultRoutes)
+          this.setCommonlyUsedRoutes()
           resolve(rewriteRoutes)
         })
       })
+    },
+    // 设置常用路由
+    setCommonlyUsedRoutes() {
+      var arraryObjectLocal = cache.local.getJSON('commonlyUseMenu') || []
+      this.commonlyUsedRoutes = arraryObjectLocal
+    },
+    // 移除常用路由
+    removeCommonlyUsedRoutes(item) {
+      var routes = this.commonlyUsedRoutes
+
+      const fi = routes.findIndex((v) => v.path === item.path)
+      routes.splice(fi, 1)
+      cache.local.setJSON('commonlyUseMenu', routes)
     }
   }
 })

@@ -84,7 +84,7 @@ service.interceptors.response.use(
     } else if (message.includes('Request failed with status code 429')) {
       message = '请求过于频繁，请稍后再试'
     } else if (message.includes('Request failed with status code')) {
-      message = '系统接口' + message.substr(message.length - 3) + '异常'
+      message = '系统接口' + message.substr(message.length - 3) + '异常，请联系管理员'
     }
     ElMessage({
       message: message,

@@ -11,7 +11,8 @@
         filterable
         default-first-option
         remote
-        class="header_search_select"
+        popper-class="header-search-select"
+        placement="bottom"
         placeholder="菜单搜索，支持标题、URL模糊查询"
         @change="change">
         <template #prefix>
@@ -20,8 +21,13 @@
           </el-icon>
         </template>
         <el-option v-for="option in options" :key="option.item.path" :value="option.item" :label="option.item.title.join(' > ')">
-          <span style="float: left">{{ option.item.title.join(' > ') }}</span>
-          <span style="float: right; color: var(--el-text-color-secondary); font-size: 13px">{{ option.item.path }}</span>
+          <span style="float: left">
+            <div>
+              {{ option.item.title.join(' > ') }}
+              <div class="path">{{ option.item.path }}</div>
+            </div>
+          </span>
+          <span style="float: right" @click.stop="handleLove(option.item)"> <svg-icon color="#ccc" name="star" /></span>
         </el-option>
       </el-select>
     </el-dialog>
@@ -33,7 +39,8 @@ import Fuse from 'fuse.js'
 import { getNormalPath } from '@/utils/ruoyi'
 import { isHttp } from '@/utils/validate'
 import usePermissionStore from '@/store/modules/permission'
-
+import { findItem, color16 } from '@/utils/ruoyi'
+const { proxy } = getCurrentInstance()
 const search = ref('')
 const options = ref([])
 const searchPool = ref([])
@@ -108,12 +115,15 @@ function generateRoutes(routes, basePath = '', prefixTitle = []) {
     const p = r.path.length > 0 && r.path[0] === '/' ? r.path : '/' + r.path
     const data = {
       path: !isHttp(r.path) ? getNormalPath(basePath + p) : r.path,
-      title: [...prefixTitle]
+      title: [...prefixTitle],
+      icon: 'menu',
+      menuTitle: ''
     }
 
     if (r.meta && r.meta.title) {
       data.title = [...data.title, r.meta.title]
-
+      data.icon = r.meta.icon
+      data.menuTitle = r.meta.title
       if (r.redirect !== 'noRedirect') {
         // only push the routes with title
         // special case: need to exclude parent router without redirect
@@ -136,6 +146,28 @@ function querySearch(query) {
     options.value = fuse.value.search(query)
   } else {
     options.value = []
+  }
+}
+/**
+ * 添加快捷菜单
+ * @param {*} item
+ */
+function handleLove(item) {
+  var arraryObjectLocal = proxy.$cache.local.getJSON('commonlyUseMenu') || []
+
+  var len = 12
+  if (arraryObjectLocal.length >= len) {
+    proxy.$modal.msgError(`最多可添加${len}个常用菜单`)
+    return
+  }
+  let index = findItem(arraryObjectLocal, 'path', item.path)
+  if (index <= -1) {
+    arraryObjectLocal.push({ ...item, color: color16() })
+    proxy.$cache.local.setJSON('commonlyUseMenu', arraryObjectLocal)
+    proxy.$modal.msgSuccess('添加成功')
+    usePermissionStore().setCommonlyUsedRoutes()
+  } else {
+    proxy.$modal.msgError('该菜单已存在')
   }
 }
 
@@ -178,18 +210,14 @@ watch(searchPool, (list) => {
     }
   }
 
-  .header_search_select {
-    height: 50px;
-
-    :deep(.el-input__wrapper) {
-      height: 50px;
-    }
-  }
-
   .search-icon {
     cursor: pointer;
     font-size: 18px;
     vertical-align: middle;
   }
+}
+.path {
+  color: #ccc;
+  font-size: 10px;
 }
 </style>

@@ -31,9 +31,13 @@
         <el-switch v-model="isDark" class="mt-2" inline-prompt />
       </span>
     </div> -->
+    <!-- <h3 class="drawer-title">
+      {{ $t('layout.themeColor') }}
+    </h3> -->
     <div class="drawer-item">
       <span>{{ $t('layout.themeColor') }}</span>
-      <span class="comp-style">
+      <span class="comp-style quick-color-wrap">
+        <!-- <span :style="{ 'background-color': item }" v-for="item in predefineColors" @change="themeChange(item)"></span> -->
         <el-color-picker v-model="theme" :predefine="predefineColors" @change="themeChange" />
       </span>
     </div>
@@ -328,6 +332,17 @@ defineExpose({
   .comp-style {
     float: right;
     margin: -3px 8px 0px 0px;
+  }
+  .quick-color-wrap {
+    display: flex;
+    align-items: center;
+
+    span {
+      width: 15px;
+      height: 15px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
   }
 }
 </style>
