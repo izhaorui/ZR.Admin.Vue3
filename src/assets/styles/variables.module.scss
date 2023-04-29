@@ -12,17 +12,19 @@ $panGreen: #30b08f;
 :root {
   --base-text-color-rgba: rgba(0, 0, 0, 0.85);
   --base-sidebar-width: 220px;
-	// 左侧菜单宽度
+  // 左侧菜单宽度
   --el-aside-width: 220px;
-	//底部高度
+  //底部高度
   --base-footer-height: 30px;
   --base-tags-height: 34px;
   --base-header-height: 50px;
+  //登录框宽度
+  --base-login-width: 280px;
 }
 
 /***侧边栏深色配置***/
 [data-theme='theme-dark'] {
-  --base-menu-background: #304156;
+  --base-menu-background: #324157;
   --base-logo-title-color: #ffffff;
   // // el-ement ui 设置
   // --el-fill-color-blank: #304156;

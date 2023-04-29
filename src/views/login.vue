@@ -6,35 +6,23 @@
 
       <LangSelect title="多语言设置" class="langSet" />
       <el-form-item prop="username">
-        <el-input v-model="loginForm.username" type="text" size="default" auto-complete="off" :placeholder="$t('login.account')">
+        <el-input v-model="loginForm.username" type="text" auto-complete="off" :placeholder="$t('login.account')">
           <template #prefix>
-            <svg-icon name="user" class="el-input__icon input-icon" />
+            <svg-icon name="user" class="input-icon" />
           </template>
         </el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input
-          v-model="loginForm.password"
-          type="password"
-          size="default"
-          auto-complete="off"
-          :placeholder="$t('login.password')"
-          @keyup.enter="handleLogin">
+        <el-input v-model="loginForm.password" type="password" auto-complete="off" :placeholder="$t('login.password')" @keyup.enter="handleLogin">
           <template #prefix>
-            <svg-icon name="password" class="el-input__icon input-icon" />
+            <svg-icon name="password" class="input-icon" />
           </template>
         </el-input>
       </el-form-item>
       <el-form-item prop="code" v-if="captchaOnOff != 'off'">
-        <el-input
-          v-model="loginForm.code"
-          size="default"
-          auto-complete="off"
-          :placeholder="$t('login.captcha')"
-          style="width: 63%"
-          @keyup.enter="handleLogin">
+        <el-input v-model="loginForm.code" auto-complete="off" :placeholder="$t('login.captcha')" style="width: 63%" @keyup.enter="handleLogin">
           <template #prefix>
-            <svg-icon name="validCode" class="el-input__icon input-icon" />
+            <svg-icon name="validCode" class="input-icon" />
           </template>
         </el-input>
         <div class="login-code">
@@ -44,7 +32,10 @@
 
       <div style="display: flex; justify-content: space-between">
         <el-checkbox v-model="loginForm.rememberMe">{{ $t('login.rememberMe') }}</el-checkbox>
-        <router-link class="link-type" :to="'/register'">{{ $t('login.register') }}</router-link>
+        <span style="font-size: 12px">
+          <span @click="handleForgetPwd()" class="forget-pwd">忘记密码</span>
+          <router-link class="link-type" :to="'/register'">{{ $t('login.register') }}</router-link>
+        </span>
       </div>
 
       <el-form-item style="width: 100%">
@@ -167,15 +158,24 @@ function onAuth(type) {
       break
   }
 }
+function handleForgetPwd() {
+  proxy.$modal.msg('请联系管理员')
+}
 getCode()
 getCookie()
 </script>
 
 <style lang="scss" scoped>
 @import '@/assets/styles/login.scss';
+.forget-pwd {
+  color: #ccc;
+  margin-right: 10px;
+  cursor: pointer;
+}
 .login-icon {
   width: 30px;
-  margin-right: 10px;
+  height: 30px;
+  margin-right: 20px;
   cursor: pointer;
 }
 .other-login {

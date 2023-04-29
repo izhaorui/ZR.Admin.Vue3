@@ -152,8 +152,7 @@ getCode()
   justify-content: center;
   align-items: center;
   height: 100%;
-  background: radial-gradient(200% 100% at bottom center, #f7f7b6, #e96f92, #1b2947);
-  background: radial-gradient(220% 105% at top center, #1b2947 10%, #75517d 40%, #e96f92 65%, #f7f7b6);
+  background: radial-gradient(220% 105% at top center, #1b2947 10%, #4b76a7 40%, #81acae 65%, #f7f7b6);
 }
 .title {
   margin: 0px auto 30px auto;
@@ -164,7 +163,7 @@ getCode()
 .register-form {
   border-radius: 6px;
   background: #fff;
-  width: 310px;
+  width: var(--base-login-width);
   padding: 25px 15px 5px 15px;
   .el-input {
     height: 38px;

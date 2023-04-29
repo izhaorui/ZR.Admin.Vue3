@@ -49,7 +49,7 @@ if (callbackQuery.value && callbackQuery.value.state != null) {
       router.push({ path: redirect.value || '/' })
     })
     .catch((error) => {
-      console.error(error)
+      console.error('login-error', error)
       proxy.$modal.msgError(error.msg)
       loading.value = false
     })
@@ -60,6 +60,6 @@ if (callbackQuery.value && callbackQuery.value.state != null) {
 .loading {
   text-align: center;
   color: #ccc;
-	padding: 10px;
+  padding: 10px;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar" :data-theme="sideTheme" :class="appStore.device">
+  <div class="navbar" :class="appStore.device">
     <hamburger id="hamburger-container" :is-active="appStore.sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
     <template v-if="appStore.device == 'desktop'">
       <breadcrumb id="breadcrumb-container" class="breadcrumb-container" v-if="!settingsStore.topNav" />
