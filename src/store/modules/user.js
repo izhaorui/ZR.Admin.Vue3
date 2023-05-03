@@ -56,9 +56,9 @@ const useUserStore = defineStore('user', {
             if (code == 200) {
               setToken(data.token)
               this.token = data.token
-              Cookies.set('username', data.userName, { expires: 30 })
-              Cookies.set('password', encrypt(data.password), { expires: 30 })
-              Cookies.set('rememberMe', true, { expires: 30 })
+              // Cookies.set('username', data.userName, { expires: 30 })
+              // Cookies.set('password', encrypt(data.password), { expires: 30 })
+              // Cookies.set('rememberMe', true, { expires: 30 })
               resolve(res) //then处理
             } else {
               console.log('login error ', res)
