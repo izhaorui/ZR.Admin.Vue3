@@ -171,8 +171,8 @@ const showSearch = ref(true)
 const queryParams = reactive({
   pageNum: 1,
   pageSize: 10,
-  sort: undefined,
-  sortType: undefined,
+  sort: 'id',
+  sortType: 'desc',
   userId: undefined,
   thirdUniqueAcount: undefined,
   accountType: undefined,
