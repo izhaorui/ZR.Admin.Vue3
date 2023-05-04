@@ -14,7 +14,7 @@ import defaultSettings from '@/settings'
 const { proxy } = getCurrentInstance()
 
 const token = computed(() => {
-  return useUserStore().token
+  return useUserStore().userId
 })
 
 const lang = computed(() => {
