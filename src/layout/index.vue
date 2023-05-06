@@ -1,7 +1,14 @@
 <template>
   <el-container :class="classObj" class="app-layout" :style="{ '--current-color': theme }">
     <!-- 移动端打开菜单遮罩 -->
-    <el-drawer v-if="device === 'mobile'" :size="220" v-model="menuDrawer" :with-header="false" modal-class="sidebar-mobile" direction="ltr">
+    <el-drawer
+      v-if="device === 'mobile'"
+      :size="220"
+      v-model="menuDrawer"
+      :with-header="false"
+      modal-class="sidebar-mobile"
+      direction="ltr"
+      @close="close">
       <sidebar />
     </el-drawer>
     <sidebar v-else-if="!sidebar.hide" />
@@ -38,12 +45,7 @@ import iframeToggle from './components/IframeToggle/index'
 import useAppStore from '@/store/modules/app'
 import useSettingsStore from '@/store/modules/settings'
 import useTagsViewStore from '@/store/modules/tagsView'
-const menuDrawer = computed({
-  get: () => useAppStore().sidebar.opened,
-  set: (val) => {
-    useAppStore().toggleSideBar(val)
-  }
-})
+
 const settingsStore = useSettingsStore()
 const theme = computed(() => settingsStore.theme)
 const sidebar = computed(() => useAppStore().sidebar)
@@ -51,7 +53,14 @@ const device = computed(() => useAppStore().device)
 const needTagsView = computed(() => settingsStore.tagsView)
 const fixedHeader = computed(() => settingsStore.fixedHeader)
 const showFooter = computed(() => settingsStore.showFooter)
-
+const menuDrawer = computed({
+  get: () => useAppStore().sidebar.opened,
+  set: (val) => {
+    if (device.value !== 'mobile') {
+      useAppStore().toggleSideBar(val)
+    }
+  }
+})
 // appMain 模块 start
 const route = useRoute()
 useTagsViewStore().addCachedView(route)
@@ -71,7 +80,7 @@ const WIDTH = 792 // refer to Bootstrap's responsive design
 
 watchEffect(() => {
   if (device.value === 'mobile' && sidebar.value.opened) {
-    // useAppStore().closeSideBar()
+    useAppStore().closeSideBar()
   }
   if (width.value - 1 < WIDTH) {
     useAppStore().toggleDevice('mobile')
@@ -84,6 +93,9 @@ watchEffect(() => {
 const settingRef = ref(null)
 function setLayout() {
   settingRef.value.openSetting()
+}
+function close() {
+  useAppStore().closeSideBar()
 }
 </script>
 
