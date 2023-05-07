@@ -12,6 +12,9 @@ export function login(username, password, code, uuid) {
     url: '/login',
     method: 'POST',
     data: data,
+    headers: {
+      userName: username
+    }
   })
 }
 
@@ -40,7 +43,7 @@ export function getCodeImg() {
 }
 /**
  * 注册
- * @returns 
+ * @returns
  */
 export function register(data) {
   return request({
@@ -52,9 +55,9 @@ export function register(data) {
 
 /**
  * 三方授权回调
- * @param {*} data 
+ * @param {*} data
  * @param {*} params
- * @returns 
+ * @returns
  */
 export function oauthCallback(data, params) {
   return request({
