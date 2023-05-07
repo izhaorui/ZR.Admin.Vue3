@@ -1,8 +1,7 @@
 import { login, logout, getInfo, oauthCallback } from '@/api/system/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import defAva from '@/assets/images/profile.jpg'
-import Cookies from 'js-cookie'
-import { encrypt } from '@/utils/jsencrypt'
+import md5 from 'js-md5'
 const useUserStore = defineStore('user', {
   state: () => ({
     userInfo: '',
@@ -22,7 +21,7 @@ const useUserStore = defineStore('user', {
     // 登录
     login(userInfo) {
       const username = userInfo.username.trim()
-      const password = userInfo.password
+      const password = md5(userInfo.password)
       const code = userInfo.code
       const uuid = userInfo.uuid
       return new Promise((resolve, reject) => {
