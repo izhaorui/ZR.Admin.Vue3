@@ -513,10 +513,11 @@ const handleFileUploadProgress = (event, file, fileList) => {
 }
 /** 文件上传成功处理 */
 const handleFileSuccess = (response, file, fileList) => {
+  const { code, msg, data } = response
   upload.open = false
   upload.isUploading = false
   proxy.$refs['uploadRef'].clearFiles()
-  proxy.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + '</div>', '导入结果', {
+  proxy.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + data.item1 + '</div>', '导入结果', {
     dangerouslyUseHTMLString: true
   })
   getList()
@@ -622,7 +623,6 @@ function submitForm() {
  * 解决编辑时角色选中不了问题
  */
 function selectRole(e) {
-  console.log(e, JSON.stringify(this.form))
   proxy.$forceUpdate()
 }
 getTreeselect()
