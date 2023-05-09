@@ -31,7 +31,7 @@
             <el-dropdown-item command="setLayout">
               <span>{{ $t('layout.layoutSetting') }}</span>
             </el-dropdown-item>
-            <el-dropdown-item command="copyToken">
+            <el-dropdown-item command="copyToken" v-if="dev">
               <span>复制token</span>
             </el-dropdown-item>
             <el-dropdown-item divided command="logout">
@@ -70,7 +70,7 @@ const sideTheme = computed(() => settingsStore.sideTheme)
 function toggleSideBar() {
   appStore.toggleSideBar()
 }
-
+const dev = ref(import.meta.env.DEV)
 function handleCommand(command) {
   switch (command) {
     case 'setLayout':
