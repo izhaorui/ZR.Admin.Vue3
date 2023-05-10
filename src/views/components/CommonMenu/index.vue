@@ -1,8 +1,8 @@
 <template>
   <div class="tool-wrap">
     <template v-for="item in commonRouters">
-      <div class="tool-item">
-        <span class="close-used" @click="removeRoute(item)" v-if="showRemove">
+      <div class="tool-item" @mouseenter="onMouseOver(item)" @mouseleave="onMouseOut(item)">
+        <span class="close-used" @click="removeRoute(item)" v-if="item.hidden">
           <el-icon><CloseBold /></el-icon>
         </span>
         <router-link :to="item.path">
@@ -35,26 +35,14 @@ watch(
 )
 const commonRouters = computed(() => usePermissionStore().commonlyUsedRoutes)
 
-// const { proxy } = getCurrentInstance()
-// const menuList = ref([
-//   { path: '/dashboard', title: '控制台', color: '#40c9c6', name: 'dashboard' },
-//   { path: '/tool/gen', title: '代码生成', color: '#40c9c6', name: 'code', perms: ['tool:gen:list'] },
-//   { path: '/tool/file', title: '文件存储', color: '#6A5ACD', name: 'upload', perms: ['tool:file:list'] },
-//   // // { path: '/system/user', title: '角色管理', color: '#7FFF00', name: 'peoples' },
-//   { path: '/system/dict', title: '字典管理', color: '#B0E0E6', name: 'dict', perms: ['system:dict:list'] },
-//   { path: '/monitor/job', title: '定时任务', color: '#D2691E', name: 'job', perms: ['monitor:job:list'] },
-//   { path: '/system/log/operlog', title: '操作日志', color: '#D2691E', name: 'form', perms: ['monitor:operlog:list'] }
-//   // { path: '/system/log/logininfor', title: '登录日志', color: '#D2691E', name: 'logininfor' }
-// ])
-
-// function checkPermi(v) {
-//   if (v && v.perms) {
-//     return proxy.$auth.hasPermiOr(v.perms)
-//   }
-//   return true
-// }
 function removeRoute(item) {
   usePermissionStore().removeCommonlyUsedRoutes(item)
+}
+function onMouseOver(item) {
+  item.hidden = true
+}
+function onMouseOut(item) {
+  item.hidden = false
 }
 </script>
 <style lang="scss" scoped>
