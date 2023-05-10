@@ -121,6 +121,7 @@
                 <el-option label="自定义输入框" value="customInput" />
                 <el-option label="下拉单选组合" title="查询下拉,表单单选" value="selectRadio" />
                 <el-option label="颜色选择器" value="colorPicker" />
+                <el-option label="月份选择器" value="month" />
               </el-select>
             </template>
           </el-table-column>

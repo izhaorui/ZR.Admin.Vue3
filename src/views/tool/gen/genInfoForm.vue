@@ -189,6 +189,9 @@
             <el-checkbox :label="6">
               <el-tag type="danger">清空</el-tag>
             </el-checkbox>
+            <el-checkbox :label="7">
+              <el-tag type="danger">批量删除</el-tag>
+            </el-checkbox>
           </el-checkbox-group>
         </el-form-item>
       </el-col>
@@ -252,7 +255,10 @@
               v-for="(column, index) in columns"
               :key="index"
               :label="column.csharpField + '：' + column.columnComment"
-              :value="column.csharpField"></el-option>
+              :value="column.csharpField">
+              <span style="float: left">{{ column.csharpField }}</span>
+              <span style="float: right">{{ column.columnComment }}</span>
+            </el-option>
           </el-select>
         </el-form-item>
       </el-col>
@@ -269,11 +275,10 @@
             </span>
           </template>
           <el-select v-model="info.treeName" placeholder="请选择树名称字段">
-            <el-option
-              v-for="(column, index) in columns"
-              :key="index"
-              :label="column.csharpField + '：' + column.columnComment"
-              :value="column.csharpField"></el-option>
+            <el-option v-for="(column, index) in columns" :key="index" :label="column.csharpField" :value="column.csharpField">
+              <span style="float: left">{{ column.csharpField }}</span>
+              <span style="float: right">{{ column.columnComment }}</span>
+            </el-option>
           </el-select>
         </el-form-item>
       </el-col>
