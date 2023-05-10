@@ -27,16 +27,17 @@ export default {
     })
 
     connection.onreconnected(() => {
+      ElMessage({
+        message: '与服务器通讯已连接成功',
+        type: 'success',
+        duration: 2000
+      })
       console.log('断线重新连接成功')
     })
 
     connection.onreconnecting(async () => {
       console.log('断线重新连接中... ')
-      ElMessage({
-        message: '与服务器通讯断开连接了，请稍后刷新浏览器尝试',
-        type: 'warning',
-        duration: 3000
-      })
+
       await this.start()
     })
 
