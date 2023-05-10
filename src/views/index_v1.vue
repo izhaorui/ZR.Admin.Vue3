@@ -27,7 +27,7 @@
     </el-row>
 
     <el-row :gutter="15">
-      <el-col :md="12" :lg="12" :xl="12" class="mb10">
+      <el-col :md="12" :lg="12" :xl="12" class="mb10" v-hasPermi="['online']">
         <el-card shadow="hover">
           <template #header>
             <div>
@@ -51,7 +51,13 @@
         <el-card shadow="hover">
           <template #header>
             <span><svg-icon name="tool" /> 常用功能</span>
-            <el-button class="home-card-more" text @click="showEdit = !showEdit">{{ $t('btn.edit') }}</el-button>
+            <div class="home-card-more">
+              <el-button text @click="handleAdd()">{{ $t('btn.add') }}</el-button>
+              <!-- <el-button text @click="showEdit = !showEdit">
+                <span v-if="!showEdit">{{ $t('btn.edit') }}</span>
+                <span v-else>{{ $t('btn.cancel') }}</span>
+              </el-button> -->
+            </div>
           </template>
           <div class="info">
             <el-scrollbar wrap-class="scrollbar-wrapper"> <CommonMenu v-model="showEdit"></CommonMenu></el-scrollbar>
@@ -211,6 +217,9 @@ function onChat(item) {
       })
     })
     .catch(() => {})
+}
+function handleAdd() {
+  proxy.$modal.msg('请通过搜索添加')
 }
 </script>
 

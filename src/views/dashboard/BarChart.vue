@@ -10,16 +10,16 @@ const animationDuration = 6000
 const props = defineProps({
   className: {
     type: String,
-    default: 'chart',
+    default: 'chart'
   },
   width: {
     type: String,
-    default: '100%',
+    default: '100%'
   },
   height: {
     type: String,
-    default: '300px',
-  },
+    default: '300px'
+  }
 })
 function initChart() {
   chart = echarts.init(proxy.$refs.chartRef, 'macarons')
@@ -29,59 +29,49 @@ function initChart() {
       trigger: 'axis',
       axisPointer: {
         // 坐标轴指示器，坐标轴触发有效
-        type: 'shadow', // 默认为直线，可选为：'line' | 'shadow'
-      },
+        type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+      }
+    },
+    title: {
+      text: 'echats标题'
     },
     grid: {
-      top: 10,
+      top: 60,
       left: '2%',
       right: '2%',
       bottom: '3%',
-      containLabel: true,
+      containLabel: true
     },
     xAxis: [
       {
         type: 'category',
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子'],
         axisTick: {
-          alignWithLabel: true,
-        },
-      },
+          alignWithLabel: true
+        }
+      }
     ],
     yAxis: [
       {
         type: 'value',
         axisTick: {
-          show: false,
-        },
-      },
+          show: false
+        }
+      }
     ],
     series: [
       {
-        name: 'pageA',
+        name: '销量',
         type: 'bar',
         stack: 'vistors',
-        barWidth: '60%',
+        barWidth: '40%',
         data: [79, 52, 200, 334, 390, 330, 220],
         animationDuration,
-      },
-      {
-        name: 'pageB',
-        type: 'bar',
-        stack: 'vistors',
-        barWidth: '60%',
-        data: [80, 52, 200, 334, 390, 330, 220],
-        animationDuration,
-      },
-      {
-        name: 'pageC',
-        type: 'bar',
-        stack: 'vistors',
-        barWidth: '60%',
-        data: [30, 52, 200, 334, 390, 330, 220],
-        animationDuration,
-      },
-    ],
+        label: {
+          show: true
+        }
+      }
+    ]
   })
 }
 onMounted(() => {

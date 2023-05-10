@@ -159,7 +159,14 @@
             <el-form-item label="数据权限" v-show="form.dataScope == 2">
               <el-checkbox v-model="deptExpand" @change="handleCheckedTreeExpand($event, 'dept')">展开/折叠</el-checkbox>
               <el-checkbox v-model="deptNodeAll" @change="handleCheckedTreeNodeAll($event, 'dept')">全选/全不选</el-checkbox>
-              <el-checkbox v-model="form.deptCheckStrictly" @change="handleCheckedTreeConnect($event, 'dept')">父子联动</el-checkbox>
+              <el-checkbox v-model="form.deptCheckStrictly" @change="handleCheckedTreeConnect($event, 'dept')">
+                父子联动
+                <el-tooltip content="勾选父节点是否同时选中子节点" placement="top">
+                  <el-icon :size="15">
+                    <questionFilled />
+                  </el-icon>
+                </el-tooltip>
+              </el-checkbox>
               <el-tree
                 class="tree-border"
                 :data="deptOptions"
