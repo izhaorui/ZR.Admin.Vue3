@@ -143,7 +143,8 @@
     "operate": "操作",
     "authorize": "授權",
     "close": "關閉",
-    "multi": "批量"
+    "multi": "批量",
+    "clean": "清空"
   },
   "language": "語言",
   "languageKey": "語言key",
