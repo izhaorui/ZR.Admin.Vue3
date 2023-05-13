@@ -46,8 +46,8 @@
           <el-link type="primary" @click="handleAuthUser(scope.row)">{{ scope.row.userNum }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="150" />
-      <el-table-column label="备注" align="center" prop="remark" width="150" :show-overflow-tooltip="true" />
+      <el-table-column label="创建时间" prop="createTime" width="150" />
+      <el-table-column label="备注" prop="remark" width="150" :show-overflow-tooltip="true" />
       <el-table-column label="操作" align="center" width="200">
         <template #default="scope">
           <div v-if="scope.row.roleKey != 'admin'">
@@ -100,7 +100,7 @@
         <el-form-item label="权限字符">
           {{ form.roleKey }}
         </el-form-item>
-        <el-form-item label="数据权限">
+        <el-form-item label="菜单权限">
           <el-checkbox v-model="menuExpand" @change="handleCheckedTreeExpand($event, 'menu')">展开/折叠</el-checkbox>
           <el-checkbox v-model="menuNodeAll" @change="handleCheckedTreeNodeAll($event, 'menu')">全选/全不选</el-checkbox>
           <el-checkbox v-model="form.menuCheckStrictly" @change="handleCheckedTreeConnect($event, 'menu')">父子联动</el-checkbox>
@@ -137,6 +137,13 @@
             </el-form-item>
           </el-col>
           <el-col :lg="12">
+            <el-form-item label="角色状态">
+              <el-radio-group v-model="form.status">
+                <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictValue">{{ dict.dictLabel }}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :lg="12">
             <el-form-item label="角色顺序" prop="roleSort">
               <el-input-number v-model="form.roleSort" controls-position="right" :min="0" />
             </el-form-item>
@@ -146,13 +153,6 @@
               <el-select v-model="form.dataScope" @change="dataScopeSelectChange">
                 <el-option v-for="item in dataScopeOptions" :key="item.dictValue" :label="item.dictLabel" :value="item.dictValue"></el-option>
               </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="状态">
-              <el-radio-group v-model="form.status">
-                <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictValue">{{ dict.dictLabel }}</el-radio>
-              </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :lg="24">
