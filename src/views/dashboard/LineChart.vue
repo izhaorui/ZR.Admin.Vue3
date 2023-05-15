@@ -47,7 +47,7 @@ function setOptions({ expectedData, actualData } = {}) {
       }
     },
     title: {
-      text: '图标测试数据'
+      text: '图表测试数据'
     },
     grid: {
       left: 10,
