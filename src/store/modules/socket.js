@@ -15,9 +15,11 @@ const useSocketStore = defineStore('socket', {
       this.noticeList = data
       this.noticeDot = data.length > 0
     },
-    setOnlineUsers(data) {
-      this.onlineUsers = data
-    },
+    // setOnlineUsers(data) {
+    //   const { onlineNum, users } = data
+    //   this.onlineUsers = users
+    //   this.onlineNum = onlineNum
+    // },
     sendChat(data) {
       const { proxy } = getCurrentInstance()
       console.log(data)

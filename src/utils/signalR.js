@@ -99,9 +99,9 @@ export default {
     })
 
     // 接收在线用户
-    connection.on('onlineUser', (data) => {
-      useSocketStore().setOnlineUsers(data)
-    })
+    // connection.on('onlineUser', (data) => {
+    //   useSocketStore().setOnlineUsers(data)
+    // })
 
     // 接收聊天数据
     connection.on('receiveChat', (data) => {
