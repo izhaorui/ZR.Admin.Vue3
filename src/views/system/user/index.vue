@@ -30,6 +30,7 @@
           </el-form-item>
           <el-form-item label="状态" prop="status">
             <el-select v-model="queryParams.status" placeholder="用户状态" clearable style="width: 240px">
+              <el-option label="全部" :value="-1" />
               <el-option v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
             </el-select>
           </el-form-item>
@@ -109,7 +110,7 @@
             width="120" />
           <el-table-column label="状态" align="center" key="status" v-if="columns.showColumn('status')">
             <template #default="scope">
-              <el-switch v-model="scope.row.status" active-value="0" inactive-value="1" @change="handleStatusChange(scope.row)"></el-switch>
+              <el-switch v-model="scope.row.status" :active-value="0" :inactive-value="1" @change="handleStatusChange(scope.row)"></el-switch>
             </template>
           </el-table-column>
           <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns.showColumn('createTime')" width="160"></el-table-column>
@@ -200,20 +201,20 @@
           <el-col :lg="12">
             <el-form-item label="用户性别">
               <el-radio-group v-model="form.sex" placeholder="请选择用户性别">
-                <el-radio v-for="dict in sexOptions" :key="dict.dictValue" :label="dict.dictValue">{{ dict.dictLabel }}</el-radio>
+                <el-radio v-for="dict in sexOptions" :key="dict.dictValue" :label="parseInt(dict.dictValue)">{{ dict.dictLabel }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :lg="12">
             <el-form-item label="用户状态">
               <el-radio-group v-model="form.status">
-                <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictValue">{{ dict.dictLabel }}</el-radio>
+                <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="parseInt(dict.dictValue)">{{ dict.dictLabel }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :lg="24">
             <el-form-item label="岗位">
-              <el-select v-model="form.postIds" multiple placeholder="请选择" class="w100">
+              <el-select v-model="form.postIds" multiple placeholder="请选择岗位" class="w100">
                 <el-option v-for="item in postOptions" :key="item.postId" :label="item.postName" :value="item.postId" :disabled="item.status == 1">
                 </el-option>
               </el-select>
@@ -221,7 +222,7 @@
           </el-col>
           <el-col :lg="24">
             <el-form-item label="角色">
-              <el-select v-model="form.roleIds" multiple placeholder="请选择" style="width: 100%" @change="selectRole($event)">
+              <el-select v-model="form.roleIds" multiple placeholder="请选择角色" style="width: 100%" @change="selectRole($event)">
                 <el-option v-for="item in roleOptions" :key="item.roleId" :label="item.roleName" :value="item.roleId" :disabled="item.status == 1">
                   <span style="float: left">{{ item.roleName }}</span>
                   <span style="float: right">{{ item.roleKey }}</span>
@@ -345,7 +346,7 @@ const data = reactive({
     pageSize: 10,
     userName: undefined,
     phonenumber: undefined,
-    status: undefined,
+    status: -1,
     deptId: undefined
   },
   rules: {
@@ -545,8 +546,8 @@ function reset() {
     password: undefined,
     phonenumber: undefined,
     email: undefined,
-    sex: '2',
-    status: '0',
+    sex: 2,
+    status: 0,
     remark: undefined,
     postIds: [],
     roleIds: []

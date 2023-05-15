@@ -2,25 +2,26 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
       <el-form-item label="角色名称" prop="roleName">
-        <el-input v-model="queryParams.roleName" placeholder="请输入角色名称" clearable size="small" @keyup.enter="handleQuery" />
+        <el-input v-model="queryParams.roleName" placeholder="请输入角色名称" clearable @keyup.enter="handleQuery" />
       </el-form-item>
       <!-- <el-form-item label="权限字符" prop="roleKey">
-        <el-input v-model="queryParams.roleKey" placeholder="请输入权限字符" clearable size="small" style="width: 240px" @keyup.enter.native="handleQuery" />
+        <el-input v-model="queryParams.roleKey" placeholder="请输入权限字符" clearable  style="width: 240px" @keyup.enter.native="handleQuery" />
       </el-form-item> -->
       <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="角色状态" clearable size="small">
+        <el-select v-model="queryParams.status" placeholder="角色状态" clearable>
+          <el-option label="全部" :value="-1" />
           <el-option v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="search" size="small" @click="handleQuery">{{ $t('btn.search') }}</el-button>
-        <el-button icon="refresh" size="small" @click="resetQuery">{{ $t('btn.reset') }}</el-button>
+        <el-button type="primary" icon="search" @click="handleQuery">{{ $t('btn.search') }}</el-button>
+        <el-button icon="refresh" @click="resetQuery">{{ $t('btn.reset') }}</el-button>
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="plus" size="small" @click="handleAdd" v-hasPermi="['system:role:add']">{{ $t('btn.add') }}</el-button>
+        <el-button type="primary" plain icon="plus" @click="handleAdd" v-hasPermi="['system:role:add']">{{ $t('btn.add') }}</el-button>
       </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -28,7 +29,7 @@
     <el-table v-loading="loading" :data="roleList" highlight-current-row @selection-change="handleSelectionChange">
       <el-table-column label="编号" prop="roleId" width="80" />
       <el-table-column label="名称" prop="roleName" />
-      <el-table-column label="显示顺序" prop="roleSort"></el-table-column>
+      <el-table-column label="显示顺序" prop="roleSort" align="center"></el-table-column>
       <el-table-column label="权限字符" prop="roleKey" />
       <el-table-column label="权限范围" prop="dataScope" :formatter="dataScopeFormat"></el-table-column>
       <el-table-column label="状态" align="center" width="90">
@@ -36,8 +37,8 @@
           <el-switch
             v-model="scope.row.status"
             :disabled="scope.row.roleKey == 'admin'"
-            active-value="0"
-            inactive-value="1"
+            :active-value="0"
+            :inactive-value="1"
             @change="handleStatusChange(scope.row)"></el-switch>
         </template>
       </el-table-column>
@@ -47,29 +48,16 @@
         </template>
       </el-table-column>
       <el-table-column label="创建时间" prop="createTime" width="150" />
-      <el-table-column label="备注" prop="remark" width="150" :show-overflow-tooltip="true" />
+      <el-table-column label="备注" align="center" prop="remark" width="150" :show-overflow-tooltip="true" />
       <el-table-column label="操作" align="center" width="200">
         <template #default="scope">
           <div v-if="scope.row.roleKey != 'admin'">
-            <el-button
-              size="small"
-              text
-              icon="edit"
-              :title="$t('btn.edit')"
-              @click.stop="handleUpdate(scope.row)"
-              v-hasPermi="['system:role:edit']">
+            <el-button text icon="edit" :title="$t('btn.edit')" @click.stop="handleUpdate(scope.row)" v-hasPermi="['system:role:edit']">
             </el-button>
-            <el-button
-              size="small"
-              text
-              icon="delete"
-              :title="$t('btn.delete')"
-              @click.stop="handleDelete(scope.row)"
-              v-hasPermi="['system:role:remove']">
+            <el-button text icon="delete" :title="$t('btn.delete')" @click.stop="handleDelete(scope.row)" v-hasPermi="['system:role:remove']">
             </el-button>
 
             <el-dropdown
-              size="small"
               @command="(command) => handleCommand(command, scope.row)"
               v-hasPermi="['system:role:edit', 'system:role:authorize', 'system:roleusers:list']">
               <span class="el-dropdown-link">
@@ -151,8 +139,19 @@
           <el-col :lg="12">
             <el-form-item label="数据范围">
               <el-select v-model="form.dataScope" @change="dataScopeSelectChange">
-                <el-option v-for="item in dataScopeOptions" :key="item.dictValue" :label="item.dictLabel" :value="item.dictValue"></el-option>
+                <el-option
+                  v-for="item in dataScopeOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="parseInt(item.dictValue)"></el-option>
               </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :lg="12">
+            <el-form-item label="状态">
+              <el-radio-group v-model="form.status">
+                <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="parseInt(dict.dictValue)">{{ dict.dictLabel }}</el-radio>
+              </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :lg="24">
@@ -261,7 +260,7 @@ const queryParams = reactive({
   pageSize: 10,
   roleName: undefined,
   roleKey: undefined,
-  status: undefined
+  status: -1
 })
 const searchText = ref('')
 
@@ -375,10 +374,10 @@ function reset() {
       roleName: undefined,
       roleKey: undefined,
       roleSort: 99,
-      status: '0',
+      status: 0,
       menuIds: [],
       deptIds: [],
-      dataScope: '1',
+      dataScope: 1,
       menuCheckStrictly: true,
       deptCheckStrictly: true,
       remark: undefined
