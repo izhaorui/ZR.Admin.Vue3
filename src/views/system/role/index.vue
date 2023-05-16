@@ -125,13 +125,6 @@
             </el-form-item>
           </el-col>
           <el-col :lg="12">
-            <el-form-item label="角色状态">
-              <el-radio-group v-model="form.status">
-                <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictValue">{{ dict.dictLabel }}</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
             <el-form-item label="角色顺序" prop="roleSort">
               <el-input-number v-model="form.roleSort" controls-position="right" :min="0" />
             </el-form-item>
