@@ -26,7 +26,7 @@
       <UploadFile v-model="form.fileUrl" :limit="5" :fileSize="15" :data="{ fileDir: 'email', uploadType: 1 }" />
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="formSubmit">发送邮件</el-button>
+      <el-button type="primary" icon="upload" @click="formSubmit">发送邮件</el-button>
     </el-form-item>
   </el-form>
 </template>

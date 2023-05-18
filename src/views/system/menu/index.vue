@@ -161,7 +161,7 @@
                   {{ $t('m.menuNameKey') }}
                 </span>
               </template>
-              <el-input v-model="form.menuNameKey" placeholder="请输入多语言菜单key" />
+              <el-input v-model="form.menuNameKey" placeholder="请输入菜单key" />
             </el-form-item>
           </el-col>
           <el-col :lg="12">
