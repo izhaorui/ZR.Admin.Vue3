@@ -108,7 +108,9 @@
         <el-row>
           <el-col :lg="12">
             <el-form-item label="操作模块：">{{ form.title }} </el-form-item>
-            <el-form-item label="登录信息：">{{ form.operName }} / {{ form.operIp }} / {{ form.operLocation }}</el-form-item>
+            <el-form-item label="登录信息：">
+              <el-tag>{{ form.operName }}</el-tag> {{ form.operIp }} / {{ form.operLocation }}
+            </el-form-item>
           </el-col>
           <el-col :lg="12">
             <el-form-item label="请求地址：">{{ form.operUrl }}</el-form-item>
