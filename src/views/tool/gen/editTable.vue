@@ -114,14 +114,14 @@
                 <el-option label="下拉框多选(查询)" value="selectMulti" />
                 <el-option label="单选框" value="radio" />
                 <el-option label="复选框" value="checkbox" />
-                <el-option label="日期控件" value="datetime" />
+                <el-option label="日期控件(组合)" value="datetime" />
                 <el-option label="图片上传" value="imageUpload" />
                 <el-option label="文件上传" value="fileUpload" />
                 <el-option label="富文本控件" value="editor" />
                 <el-option label="自定义输入框" value="customInput" />
                 <el-option label="下拉单选组合" title="查询下拉,表单单选" value="selectRadio" />
                 <el-option label="颜色选择器" value="colorPicker" />
-                <el-option label="月份选择器" value="month" />
+                <el-option label="月份选择器(查询)" value="month" />
               </el-select>
             </template>
           </el-table-column>
