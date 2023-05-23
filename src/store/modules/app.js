@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie'
+import cache from '@/plugins/cache'
 import defaultSettings from '@/settings'
 const useAppStore = defineStore('app', {
   state: () => ({
@@ -8,8 +9,8 @@ const useAppStore = defineStore('app', {
       hide: false
     },
     device: 'desktop',
-    size: Cookies.get('size') || defaultSettings.defaultSize,
-    lang: Cookies.get('lang') || 'zh-cn'
+    size: cache.local.get('size') || defaultSettings.defaultSize,
+    lang: cache.cookie.get('lang') || defaultSettings.defaultLang
   }),
   actions: {
     toggleSideBar() {
@@ -32,14 +33,14 @@ const useAppStore = defineStore('app', {
     },
     setSize(size) {
       this.size = size
-      Cookies.set('size', size)
+      cache.local.set('size', size)
     },
     toggleSideBarHide(status) {
       this.sidebar.hide = status
     },
     setLang(lang) {
       this.lang = lang
-      Cookies.set('lang', lang)
+      cache.cookie.set('lang', lang)
     }
   }
 })

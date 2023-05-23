@@ -75,5 +75,9 @@ export default {
   /**
    * 默认大小
    */
-  defaultSize: 'default'
+	defaultSize: 'default',
+	/**
+	 * 默认语言
+	 */
+	defaultLang: 'zh-cn'
 }
