@@ -377,7 +377,8 @@ const rules = ref({
     required: true,
     message: '请输入权限前缀',
     trigger: 'blur'
-  }
+  },
+  genType: [{ required: true, message: '请选择方式', trigger: 'blur' }]
 })
 function subSelectChange(value) {
   props.info.subTableFkName = ''
