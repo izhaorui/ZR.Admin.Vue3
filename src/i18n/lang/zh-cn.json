@@ -88,7 +88,8 @@
     "identity": "身份",
     "content1": "代码完全免费开源，易读易懂、界面简洁美观，给你的项目多一种选择与参考。",
     "topNav": "顶部导航",
-    "commonFuncs": "常用功能"
+    "commonFuncs": "常用功能",
+    "openWatermark": "开启水印"
   },
   "common": {
     "ok": "确定",

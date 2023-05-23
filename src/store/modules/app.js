@@ -10,7 +10,7 @@ const useAppStore = defineStore('app', {
     },
     device: 'desktop',
     size: cache.local.get('size') || defaultSettings.defaultSize,
-    lang: cache.cookie.get('lang') || defaultSettings.defaultLang
+    lang: cache.local.get('lang') || defaultSettings.defaultLang
   }),
   actions: {
     toggleSideBar() {
@@ -40,7 +40,7 @@ const useAppStore = defineStore('app', {
     },
     setLang(lang) {
       this.lang = lang
-      cache.cookie.set('lang', lang)
+      cache.local.set('lang', lang)
     }
   }
 })

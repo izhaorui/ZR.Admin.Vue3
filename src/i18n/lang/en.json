@@ -88,7 +88,8 @@
     "identity": "Identity",
     "content1": "The code is completely free and open source, easy to read and understand, and the interface is simple and beautiful, giving you one more choice and reference for your project.",
     "topNav": "Top nav",
-    "commonFuncs": "Common Functions"
+    "commonFuncs": "Common Functions",
+    "openWatermark": "Open Watermark"
   },
   "common": {
     "ok": "Ok",

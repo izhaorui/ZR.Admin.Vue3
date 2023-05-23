@@ -88,7 +88,8 @@
     "rewardUser": "打賞作者喝杯咖啡表示鼓勵",
     "content1": "代碼完全免費開源，易讀易懂、界面簡潔美觀，給你的項目多一種選擇與參考。",
     "topNav": "頂部導航",
-    "commonFuncs": "常用功能"
+    "commonFuncs": "常用功能",
+    "openWatermark": "開啟水印"
   },
   "common": {
     "ok": "確定",

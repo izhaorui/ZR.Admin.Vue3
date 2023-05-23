@@ -64,7 +64,7 @@
       </span>
     </div>
     <div class="drawer-item">
-      <span>开启水印</span>
+      <span>{{ $t('layout.openWatermark') }}</span>
       <span class="comp-style">
         <el-switch v-model="showWatermark" class="drawer-switch" />
       </span>
