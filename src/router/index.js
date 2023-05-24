@@ -95,8 +95,8 @@ export const constantRoutes = [
     children: [
       {
         path: 'icon',
-        // component: () => import('@/views/components/icons/index'),
-        component: () => import('@/views/business/GenDemo'),
+        component: () => import('@/views/components/icons/index'),
+        //component: () => import('@/views/business/GenDemo'),
         name: 'icon',
         meta: { title: '图标icon', icon: 'icon1', noCache: 'fasle', titleKey: 'menu.icon' }
       }
