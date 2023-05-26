@@ -371,8 +371,8 @@ const queryRef = ref(null)
 
 // 任务状态字典
 const isStartOptions = ref([
-  { dictLabel: '运行中', dictValue: 'true', listClass: 'success' },
-  { dictLabel: '已停止', dictValue: 'false', listClass: 'danger' }
+  { dictLabel: '运行中', dictValue: '1', listClass: 'success' },
+  { dictLabel: '已停止', dictValue: '0', listClass: 'danger' }
 ])
 // 任务组名字典
 const jobGroupOptions = ref([])
