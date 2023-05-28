@@ -30,6 +30,9 @@
 
           <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 文章标签</el-button>
         </el-form-item>
+        <el-form-item label="是否公开">
+          <el-switch v-model="form.isPublic" inline-prompt :active-value="1" :in-active-value="0" active-text="是" inactive-text="否" />
+        </el-form-item>
         <el-form-item label="文章封面">
           <UploadImage ref="uploadRef" v-model="form.coverUrl" :limit="1" :fileSize="15" :drag="true" />
         </el-form-item>
@@ -70,7 +73,8 @@ const data = reactive({
     cid: undefined,
     content: undefined,
     status: undefined,
-    categoryId: undefined
+    categoryId: undefined,
+    isPublic: 1
   },
   rules: {
     title: [{ required: true, message: '标题不能为空', trigger: 'blur' }],

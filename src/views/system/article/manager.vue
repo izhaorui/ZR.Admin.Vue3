@@ -57,7 +57,11 @@
           </el-tag>
         </template>
       </el-table-column>
-
+      <el-table-column label="是否公开" align="center" prop="isPublic" width="100">
+        <template #default="scope">
+          <dict-tag :options="options.isPublicOptions" :value="scope.row.isPublic" />
+        </template>
+      </el-table-column>
       <el-table-column prop="createTime" label="创建时间" width="128" :show-overflow-tooltip="true"> </el-table-column>
       <el-table-column label="操作" align="center" width="230">
         <template #default="scope">
@@ -91,10 +95,16 @@ const previewUrl = ref('')
 
 const data = reactive({
   form: {},
-  queryParams: {}
+  queryParams: {},
+  options: {
+    isPublicOptions: [
+      { dictLabel: '是', dictValue: '1' },
+      { dictLabel: '否', dictValue: '0', listClass: 'info' }
+    ]
+  }
 })
 
-const { queryParams } = toRefs(data)
+const { queryParams, options } = toRefs(data)
 
 proxy.getDicts('sys_article_status').then((response) => {
   statusOptions.value = response.data
