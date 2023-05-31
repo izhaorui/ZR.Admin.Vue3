@@ -2,11 +2,11 @@
   <div class="home">
     <!-- 用户信息 -->
     <el-row :gutter="15">
-      <el-col :md="24" :lg="24" :xl="24" class="mb10">
+      <el-col :md="24" :lg="18" :xl="24" class="mb10">
         <el-card shadow="hover">
           <div class="user-item">
             <div class="user-item-left">
-              <img :src="userInfo.avatar" />
+              <el-avatar :size="60" shape="circle" :src="userInfo.avatar" />
             </div>
 
             <div class="user-item-right">
@@ -22,6 +22,12 @@
               </el-row>
             </div>
           </div>
+        </el-card>
+      </el-col>
+      <el-col :lg="6" class="mb10">
+        <el-card style="height: 100%">
+          <div class="text-warning mb10">{{ currentTime }} {{ weekName }}</div>
+          <div>上次登录时间：{{ userInfo.loginDate }}</div>
         </el-card>
       </el-col>
     </el-row>
@@ -88,6 +94,7 @@ import BarChart from './dashboard/BarChart'
 import CommonMenu from './components/CommonMenu'
 
 import useUserStore from '@/store/modules/user'
+import { getWeek } from '@/utils/ruoyi'
 const showEdit = ref(false)
 const data = {
   newVisitis: {
@@ -112,8 +119,9 @@ const userInfo = computed(() => {
   return useUserStore().userInfo
 })
 const currentTime = computed(() => {
-  return proxy.parseTime(new Date())
+  return proxy.parseTime(new Date(), 'YYYY-MM-DD')
 })
+const weekName = getWeek()
 
 let lineChartData = reactive([])
 const dataType = ref(null)
@@ -143,13 +151,8 @@ function handleAdd() {
     .user-item-left {
       width: 60px;
       height: 60px;
-      border-radius: 50%;
       overflow: hidden;
       margin-right: 10px;
-      img {
-        width: 100%;
-        height: 100%;
-      }
     }
     .user-item-right {
       flex: 1;

@@ -1,10 +1,12 @@
 <template>
   <el-image
     :src="`${realSrc}`"
-    fit="cover"
+    fit="contain"
+    preview-teleported
+    :hide-on-click-modal="true"
+    lazy
     :style="`width:${realWidth};height:${realHeight};`"
-    :preview-src-list="realSrcList"
-  >
+    :preview-src-list="realSrcList">
     <template #error>
       <div class="image-slot">
         <el-icon><picture-filled /></el-icon>
@@ -14,50 +16,58 @@
 </template>
 
 <script setup>
-import { isExternal } from "@/utils/validate";
+import { isExternal, isArray } from '@/utils/validate'
 
 const props = defineProps({
   src: {
-    type: String,
-    required: true
+    type: [String, null],
+    required: true,
+    default: ''
   },
   width: {
     type: [Number, String],
-    default: ""
+    default: ''
   },
   height: {
     type: [Number, String],
-    default: ""
+    default: ''
+  },
+  split: {
+    type: String,
+    default: ','
   }
-});
+})
 
 const realSrc = computed(() => {
-  let real_src = props.src.split(",")[0];
-  if (isExternal(real_src)) {
-    return real_src;
+  if (props.src == null || props.src == undefined) return
+  let real_src = props.src.split(props.split)
+
+  if (real_src && isArray(real_src)) {
+    var url0 = real_src[0]
+    if (isExternal(url0)) {
+      return url0
+    }
   }
-  return import.meta.env.VITE_APP_BASE_API + real_src;
-});
+
+  return import.meta.env.VITE_APP_BASE_API + real_src
+})
 
 const realSrcList = computed(() => {
-  let real_src_list = props.src.split(",");
-  let srcList = [];
-  real_src_list.forEach(item => {
+  if (props.src == null || props.src == undefined) return
+  let real_src_list = props.src.split(props.split)
+  let srcList = []
+  real_src_list.forEach((item) => {
     if (isExternal(item)) {
-      return srcList.push(item);
+      return srcList.push(item)
     }
-    return srcList.push(import.meta.env.VITE_APP_BASE_API + item);
-  });
-  return srcList;
-});
+    return srcList.push(import.meta.env.VITE_APP_BASE_API + item)
+  })
+  return srcList
+})
 
-const realWidth = computed(() =>
-  typeof props.width == "string" ? props.width : `${props.width}px`
-);
+const realWidth = computed(() => (typeof props.width == 'string' ? props.width : `${props.width}px`))
 
-const realHeight = computed(() =>
-  typeof props.height == "string" ? props.height : `${props.height}px`
-);
+const realHeight = computed(() => (typeof props.height == 'string' ? props.height : `${props.height}px`))
 </script>
 
 <style lang="scss" scoped>

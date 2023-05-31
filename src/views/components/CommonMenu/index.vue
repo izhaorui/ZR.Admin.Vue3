@@ -11,8 +11,9 @@
         </router-link>
       </div>
     </template>
-    <el-empty :image-size="80" v-if="commonRouters && commonRouters.length <= 0" />
   </div>
+
+  <el-empty :image-size="80" v-if="commonRouters && commonRouters.length <= 0" />
 </template>
 <script setup>
 import usePermissionStore from '@/store/modules/permission'

@@ -1,6 +1,7 @@
 <template>
   <div class="user-info-head" @click="editCropper()">
-    <img :src="options.img" title="点击上传头像" class="img-circle img-lg" />
+    <!-- <img :src="options.img" title="点击上传头像" class="img-circle img-lg" /> -->
+    <el-avatar shape="circle" :size="120" :src="options.img" />
   </div>
   <el-dialog :title="title" v-model="open" width="800px" append-to-body @opened="modalOpened" @close="closeDialog">
     <el-row>
@@ -62,12 +63,12 @@ import useUserStore from '@/store/modules/user'
 export default {
   components: {
     VueCropper,
-    uploadAvatar,
+    uploadAvatar
   },
   props: {
     user: {
-      type: Object,
-    },
+      type: Object
+    }
   },
   setup() {
     const useStore = useUserStore()
@@ -84,7 +85,7 @@ export default {
       autoCropWidth: 200, // 默认生成截图框宽度
       autoCropHeight: 200, // 默认生成截图框高度
       fixedBox: true, // 固定截图框大小 不允许改变
-      previews: {}, //预览数据
+      previews: {} //预览数据
     })
 
     /** 编辑头像 */
@@ -162,9 +163,9 @@ export default {
       beforeUpload,
       uploadImg,
       realTime,
-      closeDialog,
+      closeDialog
     }
-  },
+  }
 }
 </script>
 

@@ -282,3 +282,14 @@ export function color16() {
   const color = `#${r.toString(16)}${g.toString(16)}${b.toString(16)}`
   return color
 }
+
+/**
+ * 返回星期几
+ * @param {*} num
+ * @returns
+ */
+export function getWeek(num = 0) {
+  var datas = dayjs().add(num, 'day').day()
+  var week = ['日', '一', '二', '三', '四', '五', '六']
+  return '星期' + week[datas]
+}
