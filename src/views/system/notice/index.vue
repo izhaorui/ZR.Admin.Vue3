@@ -58,9 +58,9 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button size="small" text icon="bell" @click="handleNotice(scope.row)" v-hasPermi="['system:notice:edit']"> 通知</el-button>
-          <el-button size="small" text icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:notice:edit']"> 修改</el-button>
-          <el-button size="small" text icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:notice:remove']"> 删除</el-button>
+          <el-button text icon="bell" @click="handleNotice(scope.row)" v-hasPermi="['system:notice:edit']"> 通知</el-button>
+          <el-button text icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:notice:edit']"> 修改</el-button>
+          <el-button text icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:notice:remove']"> 删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -71,22 +71,25 @@
     <el-dialog :title="title" v-model="open" width="780px" append-to-body>
       <el-form ref="noticeRef" :model="form" :rules="rules" label-width="80px">
         <el-row>
-          <el-col :lg="12">
+          <el-col :lg="24">
             <el-form-item label="公告标题" prop="noticeTitle">
               <el-input v-model="form.noticeTitle" placeholder="请输入公告标题" />
             </el-form-item>
           </el-col>
           <el-col :lg="12">
             <el-form-item label="公告类型" prop="noticeType">
-              <el-select v-model="form.noticeType" placeholder="请选择公告类型">
+              <!-- <el-select v-model="form.noticeType" placeholder="请选择公告类型">
                 <el-option v-for="dict in typeOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue"></el-option>
-              </el-select>
+              </el-select> -->
+              <el-radio-group v-model="form.noticeType">
+                <el-radio v-for="dict in typeOptions" :key="dict.dictValue" :label="parseInt(dict.dictValue)">{{ dict.dictLabel }}</el-radio>
+              </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :lg="24">
+          <el-col :lg="12">
             <el-form-item label="状态">
               <el-radio-group v-model="form.status">
-                <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictValue">{{ dict.dictLabel }}</el-radio>
+                <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="parseInt(dict.dictValue)">{{ dict.dictLabel }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -167,9 +170,9 @@ function reset() {
   form.value = {
     noticeId: undefined,
     noticeTitle: undefined,
-    noticeType: undefined,
+    noticeType: 1,
     noticeContent: undefined,
-    status: '0'
+    status: 0
   }
   proxy.resetForm('noticeRef')
 }
