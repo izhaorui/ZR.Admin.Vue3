@@ -22,7 +22,7 @@
     </el-col>
   </el-row>
   <el-table :data="dataList">
-    <el-table-column type="selection" width="55" align="center" />
+    <!-- <el-table-column type="selection" width="55" align="center" /> -->
     <el-table-column label="字典编码" align="center" prop="dictCode" />
     <el-table-column label="字典标签" align="center" prop="dictLabel">
       <template #default="scope">
@@ -63,13 +63,11 @@
       </el-form-item>
       <el-form-item label="样式属性" prop="cssClass">
         <!-- <el-input v-model="form.cssClass" placeholder="请输入样式属性" /> -->
-        <el-select v-model="form.cssClass" clearable="">
-          <el-option
-            v-for="dict in cssClassOptions"
-            :class="dict.value"
-            :key="dict.value"
-            :label="dict.label + '(' + dict.value + ')'"
-            :value="dict.value"></el-option>
+        <el-select v-model="form.cssClass" allow-create filterable clearable="">
+          <el-option v-for="dict in cssClassOptions" :class="dict.value" :key="dict.value" :label="dict.label" :value="dict.value">
+            <span style="float: left" :class="dict.value">{{ dict.label }}</span>
+            <span style="float: right">{{ dict.value }}</span>
+          </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="显示排序" prop="dictSort">
@@ -77,11 +75,8 @@
       </el-form-item>
       <el-form-item label="回显样式" prop="listClass">
         <el-select v-model="form.listClass">
-          <el-option
-            v-for="item in listClassOptions"
-            :key="item.value"
-            :label="item.label + '(' + item.value + ')'"
-            :value="item.value"></el-option>
+          <el-option v-for="item in listClassOptions" :key="item.value" :label="item.label + '(' + item.value + ')'" :value="item.value">
+          </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="状态" prop="status">

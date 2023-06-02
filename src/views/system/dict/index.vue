@@ -52,7 +52,7 @@
     <el-table :data="typeList" v-loading="loading" border @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="字典编号" align="center" prop="dictId" width="100" sortable />
-      <el-table-column label="字典类型" align="center" :show-overflow-tooltip="true">
+      <el-table-column label="字典类型" :show-overflow-tooltip="true">
         <template #default="scope">
           <el-link type="primary" @click="showDictData(scope.row)">{{ scope.row.dictType }}</el-link>
         </template>
