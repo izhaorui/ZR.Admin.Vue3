@@ -115,7 +115,7 @@
                 <el-option label="单选框" value="radio" />
                 <el-option label="复选框" value="checkbox" />
                 <el-option label="日期时间范围控件" value="datetime" />
-								<el-option label="日期范围控件" value="datePicker" />
+                <el-option label="日期范围控件" value="datePicker" />
                 <el-option label="图片上传" value="imageUpload" />
                 <el-option label="文件上传" value="fileUpload" />
                 <el-option label="富文本控件" value="editor" />
@@ -224,7 +224,8 @@ function submitForm() {
         checkedBtn: info.value.checkedBtn,
         permissionPrefix: info.value.permissionPrefix,
         colNum: info.value.colNum,
-        generateRepo: info.value.generateRepo
+        generateRepo: info.value.generateRepo,
+        generateMenu: info.value.generateMenu
       }
 
       updateGenTable(genTable)

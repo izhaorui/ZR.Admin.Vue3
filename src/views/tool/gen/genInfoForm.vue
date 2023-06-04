@@ -162,6 +162,31 @@
           <el-input v-model="info.genPath" placeholder="前端代码路径在后端配置文件gen->vuePath下配置"></el-input>
         </el-form-item>
       </el-col>
+      <el-col :lg="12">
+        <el-form-item label="是否生成仓储层">
+          <template #label>
+            是否生成仓储层
+            <span>
+              <el-tooltip content="不勾选代码将不会生成对应的ZR.Repository代码" placement="top">
+                <el-icon>
+                  <question-filled />
+                </el-icon>
+              </el-tooltip>
+            </span>
+          </template>
+          <el-radio-group v-model="info.generateRepo">
+            <el-radio :label="1">是</el-radio>
+            <el-radio :label="0">否</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-col>
+
+      <el-col :lg="12" v-if="info.genType == '1'">
+        <el-form-item prop="generateMenu" label="添加菜单">
+          <el-switch v-model="info.generateMenu" class="ml-2" />
+        </el-form-item>
+      </el-col>
+
       <el-col :lg="24">
         <el-form-item prop="colNum" label="一行显示列">
           <el-radio v-model="info.colNum" :label="12">2列</el-radio>
@@ -193,24 +218,6 @@
               <el-tag type="danger">批量删除</el-tag>
             </el-checkbox>
           </el-checkbox-group>
-        </el-form-item>
-      </el-col>
-      <el-col :lg="24">
-        <el-form-item label="是否生成仓储层">
-          <template #label>
-            是否生成仓储层
-            <span>
-              <el-tooltip content="不勾选代码将不会生成对应的ZR.Repository代码" placement="top">
-                <el-icon>
-                  <question-filled />
-                </el-icon>
-              </el-tooltip>
-            </span>
-          </template>
-          <el-radio-group v-model="info.generateRepo">
-            <el-radio :label="1">是</el-radio>
-            <el-radio :label="0">否</el-radio>
-          </el-radio-group>
         </el-form-item>
       </el-col>
     </el-row>
