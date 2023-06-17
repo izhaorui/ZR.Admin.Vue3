@@ -30,17 +30,7 @@ export function formatTime(time, option) {
   if (option) {
     return parseTime(time, option)
   } else {
-    return (
-      d.getMonth() +
-      1 +
-      '月' +
-      d.getDate() +
-      '日' +
-      d.getHours() +
-      '时' +
-      d.getMinutes() +
-      '分'
-    )
+    return d.getMonth() + 1 + '月' + d.getDate() + '日' + d.getHours() + '时' + d.getMinutes() + '分'
   }
 }
 
@@ -85,7 +75,7 @@ export function cleanArray(actual) {
 export function param(json) {
   if (!json) return ''
   return cleanArray(
-    Object.keys(json).map(key => {
+    Object.keys(json).map((key) => {
       if (json[key] === undefined) return ''
       return encodeURIComponent(key) + '=' + encodeURIComponent(json[key])
     })
@@ -103,7 +93,7 @@ export function param2Obj(url) {
   }
   const obj = {}
   const searchArr = search.split('&')
-  searchArr.forEach(v => {
+  searchArr.forEach((v) => {
     const index = v.indexOf('=')
     if (index !== -1) {
       const name = v.substring(0, index)
@@ -137,7 +127,7 @@ export function objectMerge(target, source) {
   if (Array.isArray(source)) {
     return source.slice()
   }
-  Object.keys(source).forEach(property => {
+  Object.keys(source).forEach((property) => {
     const sourceProperty = source[property]
     if (typeof sourceProperty === 'object') {
       target[property] = objectMerge(target[property], sourceProperty)
@@ -161,9 +151,7 @@ export function toggleClass(element, className) {
   if (nameIndex === -1) {
     classString += '' + className
   } else {
-    classString =
-      classString.substr(0, nameIndex) +
-      classString.substr(nameIndex + className.length)
+    classString = classString.substr(0, nameIndex) + classString.substr(nameIndex + className.length)
   }
   element.className = classString
 }
@@ -233,7 +221,7 @@ export function deepClone(source) {
     throw new Error('error arguments', 'deepClone')
   }
   const targetObj = source.constructor === Array ? [] : {}
-  Object.keys(source).forEach(keys => {
+  Object.keys(source).forEach((keys) => {
     if (source[keys] && typeof source[keys] === 'object') {
       targetObj[keys] = deepClone(source[keys])
     } else {
@@ -297,19 +285,17 @@ export function makeMap(str, expectsLowerCase) {
   for (let i = 0; i < list.length; i++) {
     map[list[i]] = true
   }
-  return expectsLowerCase ?
-    val => map[val.toLowerCase()] :
-    val => map[val]
+  return expectsLowerCase ? (val) => map[val.toLowerCase()] : (val) => map[val]
 }
 
 // 首字母大小
 export function titleCase(str) {
-  return str.replace(/( |^)[a-z]/g, L => L.toUpperCase())
+  return str.replace(/( |^)[a-z]/g, (L) => L.toUpperCase())
 }
 
 // 下划转驼峰
 export function camelCase(str) {
-  return str.replace(/_[a-z]/g, str1 => str1.substr(-1).toUpperCase())
+  return str.replace(/_[a-z]/g, (str1) => str1.substr(-1).toUpperCase())
 }
 
 // 是否数字
@@ -324,11 +310,11 @@ export function isNumberStr(str) {
  * @returns 返回处理后的颜色值
  */
 export function getLightColor(color, level) {
-  let reg = /^\#?[0-9A-Fa-f]{6}$/;
-  if (!reg.test(color)) return color;
-  let rgb = hexToRgb(color);
-  for (let i = 0; i < 3; i++) rgb[i] = Math.floor((255 - rgb[i]) * level + rgb[i]);
-  return rgbToHex(rgb[0], rgb[1], rgb[2]);
+  let reg = /^\#?[0-9A-Fa-f]{6}$/
+  if (!reg.test(color)) return color
+  let rgb = hexToRgb(color)
+  for (let i = 0; i < 3; i++) rgb[i] = Math.floor((255 - rgb[i]) * level + rgb[i])
+  return rgbToHex(rgb[0], rgb[1], rgb[2])
 }
 
 /**
@@ -337,13 +323,13 @@ export function getLightColor(color, level) {
  * @returns 返回处理后的颜色值
  */
 export function hexToRgb(str) {
-  let hexs = '';
-  let reg = /^\#?[0-9A-Fa-f]{6}$/;
-  if (!reg.test(str)) return str;
-  str = str.replace('#', '');
-  hexs = str.match(/../g);
-  for (let i = 0; i < 3; i++) hexs[i] = parseInt(hexs[i], 16);
-  return hexs;
+  let hexs = ''
+  let reg = /^\#?[0-9A-Fa-f]{6}$/
+  if (!reg.test(str)) return str
+  str = str.replace('#', '')
+  hexs = str.match(/../g)
+  for (let i = 0; i < 3; i++) hexs[i] = parseInt(hexs[i], 16)
+  return hexs
 }
 
 /**
@@ -354,12 +340,11 @@ export function hexToRgb(str) {
  * @returns 返回处理后的颜色值
  */
 export function rgbToHex(r, g, b) {
-  let reg = /^\d{1,3}$/;
-  if (!reg.test(r) || !reg.test(g) || !reg.test(b)) return "";
-  let hexs = [r.toString(16), g.toString(16), b.toString(16)];
-  for (let i = 0; i < 3; i++)
-    if (hexs[i].length == 1) hexs[i] = `0${hexs[i]}`;
-  return `#${hexs.join('')}`;
+  let reg = /^\d{1,3}$/
+  if (!reg.test(r) || !reg.test(g) || !reg.test(b)) return ''
+  let hexs = [r.toString(16), g.toString(16), b.toString(16)]
+  for (let i = 0; i < 3; i++) if (hexs[i].length == 1) hexs[i] = `0${hexs[i]}`
+  return `#${hexs.join('')}`
 }
 
 /**

@@ -293,3 +293,21 @@ export function getWeek(num = 0) {
   var week = ['日', '一', '二', '三', '四', '五', '六']
   return '星期' + week[datas]
 }
+
+// 移除空字符串，null, undefined
+export const delEmptyQueryNodes = (obj = {}) => {
+  if (Array.isArray(obj)) {
+    return obj
+  }
+  const params = Object.keys(obj)
+    .filter((key) => obj[key] !== null && obj[key] !== undefined)
+    .reduce(
+      (acc, key) => ({
+        ...acc,
+        [key]: obj[key]
+      }),
+      {}
+    )
+  // console.log('过滤后参数=', params)
+  return params
+}

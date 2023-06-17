@@ -3,7 +3,7 @@ import { ElMessageBox, ElMessage, ElLoading } from 'element-plus'
 import { getToken } from '@/utils/auth'
 import errorCode from '@/utils/errorCode'
 import useUserStore from '@/store/modules/user'
-import { blobValidate } from '@/utils/ruoyi'
+import { blobValidate, delEmptyQueryNodes } from '@/utils/ruoyi'
 import { saveAs } from 'file-saver'
 
 let downloadLoadingInstance
@@ -27,6 +27,11 @@ service.interceptors.request.use(
       config.headers['Authorization'] = 'Bearer ' + getToken()
       config.headers['userid'] = useUserStore().userId
       config.headers['userName'] = useUserStore().userName
+    }
+    const method = config?.method || 'get'
+
+    if (method.toLowerCase() === 'post' || method.toLowerCase() === 'put') {
+      config.data = delEmptyQueryNodes(config.data)
     }
     return config
   },
@@ -81,18 +86,23 @@ service.interceptors.response.use(
       message = '后端接口连接异常'
     } else if (message.includes('timeout')) {
       message = '系统接口请求超时'
-    } else if (message.includes('Request failed with status code 429')) {
+    } else if (message.includes('code 429')) {
       message = '请求过于频繁，请稍后再试'
     } else if (message.includes('Request failed with status code')) {
       message = '系统接口' + message.substr(message.length - 3) + '异常，请联系管理员'
+
+      if (import.meta.env.DEV) {
+        message = 'Oops,后端出错了，你不会连错误日志都不会看吧'
+      }
     }
     ElMessage({
       message: message,
       type: 'error',
-      duration: 3 * 1000,
+      duration: 0,
+      showClose: true,
       grouping: true
     })
-    return Promise.reject(error)
+    return Promise.reject()
   }
 )
 
