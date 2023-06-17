@@ -70,6 +70,7 @@
                 <el-dropdown-menu>
                   <el-dropdown-item command="handleDataScope" icon="circle-check">{{ $t('menu.menuPermi') }}</el-dropdown-item>
                   <el-dropdown-item command="handleAuthUser" icon="user">{{ $t('menu.assignUsers') }}</el-dropdown-item>
+                  <el-dropdown-item command="handleExportMenu" icon="download">导出菜单</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -187,7 +188,7 @@
 </template>
 
 <script setup name="role">
-import { listRole, getRole, delRole, addRole, updateRole, exportRole, dataScope, changeRoleStatus } from '@/api/system/role'
+import { listRole, getRole, delRole, addRole, updateRole, exportRole, dataScope, changeRoleStatus, exportRoleMenu } from '@/api/system/role'
 import { roleMenuTreeselect } from '@/api/system/menu'
 import { treeselect as deptTreeselect, roleDeptTreeselect } from '@/api/system/dept'
 
@@ -403,6 +404,8 @@ function handleCommand(command, row) {
     case 'handleAuthUser':
       handleAuthUser(row)
       break
+    case 'handleExportMenu':
+      handleExportMenu(row)
     default:
       break
   }
@@ -597,7 +600,18 @@ function handleExport() {
       proxy.download(response.data.path)
     })
 }
-
+// 导出角色菜单
+function handleExportMenu(row) {
+  proxy.$modal
+    .confirm('是否确认导出所有角色菜单数据项?', '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+    .then(async () => {
+      await exportRoleMenu({ roleId: row.roleId })
+    })
+}
 getList()
 proxy.getDicts('sys_normal_disable').then((response) => {
   statusOptions.value = response.data
