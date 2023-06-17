@@ -116,7 +116,7 @@
     </el-table>
 
     <!-- 添加或修改菜单对话框 -->
-    <el-dialog :title="title" v-model="open" width="680px" append-to-body>
+    <el-dialog :title="title" v-model="open" width="720px" append-to-body>
       <el-form ref="menuRef" :model="form" :rules="rules" label-width="100px">
         <el-row>
           <el-col :lg="24">
@@ -231,7 +231,11 @@
                   {{ $t('m.componentPath') }}
                 </span>
               </template>
-              <el-input v-model="form.component" placeholder="请输入组件路径" />
+              <el-input v-model="form.component" placeholder="请输入组件路径">
+                <template #prepend>
+                  <span style="width: 40px">src/views/</span>
+                </template>
+              </el-input>
             </el-form-item>
           </el-col>
           <el-col :lg="12" v-if="form.menuType != 'M'">
@@ -377,7 +381,7 @@ proxy.getDicts(dictParams).then((response) => {
 const { queryParams, form, rules, sys_show_hide, sys_normal_disable } = toRefs(state)
 
 /** 查询菜单列表 */
-function getList() {
+function getList(type) {
   loading.value = true
   if (queryParams.value.parentId != undefined || queryParams.value.menuName != undefined) {
     queryParams.value.menuTypeIds = ''
@@ -386,6 +390,9 @@ function getList() {
   }
   listMenu(queryParams.value).then((response) => {
     menuList.value = response.data
+    if (type == 1) {
+      menuQueryOptions.value = response.data
+    }
     loading.value = false
   })
 }
@@ -557,10 +564,10 @@ function refreshMenu(pid) {
   }
 }
 
-listMenu({ menuTypeIds: 'M,C' }).then((response) => {
-  menuQueryOptions.value = response.data
-})
+// listMenu({ menuTypeIds: 'M,C' }).then((response) => {
+//   menuQueryOptions.value = response.data
+// })
 
 // 首次列表加载（只加载一层）
-getList()
+getList(1)
 </script>
