@@ -56,7 +56,7 @@
         </el-table-column>
         <el-table-column sortable prop="isStart" align="center" label="任务状态" width="100">
           <template #default="scope">
-            <dict-tag :value="scope.row.isStart" :options="isStartOptions"></dict-tag>
+            <dict-tag :value="scope.row.isStart" :options="options.isStartOptions"></dict-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -168,7 +168,11 @@
           <el-col :lg="12">
             <el-form-item label="任务分组" maxlength="200" prop="jobGroup">
               <el-select v-model="form.jobGroup" placeholder="请选择任务分组">
-                <el-option v-for="dict in jobGroupOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue"></el-option>
+                <el-option
+                  v-for="dict in options.jobGroupOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -369,14 +373,6 @@ const logTitle = ref('')
 const formRef = ref(null)
 const queryRef = ref(null)
 
-// 任务状态字典
-const isStartOptions = ref([
-  { dictLabel: '运行中', dictValue: '1', listClass: 'success' },
-  { dictLabel: '已停止', dictValue: '0', listClass: 'danger' }
-])
-// 任务组名字典
-const jobGroupOptions = ref([])
-
 const state = reactive({
   form: {},
   // 表单校验
@@ -404,7 +400,14 @@ const state = reactive({
       { dictLabel: '程序集', dictValue: '1' },
       { dictLabel: 'api请求', dictValue: '2', listClass: 'danger' },
       { dictLabel: 'sql脚本', dictValue: '3', listClass: 'info' }
-    ]
+    ],
+    // 任务状态字典
+    isStartOptions: [
+      { dictLabel: '运行中', dictValue: '1', listClass: 'success' },
+      { dictLabel: '已停止', dictValue: '0', listClass: 'danger' }
+    ],
+    // 任务组名字典
+    jobGroupOptions: []
   }
 })
 // 按钮是否可见
@@ -588,8 +591,9 @@ function handleExport() {
 
 getList()
 proxy.getDicts('sys_job_group').then((response) => {
-  jobGroupOptions.value = response.data
+  state.options.jobGroupOptions = response.data
 })
+
 watch(
   () => form.value.triggerType,
   (val) => {
