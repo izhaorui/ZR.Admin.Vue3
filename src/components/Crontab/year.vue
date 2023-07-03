@@ -8,7 +8,7 @@
       <el-radio :label="2" v-model="radioValue"> 每年 </el-radio>
     </el-form-item>
 
-    <el-form-item>
+    <!-- <el-form-item>
       <el-radio :label="3" v-model="radioValue">
         周期从
         <el-input-number v-model="cycle01" :min="fullYear" :max="maxFullYear - 1" /> -
@@ -22,7 +22,7 @@
         <el-input-number v-model="average01" :min="fullYear" :max="maxFullYear - 1" /> 年开始，每
         <el-input-number v-model="average02" :min="1" :max="10" /> 年执行一次
       </el-radio>
-    </el-form-item>
+    </el-form-item> -->
 
     <el-form-item>
       <el-radio :label="5" v-model="radioValue">
@@ -73,6 +73,9 @@ const averageTotal = computed(() => {
   average01.value = props.check(average01.value, fullYear.value, maxFullYear.value - 1)
   average02.value = props.check(average02.value, 1, 10)
   return average01.value + '/' + average02.value
+})
+const maxFullYearLabel = computed(() => {
+  return maxFullYear.value - 1
 })
 const checkboxString = computed(() => {
   return checkboxList.value.join(',')

@@ -15,7 +15,7 @@
       <el-radio v-model="radioValue" :label="3">
         从
         <el-input-number v-model="average01" :min="1" :max="11" /> 月开始，每
-        <el-input-number v-model="average02" :min="1" :max="12 - average01" /> 月月执行一次
+        <el-input-number v-model="average02" :min="1" :max="maxMonth" /> 月执行一次
       </el-radio>
     </el-form-item>
 
@@ -80,6 +80,9 @@ const averageTotal = computed(() => {
   average01.value = props.check(average01.value, 1, 11)
   average02.value = props.check(average02.value, 1, 12 - average01.value)
   return average01.value + '/' + average02.value
+})
+const maxMonth = computed(() => {
+  return 12 - average01.value
 })
 const checkboxString = computed(() => {
   return checkboxList.value.join(',')
