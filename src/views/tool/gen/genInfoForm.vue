@@ -97,6 +97,7 @@
             :props="{ checkStrictly: true, value: 'menuId', label: 'menuName', emitPath: false }"
             placeholder="请选择上级菜单"
             clearable
+            @change="clearParentMent($event)"
             v-model="info.parentMenuId">
             <template #default="{ node, data }">
               <span>{{ data.menuName }}</span>
@@ -394,6 +395,11 @@ function tplSelectChange(value) {
   if (value !== 'sub') {
     props.info.subTableName = ''
     props.info.subTableFkName = ''
+  }
+}
+function clearParentMent(e) {
+  if (e == null) {
+    props.info.parentMenuId = 0
   }
 }
 function setSubTableColumns(value) {
