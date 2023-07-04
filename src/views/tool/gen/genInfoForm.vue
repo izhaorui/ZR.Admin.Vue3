@@ -188,10 +188,16 @@
         </el-form-item>
       </el-col>
 
-      <el-col :lg="24">
+      <el-col :lg="12">
         <el-form-item prop="colNum" label="一行显示列">
           <el-radio v-model="info.colNum" :label="12">2列</el-radio>
           <el-radio v-model="info.colNum" :label="24">1列</el-radio>
+        </el-form-item>
+      </el-col>
+      <el-col :lg="12">
+        <el-form-item prop="operBtnStyle" label="操作按钮样式">
+          <el-radio v-model="info.operBtnStyle" :label="1">样式1</el-radio>
+          <el-radio v-model="info.operBtnStyle" :label="2">text按钮</el-radio>
         </el-form-item>
       </el-col>
       <el-col :lg="24" v-show="info.tplCategory != 'select'">

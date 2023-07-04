@@ -171,7 +171,7 @@ import { useRoute } from 'vue-router'
 import Sortable from 'sortablejs'
 
 // 选中选项卡的 name
-const activeName = ref('cloum')
+const activeName = ref('basic')
 // 表格的高度
 const tableHeight = ref(document.documentElement.scrollHeight - 275 + 'px')
 // 表信息
@@ -214,7 +214,7 @@ function submitForm() {
       genTable.columns = columns.value
 
       // 额外参数拼接
-      genTable.params = {
+      var options = {
         treeCode: info.value.treeCode,
         treeName: info.value.treeName,
         treeParentCode: info.value.treeParentCode,
@@ -227,6 +227,7 @@ function submitForm() {
         generateRepo: info.value.generateRepo,
         generateMenu: info.value.generateMenu
       }
+      genTable.params = options
 
       updateGenTable(genTable)
         .then((res) => {
