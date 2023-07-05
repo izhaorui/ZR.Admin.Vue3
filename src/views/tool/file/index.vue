@@ -91,9 +91,9 @@
           <el-col :lg="24">
             <el-form-item label="存储类型" prop="storeType">
               <el-radio-group v-model="form.storeType" placeholder="请选择存储类型">
-                <el-radio v-for="item in storeTypeOptions" :key="item.dictValue" :label="parseInt(item.dictValue)">
+                <el-radio-button v-for="item in storeTypeOptions" :key="item.dictValue" :label="parseInt(item.dictValue)">
                   {{ item.dictLabel }}
-                </el-radio>
+                </el-radio-button>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -101,7 +101,7 @@
             <el-form-item label="文件目录" prop="storePath">
               <template #label>
                 <span>
-                  <el-tooltip content="文件目录不填则默认使用本地上次格式：uploads/yyyyMMdd" placement="top">
+                  <el-tooltip content="文件目录不填则默认使用本地上传格式：yyyy/MMdd" placement="top">
                     <el-icon :size="15">
                       <questionFilled />
                     </el-icon>
@@ -109,7 +109,18 @@
                   文件目录
                 </span>
               </template>
-              <el-input v-model="form.storePath" placeholder="请输入文件目录" clearable="" auto-complete="" />
+              <!-- <el-input v-model="form.storePath" placeholder="请输入文件目录，默认yyyy/MMdd格式" clearable="" auto-complete="" /> -->
+              <el-select
+                style="width: 100%"
+                v-model="form.storePath"
+                allow-create
+                clearable
+                filterable
+                default-first-option
+                :reserve-keyword="false"
+                placeholder="请输入文件目录，默认yyyy/MMdd格式">
+                <el-option v-for="item in saveDirOptions" :key="item.dictValue" :label="item.dictLabel" :value="item.dictValue" />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :lg="24">
@@ -238,6 +249,12 @@ const fileNameTypeOptions = ref([
   { dictLabel: '原文件名', dictValue: 1 },
   { dictLabel: '自定义', dictValue: 2 },
   { dictLabel: '自动生成', dictValue: 3 }
+])
+// 存储目录前缀
+const saveDirOptions = ref([
+  { dictLabel: 'uploads', dictValue: 'uploads' },
+  { dictLabel: 'video', dictValue: 'video' },
+  { dictLabel: 'avatar', dictValue: 'avatar' }
 ])
 // 数据列表
 const dataList = ref([])
