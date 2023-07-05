@@ -29,8 +29,9 @@ service.interceptors.request.use(
       config.headers['userName'] = useUserStore().userName
     }
     const method = config?.method || 'get'
+    const header = config?.headers['Content-Type'] ?? ''
 
-    if (method.toLowerCase() === 'post' || method.toLowerCase() === 'put') {
+    if ((method.toLowerCase() === 'post' || method.toLowerCase() === 'put') && header != 'multipart/form-data') {
       config.data = delEmptyQueryNodes(config.data)
     }
     return config

@@ -5,7 +5,7 @@ export function upload(data) {
     url: '/common/UploadFile',
     method: 'POST',
     data: data,
-    headers: { "Content-Type": "multipart/form-data" },
+    headers: { 'Content-Type': 'multipart/form-data' }
   })
 }
 
@@ -18,6 +18,6 @@ export function sendEmail(data) {
   return request({
     url: '/common/SendEmail',
     method: 'POST',
-    data: data,
+    data: data
   })
 }
