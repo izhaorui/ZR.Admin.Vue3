@@ -215,7 +215,7 @@
     </el-dialog>
   </div>
 </template>
-<script setup name="sysfile">
+<script setup name="file">
 import { listSysfile, delSysfile, getSysfile } from '@/api/tool/file.js'
 import { useClipboard } from '@vueuse/core'
 // 选中id数组
