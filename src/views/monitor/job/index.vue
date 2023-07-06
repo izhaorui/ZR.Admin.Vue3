@@ -543,10 +543,17 @@ function submitForm() {
   })
 }
 // 排序操作
-function handleSortable(val) {
-  queryParams.orderby = val.prop
-  queryParams.sort = val.order
-  getList()
+function handleSortable(column) {
+  var sort = undefined
+  var sortType = undefined
+
+  if (column.prop != null && column.order != null) {
+    sort = column.prop
+    sortType = column.order
+  }
+  queryParams.sort = sort
+  queryParams.sortType = sortType
+  handleQuery()
 }
 // 表单重置
 function reset() {
