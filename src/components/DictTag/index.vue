@@ -23,15 +23,21 @@ const props = defineProps({
   // 数据
   options: {
     type: Array,
-    default: null,
+    default: null
   },
   // 当前的值
   value: [Number, String, Array, Boolean],
   showValue: false,
+  split: {
+    type: String,
+    default: null
+  }
 })
 
 const values = computed(() => {
-  if (props.value !== null && typeof props.value !== 'undefined') {
+  if (props.split != null && props.split != '') {
+    return props.value.split(props.split) ?? []
+  } else if (props.value !== null && typeof props.value !== 'undefined') {
     return Array.isArray(props.value) ? props.value : [String(props.value)]
   } else {
     return []
