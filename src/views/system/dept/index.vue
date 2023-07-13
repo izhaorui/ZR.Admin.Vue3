@@ -112,7 +112,7 @@
           <el-col :lg="12">
             <el-form-item label="部门状态">
               <el-radio-group v-model="form.status">
-                <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictValue">{{ dict.dictLabel }}</el-radio>
+                <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="parseInt(dict.dictValue)">{{ dict.dictLabel }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -197,7 +197,7 @@ function reset() {
     deptId: undefined,
     parentId: undefined,
     deptName: undefined,
-    orderNum: undefined,
+    orderNum: 999,
     leader: undefined,
     phone: undefined,
     email: undefined,
