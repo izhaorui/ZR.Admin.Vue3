@@ -8,9 +8,9 @@
             <el-option label="单表（增删改查）" value="crud" />
             <!-- <el-option label="单表查询" value="select" /> -->
             <el-option label="树表（增删改查）" value="tree" />
-            <el-option label="导航查询(1对1)" value="subNav"></el-option>
-            <el-option label="导航查询(1对多)" value="subNavMore"></el-option>
-            <!-- <el-option label="主子表（增删改查）" value="sub" /> -->
+            <!-- <el-option label="导航查询(1对1)" value="subNav"></el-option>
+            <el-option label="导航查询(1对多)" value="subNavMore"></el-option> -->
+            <el-option label="主子表（增删改查）" value="subNavMore" />
           </el-select>
         </el-form-item>
       </el-col>
