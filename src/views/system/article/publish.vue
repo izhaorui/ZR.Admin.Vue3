@@ -33,15 +33,9 @@
               <el-tag v-for="tag in form.dynamicTags" :key="tag" class="mr10" closable :disable-transitions="false" @close="handleCloseTag(tag)">
                 {{ tag }}
               </el-tag>
-              <el-input
-                v-if="inputVisible"
-                ref="inputRef"
-                v-model="inputValue"
-                class="w20"
-                @keyup.enter="handleInputConfirm"
-                @blur="handleInputConfirm" />
+              <el-input v-if="inputVisible" ref="inputRef" v-model="inputValue" @keyup.enter="handleInputConfirm" @blur="handleInputConfirm" />
 
-              <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 文章标签</el-button>
+              <el-button v-else class="button-new-tag" size="small" icon="plus" text @click="showInput">文章标签</el-button>
             </el-form-item>
           </el-col>
 
