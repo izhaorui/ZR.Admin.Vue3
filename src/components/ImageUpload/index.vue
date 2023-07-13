@@ -31,8 +31,23 @@
       的文件
     </div>
 
-    <el-dialog v-model="dialogVisible" title="预览" width="800px" append-to-body>
-      <img :src="dialogImageUrl" style="display: block; max-width: 100%; margin: 0 auto" />
+    <el-dialog v-model="dialogVisible" append-to-body>
+      <el-form label-width="100px">
+        <el-form-item label="预览">
+          <el-image style="display: block; max-width: 50%" :src="dialogImageUrl">
+            <template #error>
+              <div class="image-slot">加载失败</div>
+            </template>
+          </el-image>
+        </el-form-item>
+
+        <el-form-item label="访问路径">
+          <el-link type="warning" :href="dialogImageUrl" target="_blank">{{ dialogImageUrl }}</el-link>
+          <el-button type="danger" text icon="document-copy" plain class="ml10" v-clipboard:success="copySuccess" v-clipboard:copy="dialogImageUrl"
+            >复制</el-button
+          >
+        </el-form-item>
+      </el-form>
     </el-dialog>
   </div>
 </template>
@@ -45,27 +60,27 @@ const props = defineProps({
   // 图片数量限制
   limit: {
     type: Number,
-    default: 5,
+    default: 5
   },
   // 大小限制(MB)
   fileSize: {
     type: Number,
-    default: 5,
+    default: 5
   },
   // 文件类型, 例如['png', 'jpg', 'jpeg']
   fileType: {
     type: Array,
-    default: () => ['png', 'jpg', 'jpeg'],
+    default: () => ['png', 'jpg', 'jpeg']
   },
   // 是否显示提示
   isShowTip: {
     type: Boolean,
-    default: true,
+    default: true
   },
   // 上传携带的参数
   data: {
-    type: Object,
-  },
+    type: Object
+  }
 })
 
 const { proxy } = getCurrentInstance()
@@ -102,7 +117,7 @@ watch(
       return []
     }
   },
-  { deep: true, immediate: true },
+  { deep: true, immediate: true }
 )
 
 // 删除图片
@@ -186,5 +201,8 @@ function listToString(list, separator) {
     }
   }
   return strs != '' ? strs.substr(0, strs.length - 1) : ''
+}
+function copySuccess() {
+  proxy.$modal.msgSuccess('复制成功')
 }
 </script>
