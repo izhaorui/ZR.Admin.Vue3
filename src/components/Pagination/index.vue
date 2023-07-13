@@ -23,43 +23,43 @@ export default {
   props: {
     total: {
       required: true,
-      type: Number,
+      type: Number
     },
     page: {
       type: Number,
-      default: 1,
+      default: 1
     },
     limit: {
       type: Number,
-      default: 20,
+      default: 20
     },
     pageSizes: {
       type: Array,
       default() {
         return [10, 20, 30, 50, 100]
-      },
+      }
     },
     // 移动端页码按钮的数量端默认值5
     pagerCount: {
       type: Number,
-      default: document.body.clientWidth < 992 ? 5 : 7,
+      default: document.body.clientWidth < 992 ? 5 : 7
     },
     layout: {
       type: String,
-      default: 'total, sizes, prev, pager, next, jumper',
+      default: 'total, sizes, prev, pager, next, jumper'
     },
     background: {
       type: Boolean,
-      default: true,
+      default: true
     },
     autoScroll: {
       type: Boolean,
-      default: true,
+      default: true
     },
     hidden: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   setup(props, { ctx, emit }) {
     const currentPage = computed({
@@ -68,7 +68,7 @@ export default {
       },
       set(val) {
         emit('update:page', val)
-      },
+      }
     })
     const pageSize = computed({
       get() {
@@ -76,7 +76,7 @@ export default {
       },
       set(val) {
         emit('update:limit', val)
-      },
+      }
     })
 
     function handleSizeChange(val) {
@@ -96,15 +96,16 @@ export default {
       currentPage,
       pageSize,
       handleSizeChange,
-      handleCurrentChange,
+      handleCurrentChange
     }
-  },
+  }
 }
 </script>
 <style scoped>
 .pagination-container {
   /* background: #fff; */
-  padding: 32px 16px;
+  padding: 20px 16px;
+  float: right;
 }
 .pagination-container.hidden {
   display: none;
