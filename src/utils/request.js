@@ -82,6 +82,7 @@ service.interceptors.response.use(
   },
   (error) => {
     console.log('axios err', error)
+    const duration = 3000
     let { message } = error
     if (message == 'Network Error') {
       message = '后端接口连接异常'
@@ -94,12 +95,13 @@ service.interceptors.response.use(
 
       if (import.meta.env.DEV) {
         message = 'Oops,后端出错了，你不会连错误日志都不会看吧'
+        duration = 0
       }
     }
     ElMessage({
       message: message,
       type: 'error',
-      duration: 0,
+      duration: duration,
       showClose: true,
       grouping: true
     })
