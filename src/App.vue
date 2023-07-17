@@ -7,9 +7,9 @@
 import useUserStore from './store/modules/user'
 import useAppStore from './store/modules/app'
 import { ElConfigProvider } from 'element-plus'
-import zh from 'element-plus/lib/locale/lang/zh-cn' // 中文语言
-import en from 'element-plus/lib/locale/lang/en' // 英文语言
-import tw from 'element-plus/lib/locale/lang/zh-tw' //繁体
+import zh from 'element-plus/dist/locale/zh-cn.mjs' // 中文语言
+import en from 'element-plus/dist/locale/en.mjs' // 英文语言
+import tw from 'element-plus/dist/locale/zh-tw.mjs' //繁体
 import defaultSettings from '@/settings'
 const { proxy } = getCurrentInstance()
 
