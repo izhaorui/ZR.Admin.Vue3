@@ -64,7 +64,9 @@ service.interceptors.response.use(
         useUserStore()
           .logOut()
           .then(() => {
-            location.href = import.meta.env.VITE_APP_ROUTER_PREFIX + 'index'
+            if (location.pathname.indexOf('/login') != 0) {
+              location.href = import.meta.env.VITE_APP_ROUTER_PREFIX + 'index'
+            }
           })
       })
 
