@@ -114,6 +114,30 @@
       <el-col :sm="24" :lg="8">
         <el-card>
           <template #header>
+            <span>移动端体验</span>
+          </template>
+
+          <div class="body">
+            <table style="width: 100%; text-align: center">
+              <tr>
+                <td>微信小程序</td>
+                <td>H5</td>
+              </tr>
+              <tr>
+                <td>
+                  <img src="@/assets/images/qrcode.jpg" alt="donate" style="width: 180px" />
+                </td>
+                <td>
+                  <img src="@/assets/images/qrcodeH5.png" alt="donate" style="width: 180px" />
+                </td>
+              </tr>
+            </table>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :sm="24" :lg="8">
+        <el-card>
+          <template #header>
             <span>{{ $t('layout.contactUs') }}</span>
           </template>
           <div class="body">
