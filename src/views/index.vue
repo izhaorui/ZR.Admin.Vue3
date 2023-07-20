@@ -111,10 +111,13 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :sm="24" :lg="8">
+      <el-col :sm="24" :lg="10">
         <el-card>
           <template #header>
-            <span>移动端体验</span>
+            <span>
+              移动端体验
+              <span style="color: red">如有需要联系作者</span>
+            </span>
           </template>
 
           <div class="body">
@@ -125,17 +128,17 @@
               </tr>
               <tr>
                 <td>
-                  <img src="@/assets/images/qrcode.jpg" alt="donate" style="width: 180px" />
+                  <img src="@/assets/images/qrcode.jpg" alt="donate" style="width: 160px" />
                 </td>
                 <td>
-                  <img src="@/assets/images/qrcodeH5.png" alt="donate" style="width: 180px" />
+                  <img src="@/assets/images/qrcodeH5.png" alt="donate" style="width: 160px" />
                 </td>
               </tr>
             </table>
           </div>
         </el-card>
       </el-col>
-      <el-col :sm="24" :lg="8">
+      <el-col :sm="24" :lg="6">
         <el-card>
           <template #header>
             <span>{{ $t('layout.contactUs') }}</span>
