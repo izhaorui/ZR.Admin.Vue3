@@ -15,7 +15,6 @@
       <el-form-item label="登录时间">
         <el-date-picker
           v-model="dateRange"
-          style="width: 240px"
           type="daterange"
           range-separator="-"
           start-placeholder="开始日期"
@@ -42,12 +41,17 @@
       <right-toolbar :showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="list" border @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="访问编号" align="center" prop="infoId" width="80"/>
+      <el-table-column label="访问编号" align="center" prop="infoId" width="80" />
       <el-table-column label="用户名称" align="center" prop="userName" />
-      <el-table-column label="登录地址" align="center" prop="ipaddr" width="130" :show-overflow-tooltip="true" />
-      <el-table-column label="登录地点" align="center" prop="loginLocation" :show-overflow-tooltip="true" />
+      <el-table-column label="登录地址" align="center" prop="ipaddr" width="130">
+        <template #default="{ row }">
+          <div>{{ row.loginLocation }}</div>
+          <div>{{ row.ipaddr }}</div>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="登录地点" align="center" prop="loginLocation"  /> -->
       <el-table-column label="浏览器" align="center" prop="browser" />
       <el-table-column label="操作系统" align="center" prop="os" />
       <el-table-column label="操作状态" align="center" prop="status">
@@ -59,6 +63,11 @@
       <el-table-column label="登录日期" align="center" prop="loginTime" width="180">
         <template #default="scope">
           <span>{{ scope.row.loginTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作">
+        <template #default="scope">
+          <el-button type="danger" text plain icon="delete" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -92,7 +101,7 @@ const queryParams = reactive({
   pageSize: 10,
   ipaddr: undefined,
   userName: undefined,
-  status: undefined,
+  status: undefined
 })
 
 const { proxy } = getCurrentInstance()
@@ -142,7 +151,7 @@ function handleDelete(row) {
     .$confirm('是否确认删除访问编号为"' + infoIds + '"的数据项?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(function () {
       return delLogininfor(infoIds)
@@ -158,7 +167,7 @@ function handleClean() {
     .$confirm('是否确认清空所有登录日志数据项?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(function () {
       return cleanLogininfor()
@@ -174,7 +183,7 @@ function handleExport() {
     .$confirm('是否确认导出所有操作日志数据项?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(function () {
       return exportLogininfor(queryParams)

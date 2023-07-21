@@ -15,8 +15,12 @@
         </template>
       </el-table-column>
       <el-table-column prop="name" label="用户名" align="center" />
-      <el-table-column prop="userIP" label="用户IP" align="center" />
-      <el-table-column prop="location" label="登录地点" align="center" />
+      <el-table-column label="登录地点" align="center">
+        <template #default="{ row }">
+          <div>{{ row.location }}</div>
+          <div>{{ row.userIP }}</div>
+        </template>
+      </el-table-column>
       <el-table-column prop="browser" label="登录浏览器"></el-table-column>
       <el-table-column prop="loginTime" label="登录时间">
         <template #default="scope">

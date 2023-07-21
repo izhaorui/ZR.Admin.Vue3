@@ -62,13 +62,13 @@
       </el-table-column>
       <el-table-column label="请求方法" align="center" prop="requestMethod" v-if="columns.showColumn('requestMethod')" />
       <el-table-column label="操作人员" align="center" prop="operName" v-if="columns.showColumn('operName')" />
-      <el-table-column label="主机" align="center" prop="operIp" width="130" :show-overflow-tooltip="true" v-if="columns.showColumn('operIP')" />
-      <el-table-column
-        label="操作地点"
-        align="center"
-        prop="operLocation"
-        :show-overflow-tooltip="true"
-        v-if="columns.showColumn('operLocation')" />
+
+      <el-table-column label="操作地址" align="center" prop="operIp" width="120">
+        <template #default="{ row }">
+          <div>{{ row.operLocation }}</div>
+          <div>{{ row.operIp }}</div>
+        </template>
+      </el-table-column>
       <el-table-column label="操作状态" align="center" prop="status" v-if="columns.showColumn('status')">
         <template #default="{ row }">
           <dict-tag :options="options.statusOptions" :value="row.status"></dict-tag>
@@ -96,6 +96,7 @@
           <el-button size="small" text icon="view" @click="handleView(scope.row, scope.index)" v-hasPermi="['monitor:operlog:query']">
             详细
           </el-button>
+          <el-button size="small" text icon="delete" @click="handleDelete(scope.row)" v-hasPermi="['monitor:operlog:remove']"> 删除 </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -143,7 +144,9 @@
             </el-form-item>
           </el-col>
           <el-col :lg="24">
-            <el-form-item label="异常信息：" v-if="form.status === 1">{{ form.errorMsg }}</el-form-item>
+            <el-form-item label="异常信息：" v-if="form.status === 1">
+              <div class="text-danger">{{ form.errorMsg }}</div>
+            </el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -205,9 +208,9 @@ const columns = ref([
   { visible: true, prop: 'operName', label: '操作人员' },
   // { visible: true, prop: 'deptName', label: '部门' },
   // { visible: true, prop: 'operUrl', label: '请求地址' },
-  { visible: true, prop: 'operIP', label: '请求IP' },
+  // { visible: true, prop: 'operIP', label: '请求IP' },
   { visible: true, prop: 'status', label: '操作状态' },
-  { visible: true, prop: 'operLocation', label: '操作人地址' },
+  // { visible: true, prop: 'operLocation', label: '操作人地址' },
   { visible: true, prop: 'operTime', label: '操作时间' },
   { visible: false, prop: 'method', label: '操作方法' },
   { visible: false, prop: 'operParam', label: '请求参数' },
