@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-popover placement="bottom" trigger="hover" width="300px" popper-class="el-popover-pupop-user-news">
+    <el-popover placement="bottom" trigger="hover" width="400px" popper-class="el-popover-pupop-user-news">
       <template #reference>
         <el-badge :is-dot="noticeDot" style="line-height: 18px">
           <el-icon><bell /></el-icon>
@@ -87,6 +87,10 @@ function onGoToGiteeClick() {
       color: #999999;
       margin-top: 5px;
       margin-bottom: 5px;
+      height: 100px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
     }
     .content-box-time {
       color: #999999;

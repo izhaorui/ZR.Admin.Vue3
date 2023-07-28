@@ -133,12 +133,12 @@
           <el-col :lg="12">
             <el-form-item label="操作时间：">{{ parseTime(form.operTime) }}</el-form-item>
           </el-col>
-          <el-col :lg="24">
+          <el-col :lg="24" v-if="form.operParam">
             <el-form-item label="请求参数：">
               <el-input type="textarea" rows="5" v-model="form.operParam"> </el-input>
             </el-form-item>
           </el-col>
-          <el-col :lg="24">
+          <el-col :lg="24" v-if="form.jsonResult">
             <el-form-item label="返回结果：">
               <el-input type="textarea" rows="10" v-model="form.jsonResult"> </el-input>
             </el-form-item>

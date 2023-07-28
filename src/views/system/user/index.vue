@@ -251,7 +251,7 @@
         name="file"
         ref="uploadRef"
         :limit="1"
-        accept=".xlsx, .xls"
+        accept=".xlsx,.xls"
         :headers="upload.headers"
         :action="upload.url + '?updateSupport=' + upload.updateSupport"
         :disabled="upload.isUploading"
