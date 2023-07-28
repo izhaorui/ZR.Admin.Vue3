@@ -184,6 +184,16 @@
 
       <el-col :lg="12" v-if="info.genType == '1'">
         <el-form-item prop="generateMenu" label="添加菜单">
+          <template #label>
+            添加菜单
+            <span>
+              <el-tooltip content="将自动添加菜单到菜单栏" placement="top">
+                <el-icon>
+                  <question-filled />
+                </el-icon>
+              </el-tooltip>
+            </span>
+          </template>
           <el-switch v-model="info.generateMenu" class="ml-2" />
         </el-form-item>
       </el-col>
@@ -196,12 +206,12 @@
       </el-col>
       <el-col :lg="12">
         <el-form-item prop="operBtnStyle" label="操作按钮样式">
-          <el-radio v-model="info.operBtnStyle" :label="1">样式1</el-radio>
-          <el-radio v-model="info.operBtnStyle" :label="2">text按钮</el-radio>
+          <el-radio v-model="info.operBtnStyle" :label="1">button</el-radio>
+          <el-radio v-model="info.operBtnStyle" :label="2">text button</el-radio>
         </el-form-item>
       </el-col>
       <el-col :lg="24" v-show="info.tplCategory != 'select'">
-        <el-form-item label="显示按钮">
+        <el-form-item label="生成功能">
           <el-checkbox-group v-model="info.checkedBtn" @change="checkedBtnSelect">
             <el-checkbox :label="1">
               <el-tag>添加</el-tag>
@@ -223,6 +233,9 @@
             </el-checkbox>
             <el-checkbox :label="7">
               <el-tag type="danger">批量删除</el-tag>
+            </el-checkbox>
+            <el-checkbox :label="8">
+              <el-tag>批量导入</el-tag>
             </el-checkbox>
           </el-checkbox-group>
         </el-form-item>
