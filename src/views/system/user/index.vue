@@ -475,7 +475,7 @@ function handleStatusChange(row) {
       proxy.$modal.msgSuccess(text + '成功')
     })
     .catch(function () {
-      row.status = row.status === '0' ? '1' : '0'
+      row.status = row.status == 1 ? 0 : 1
     })
 }
 /** 重置密码按钮操作 */

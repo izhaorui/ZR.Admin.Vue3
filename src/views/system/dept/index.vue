@@ -201,7 +201,7 @@ function reset() {
     leader: undefined,
     phone: undefined,
     email: undefined,
-    status: '0'
+    status: 0
   }
   proxy.resetForm('formRef')
 }

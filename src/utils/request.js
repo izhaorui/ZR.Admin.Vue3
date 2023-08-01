@@ -84,7 +84,7 @@ service.interceptors.response.use(
   },
   (error) => {
     console.log('axios err', error)
-    const duration = 3000
+    var duration = 3000
     let { message } = error
     if (message == 'Network Error') {
       message = '后端接口连接异常'
