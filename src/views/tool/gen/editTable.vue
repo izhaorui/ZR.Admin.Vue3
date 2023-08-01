@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <div>
     <el-tabs v-model="activeName" tab-position="top">
       <el-tab-pane label="基本信息" name="basic">
         <basic-info-form ref="basicInfo" :info="info" />
@@ -123,6 +123,7 @@
                 <el-option label="下拉单选组合" title="查询下拉,表单单选" value="selectRadio" />
                 <el-option label="颜色选择器" value="colorPicker" />
                 <el-option label="月份选择器(查询)" value="month" />
+                <el-option label="switch开关" value="switch" />
               </el-select>
             </template>
           </el-table-column>
@@ -153,6 +154,7 @@
             </template>
           </el-table-column>
         </el-table>
+        <div style="font-size: 12px; color: #8492a6">提示：拖动单元格可排序</div>
       </el-tab-pane>
     </el-tabs>
     <footer class="mt20" style="text-align: center">
@@ -160,7 +162,7 @@
       <el-button type="success" icon="refresh" @click="handleQuery()">刷新</el-button>
       <el-button icon="back" @click="close()">返回</el-button>
     </footer>
-  </el-card>
+  </div>
 </template>
 <script setup name="genedit">
 import { updateGenTable, getGenTable } from '@/api/tool/gen'
