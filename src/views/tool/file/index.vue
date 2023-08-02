@@ -15,9 +15,12 @@
           placeholder="请选择上传时间"></el-date-picker>
       </el-form-item>
       <el-form-item label="" prop="storeType">
-        <el-select v-model="queryParams.storeType" placeholder="请选择存储类型" clearable="">
-          <el-option v-for="item in storeTypeOptions" :key="item.dictValue" :label="item.dictLabel" :value="item.dictValue"></el-option>
-        </el-select>
+        <el-radio-group v-model="queryParams.storeType" placeholder="请选择存储类型">
+          <el-radio-button> 全部 </el-radio-button>
+          <el-radio-button v-for="item in storeTypeOptions" :key="item.dictValue" :label="item.dictValue">
+            {{ item.dictLabel }}
+          </el-radio-button>
+        </el-radio-group>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="search" @click="handleQuery">{{ $t('btn.search') }}</el-button>
