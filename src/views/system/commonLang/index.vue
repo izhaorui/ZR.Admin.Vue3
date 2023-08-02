@@ -59,6 +59,23 @@
         </el-button>
       </el-col>
       <el-col :span="1.5">
+        <el-dropdown trigger="click" v-hasPermi="['business:commonlang:import']">
+          <el-button type="primary" plain icon="Upload">
+            {{ $t('btn.import') }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
+          </el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="upload">
+                <importData
+                  templateUrl="system/CommonLang/importTemplate"
+                  importUrl="/system/CommonLang/importData"
+                  @success="handleFileSuccess"></importData>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </el-col>
+      <el-col :span="1.5">
         <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['system:lang:export']">{{ $t('btn.export') }}</el-button>
       </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
@@ -115,19 +132,14 @@
           <el-button v-hasPermi="['system:lang:edit']" text size="small" icon="edit" title="编辑" @click="handleUpdateP(scope.row)">
             {{ $t('btn.edit') }}
           </el-button>
-          <!-- <el-button v-hasPermi="['system:lang:delete']" type="danger" icon="delete" title="删除" @click="handleDeleteP(scope.row)"></el-button> -->
+          <el-button v-hasPermi="['system:lang:delete']" text type="danger" icon="delete" title="删除" @click="handleDeleteByKey(scope.row)">
+            {{ $t('btn.delete') }}
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination
-      v-if="total > 0"
-      class="mt10"
-      background
-      :total="total"
-      v-model:page="queryParams.pageNum"
-      v-model:limit="queryParams.pageSize"
-      @pagination="getList" />
+    <pagination class="mt10" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
 
     <!-- 添加或修改多语言配置对话框 -->
     <el-dialog :title="title" :lock-scroll="false" v-model="open" width="550px">
@@ -174,8 +186,17 @@
 </template>
 
 <script setup name="commonlang">
-import { listCommonLang, delCommonLang, updateCommonLang, getCommonLang, exportCommonLang, getCommonLangByKey } from '@/api/system/commonlang.js'
+import {
+  listCommonLang,
+  delCommonLang,
+  updateCommonLang,
+  getCommonLang,
+  exportCommonLang,
+  getCommonLangByKey,
+  delCommonLangByKey
+} from '@/api/system/commonlang.js'
 import { isEmpty } from '@/utils/ruoyi.js'
+import importData from '@/components/ImportData'
 const { proxy } = getCurrentInstance()
 // 选中id数组数组
 const ids = ref([])
@@ -313,6 +334,18 @@ function handleDelete(row) {
     .catch(() => {})
 }
 
+function handleDeleteByKey(row) {
+  proxy
+    .$confirm('是否确认删除key为"' + row.langKey + '"的数据项？')
+    .then(function () {
+      return delCommonLangByKey(row.langKey)
+    })
+    .then(() => {
+      handleQuery()
+      proxy.$modal.msgSuccess('删除成功')
+    })
+}
+
 // 修改按钮操作
 function handleUpdate(row) {
   reset()
@@ -413,6 +446,19 @@ function sortChange(column) {
 
   handleQuery()
 }
+// 导入数据成功处理
+const handleFileSuccess = (response) => {
+  const { item1, item2 } = response.data
+  var error = ''
+  item2.forEach((item) => {
+    error += item.storageMessage + ','
+  })
+  proxy.$alert(item1 + '<p>' + error + '</p>', '导入结果', {
+    dangerouslyUseHTMLString: true
+  })
+  getList()
+}
+
 handleQuery()
 reset()
 </script>
