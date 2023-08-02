@@ -330,7 +330,7 @@ function getRoleDeptTreeselect(roleId) {
 }
 // 角色状态修改
 function handleStatusChange(row) {
-  const text = row.status === '0' ? '启用' : '停用'
+  const text = row.status == '0' ? '启用' : '停用'
 
   proxy
     .$confirm('确认要"' + text + '""' + row.roleName + '"角色吗?', '警告', {
@@ -345,7 +345,7 @@ function handleStatusChange(row) {
       proxy.$modal.msgSuccess(text + '成功')
     })
     .catch(function () {
-      row.status = row.status === '0' ? '1' : '0'
+      row.status = row.status == 0 ? 1 : 0
     })
 }
 // 取消按钮

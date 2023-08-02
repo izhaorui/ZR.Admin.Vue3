@@ -26,51 +26,49 @@
       highlight-current-row
       height="400px">
       <el-table-column type="selection" align="center" width="55"></el-table-column>
-      <el-table-column label="#" type="index" width="50" align="center">
-        <template #default="scope">
-          <span>{{ (queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1 }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column prop="tableId" label="tableId" width="80" sortable="" />
       <el-table-column prop="dbName" label="数据库名" width="90" :show-overflow-tooltip="true" />
-      <el-table-column prop="tableId" label="id" width="70" sortable="" />
-      <el-table-column prop="tableName" label="表名" width="110" :show-overflow-tooltip="true" />
+      <el-table-column prop="tplCategory" label="生成模板" width="90" sortable="" />
+      <el-table-column prop="tableName" label="表名" width="120" :show-overflow-tooltip="true" />
       <el-table-column prop="tableComment" label="表描述" :show-overflow-tooltip="true" width="120" />
       <el-table-column prop="className" label="实体" :show-overflow-tooltip="true" />
       <el-table-column prop="createTime" label="创建时间" sortable />
       <el-table-column prop="updateTime" label="更新时间" sortable />
-      <el-table-column label="操作" align="center" width="220">
+      <el-table-column label="操作" align="center" width="200">
         <template #default="scope">
-          <el-button text icon="view" @click="handlePreview(scope.row)" v-hasPermi="['tool:gen:preview']"> 预览 </el-button>
-          <el-button text icon="edit" @click="handleEditTable(scope.row)" v-hasPermi="['tool:gen:edit']"> 编辑 </el-button>
+          <el-button-group>
+            <el-button text icon="view" @click="handlePreview(scope.row)" v-hasPermi="['tool:gen:preview']"> 预览 </el-button>
+            <el-button text icon="edit" @click="handleEditTable(scope.row)" v-hasPermi="['tool:gen:edit']"> 编辑 </el-button>
 
-          <el-dropdown @command="handleCommand($event, scope.row)">
-            <el-button text>
-              {{ $t('btn.more') }}
-              <el-icon class="el-icon--right">
-                <arrow-down />
-              </el-icon>
-            </el-button>
+            <el-dropdown @command="handleCommand($event, scope.row)">
+              <el-button text>
+                {{ $t('btn.more') }}
+                <el-icon class="el-icon--right">
+                  <arrow-down />
+                </el-icon>
+              </el-button>
 
-            <template #dropdown>
-              <el-dropdown-menu>
-                <div v-hasPermi="['tool:gen:code']">
-                  <el-dropdown-item command="generate">
-                    <el-button icon="download" link>生成代码</el-button>
-                  </el-dropdown-item>
-                </div>
-                <div v-hasPermi="['tool:gen:edit']">
-                  <el-dropdown-item command="sync">
-                    <el-button icon="refresh" link> 同步 </el-button>
-                  </el-dropdown-item>
-                </div>
-                <div v-hasPermi="['tool:gen:remove']">
-                  <el-dropdown-item command="delete">
-                    <el-button icon="delete" type="danger" link> 删除 </el-button>
-                  </el-dropdown-item>
-                </div>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <div v-hasPermi="['tool:gen:code']">
+                    <el-dropdown-item command="generate">
+                      <el-button icon="download" link>生成代码</el-button>
+                    </el-dropdown-item>
+                  </div>
+                  <div v-hasPermi="['tool:gen:edit']">
+                    <el-dropdown-item command="sync">
+                      <el-button icon="refresh" link> 同步 </el-button>
+                    </el-dropdown-item>
+                  </div>
+                  <div v-hasPermi="['tool:gen:remove']">
+                    <el-dropdown-item command="delete">
+                      <el-button icon="delete" type="danger" link> 删除 </el-button>
+                    </el-dropdown-item>
+                  </div>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </el-button-group>
         </template>
       </el-table-column>
     </el-table>
