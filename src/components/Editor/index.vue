@@ -21,17 +21,21 @@ export default {
   props: {
     placeholder: {
       type: String,
-      default: () => '请输入内容',
+      default: () => '请输入内容'
     },
     modelValue: String,
+    // 工具栏
+    toolbarConfig: {
+      type: [Object],
+      default: () => {}
+    }
   },
   setup(props, { emit }) {
     const editorRef = shallowRef()
     const valueHtml = ref(props.modelValue)
-    const toolbarConfig = {}
     const editorConfig = {
       MENU_CONF: {},
-      placeholder: props.placeholder,
+      placeholder: props.placeholder
     }
     //上传图片
     editorConfig.MENU_CONF['uploadImage'] = {
@@ -49,7 +53,7 @@ export default {
       // 自定义增加 http  header
       headers: {
         Authorization: 'Bearer ' + getToken(),
-        userid: useUserStore().userId,
+        userid: useUserStore().userId
       },
       // 跨域是否传递 cookie ，默认为 false
       withCredentials: true,
@@ -61,7 +65,7 @@ export default {
           // 从 res 中找到 url alt href ，然后插图图片
           insertFn(res.data.url)
         )
-      },
+      }
     }
     //上传视频
     editorConfig.MENU_CONF['uploadVideo'] = {
@@ -84,7 +88,7 @@ export default {
       // 自定义增加 http  header
       headers: {
         Authorization: 'Bearer ' + getToken(),
-        userid: useUserStore().userId,
+        userid: useUserStore().userId
       },
 
       // 跨域是否传递 cookie ，默认为 false
@@ -97,7 +101,7 @@ export default {
           // 从 res 中找到 url alt href ，然后插图图片
           insertFn(res.data.url)
         )
-      },
+      }
     }
     onBeforeUnmount(() => {
       const editor = editorRef.value
@@ -118,18 +122,18 @@ export default {
           editor.clear()
           return
         }
-        valueHtml.value = value;
-      },
+        valueHtml.value = value
+      }
     )
     return {
       editorRef,
       valueHtml,
       mode: 'default',
-      toolbarConfig,
       editorConfig,
       handleCreated,
       handleChange,
+      toolbarConfig: props.toolbarConfig
     }
-  },
+  }
 }
 </script>

@@ -95,7 +95,7 @@
           </el-col>
           <el-col :lg="24">
             <el-form-item label="内容" prop="noticeContent">
-              <editor v-model="form.noticeContent" :min-height="196" />
+              <editor v-model="form.noticeContent" :toolbarConfig="toolbarConfig" :min-height="196" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -139,6 +139,33 @@ const data = reactive({
     noticeTitle: [{ required: true, message: '公告标题不能为空', trigger: 'blur' }],
     noticeType: [{ required: true, message: '公告类型不能为空', trigger: 'change' }]
   }
+})
+
+const toolbarConfig = ref({
+  toolbarKeys: [
+    // 菜单 key
+    'headerSelect',
+    'bold', // 加粗
+    'italic', // 斜体
+    'through', // 删除线
+    'underline', // 下划线
+    'bulletedList', // 无序列表
+    'numberedList', // 有序列表
+    'color', // 文字颜色
+    'uploadImage', // 上传图片
+    'delIndent', // 缩进
+    'indent', // 增进
+    'insertLink', // 插入链接
+    'fontSize', // 字体大小
+    'clearStyle', // 清除格式
+    'divider', // 分割线
+    'insertTable', // 插入表格
+    'justifyCenter', // 居中对齐
+    'justifyJustify', // 两端对齐
+    'justifyLeft', // 左对齐
+    'justifyRight', // 右对齐
+    'fullScreen' // 全屏
+  ]
 })
 const statusOptions = ref([])
 const typeOptions = ref([])
