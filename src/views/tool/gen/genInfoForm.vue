@@ -242,10 +242,13 @@
       </el-col>
     </el-row>
 
-    <el-row v-show="info.tplCategory == 'tree'">
-      <h4 class="form-header">其他信息</h4>
+    <!-- 树表配置 -->
+    <el-row v-if="info.tplCategory == 'tree'">
+      <el-col :lg="24">
+        <h4 class="form-header">树表信息</h4>
+      </el-col>
       <el-col :lg="12">
-        <el-form-item>
+        <el-form-item prop="treeCode">
           <template #label>
             树编码字段
             <span>
@@ -257,16 +260,36 @@
             </span>
           </template>
           <el-select v-model="info.treeCode" placeholder="请选择树编码字段">
-            <el-option
-              v-for="(column, index) in columns"
-              :key="index"
-              :label="column.csharpField + '：' + column.columnComment"
-              :value="column.csharpField"></el-option>
+            <el-option v-for="(column, index) in columns" :key="index" :label="column.columnComment" :value="column.csharpField">
+              <span style="float: left">{{ column.csharpField }}</span>
+              <span style="float: right">{{ column.columnComment }}</span>
+            </el-option>
           </el-select>
         </el-form-item>
       </el-col>
+
       <el-col :lg="12">
-        <el-form-item>
+        <el-form-item prop="treeName">
+          <template #label>
+            树名称字段
+            <span>
+              <el-tooltip content="树节点的显示名称字段名， 如：dept_name" placement="top">
+                <el-icon>
+                  <question-filled />
+                </el-icon>
+              </el-tooltip>
+            </span>
+          </template>
+          <el-select v-model="info.treeName" placeholder="请选择树名称字段">
+            <el-option v-for="(column, index) in columns" :key="index" :label="column.csharpField" :value="column.csharpField">
+              <span style="float: left">{{ column.csharpField }}</span>
+              <span style="float: right">{{ column.columnComment }}</span>
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :lg="24">
+        <el-form-item prop="treeParentCode">
           <template #label>
             树父编码字段
             <span>
@@ -289,34 +312,16 @@
           </el-select>
         </el-form-item>
       </el-col>
-      <el-col :lg="12">
-        <el-form-item>
-          <template #label>
-            树名称字段
-            <span>
-              <el-tooltip content="树节点的显示名称字段名， 如：dept_name" placement="top">
-                <el-icon>
-                  <question-filled />
-                </el-icon>
-              </el-tooltip>
-            </span>
-          </template>
-          <el-select v-model="info.treeName" placeholder="请选择树名称字段">
-            <el-option v-for="(column, index) in columns" :key="index" :label="column.csharpField" :value="column.csharpField">
-              <span style="float: left">{{ column.csharpField }}</span>
-              <span style="float: right">{{ column.columnComment }}</span>
-            </el-option>
-          </el-select>
-        </el-form-item>
-      </el-col>
     </el-row>
-    <el-row v-show="info.tplCategory == 'sub' || info.tplCategory == 'subNav' || info.tplCategory == 'subNavMore'">
+
+    <!-- 主子表配置 -->
+    <el-row v-if="info.tplCategory == 'sub' || info.tplCategory == 'subNav' || info.tplCategory == 'subNavMore'">
       <el-col :lg="24">
         <h4 class="form-header">关联信息</h4>
       </el-col>
 
       <el-col :lg="12">
-        <el-form-item>
+        <el-form-item prop="subTableName">
           <template #label>
             关联子表的表名
             <span>
@@ -339,7 +344,7 @@
         </el-form-item>
       </el-col>
       <el-col :lg="12">
-        <el-form-item>
+        <el-form-item prop="subTableFkName">
           <template #label>
             子表关联的外键名
             <span>
@@ -410,7 +415,11 @@ const rules = ref({
     message: '请输入权限前缀',
     trigger: 'blur'
   },
-  genType: [{ required: true, message: '请选择方式', trigger: 'blur' }]
+  genType: [{ required: true, message: '请选择代码生成方式', trigger: 'blur' }],
+  treeCode: [{ required: true, message: '请选择树编码字段', trigger: 'blur' }],
+  treeParentCode: [{ required: true, message: '请选择树父编码字段', trigger: 'blur' }],
+  subTableName: [{ required: true, message: '请选择关联的子表表名', trigger: 'blur' }],
+  subTableFkName: [{ required: true, message: '请选择子表关联的外键名', trigger: 'blur' }]
 })
 function subSelectChange(value) {
   props.info.subTableFkName = ''

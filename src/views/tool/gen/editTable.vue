@@ -296,15 +296,13 @@ const tableSort = () => {
   const tbody = document.querySelector('.el-table__body > tbody')
 
   Sortable.create(tbody, {
+    dragClass: 'sortable-ghost',
     onEnd: (evt) => {
       const targetRow = columns.value.splice(evt.oldIndex, 1)[0]
       columns.value.splice(evt.newIndex, 0, targetRow)
       for (const index in columns.value) {
         columns.value[index].sort = parseInt(index) + 1
       }
-      nextTick(() => {
-        console.log(columns.value)
-      })
     }
   })
 }
@@ -315,3 +313,8 @@ onMounted(() => {
 
 handleQuery()
 </script>
+<style>
+.sortable-ghost {
+  background: burlywood;
+}
+</style>
