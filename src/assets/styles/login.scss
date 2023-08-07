@@ -21,7 +21,7 @@
   background: #ffffff;
   // background-color: hsla(0, 0%, 100%, 0.3);
   width: var(--base-login-width);
-  padding: 25px 15px 5px 15px;
+  padding: 35px 15px 5px 15px;
   position: relative;
 
   .input-icon {
@@ -68,6 +68,45 @@
 }
 .langSet {
   position: absolute;
-  right: 20px;
+  left: 20px;
   top: 10px;
+}
+
+.scan-wrap {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  transition: all ease 0.3s;
+  overflow: hidden;
+
+  .icon {
+    width: 48px;
+    height: 50px;
+    display: inline-block;
+    font-size: 48px;
+    position: absolute;
+    right: 1px;
+    top: 0px;
+  }
+  .scan-delta {
+    position: absolute;
+    width: 35px;
+    height: 70px;
+    z-index: 2;
+    top: 2px;
+    right: 21px;
+    background: var(--el-color-white);
+    transform: rotate(-45deg);
+  }
+}
+
+.login-scan-container {
+  padding: 0 20px 20px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
 }

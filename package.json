@@ -33,6 +33,7 @@
     "md-editor-v3": "^1.11.11",
     "nprogress": "0.2.0",
     "pinia": "^2.0.33",
+    "qrcodejs2-fixes": "^0.0.2",
     "qs": "^6.11.0",
     "sortablejs": "^1.15.0",
     "vue": "^3.3.4",

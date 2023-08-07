@@ -1,9 +1,13 @@
 <template>
   <starBackground></starBackground>
   <div class="login">
-    <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form">
+    <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form" v-if="!showQrLogin">
       <h3 class="title">{{ defaultSettings.title }}</h3>
 
+      <div class="scan-wrap" @click="handleShowQrLogin()">
+        <svg-icon name="qr" class="icon" />
+        <div class="scan-delta"></div>
+      </div>
       <LangSelect title="多语言设置" class="langSet" />
       <el-form-item prop="username">
         <el-input v-model="loginForm.username" type="text" auto-complete="off" :placeholder="$t('login.account')">
@@ -52,6 +56,18 @@
       </div>
     </el-form>
 
+    <div class="qr-wrap login-form" v-else>
+      <h3 class="title">移动端扫码登录</h3>
+      <div class="scan-wrap" @click="handleShowQrLogin()">
+        <svg-icon name="pc" class="icon" />
+        <div class="scan-delta"></div>
+      </div>
+
+      <div class="login-scan-container">
+        <div ref="imgContainerRef" id="imgContainer"></div>
+      </div>
+    </div>
+
     <!--  底部  -->
     <div class="el-login-footer">
       <div v-html="defaultSettings.copyright"></div>
@@ -67,6 +83,7 @@ import defaultSettings from '@/settings'
 import starBackground from '@/views/components/starBackground.vue'
 import LangSelect from '@/components/LangSelect/index.vue'
 import useUserStore from '@/store/modules/user'
+import QRCode from 'qrcodejs2-fixes'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -161,6 +178,27 @@ function onAuth(type) {
 function handleForgetPwd() {
   proxy.$modal.msg('请联系管理员')
 }
+
+const showQrLogin = ref(false)
+function handleShowQrLogin() {
+  showQrLogin.value = !showQrLogin.value
+
+  if (showQrLogin.value) {
+    nextTick(() => {
+      generateCode()
+    })
+  }
+}
+// 生成二维码
+function generateCode() {
+  document.getElementById('imgContainer').innerHTML = ''
+  new QRCode(document.getElementById('imgContainer'), {
+    text: 'https://qm.qq.com/cgi-bin/qm/qr?k=kgt4HsckdljU0VM-0kxND6d_igmfuPlL&authKey=r55YUbruiKQ5iwC/folG7KLCmZ++Y4rQVgNlvLbUniUMkbk24Y9+zNuOmOnjAjRc&noverify=0',
+    width: 200,
+    height: 200
+  })
+}
+
 getCode()
 getCookie()
 </script>
