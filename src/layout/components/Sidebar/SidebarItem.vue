@@ -5,6 +5,7 @@
         <el-menu-item :index="resolvePath(onlyOneChild.path)">
           <svg-icon :name="onlyOneChild.meta.icon || (item.meta && item.meta.icon)" />
 
+          <span v-if="props.isCollapse && !onlyOneChild.meta.icon">{{ hasTitle2(onlyOneChild.meta.title) }}</span>
           <template v-if="onlyOneChild.meta.titleKey" #title>
             {{ $t(onlyOneChild.meta.titleKey) }}
           </template>
@@ -45,6 +46,10 @@ const props = defineProps({
   basePath: {
     type: String,
     default: ''
+  },
+  isCollapse: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -98,6 +103,14 @@ function resolvePath(routePath, routeQuery) {
 function hasTitle(title) {
   if (title.length > 5) {
     return title
+  } else {
+    return ''
+  }
+}
+
+function hasTitle2(title) {
+  if (title.length >= 1) {
+    return title.charAt(0) + '...'
   } else {
     return ''
   }
