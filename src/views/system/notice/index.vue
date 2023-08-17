@@ -68,7 +68,7 @@
     <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
 
     <!-- 添加或修改公告对话框 -->
-    <el-dialog :title="title" v-model="open" width="780px" append-to-body>
+    <zr-dialog :title="title" v-model="open" width="780px" @close="cancel" fullScreen>
       <el-form ref="noticeRef" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :lg="24">
@@ -104,7 +104,7 @@
         <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
         <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
       </template>
-    </el-dialog>
+    </zr-dialog>
   </div>
 </template>
 

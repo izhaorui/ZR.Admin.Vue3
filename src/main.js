@@ -41,6 +41,8 @@ import ImagePreview from '@/components/ImagePreview'
 import DictTag from '@/components/DictTag'
 // el-date-picker 快捷选项
 import dateOptions from '@/utils/dateOptions'
+// Dialog组件
+import Dialog from '@/components/Dialog'
 
 const app = createApp(App)
 signalR.init(import.meta.env.VITE_APP_SOCKET_API)
@@ -65,6 +67,7 @@ app.component('UploadImage', ImageUpload)
 app.component('ImagePreview', ImagePreview)
 app.component('RightToolbar', RightToolbar)
 app.component('svg-icon', SvgIcon)
+app.component('ZrDialog', Dialog)
 
 directive(app)
 
