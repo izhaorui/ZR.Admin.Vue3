@@ -66,7 +66,7 @@ function reset() {
 }
 
 defineExpose({
-  reset,
+  reset
 })
 </script>
 
@@ -76,25 +76,14 @@ defineExpose({
   padding: 10px;
   .icon-list {
     overflow-y: scroll;
-    display: flex;
+    display: grid;
     flex-wrap: wrap;
-    justify-content: space-around;
     height: 200px;
+    grid-template-columns: repeat(5, 90px);
 
     .icon-item {
-      // height: 30px;
-      // line-height: 30px;
-      // margin-bottom: -5px;
       cursor: pointer;
-      width: 19%;
       text-align: center;
-      // float: left;
-    }
-    .name {
-      // display: inline-block;
-      // vertical-align: -0.15em;
-      // fill: currentColor;
-      // overflow: hidden;
     }
   }
 }
