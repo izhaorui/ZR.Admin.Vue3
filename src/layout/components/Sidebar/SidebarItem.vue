@@ -8,6 +8,8 @@
           <span v-if="props.isCollapse && !onlyOneChild.meta.icon">{{ hasTitle2(onlyOneChild.meta.title) }}</span>
           <template v-if="onlyOneChild.meta.titleKey" #title>
             {{ $t(onlyOneChild.meta.titleKey) }}
+
+            <svg-icon name="new" color="#fff" style="width: 60px; height: 30px" v-if="onlyOneChild.meta.isNew == 1" />
           </template>
           <template v-else-if="onlyOneChild.meta.title" #title>
             {{ onlyOneChild.meta.title }}
