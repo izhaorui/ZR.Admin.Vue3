@@ -86,7 +86,7 @@
 
     <!-- 添加或修改数据差异日志对话框 -->
     <zr-dialog :title="title" :lock-scroll="false" v-model="open" @close="cancel">
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
+      <el-form ref="formRef" :model="form" label-width="100px">
         <el-row :gutter="20">
           <el-col :lg="12">
             <el-form-item label="主键" prop="pId">
