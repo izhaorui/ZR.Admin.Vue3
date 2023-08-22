@@ -35,10 +35,12 @@ const props = defineProps({
 })
 
 const values = computed(() => {
-  if (props.split != null && props.split != '') {
-    return props.value.split(props.split) ?? []
-  } else if (props.value !== null && typeof props.value !== 'undefined') {
-    return Array.isArray(props.value) ? props.value : [String(props.value)]
+  if (props.value !== null && typeof props.value !== 'undefined') {
+    if (props.split != null && props.split != '') {
+      return props.value.split(props.split) ?? []
+    } else {
+      return Array.isArray(props.value) ? props.value : [String(props.value)]
+    }
   } else {
     return []
   }
