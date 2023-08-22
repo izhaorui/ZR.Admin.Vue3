@@ -81,7 +81,7 @@
     <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
 
     <!-- 角色菜单弹框 -->
-    <el-dialog title="角色权限分配" v-model="showRoleScope" width="500px">
+    <zr-dialog title="角色权限分配" v-model="showRoleScope" width="700px" @close="cancel">
       <el-form :model="form" label-width="80px">
         <el-form-item label="菜单搜索">
           <el-input placeholder="请输入关键字进行过滤" v-model="searchText"></el-input>
@@ -101,18 +101,28 @@
             node-key="id"
             :check-strictly="!form.menuCheckStrictly"
             empty-text="加载中，请稍后"
+            highlight-current
             :filter-node-method="menuFilterNode"
-            :props="defaultProps"></el-tree>
+            :props="{ children: 'children', label: 'label', class: customNodeClass }">
+            <template #default="{ node, data }">
+              <div class="custom-tree-node">
+                <span style="float: left">{{ node.label }}</span>
+                <span style="float;right: ;margin-left: 10px;">
+                  <el-tag v-if="data.status == 1" type="danger">停用</el-tag>
+                </span>
+              </div>
+            </template>
+          </el-tree>
         </el-form-item>
       </el-form>
       <template #footer>
         <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
         <el-button type="primary" @click="submitDataScope" v-hasPermi="['system:role:authorize']">{{ $t('btn.save') }}</el-button>
       </template>
-    </el-dialog>
+    </zr-dialog>
 
     <!-- 添加或修改角色配置对话框 -->
-    <el-dialog :title="title" v-model="open" width="600px" append-to-body>
+    <zr-dialog :title="title" v-model="open" width="600px" append-to-body @close="cancel">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :lg="12">
@@ -183,7 +193,7 @@
         <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
         <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
       </template>
-    </el-dialog>
+    </zr-dialog>
   </div>
 </template>
 
@@ -267,7 +277,8 @@ const state = reactive({
   },
   defaultProps: {
     children: 'children',
-    label: 'label'
+    label: 'label',
+    menuType: customNodeClass
   }
 })
 const menuRef = ref()
@@ -616,6 +627,13 @@ getList()
 proxy.getDicts('sys_normal_disable').then((response) => {
   statusOptions.value = response.data
 })
+
+function customNodeClass(data, node) {
+  if (data.menuType == 'C') {
+    return 'tree-item-flex'
+  }
+  return null
+}
 </script>
 <style scoped>
 /* tree border */

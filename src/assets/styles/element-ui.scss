@@ -137,3 +137,14 @@
 .el-dialog__headerbtn {
   width: 47px !important;
 }
+
+// el-tree
+
+.tree-item-flex {
+  &.is-expanded .el-tree-node__children {
+    display: flex !important;
+    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
