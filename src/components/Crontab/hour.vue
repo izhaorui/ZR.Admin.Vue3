@@ -20,12 +20,10 @@
     </el-form-item>
 
     <el-form-item>
-      <el-radio v-model="radioValue" :label="4">
-        指定
-        <el-select clearable v-model="checkboxList" placeholder="可多选" multiple :multiple-limit="10">
-          <el-option v-for="item in 24" :key="item" :label="item - 1" :value="item - 1" />
-        </el-select>
-      </el-radio>
+      <el-radio v-model="radioValue" :label="4"> 指定 </el-radio>
+      <el-select clearable v-model="checkboxList" placeholder="可多选" multiple :multiple-limit="10">
+        <el-option v-for="item in 24" :key="item" :label="item - 1" :value="item - 1" />
+      </el-select>
     </el-form-item>
   </el-form>
 </template>
