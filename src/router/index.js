@@ -85,22 +85,6 @@ export const constantRoutes = [
         meta: { title: '个人中心', icon: 'user', titleKey: 'menu.personalCenter' }
       }
     ]
-  },
-  // 不用可删掉
-  {
-    path: '',
-    component: Layout,
-    hidden: false,
-    meta: { title: '组件示例', icon: 'icon', noCache: 'fasle' },
-    children: [
-      {
-        path: 'icon',
-        component: () => import('@/views/components/icons/index'),
-        //component: () => import('@/views/business/GenDemo'),
-        name: 'icon',
-        meta: { title: '图标icon', icon: 'icon1', noCache: 'fasle', titleKey: 'menu.icon' }
-      }
-    ]
   }
 ]
 

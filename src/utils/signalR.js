@@ -1,15 +1,15 @@
 // 官方文档：https://docs.microsoft.com/zh-cn/aspnet/core/signalr/javascript-client?view=aspnetcore-6.0&viewFallbackFrom=aspnetcore-2.2&tabs=visual-studio
 import * as signalR from '@microsoft/signalr'
 import { getToken } from '@/utils/auth'
-import { ElNotification, ElMessage } from 'element-plus'
+import { ElNotification, ElMessage, ElMessageBox } from 'element-plus'
 import useSocketStore from '@/store/modules/socket'
+import useUserStore from '@/store/modules/user'
 import { webNotify } from './index'
 export default {
   // signalR对象
   SR: {},
   // 失败连接重试次数
   failNum: 4,
-  baseUrl: '',
   init(url) {
     var socketUrl = window.location.origin + url
     const connection = new signalR.HubConnectionBuilder()
@@ -80,6 +80,9 @@ export default {
     connection.on('welcome', (data) => {
       ElNotification.info(data)
     })
+    connection.on('getConnId', (data) => {
+      // useUserStore().saveConnId(data)
+    })
     // 接收后台手动推送消息
     connection.on('receiveNotice', (title, data) => {
       ElNotification({
@@ -103,6 +106,22 @@ export default {
     //   useSocketStore().setOnlineUsers(data)
     // })
 
+    // 接收封锁通知
+    connection.on('lockUser', (data) => {
+      ElMessageBox.alert(`你的账号已被锁定，剩余，${data.time}分，原因：${data.reason || '-'}`, '提示', {
+        confirmButtonText: '确定',
+        callback: (action) => {
+          useUserStore()
+            .logOut()
+            .then(() => {
+              var redirectUrl = window.location.pathname
+              if (location.pathname.indexOf('/login') != 0) {
+                location.href = import.meta.env.VITE_APP_ROUTER_PREFIX + 'index?redirect=' + redirectUrl
+              }
+            })
+        }
+      })
+    })
     // 接收聊天数据
     connection.on('receiveChat', (data) => {
       const title = `来自${data.userName}的消息通知`

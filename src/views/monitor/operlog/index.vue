@@ -91,7 +91,7 @@
       <el-table-column prop="method" label="操作方法" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('method')" />
       <el-table-column prop="operParam" label="请求参数" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('operParam')" />
       <el-table-column prop="jsonResult" label="返回结果" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('jsonResult')" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="140">
         <template #default="scope">
           <el-button size="small" text icon="view" @click="handleView(scope.row, scope.index)" v-hasPermi="['monitor:operlog:query']">
             详细

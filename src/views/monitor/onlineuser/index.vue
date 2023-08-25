@@ -15,40 +15,32 @@
         </template>
       </el-table-column>
       <el-table-column prop="name" label="用户名" align="center" />
-      <el-table-column label="登录地点" align="center">
-        <template #default="{ row }">
-          <div>{{ row.location }}</div>
-          <div>{{ row.userIP }}</div>
-        </template>
-      </el-table-column>
-      <el-table-column prop="browser" label="登录浏览器"></el-table-column>
+      <el-table-column label="登录地点" prop="location" align="center"> </el-table-column>
+      <el-table-column label="登录IP" prop="userIP" align="center"></el-table-column>
+      <el-table-column prop="browser" label="登录浏览器" width="250"></el-table-column>
+      <el-table-column prop="platform" label="登录设备" align="center"></el-table-column>
       <el-table-column prop="loginTime" label="登录时间">
         <template #default="scope">
           {{ dayjs(scope.row.loginTime).format('MM/DD日HH:mm:ss') }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="140">
+      <el-table-column label="操作" align="center" width="160">
         <template #default="scope">
           <el-button text @click="onChat(scope.row)" icon="bell" v-hasRole="['admin']">通知</el-button>
+          <el-button text @click="onLock(scope.row)" icon="lock" v-hasRole="['admin']">强退</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination
-      class="mt10"
-      background
-      :total="total"
-      v-model:page="queryParams.pageNum"
-      v-model:limit="queryParams.pageSize"
-      @pagination="getList" />
+    <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
   </div>
 </template>
 
 <script setup name="onlineuser">
-import { listOnline } from '@/api/monitor/online'
+import { listOnline, forceLogout } from '@/api/monitor/online'
 import dayjs from 'dayjs'
 import useSocketStore from '@/store/modules/socket'
+import useUserStore from '@/store/modules/user'
 const { proxy } = getCurrentInstance()
-
 const queryRef = ref(null)
 const queryParams = reactive({
   pageNum: 1,
@@ -95,5 +87,17 @@ function onChat(item) {
     })
     .catch(() => {})
 }
-function resetQuery() {}
+function onLock(row) {
+  proxy
+    .$prompt('请输入踢出原因', '', {
+      confirmButtonText: '发送',
+      cancelButtonText: '取消'
+    })
+    .then((val) => {
+      forceLogout({ ...row, time: 10, reason: val.value, clientId: useUserStore().clientId }).then((res) => {
+        proxy.$modal.msgSuccess('踢出成功')
+      })
+    })
+    .catch(() => {})
+}
 </script>
