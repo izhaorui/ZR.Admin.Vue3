@@ -1,12 +1,13 @@
 import request from '@/utils/request'
 
 // 登录方法
-export function login(username, password, code, uuid) {
+export function login(username, password, code, uuid, clientId) {
   const data = {
     username,
     password,
     code,
-    uuid
+    uuid,
+    clientId
   }
   return request({
     url: '/login',
@@ -65,5 +66,31 @@ export function oauthCallback(data, params) {
     method: 'post',
     data: data,
     params: params
+  })
+}
+
+/**
+ * 生成二维码
+ * @param {*} data
+ * @returns
+ */
+export function generateQrcode(data) {
+  return request({
+    url: '/GenerateQrcode',
+    method: 'GET',
+    params: data
+  })
+}
+
+/**
+ * 刷新二维码
+ * @param {*} data
+ * @returns
+ */
+export function verifyScan(data) {
+  return request({
+    url: '/VerifyScan',
+    method: 'post',
+    data: data
   })
 }

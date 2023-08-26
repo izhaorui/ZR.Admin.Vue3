@@ -1,7 +1,7 @@
 import { login, logout, getInfo, oauthCallback } from '@/api/system/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import defAva from '@/assets/images/profile.jpg'
-
+import cache from '@/plugins/cache'
 import md5 from 'crypto-js/md5'
 
 const useUserStore = defineStore('user', {
@@ -14,7 +14,8 @@ const useUserStore = defineStore('user', {
     permissions: [],
     userId: 0,
     authSource: '',
-    userName: ''
+    userName: '',
+    clientId: cache.local.get('clientId')
   }),
   actions: {
     setAuthSource(source) {
@@ -26,9 +27,10 @@ const useUserStore = defineStore('user', {
       const password = md5(userInfo.password).toString()
       const code = userInfo.code
       const uuid = userInfo.uuid
+      const clientId = this.clientId
 
       return new Promise((resolve, reject) => {
-        login(username, password, code, uuid)
+        login(username, password, code, uuid, clientId)
           .then((res) => {
             if (res.code == 200) {
               setToken(res.data)
@@ -70,6 +72,15 @@ const useUserStore = defineStore('user', {
           .catch((err) => {
             reject(err)
           })
+      })
+    },
+    // 扫码登录
+    scanLogin(data) {
+      return new Promise((resolve, reject) => {
+        setToken(data.token)
+        this.token = data.token
+
+        resolve(data.token) //then处理
       })
     },
     // 获取用户信息
@@ -124,6 +135,10 @@ const useUserStore = defineStore('user', {
         removeToken()
         resolve()
       })
+    },
+    setClientId(clientId) {
+      this.clientId = clientId
+      cache.local.set('clientId', clientId)
     }
   }
 })

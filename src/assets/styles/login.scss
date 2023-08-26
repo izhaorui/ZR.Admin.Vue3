@@ -21,6 +21,7 @@
   background: #ffffff;
   // background-color: hsla(0, 0%, 100%, 0.3);
   width: var(--base-login-width);
+  height: 300px;
   padding: 35px 15px 5px 15px;
   position: relative;
 
@@ -109,4 +110,6 @@
   flex-direction: column;
   text-align: center;
   align-items: center;
+  height: 200px;
+  justify-content: space-around;
 }

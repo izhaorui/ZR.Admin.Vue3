@@ -84,7 +84,17 @@ import starBackground from '@/views/components/starBackground.vue'
 import LangSelect from '@/components/LangSelect/index.vue'
 import useUserStore from '@/store/modules/user'
 import QRCode from 'qrcodejs2-fixes'
-
+import { verifyScan, generateQrcode } from '@/api/system/login'
+var visitorId = ''
+const fpPromise = import('https://openfpcdn.io/fingerprintjs/v3').then((FingerprintJS) => FingerprintJS.load())
+// Get the visitor identifier when you need it.
+fpPromise
+  .then((fp) => fp.get())
+  .then((result) => {
+    // This is the visitor identifier:
+    visitorId = result.visitorId
+    useUserStore().setClientId(visitorId)
+  })
 const userStore = useUserStore()
 const router = useRouter()
 const route = useRoute()
@@ -179,6 +189,7 @@ function handleForgetPwd() {
   proxy.$modal.msg('请联系管理员')
 }
 
+const interval = ref(null)
 const showQrLogin = ref(false)
 function handleShowQrLogin() {
   showQrLogin.value = !showQrLogin.value
@@ -187,18 +198,65 @@ function handleShowQrLogin() {
     nextTick(() => {
       generateCode()
     })
+  } else {
+    clearQr()
   }
 }
 // 生成二维码
 function generateCode() {
-  document.getElementById('imgContainer').innerHTML = ''
-  new QRCode(document.getElementById('imgContainer'), {
-    text: 'https://qm.qq.com/cgi-bin/qm/qr?k=kgt4HsckdljU0VM-0kxND6d_igmfuPlL&authKey=r55YUbruiKQ5iwC/folG7KLCmZ++Y4rQVgNlvLbUniUMkbk24Y9+zNuOmOnjAjRc&noverify=0',
-    width: 200,
-    height: 200
-  })
-}
+  clearQr()
+  var uuid = getUuid()
 
+  document.getElementById('imgContainer').innerHTML = '正在生成中...'
+  generateQrcode({ uuid, deviceId: visitorId }).then((res) => {
+    const { code, data } = res
+    document.getElementById('imgContainer').innerHTML = ''
+
+    if (code == 200) {
+      new QRCode(document.getElementById('imgContainer'), {
+        // text: 'https://qm.qq.com/cgi-bin/qm/qr?k=kgt4HsckdljU0VM-0kxND6d_igmfuPlL&authKey=r55YUbruiKQ5iwC/folG7KLCmZ++Y4rQVgNlvLbUniUMkbk24Y9+zNuOmOnjAjRc&noverify=0',
+        text: JSON.stringify(data.codeContent),
+        width: 200,
+        height: 200
+      })
+    }
+  })
+  interval.value = setInterval(() => {
+    verifyScan({ uuid: uuid })
+      .then((res) => {
+        const { code, data } = res
+        if (data.status == -1) {
+          clearQr()
+          document.getElementById('imgContainer').innerHTML = '二维码已过期'
+        } else if (data.status == 2) {
+          userStore
+            .scanLogin(data)
+            .then(() => {
+              proxy.$modal.msgSuccess(proxy.$t('login.loginSuccess'))
+              router.push({ path: redirect.value || '/' })
+            })
+            .catch((error) => {
+              console.error(error)
+              proxy.$modal.msgError(error.msg)
+            })
+          clearQr()
+        }
+      })
+      .catch(() => {
+        clearQr()
+      })
+  }, 1000)
+}
+function clearQr() {
+  clearInterval(interval.value)
+  interval.value = null
+}
+function getUuid() {
+  var temp_url = URL.createObjectURL(new Blob())
+  var uuid = temp_url.toString().replace('-', '') // blob:https://xxx.com/b250d159-e1b6-4a87-9002-885d90033be3
+  URL.revokeObjectURL(temp_url)
+  return uuid.substr(uuid.lastIndexOf('/') + 1)
+}
 getCode()
 getCookie()
 </script>
