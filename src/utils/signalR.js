@@ -80,7 +80,7 @@ export default {
     connection.on('welcome', (data) => {
       ElNotification.info(data)
     })
-    connection.on('getConnId', (data) => {
+    connection.on('connId', (data) => {
       // useUserStore().saveConnId(data)
     })
     // 接收后台手动推送消息

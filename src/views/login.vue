@@ -1,73 +1,74 @@
 <template>
   <starBackground></starBackground>
-  <div class="login">
-    <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form" v-if="!showQrLogin">
-      <h3 class="title">{{ defaultSettings.title }}</h3>
+  <div class="login-wrap">
+    <div class="login">
+      <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form" v-if="!showQrLogin">
+        <h3 class="title">{{ defaultSettings.title }}</h3>
 
-      <div class="scan-wrap" @click="handleShowQrLogin()">
-        <svg-icon name="qr" class="icon" />
-        <div class="scan-delta"></div>
-      </div>
-      <LangSelect title="多语言设置" class="langSet" />
-      <el-form-item prop="username">
-        <el-input v-model="loginForm.username" type="text" auto-complete="off" :placeholder="$t('login.account')">
-          <template #prefix>
-            <svg-icon name="user" class="input-icon" />
-          </template>
-        </el-input>
-      </el-form-item>
-      <el-form-item prop="password">
-        <el-input v-model="loginForm.password" type="password" auto-complete="off" :placeholder="$t('login.password')" @keyup.enter="handleLogin">
-          <template #prefix>
-            <svg-icon name="password" class="input-icon" />
-          </template>
-        </el-input>
-      </el-form-item>
-      <el-form-item prop="code" v-if="captchaOnOff != 'off'">
-        <el-input v-model="loginForm.code" auto-complete="off" :placeholder="$t('login.captcha')" style="width: 63%" @keyup.enter="handleLogin">
-          <template #prefix>
-            <svg-icon name="validCode" class="input-icon" />
-          </template>
-        </el-input>
-        <div class="login-code">
-          <img :src="codeUrl" @click="getCode" class="login-code-img" />
+        <div class="scan-wrap" @click="handleShowQrLogin()">
+          <svg-icon name="qr" class="icon" />
+          <div class="scan-delta"></div>
         </div>
-      </el-form-item>
+        <LangSelect title="多语言设置" class="langSet" />
+        <el-form-item prop="username">
+          <el-input v-model="loginForm.username" type="text" auto-complete="off" :placeholder="$t('login.account')">
+            <template #prefix>
+              <svg-icon name="user" class="input-icon" />
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input v-model="loginForm.password" type="password" auto-complete="off" :placeholder="$t('login.password')" @keyup.enter="handleLogin">
+            <template #prefix>
+              <svg-icon name="password" class="input-icon" />
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="code" v-if="captchaOnOff != 'off'">
+          <el-input v-model="loginForm.code" auto-complete="off" :placeholder="$t('login.captcha')" style="width: 63%" @keyup.enter="handleLogin">
+            <template #prefix>
+              <svg-icon name="validCode" class="input-icon" />
+            </template>
+          </el-input>
+          <div class="login-code">
+            <img :src="codeUrl" @click="getCode" class="login-code-img" />
+          </div>
+        </el-form-item>
 
-      <div style="display: flex; justify-content: space-between">
-        <el-checkbox v-model="loginForm.rememberMe">{{ $t('login.rememberMe') }}</el-checkbox>
-        <span style="font-size: 12px">
-          <span @click="handleForgetPwd()" class="forget-pwd">忘记密码</span>
-          <router-link class="link-type" :to="'/register'">{{ $t('login.register') }}</router-link>
-        </span>
+        <div style="display: flex; justify-content: space-between">
+          <el-checkbox v-model="loginForm.rememberMe">{{ $t('login.rememberMe') }}</el-checkbox>
+          <span style="font-size: 12px">
+            <span @click="handleForgetPwd()" class="forget-pwd">忘记密码</span>
+            <router-link class="link-type" :to="'/register'">{{ $t('login.register') }}</router-link>
+          </span>
+        </div>
+
+        <el-form-item style="width: 100%">
+          <el-button :loading="loading" size="default" type="primary" style="width: 100%" @click.prevent="handleLogin">
+            <span v-if="!loading">{{ $t('login.btnLogin') }}</span>
+            <span v-else>登 录 中...</span>
+          </el-button>
+        </el-form-item>
+      </el-form>
+      <div class="qr-wrap login-form" v-else>
+        <h3 class="title">移动端扫码登录</h3>
+        <div class="scan-wrap" @click="handleShowQrLogin()">
+          <svg-icon name="pc" class="icon" />
+          <div class="scan-delta"></div>
+        </div>
+
+        <div class="login-scan-container">
+          <div ref="imgContainerRef" id="imgContainer"></div>
+        </div>
       </div>
 
-      <el-form-item style="width: 100%">
-        <el-button :loading="loading" size="default" type="primary" style="width: 100%" @click.prevent="handleLogin">
-          <span v-if="!loading">{{ $t('login.btnLogin') }}</span>
-          <span v-else>登 录 中...</span>
-        </el-button>
-      </el-form-item>
       <div class="other-login" v-if="defaultSettings.showOtherLogin">
         <el-divider>{{ $t('login.otherLoginWay') }}</el-divider>
 
         <span @click="onAuth('GITHUB')" title="github"><svg-icon name="github" className="login-icon"></svg-icon></span>
         <span @click="onAuth('GITEE')" title="gitee"><svg-icon name="gitee" className="login-icon"></svg-icon></span>
       </div>
-    </el-form>
-
-    <div class="qr-wrap login-form" v-else>
-      <h3 class="title">移动端扫码登录</h3>
-      <div class="scan-wrap" @click="handleShowQrLogin()">
-        <svg-icon name="pc" class="icon" />
-        <div class="scan-delta"></div>
-      </div>
-
-      <div class="login-scan-container">
-        <div ref="imgContainerRef" id="imgContainer"></div>
-      </div>
     </div>
-
     <!--  底部  -->
     <div class="el-login-footer">
       <div v-html="defaultSettings.copyright"></div>
@@ -222,7 +223,7 @@ function generateCode() {
     }
   })
   interval.value = setInterval(() => {
-    verifyScan({ uuid: uuid })
+    verifyScan({ uuid: uuid, deviceId: visitorId })
       .then((res) => {
         const { code, data } = res
         if (data.status == -1) {
