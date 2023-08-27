@@ -55,6 +55,10 @@ service.interceptors.response.use(
     if (res.request.responseType === 'blob' || res.request.responseType === 'arraybuffer') {
       return res
     }
+    var token = res.headers['x-refresh-token']
+    if (token) {
+      useUserStore().refreshToken(token)
+    }
     if (code == 401) {
       ElMessageBox.confirm('登录状态已过期，请重新登录', '系统提示', {
         confirmButtonText: '重新登陆',

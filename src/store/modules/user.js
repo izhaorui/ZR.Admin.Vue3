@@ -139,6 +139,10 @@ const useUserStore = defineStore('user', {
     setClientId(clientId) {
       this.clientId = clientId
       cache.local.set('clientId', clientId)
+    },
+    refreshToken(token) {
+      setToken(token)
+      this.token = token
     }
   }
 })
