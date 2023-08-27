@@ -31,7 +31,7 @@
             </template>
           </el-input>
           <div class="login-code">
-            <img :src="codeUrl" @click="getCode" class="login-code-img" />
+            <el-image :src="codeUrl" @click="getCode" class="login-code-img" />
           </div>
         </el-form-item>
 
@@ -59,6 +59,7 @@
 
         <div class="login-scan-container">
           <div ref="imgContainerRef" id="imgContainer"></div>
+          <div>请使用移动端app扫码登录</div>
         </div>
       </div>
 

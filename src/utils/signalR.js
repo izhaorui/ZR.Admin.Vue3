@@ -19,20 +19,20 @@ export default {
       .build()
     this.SR = connection
     // 断线重连
-    connection.onclose(async () => {
-      console.log('断开连接了')
+    connection.onclose(async (error) => {
+      console.error('断开连接了' + error)
       console.assert(connection.state === signalR.HubConnectionState.Disconnected)
       // 建议用户重新刷新浏览器
       await this.start()
     })
 
-    connection.onreconnected(() => {
+    connection.onreconnected((connectionId) => {
       ElMessage({
         message: '与服务器通讯已连接成功',
         type: 'success',
         duration: 2000
       })
-      console.log('断线重新连接成功')
+      console.log('断线重新连接成功' + connectionId)
     })
 
     connection.onreconnecting(async () => {
@@ -74,7 +74,7 @@ export default {
   // 接收消息处理
   receiveMsg(connection) {
     connection.on('onlineNum', (data) => {
-      useSocketStore().setOnlineUserNum(data)
+      useSocketStore().setOnlineUsers(data)
     })
     // 接收欢迎语
     connection.on('welcome', (data) => {
@@ -125,14 +125,35 @@ export default {
     // 接收聊天数据
     connection.on('receiveChat', (data) => {
       const title = `来自${data.userName}的消息通知`
-      ElNotification({
-        title: title,
-        message: data.message,
-        type: 'success',
-        duration: 0
-      })
+      useSocketStore().setChat(data)
 
+      if (data.userid != useUserStore().userId) {
+        ElNotification({
+          title: title,
+          message: data.message,
+          type: 'success',
+          duration: 3000
+        })
+      }
       webNotify({ title: title, body: data.message })
+    })
+
+    connection.on('onlineInfo', (data) => {
+      console.log('onlineInfo', data)
+      useSocketStore().getOnlineInfo(data)
+    })
+
+    connection.on('logOut', () => {
+      useUserStore()
+        .logOut()
+        .then(() => {
+          ElMessageBox.alert(`你的账号已在其他设备登录，如果不是你的操作请尽快修改密码`, '提示', {
+            confirmButtonText: '确定',
+            callback: () => {
+              location.href = import.meta.env.VITE_APP_ROUTER_PREFIX + 'index'
+            }
+          })
+        })
     })
   }
 }

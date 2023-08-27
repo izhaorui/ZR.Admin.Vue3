@@ -2,7 +2,7 @@
   <div class="home">
     <!-- 用户信息 -->
     <el-row :gutter="15">
-      <el-col :md="24" :lg="18" :xl="24" class="mb10">
+      <el-col :md="24" :lg="16" :xl="24" class="mb10">
         <el-card shadow="hover">
           <div class="user-item">
             <div class="user-item-left">
@@ -12,7 +12,10 @@
             <div class="user-item-right">
               <el-row>
                 <el-col :xs="24" :md="24" class="right-title mb20 one-text-overflow">
-                  {{ userInfo.welcomeMessage }} <strong>{{ userInfo.nickName }}</strong> {{ userInfo.welcomeContent }}
+                  <div class="mb10">
+                    {{ userInfo.welcomeMessage }} <strong>{{ userInfo.nickName }}</strong>
+                    <span>({{ userInfo.welcomeContent }})</span>
+                  </div>
                 </el-col>
               </el-row>
               <el-row>
@@ -24,10 +27,19 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :lg="6" class="mb10">
+      <el-col :lg="8" class="mb10">
         <el-card style="height: 100%">
           <div class="text-warning mb10">{{ currentTime }} {{ weekName }}</div>
-          <div>上次登录时间：{{ userInfo.loginDate }}</div>
+          <div class="work-wrap">
+            <div class="item">
+              <div class="name">今日工作时长</div>
+              <div class="mt10">{{ onlineInfo.onlineTime }}分</div>
+            </div>
+            <div class="item">
+              <div class="name">在线设备数</div>
+              <div class="mt10">{{ onlineInfo.clientNum }}</div>
+            </div>
+          </div>
         </el-card>
       </el-col>
     </el-row>
@@ -94,6 +106,7 @@ import BarChart from './dashboard/BarChart'
 import CommonMenu from './components/CommonMenu'
 
 import useUserStore from '@/store/modules/user'
+import useSocketStore from '@/store/modules/socket'
 import { getWeek } from '@/utils/ruoyi'
 const showEdit = ref(false)
 const data = {
@@ -117,6 +130,9 @@ const data = {
 const { proxy } = getCurrentInstance()
 const userInfo = computed(() => {
   return useUserStore().userInfo
+})
+const onlineInfo = computed(() => {
+  return useSocketStore().onlineInfo
 })
 const currentTime = computed(() => {
   return proxy.parseTime(new Date(), 'YYYY-MM-DD')
@@ -164,6 +180,19 @@ function handleAdd() {
   .info {
     height: 200px;
     // overflow-y: scroll;
+  }
+
+  .work-wrap {
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+
+    .item {
+      text-align: center;
+
+      .name {
+        color: #606666;
+      }
+    }
   }
 }
 .chart-wrapper {

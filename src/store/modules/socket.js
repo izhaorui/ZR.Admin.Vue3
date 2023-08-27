@@ -3,7 +3,12 @@ const useSocketStore = defineStore('socket', {
     onlineNum: 0,
     onlineUsers: [],
     noticeList: [],
-    noticeDot: false
+    noticeDot: false,
+    //在线用户信息
+    onlineInfo: {},
+    // 聊天数据
+    chatList: [],
+    leaveUser: {}
   }),
   actions: {
     //更新在线人数
@@ -15,14 +20,19 @@ const useSocketStore = defineStore('socket', {
       this.noticeList = data
       this.noticeDot = data.length > 0
     },
-    // setOnlineUsers(data) {
-    //   const { onlineNum, users } = data
-    //   this.onlineUsers = users
-    //   this.onlineNum = onlineNum
-    // },
-    sendChat(data) {
-      const { proxy } = getCurrentInstance()
-      console.log(data)
+    setOnlineUsers(data) {
+      const { onlineClients, num, leaveUser } = data
+      this.onlineUsers = onlineClients
+      this.onlineNum = num
+      if (leaveUser != null) {
+        this.leaveUser = leaveUser
+      }
+    },
+    getOnlineInfo(data) {
+      this.onlineInfo = data
+    },
+    setChat(data) {
+      this.chatList.push(data)
     }
   }
 })

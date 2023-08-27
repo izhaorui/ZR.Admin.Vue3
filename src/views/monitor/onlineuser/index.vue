@@ -3,11 +3,10 @@
     <el-form :model="queryParams" ref="queryRef" :inline="true">
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">刷新</el-button>
-        <!-- <el-button icon="Refresh" @click="resetQuery">{{ $t('btn.reset') }}</el-button> -->
       </el-form-item>
     </el-form>
 
-    <el-table :data="onlineUsers" ref="tableRef" border highlight-current-row>
+    <el-table :data="onlineUsers" v-loading="loading" ref="tableRef" border highlight-current-row>
       <!-- <el-table-column prop="connnectionId" label="连接id"></el-table-column> -->
       <el-table-column label="No" type="index" width="50" align="center">
         <template #default="scope">
@@ -17,11 +16,12 @@
       <el-table-column prop="name" label="用户名" align="center" />
       <el-table-column label="登录地点" prop="location" align="center"> </el-table-column>
       <el-table-column label="登录IP" prop="userIP" align="center"></el-table-column>
-      <el-table-column prop="browser" label="登录浏览器" width="250"></el-table-column>
+      <el-table-column prop="browser" label="登录浏览器" width="210"></el-table-column>
       <el-table-column prop="platform" label="登录设备" align="center"></el-table-column>
-      <el-table-column prop="loginTime" label="登录时间">
+      <el-table-column prop="loginTime" label="登录时间" witdh="280px">
         <template #default="scope">
           {{ dayjs(scope.row.loginTime).format('MM/DD日HH:mm:ss') }}
+          <div>在线时长：{{ scope.row.onlineTime }}分钟</div>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="160">
@@ -47,12 +47,11 @@ const queryParams = reactive({
   pageSize: 10
 })
 
-// const total = computed(() => {
-//   return useSocketStore().onlineNum
-// })
-// const onlineUsers = computed(() => {
-//   return useSocketStore().onlineUsers
-// })
+const onlineNum = computed(() => {
+  return useSocketStore().onlineNum
+})
+
+const loading = ref(false)
 const onlineUsers = ref([])
 const total = ref(0)
 function handleQuery() {
@@ -60,13 +59,14 @@ function handleQuery() {
   getList()
 }
 function getList() {
-  // proxy.signalr.SR.invoke('GetOnlineUsers', queryParams.pageNum, queryParams.pageSize).catch(function (err) {
-  //   console.error(err.toString())
-  // })
+  loading.value = true
   listOnline(queryParams).then((res) => {
     if (res.code == 200) {
       total.value = res.data.totalNum
       onlineUsers.value = res.data.result
+      setTimeout(() => {
+        loading.value = false
+      }, 200)
     }
   })
 }
@@ -81,7 +81,7 @@ function onChat(item) {
       inputErrorMessage: '消息内容不能为空'
     })
     .then(({ value }) => {
-      proxy.signalr.SR.invoke('SendMessage', item.connnectionId, item.name, value).catch(function (err) {
+      proxy.signalr.SR.invoke('sendMessage', item.connnectionId, item.userid, value).catch(function (err) {
         console.error(err.toString())
       })
     })
@@ -100,4 +100,14 @@ function onLock(row) {
     })
     .catch(() => {})
 }
+
+watch(
+  onlineNum,
+  () => {
+    handleQuery()
+  },
+  {
+    immediate: true
+  }
+)
 </script>

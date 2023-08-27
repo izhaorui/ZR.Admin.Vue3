@@ -11,7 +11,7 @@ import directive from './directive' // directive
 // 注册指令
 import plugins from './plugins' // plugins
 import { downFile } from '@/utils/request'
-import signalR from '@/utils/signalR'
+import signalR from '@/signalr/signalr'
 import vueI18n from './i18n/index'
 import pinia from '@/store/index'
 

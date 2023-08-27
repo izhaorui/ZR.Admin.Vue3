@@ -28,7 +28,11 @@ watch(
   token,
   (val) => {
     if (val) {
-      proxy.signalr.start()
+      proxy.signalr.start().then(async (res) => {
+        if (res) {
+          await proxy.signalr.SR.invoke('logOut')
+        }
+      })
     }
   },
   {
