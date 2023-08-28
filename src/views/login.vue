@@ -89,14 +89,7 @@ import QRCode from 'qrcodejs2-fixes'
 import { verifyScan, generateQrcode } from '@/api/system/login'
 var visitorId = ''
 const fpPromise = import('https://openfpcdn.io/fingerprintjs/v3').then((FingerprintJS) => FingerprintJS.load())
-// Get the visitor identifier when you need it.
-fpPromise
-  .then((fp) => fp.get())
-  .then((result) => {
-    // This is the visitor identifier:
-    visitorId = result.visitorId
-    useUserStore().setClientId(visitorId)
-  })
+
 const userStore = useUserStore()
 const router = useRouter()
 const route = useRoute()
@@ -124,7 +117,14 @@ const captchaOnOff = ref('')
 const register = ref(false)
 const redirect = ref()
 redirect.value = route.query.redirect
-
+// Get the visitor identifier when you need it.
+fpPromise
+  .then((fp) => fp.get())
+  .then((result) => {
+    // This is the visitor identifier:
+    visitorId = result.visitorId
+    userStore.setClientId(visitorId)
+  })
 function handleLogin() {
   proxy.$refs.loginRef.validate((valid) => {
     if (valid) {
@@ -224,7 +224,7 @@ function generateCode() {
     }
   })
   interval.value = setInterval(() => {
-    verifyScan({ uuid: uuid, deviceId: visitorId })
+    verifyScan({ uuid: uuid, deviceId: userStore.clientId })
       .then((res) => {
         const { code, data } = res
         if (data.status == -1) {
