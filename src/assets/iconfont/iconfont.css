@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4017520 */
-  src: url('iconfont.woff2?t=1681548759797') format('woff2'),
-       url('iconfont.woff?t=1681548759797') format('woff'),
-       url('iconfont.ttf?t=1681548759797') format('truetype');
+  src: url('iconfont.woff2?t=1693295134717') format('woff2'),
+       url('iconfont.woff?t=1693295134717') format('woff'),
+       url('iconfont.ttf?t=1693295134717') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,18 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-exit-fullscreen:before {
+  content: "\e66d";
+}
+
+.icon-validCode:before {
+  content: "\e621";
+}
+
+.icon-index:before {
+  content: "\e61f";
 }
 
 .icon-tree-table:before {
@@ -87,10 +99,6 @@
 
 .icon-language:before {
   content: "\e63a";
-}
-
-.icon-index:before {
-  content: "\e63b";
 }
 
 .icon-ipvisits:before {

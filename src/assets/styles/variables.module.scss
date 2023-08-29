@@ -11,6 +11,7 @@ $panGreen: #30b08f;
 // 默认菜单主题风格
 :root {
   --base-text-color-rgba: rgba(0, 0, 0, 0.85);
+  --base-menu-background: #fff;
   --base-sidebar-width: 220px;
   // 左侧菜单宽度
   --el-aside-width: 220px;
@@ -36,6 +37,7 @@ html.dark {
   // --el-bg-color: #141414;
   --base-color-white: #ffffff;
   --base-text-color-rgba: #ffffff;
+  --base-menu-background: #000;
 }
 html.cafe {
   filter: sepia(0.9) hue-rotate(315deg) brightness(0.9);
