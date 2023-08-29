@@ -89,7 +89,9 @@
     "content1": "The code is completely free and open source, easy to read and understand, and the interface is simple and beautiful, giving you one more choice and reference for your project.",
     "topNav": "Top nav",
     "commonFuncs": "Common Functions",
-    "openWatermark": "Open Watermark"
+    "openWatermark": "Open Watermark",
+    "workTime": "Today's working times(min)",
+    "onlineClientNum": "Number of online devices"
   },
   "common": {
     "ok": "Ok",

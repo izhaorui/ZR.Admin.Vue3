@@ -10,6 +10,7 @@
     "reLogin": "重新登錄",
     "invalidSession": "無效的會話，或者會話已過期，請重新登錄。",
     "otherLoginWay": "其他登錄方式",
-    "register": "註冊"
+    "register": "註冊",
+    "forgotPwd": "忘記密碼"
   }
 }

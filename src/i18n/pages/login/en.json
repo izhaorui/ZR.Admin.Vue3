@@ -10,6 +10,7 @@
     "reLogin": "re-register",
     "invalidSession": "Invalid session, or session has expired, please log in again.",
     "otherLoginWay": "Other",
-    "register": "Sign up now"
+    "register": "Sign up now",
+    "forgotPwd": "forget"
   }
 }
