@@ -39,7 +39,7 @@
         <h2>ZRAdmin.NET {{ $t('layout.backstageManagement') }}</h2>
         <p>
           ZRAdmin.NET借鉴了很多开源项目的优点，让你开发Web管理系统更简单，所以我也把它给开源了（前端
-          <code>vue页面</code>主要参考若依，在此表示感谢.)
+          <code>vue页面</code>主要使用了若依，后端参考Ruoyi stringboot版本，在此表示感谢.)
         </p>
         <p>{{ $t('layout.content1') }}</p>
         <p>

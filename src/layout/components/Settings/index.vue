@@ -21,7 +21,7 @@
       <el-radio-group v-model="mode" size="small">
         <el-radio label="dark">{{ $t('layout.darkMode') }}</el-radio>
         <el-radio label="light">{{ $t('layout.lightMode') }}</el-radio>
-        <el-radio label="cafe">cafe</el-radio>
+        <!-- <el-radio label="cafe">cafe</el-radio> -->
         <!-- <el-radio label="contrast">contrast</el-radio> -->
       </el-radio-group>
     </div>

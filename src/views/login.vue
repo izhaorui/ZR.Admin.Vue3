@@ -24,7 +24,7 @@
             </template>
           </el-input>
         </el-form-item>
-        <el-form-item prop="code" v-if="captchaOnOff != 'off'">
+        <el-form-item prop="code" v-show="captchaOnOff != 'off'">
           <el-input v-model="loginForm.code" auto-complete="off" :placeholder="$t('login.captcha')" style="width: 63%" @keyup.enter="handleLogin">
             <template #prefix>
               <svg-icon name="validCode" class="input-icon" />
@@ -38,7 +38,7 @@
         <div style="display: flex; justify-content: space-between">
           <el-checkbox v-model="loginForm.rememberMe">{{ $t('login.rememberMe') }}</el-checkbox>
           <span style="font-size: 12px">
-            <span @click="handleForgetPwd()" class="forget-pwd">忘记密码</span>
+            <span @click="handleForgetPwd()" class="forget-pwd">{{ $t('login.forgotPwd') }}</span>
             <router-link class="link-type" :to="'/register'">{{ $t('login.register') }}</router-link>
           </span>
         </div>
@@ -58,8 +58,8 @@
         </div>
 
         <div class="login-scan-container">
-          <div ref="imgContainerRef" id="imgContainer"></div>
-          <div>请使用移动端app扫码登录</div>
+          <div ref="imgContainerRef" id="imgContainer" class="qrCode"></div>
+          <div class="mt10 text-muted">请使用移动端app扫码登录</div>
         </div>
       </div>
 
@@ -218,8 +218,8 @@ function generateCode() {
       new QRCode(document.getElementById('imgContainer'), {
         // text: 'https://qm.qq.com/cgi-bin/qm/qr?k=kgt4HsckdljU0VM-0kxND6d_igmfuPlL&authKey=r55YUbruiKQ5iwC/folG7KLCmZ++Y4rQVgNlvLbUniUMkbk24Y9+zNuOmOnjAjRc&noverify=0',
         text: JSON.stringify(data.codeContent),
-        width: 200,
-        height: 200
+        width: 160,
+        height: 160
       })
     }
   })
@@ -278,5 +278,10 @@ getCookie()
 }
 .other-login {
   padding: 0px 10px 5px;
+}
+.qrCode {
+  width: 160px;
+  height: 160px;
+  line-height: 160px;
 }
 </style>

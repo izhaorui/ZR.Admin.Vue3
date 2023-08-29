@@ -31,14 +31,8 @@
         <el-card style="height: 100%">
           <div class="text-warning mb10">{{ currentTime }} {{ weekName }}</div>
           <div class="work-wrap">
-            <div class="item">
-              <div class="name">今日工作时长</div>
-              <div class="mt10">{{ onlineInfo.onlineTime }}分</div>
-            </div>
-            <div class="item">
-              <div class="name">在线设备数</div>
-              <div class="mt10">{{ onlineInfo.clientNum }}</div>
-            </div>
+            <el-statistic :title="$t('layout.workTime')" :value="Math.ceil(onlineInfo.todayOnlineTime, 2)" />
+            <el-statistic :title="$t('layout.onlineClientNum')" :value="onlineInfo.clientNum" />
           </div>
         </el-card>
       </el-col>
@@ -53,7 +47,7 @@
               <el-button text @click="handleAdd()">{{ $t('btn.add') }}</el-button>
             </div>
           </template>
-          <div class="info">
+          <div>
             <el-scrollbar wrap-class="scrollbar-wrapper"> <CommonMenu v-model="showEdit"></CommonMenu></el-scrollbar>
           </div>
         </el-card>

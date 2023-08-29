@@ -7,6 +7,7 @@
             <template #content> {{ generateIconCode(item) }} </template>
             <div class="icon-item">
               <svg-icon :name="item" style="height: 40px; width: 40px" />
+              <span>{{ item }}</span>
             </div>
           </el-tooltip>
         </div>
@@ -17,6 +18,7 @@
             <template #content> {{ generateElementIconCode(item) }} </template>
             <div class="icon-item">
               <el-icon><component :is="item" /></el-icon>
+              <span>{{ item }}</span>
             </div>
           </el-tooltip>
         </div>
@@ -54,7 +56,7 @@ function generateElementIconCode(symbol) {
     margin: 20px;
     height: 60px;
     text-align: center;
-    width: 60px;
+    width: 77px;
     float: left;
     font-size: 30px;
     color: #24292e;
