@@ -17,3 +17,12 @@ export function forceLogout(data) {
     data: data
   })
 }
+
+// 批量强退用户
+export function forceLogoutAll(data) {
+  return request({
+    url: '/monitor/online/batchlock',
+    method: 'delete',
+    data: data
+  })
+}

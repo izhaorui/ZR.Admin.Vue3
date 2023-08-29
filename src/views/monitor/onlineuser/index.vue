@@ -5,7 +5,11 @@
         <el-button type="primary" icon="Search" @click="handleQuery">刷新</el-button>
       </el-form-item>
     </el-form>
-
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="2">
+        <el-button plain type="primary" @click="onLockAll()" icon="lock" v-hasPermi="['monitor:online:forceLogout']">全部强退</el-button>
+      </el-col>
+    </el-row>
     <el-table :data="onlineUsers" v-loading="loading" ref="tableRef" border highlight-current-row>
       <!-- <el-table-column prop="connnectionId" label="连接id"></el-table-column> -->
       <el-table-column label="No" type="index" width="50" align="center">
@@ -17,7 +21,7 @@
       <el-table-column label="登录地点" prop="location" align="center"> </el-table-column>
       <el-table-column label="登录IP" prop="userIP" align="center"></el-table-column>
       <el-table-column prop="browser" label="登录浏览器" width="210"></el-table-column>
-      <el-table-column prop="platform" label="登录设备" align="center"></el-table-column>
+      <el-table-column prop="platform" label="登录平台" align="center"></el-table-column>
       <el-table-column prop="loginTime" label="登录时间" witdh="280px">
         <template #default="scope">
           {{ dayjs(scope.row.loginTime).format('MM/DD日HH:mm:ss') }}
@@ -27,7 +31,7 @@
       <el-table-column label="操作" align="center" width="160">
         <template #default="scope">
           <el-button text @click="onChat(scope.row)" icon="bell" v-hasRole="['admin']">通知</el-button>
-          <el-button text @click="onLock(scope.row)" icon="lock" v-hasRole="['admin']">强退</el-button>
+          <el-button text @click="onLock(scope.row)" icon="lock" v-hasPermi="['monitor:online:forceLogout']">强退</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -36,7 +40,7 @@
 </template>
 
 <script setup name="onlineuser">
-import { listOnline, forceLogout } from '@/api/monitor/online'
+import { listOnline, forceLogout, forceLogoutAll } from '@/api/monitor/online'
 import dayjs from 'dayjs'
 import useSocketStore from '@/store/modules/socket'
 import useUserStore from '@/store/modules/user'
@@ -89,18 +93,30 @@ function onChat(item) {
 }
 function onLock(row) {
   proxy
-    .$prompt('请输入踢出原因', '', {
+    .$prompt('请输入强退原因', '', {
       confirmButtonText: '发送',
       cancelButtonText: '取消'
     })
     .then((val) => {
-      forceLogout({ ...row, time: 10, reason: val.value, clientId: useUserStore().clientId }).then((res) => {
-        proxy.$modal.msgSuccess('踢出成功')
+      forceLogout({ ...row, time: 10, reason: val.value, clientId: row.clientId }).then(() => {
+        proxy.$modal.msgSuccess('强退成功')
       })
     })
-    .catch(() => {})
 }
 
+// 批量强退
+function onLockAll() {
+  proxy
+    .$prompt('请输入强退原因', '', {
+      confirmButtonText: '发送',
+      cancelButtonText: '取消'
+    })
+    .then((val) => {
+      forceLogoutAll({ time: 10, reason: val.value }).then((res) => {
+        proxy.$modal.msgSuccess('强退成功')
+      })
+    })
+}
 watch(
   onlineNum,
   () => {

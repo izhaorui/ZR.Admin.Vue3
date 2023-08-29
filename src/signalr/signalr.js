@@ -2,7 +2,7 @@
 import * as signalR from '@microsoft/signalr'
 import { getToken } from '@/utils/auth'
 import { ElMessage } from 'element-plus'
-
+import cache from '@/plugins/cache'
 import analysis from '@/signalr/analysis'
 
 export default {
@@ -11,7 +11,7 @@ export default {
   // 失败连接重试次数
   failNum: 4,
   init(url) {
-    var socketUrl = window.location.origin + url
+    var socketUrl = window.location.origin + url + '?clientId=' + cache.local.get('clientId')
     const connection = new signalR.HubConnectionBuilder()
       .withUrl(socketUrl, { accessTokenFactory: () => getToken() })
       .withAutomaticReconnect() //自动重新连接
