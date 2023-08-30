@@ -12,7 +12,7 @@ export function listOnline(query) {
 // 强退用户
 export function forceLogout(data) {
   return request({
-    url: '/monitor/online/lock',
+    url: '/monitor/online/force',
     method: 'delete',
     data: data
   })
@@ -21,7 +21,7 @@ export function forceLogout(data) {
 // 批量强退用户
 export function forceLogoutAll(data) {
   return request({
-    url: '/monitor/online/batchlock',
+    url: '/monitor/online/batchForce',
     method: 'delete',
     data: data
   })

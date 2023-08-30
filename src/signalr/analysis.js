@@ -36,9 +36,9 @@ export default {
     //   useSocketStore().setOnlineUsers(data)
     // })
 
-    // 接收封锁通知
-    connection.on('lockUser', (data) => {
-      ElMessageBox.alert(`你的账号已被锁定，剩余，${data.time}分，原因：${data.reason || '-'}`, '提示', {
+    // 接收强退通知
+    connection.on('forceUser', (data) => {
+      ElMessageBox.alert(`你的账号已被强退，原因：${data.reason || '无'}`, '提示', {
         confirmButtonText: '确定',
         callback: () => {
           useUserStore()
