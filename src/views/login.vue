@@ -43,7 +43,7 @@
           </span>
         </div>
 
-        <el-form-item style="width: 100%">
+        <el-form-item style="width: 100%" :style="{ 'margin-top': captchaOnOff == 'off' ? '40px' : '' }">
           <el-button :loading="loading" size="default" type="primary" style="width: 100%" @click.prevent="handleLogin">
             <span v-if="!loading">{{ $t('login.btnLogin') }}</span>
             <span v-else>登 录 中...</span>

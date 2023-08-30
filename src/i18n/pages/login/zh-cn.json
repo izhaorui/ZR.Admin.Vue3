@@ -10,7 +10,7 @@
     "reLogin": "重新登录",
     "invalidSession": "无效的会话，或者会话已过期，请重新登录。",
     "otherLoginWay": "其他登录方式",
-    "register": "注册",
+    "register": "立即注册",
     "forgotPwd": "忘记密码"
   }
 }

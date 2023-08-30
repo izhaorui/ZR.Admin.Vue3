@@ -1,49 +1,51 @@
 <template>
   <starBackground></starBackground>
-  <div class="register">
-    <el-form ref="registerFormRef" :model="registerForm" :rules="registerRules" class="register-form">
-      <h3 class="title">{{ title }}</h3>
-      <el-form-item prop="username">
-        <el-input v-model="registerForm.username" type="text" auto-complete="off" placeholder="账号">
-          <template #prefix>
-            <svg-icon name="user" />
-          </template>
-        </el-input>
-      </el-form-item>
-      <el-form-item prop="password">
-        <el-input v-model="registerForm.password" type="password" auto-complete="off" placeholder="密码" @keyup.enter="handleRegister">
-          <template #prefix>
-            <svg-icon name="password" />
-          </template>
-        </el-input>
-      </el-form-item>
-      <el-form-item prop="confirmPassword">
-        <el-input v-model="registerForm.confirmPassword" type="password" auto-complete="off" placeholder="确认密码" @keyup.enter="handleRegister">
-          <template #prefix>
-            <svg-icon name="password" />
-          </template>
-        </el-input>
-      </el-form-item>
-      <el-form-item prop="code" v-if="captchaOnOff">
-        <el-input v-model="registerForm.code" auto-complete="off" placeholder="验证码" style="width: 63%" @keyup.enter="handleRegister">
-          <template #prefix>
-            <svg-icon name="validCode" />
-          </template>
-        </el-input>
-        <div class="register-code ml10">
-          <img :src="codeUrl" @click="getCode" class="register-code-img" />
-        </div>
-      </el-form-item>
-      <el-form-item style="width: 100%">
-        <el-button :loading="loading" type="primary" size="large" style="width: 100%" @click.prevent="handleRegister">
-          <span v-if="!loading">注 册</span>
-          <span v-else>注 册 中...</span>
-        </el-button>
-        <div style="float: right">
-          <router-link class="link-type" :to="'/login'">使用已有账户登录</router-link>
-        </div>
-      </el-form-item>
-    </el-form>
+  <div class="login-wrap">
+    <div class="login">
+      <el-form ref="registerFormRef" :model="registerForm" :rules="registerRules" class="login-form">
+        <h3 class="title">{{ title }}</h3>
+        <el-form-item prop="username">
+          <el-input v-model="registerForm.username" type="text" auto-complete="off" placeholder="账号">
+            <template #prefix>
+              <svg-icon name="user" />
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input v-model="registerForm.password" type="password" auto-complete="off" placeholder="密码" @keyup.enter="handleRegister">
+            <template #prefix>
+              <svg-icon name="password" />
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="confirmPassword">
+          <el-input v-model="registerForm.confirmPassword" type="password" auto-complete="off" placeholder="确认密码" @keyup.enter="handleRegister">
+            <template #prefix>
+              <svg-icon name="password" />
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="code" v-if="captchaOnOff">
+          <el-input v-model="registerForm.code" auto-complete="off" placeholder="验证码" style="width: 63%" @keyup.enter="handleRegister">
+            <template #prefix>
+              <svg-icon name="validCode" />
+            </template>
+          </el-input>
+          <div class="register-code ml10">
+            <img :src="codeUrl" @click="getCode" class="register-code-img" />
+          </div>
+        </el-form-item>
+        <el-form-item style="width: 100%">
+          <el-button :loading="loading" type="primary" size="default" style="width: 100%" @click.prevent="handleRegister">
+            <span v-if="!loading">注 册</span>
+            <span v-else>注 册 中...</span>
+          </el-button>
+          <div style="text-align: center">
+            <router-link class="link-type" :to="'/login'">使用已有账户登录</router-link>
+          </div>
+        </el-form-item>
+      </el-form>
+    </div>
     <!--  底部  -->
     <div class="el-register-footer">
       <div v-html="defaultSettings.copyright"></div>
@@ -147,11 +149,14 @@ getCode()
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
+@import '@/assets/styles/login.scss';
 .register {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
+  background-size: cover;
+  flex-direction: column;
   background: radial-gradient(220% 105% at top center, #1b2947 10%, #4b76a7 40%, #81acae 65%, #f7f7b6);
 }
 .title {
@@ -161,10 +166,9 @@ getCode()
 }
 
 .register-form {
-  border-radius: 6px;
   background: #fff;
   width: var(--base-login-width);
-  padding: 25px 15px 5px 15px;
+  padding: 35px 15px 5px 15px;
   .el-input {
     height: 38px;
     input {
