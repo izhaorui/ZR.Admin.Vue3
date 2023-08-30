@@ -24,7 +24,7 @@
             </template>
           </el-input>
         </el-form-item>
-        <el-form-item prop="code" v-show="captchaOnOff != 'off'">
+        <el-form-item prop="code" v-if="captchaOnOff != 'off'">
           <el-input v-model="loginForm.code" auto-complete="off" :placeholder="$t('login.captcha')" style="width: 63%" @keyup.enter="handleLogin">
             <template #prefix>
               <svg-icon name="validCode" class="input-icon" />

@@ -2,16 +2,22 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true">
       <el-form-item>
+        <el-button plain type="primary" @click="onLockAll()" icon="lock" v-hasPermi="['monitor:online:forceLogout']">全部强退</el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-radio-group v-model="viewSwitch">
+          <el-radio-button label="1">表格</el-radio-button>
+          <el-radio-button label="2">卡片</el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">刷新</el-button>
       </el-form-item>
     </el-form>
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="2">
-        <el-button plain type="primary" @click="onLockAll()" icon="lock" v-hasPermi="['monitor:online:forceLogout']">全部强退</el-button>
-      </el-col>
-    </el-row>
-    <el-table :data="onlineUsers" v-loading="loading" ref="tableRef" border highlight-current-row>
-      <!-- <el-table-column prop="connnectionId" label="连接id"></el-table-column> -->
+    <!-- <el-row :gutter="10" class="mb8">
+      <el-col :span="2"> </el-col>
+    </el-row> -->
+    <el-table :data="onlineUsers" v-loading="loading" ref="tableRef" border highlight-current-row v-if="viewSwitch == 1">
       <el-table-column label="No" type="index" width="50" align="center">
         <template #default="scope">
           <span>{{ (queryParams.pageNum - 1) * queryParams.pageSize + scope.$index + 1 }}</span>
@@ -35,6 +41,27 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <el-row :gutter="20" v-if="viewSwitch == 2">
+      <el-col v-for="item in onlineUsers" :lg="4" :span="24">
+        <el-card :body-style="{ padding: '15px' }">
+          <el-descriptions :column="1" :title="item.name">
+            <el-descriptions-item label="登录平台">{{ item.platform }}</el-descriptions-item>
+            <el-descriptions-item label="登录地点">{{ item.location }}</el-descriptions-item>
+            <el-descriptions-item label="在线时长" :span="2">
+              <el-tag type="success">{{ item.onlineTime }}分钟</el-tag>
+            </el-descriptions-item>
+          </el-descriptions>
+          <el-text truncated>{{ item.browser }}</el-text>
+          <div>
+            <el-button text @click="onChat(item)" icon="bell" v-hasRole="['admin']">通知</el-button>
+            <el-button text @click="onLock(item)" icon="lock" v-hasPermi="['monitor:online:forceLogout']">强退</el-button>
+          </div>
+        </el-card>
+      </el-col>
+
+      <el-empty v-show="total == 0" description="no data" />
+    </el-row>
     <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
   </div>
 </template>
@@ -43,7 +70,6 @@
 import { listOnline, forceLogout, forceLogoutAll } from '@/api/monitor/online'
 import dayjs from 'dayjs'
 import useSocketStore from '@/store/modules/socket'
-import useUserStore from '@/store/modules/user'
 const { proxy } = getCurrentInstance()
 const queryRef = ref(null)
 const queryParams = reactive({
@@ -54,7 +80,7 @@ const queryParams = reactive({
 const onlineNum = computed(() => {
   return useSocketStore().onlineNum
 })
-
+const viewSwitch = ref(1)
 const loading = ref(false)
 const onlineUsers = ref([])
 const total = ref(0)
@@ -127,3 +153,8 @@ watch(
   }
 )
 </script>
+<style>
+.el-col {
+  margin-bottom: 10px;
+}
+</style>
