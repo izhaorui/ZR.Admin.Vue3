@@ -139,7 +139,12 @@
       </el-table-column>
     </el-table>
 
-    <pagination class="mt10" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
+    <pagination
+      v-if="queryParams.showMode == 1"
+      :total="total"
+      v-model:page="queryParams.pageNum"
+      v-model:limit="queryParams.pageSize"
+      @pagination="getList" />
 
     <!-- 添加或修改多语言配置对话框 -->
     <el-dialog :title="title" :lock-scroll="false" v-model="open" width="550px">
