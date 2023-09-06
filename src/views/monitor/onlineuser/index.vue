@@ -44,7 +44,7 @@
 
     <el-row :gutter="20" v-if="viewSwitch == 2">
       <el-col v-for="item in onlineUsers" :lg="4" :span="24">
-        <el-card :body-style="{ padding: '15px' }">
+        <el-card :body-style="{ padding: '15px 15px 0' }">
           <el-descriptions :column="1" :title="item.name">
             <el-descriptions-item label="登录平台">{{ item.platform }}</el-descriptions-item>
             <el-descriptions-item label="登录地点">{{ item.location }}</el-descriptions-item>
@@ -54,8 +54,8 @@
           </el-descriptions>
           <el-text truncated>{{ item.browser }}</el-text>
           <div>
-            <el-button text @click="onChat(item)" icon="bell" v-hasRole="['admin']">通知</el-button>
-            <el-button text @click="onLock(item)" icon="lock" v-hasPermi="['monitor:online:forceLogout']">强退</el-button>
+            <el-button text @click="onChat(item)" icon="bell" title="通知" v-hasRole="['admin']"></el-button>
+            <el-button text @click="onLock(item)" icon="lock" title="强退" v-hasPermi="['monitor:online:forceLogout']"></el-button>
           </div>
         </el-card>
       </el-col>
