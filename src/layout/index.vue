@@ -20,11 +20,14 @@
       </el-header>
       <el-main class="app-main">
         <router-view v-slot="{ Component, route }">
-          <transition name="fade-transform" mode="out-in">
+          <transition name="fade-transform" mode="out-in" v-if="!dev">
             <keep-alive :include="cachedViews">
               <component v-if="!route.meta.link" :is="Component" :key="route.path" />
             </keep-alive>
           </transition>
+          <keep-alive :include="cachedViews" v-else>
+            <component v-if="!route.meta.link" :is="Component" :key="route.path" />
+          </keep-alive>
         </router-view>
         <iframe-toggle />
       </el-main>
@@ -46,6 +49,7 @@ import useAppStore from '@/store/modules/app'
 import useSettingsStore from '@/store/modules/settings'
 import useTagsViewStore from '@/store/modules/tagsView'
 
+const dev = import.meta.env.DEV
 const settingsStore = useSettingsStore()
 const theme = computed(() => settingsStore.theme)
 const sidebar = computed(() => useAppStore().sidebar)
