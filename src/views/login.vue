@@ -2,14 +2,19 @@
   <starBackground></starBackground>
   <div class="login-wrap">
     <div class="login">
-      <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form" v-if="!showQrLogin">
-        <h3 class="title">{{ defaultSettings.title }}</h3>
+      <h3 class="title">{{ defaultSettings.title }}</h3>
 
-        <div class="scan-wrap" @click="handleShowQrLogin()">
-          <svg-icon name="qr" class="icon" />
-          <div class="scan-delta"></div>
-        </div>
-        <LangSelect title="多语言设置" class="langSet" />
+      <LangSelect title="多语言设置" class="langSet" />
+
+      <div style="padding: 0 25px 5px 25px">
+        <el-tabs v-model="loginType" @tab-click="handleLoginType">
+          <el-tab-pane :label="$t('login.loginway1')" :name="1"></el-tab-pane>
+          <el-tab-pane :label="$t('login.loginway2')" :name="2"></el-tab-pane>
+          <el-tab-pane :label="$t('login.loginway3')" :name="3"></el-tab-pane>
+        </el-tabs>
+      </div>
+
+      <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form" v-show="loginType == 1">
         <el-form-item prop="username">
           <el-input v-model="loginForm.username" type="text" auto-complete="off" :placeholder="$t('login.account')">
             <template #prefix>
@@ -43,34 +48,24 @@
           </span>
         </div>
 
-        <el-form-item style="width: 100%" :style="{ 'margin-top': captchaOnOff == 'off' ? '40px' : '' }">
-          <el-button :loading="loading" size="default" type="primary" style="width: 100%" @click.prevent="handleLogin">
+        <el-form-item style="width: 100%" :style="{ 'margin-top': captchaOnOff == 'off' ? '20px' : '' }">
+          <el-button :loading="loading" size="default" round type="primary" style="width: 100%" @click.prevent="handleLogin">
             <span v-if="!loading">{{ $t('login.btnLogin') }}</span>
             <span v-else>登 录 中...</span>
           </el-button>
         </el-form-item>
       </el-form>
-      <div class="qr-wrap login-form" v-else>
-        <h3 class="title">移动端扫码登录</h3>
-        <div class="scan-wrap" @click="handleShowQrLogin()">
-          <svg-icon name="pc" class="icon" />
-          <div class="scan-delta"></div>
-        </div>
-
+      <div class="qr-wrap login-form" v-show="loginType == 3">
         <div class="login-scan-container">
           <div ref="imgContainerRef" id="imgContainer" class="qrCode"></div>
-          <div class="mt10 text-muted">请使用移动端app扫码登录</div>
+          <div class="mt10 text-muted">{{ $t('login.tip_scan_code') }}</div>
         </div>
       </div>
 
-      <div class="other-login" v-if="defaultSettings.showOtherLogin">
-        <el-divider>{{ $t('login.otherLoginWay') }}</el-divider>
-
-        <span @click="onAuth('GITHUB')" title="github"><svg-icon name="github" className="login-icon"></svg-icon></span>
-        <span @click="onAuth('GITEE')" title="gitee"><svg-icon name="gitee" className="login-icon"></svg-icon></span>
-      </div>
+      <phoneLogin v-show="loginType == 2"></phoneLogin>
+      <oauthLogin></oauthLogin>
     </div>
-    <!--  底部  -->
+
     <div class="el-login-footer">
       <div v-html="defaultSettings.copyright"></div>
     </div>
@@ -87,6 +82,9 @@ import LangSelect from '@/components/LangSelect/index.vue'
 import useUserStore from '@/store/modules/user'
 import QRCode from 'qrcodejs2-fixes'
 import { verifyScan, generateQrcode } from '@/api/system/login'
+import oauthLogin from './components/Login/oauthLogin.vue'
+import phoneLogin from './components/Login/phoneLogin.vue'
+
 var visitorId = ''
 const fpPromise = import('https://openfpcdn.io/fingerprintjs/v3').then((FingerprintJS) => FingerprintJS.load())
 
@@ -108,7 +106,7 @@ const loginRules = {
   password: [{ required: true, trigger: 'blur', message: '请输入您的密码' }],
   code: [{ required: true, trigger: 'change', message: '请输入验证码' }]
 }
-
+const loginType = ref(1)
 const codeUrl = ref('')
 const loading = ref(false)
 // 验证码开关
@@ -178,15 +176,6 @@ function getCookie() {
     rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
   }
 }
-function onAuth(type) {
-  userStore.setAuthSource(type)
-
-  switch (type) {
-    default:
-      window.location.href = import.meta.env.VITE_APP_BASE_API + '/auth/Authorization?authSource=' + type
-      break
-  }
-}
 function handleForgetPwd() {
   proxy.$modal.msg('请联系管理员')
 }
@@ -194,15 +183,11 @@ function handleForgetPwd() {
 const interval = ref(null)
 const showQrLogin = ref(false)
 function handleShowQrLogin() {
-  showQrLogin.value = !showQrLogin.value
+  // showQrLogin.value = !showQrLogin.value
 
-  if (showQrLogin.value) {
-    nextTick(() => {
-      generateCode()
-    })
-  } else {
-    clearQr()
-  }
+  nextTick(() => {
+    generateCode()
+  })
 }
 // 生成二维码
 function generateCode() {
@@ -259,6 +244,15 @@ function getUuid() {
   URL.revokeObjectURL(temp_url)
   return uuid.substr(uuid.lastIndexOf('/') + 1)
 }
+function handleLoginType(t) {
+  const val = t.paneName
+
+  if (val == 3) {
+    handleShowQrLogin()
+  } else {
+    clearQr()
+  }
+}
 getCode()
 getCookie()
 </script>
@@ -269,15 +263,6 @@ getCookie()
   color: #ccc;
   margin-right: 10px;
   cursor: pointer;
-}
-.login-icon {
-  width: 30px;
-  height: 30px;
-  margin-right: 20px;
-  cursor: pointer;
-}
-.other-login {
-  padding: 0px 10px 5px;
 }
 .qrCode {
   width: 160px;

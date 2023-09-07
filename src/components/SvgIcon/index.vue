@@ -7,17 +7,17 @@ export default defineComponent({
     name: {
       type: String,
       required: true,
-      default: '',
+      default: ''
     },
     className: {
       type: String,
-      default: '',
+      default: ''
     },
     // svg 颜色
     color: {
       type: String,
-      default: '',
-    },
+      default: ''
+    }
   },
   setup(props) {
     if (props.name?.startsWith('ele')) {
@@ -25,9 +25,9 @@ export default defineComponent({
         h(
           'i',
           {
-            class: 'el-icon',
+            class: 'el-icon'
           },
-          [h(resolveComponent(props.name.replace('ele-', '')))],
+          [h(resolveComponent(props.name.replace('ele-', '')))]
         )
     } else if (props.name != undefined && props.name != '') {
       return () =>
@@ -38,16 +38,17 @@ export default defineComponent({
             'aria-hidden': true,
             style: `color: ${props.color}`,
             class: `svg-icon ${props.className}`,
+            'shape-rendering': 'geometricPrecision'
           },
           h('use', {
             'xlink:href': `#icon-${props.name}`,
-            fill: `${props.color}`,
-          }),
+            fill: `${props.color}`
+          })
         )
     } else {
       return () => h('i')
     }
-  },
+  }
 })
 </script>
 

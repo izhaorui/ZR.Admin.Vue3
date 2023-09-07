@@ -31,7 +31,7 @@
         <el-card style="height: 100%">
           <div class="text-warning mb10">{{ currentTime }} {{ weekName }}</div>
           <div class="work-wrap">
-            <el-statistic :title="$t('layout.workTime')" :value="Math.ceil(onlineInfo.todayOnlineTime, 2)" />
+            <el-statistic :title="$t('layout.workTime')" :formatter="workTimeFormatter" :value="onlineInfo.todayOnlineTime" />
             <el-statistic :title="$t('layout.onlineClientNum')" :value="onlineInfo.clientNum" />
           </div>
         </el-card>
@@ -98,6 +98,10 @@ import PieChart from './dashboard/PieChart'
 import BarChart from './dashboard/BarChart'
 // import WordCloudChat from './dashboard/WordCloud.vue'
 import CommonMenu from './components/CommonMenu'
+import dayjs from 'dayjs'
+// 时间插件
+import duration from 'dayjs/plugin/duration'
+dayjs.extend(duration)
 
 import useUserStore from '@/store/modules/user'
 import useSocketStore from '@/store/modules/socket'
@@ -143,6 +147,9 @@ handleSetLineChartData('newVisitis')
 
 function handleAdd() {
   proxy.$modal.msg('请通过搜索添加')
+}
+function workTimeFormatter(val) {
+  return dayjs.duration(val * 60, 'second').format('HH时mm分')
 }
 </script>
 

@@ -11,6 +11,13 @@
     "invalidSession": "無效的會話，或者會話已過期，請重新登錄。",
     "otherLoginWay": "其他登錄方式",
     "register": "註冊",
-    "forgotPwd": "忘記密碼"
+    "forgotPwd": "忘記密碼",
+    "loginway1": "賬號密碼",
+    "loginway2": "手機號",
+    "loginway3": "掃碼登錄",
+    "phoneCode": "請輸入短信驗證碼",
+    "sendPhoneCode": "發送驗證碼",
+    "input_phoneNum": "請輸入手機號",
+    "tip_scan_code": "請使用移動端app掃碼登錄"
   }
 }

@@ -11,6 +11,13 @@
     "invalidSession": "无效的会话，或者会话已过期，请重新登录。",
     "otherLoginWay": "其他登录方式",
     "register": "立即注册",
-    "forgotPwd": "忘记密码"
+    "forgotPwd": "忘记密码",
+    "phoneCode": "请输入短信验证码",
+    "sendPhoneCode": "发送验证码",
+    "loginway1": "账号密码",
+    "loginway2": "手机号",
+    "loginway3": "扫码登录",
+    "input_phoneNum": "请输入手机号",
+    "tip_scan_code": "请使用移动端app扫码登录"
   }
 }

@@ -15,22 +15,23 @@
     background: #ffffff;
     border-radius: 6px;
     width: var(--base-login-width);
+    position: relative;
   }
 }
 
 .title {
-  margin: 0px auto 30px auto;
+  margin: 10px auto 30px auto;
   text-align: center;
   // color: #fff;
 }
 
 .login-form {
-  padding: 35px 15px 5px 15px;
+  padding: 15px 25px 5px 25px;
   position: relative;
-  height: 300px;
+  height: 210px;
 
   .input-icon {
-    height: 39px;
+    height: 30px;
     width: 14px;
     margin-left: 0px;
   }
@@ -114,4 +115,7 @@
   text-align: center;
   align-items: center;
   justify-content: space-around;
+}
+
+@media screen and (max-width: 500px) {
 }

@@ -36,19 +36,20 @@
           </div>
         </el-form-item>
         <el-form-item style="width: 100%">
-          <el-button :loading="loading" type="primary" size="default" style="width: 100%" @click.prevent="handleRegister">
-            <span v-if="!loading">注 册</span>
+          <el-button :loading="loading" type="primary" size="default" round style="width: 100%" @click.prevent="handleRegister">
+            <span v-if="!loading">{{ $t('login.register') }}</span>
             <span v-else>注 册 中...</span>
           </el-button>
-          <div style="text-align: center">
-            <router-link class="link-type" :to="'/login'">使用已有账户登录</router-link>
-          </div>
         </el-form-item>
+        <div style="text-align: center">
+          <router-link class="link-type" :to="'/login'">使用已有账户登录</router-link>
+        </div>
       </el-form>
+      <oauthLogin></oauthLogin>
     </div>
     <!--  底部  -->
     <div class="el-register-footer">
-      <div v-html="defaultSettings.copyright"></div>
+      <div v-html="copyRight"></div>
     </div>
   </div>
 </template>
@@ -58,6 +59,7 @@ import starBackground from '@/views/components/starBackground.vue'
 import { getCodeImg, register } from '@/api/system/login'
 import defaultSettings from '@/settings'
 import { ElMessageBox } from 'element-plus'
+import oauthLogin from './components/Login/oauthLogin.vue'
 const { proxy } = getCurrentInstance()
 const router = useRouter()
 const codeUrl = ref('')
@@ -159,28 +161,15 @@ getCode()
   flex-direction: column;
   background: radial-gradient(220% 105% at top center, #1b2947 10%, #4b76a7 40%, #81acae 65%, #f7f7b6);
 }
+.login-form {
+  height: 320px;
+}
 .title {
   margin: 0px auto 30px auto;
   text-align: center;
   // color: #fff;
 }
 
-.register-form {
-  background: #fff;
-  width: var(--base-login-width);
-  padding: 35px 15px 5px 15px;
-  .el-input {
-    height: 38px;
-    input {
-      height: 38px;
-    }
-  }
-  .input-icon {
-    height: 39px;
-    width: 14px;
-    margin-left: 2px;
-  }
-}
 .register-tip {
   font-size: 13px;
   text-align: center;

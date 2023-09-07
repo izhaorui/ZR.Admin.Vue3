@@ -11,6 +11,13 @@
     "invalidSession": "Invalid session, or session has expired, please log in again.",
     "otherLoginWay": "Other",
     "register": "Sign up now",
-    "forgotPwd": "forget"
+    "forgotPwd": "forget",
+    "loginway1": "account",
+    "loginway2": "Phone",
+    "loginway3": "Scan code",
+    "phoneCode": "Please enter SMS verification code",
+    "sendPhoneCode": "Send",
+    "input_phoneNum": "Please enter phone number",
+    "tip_scan_code": "Please use the mobile app to scan the code to log in"
   }
 }
