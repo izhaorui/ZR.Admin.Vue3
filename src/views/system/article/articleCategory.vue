@@ -50,8 +50,8 @@
       :default-expand-all="isExpandAll"
       row-key="categoryId"
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
-      <el-table-column type="selection" width="50" align="center" />
-      <el-table-column prop="name" label="目录名" align="center" :show-overflow-tooltip="true" />
+      <el-table-column type="selection" width="50" />
+      <el-table-column prop="name" label="目录名" :show-overflow-tooltip="true" />
       <el-table-column prop="categoryId" label="目录id" align="center" />
       <el-table-column prop="createTime" label="添加时间" align="center" :show-overflow-tooltip="true" />
       <el-table-column prop="parentId" label="父级id" align="center" />
@@ -112,7 +112,7 @@ import {
   delArticleCategory,
   updateArticleCategory,
   getArticleCategory,
-  exportArticleCategory,
+  exportArticleCategory
 } from '@/api/article/articlecategory.js'
 
 const { proxy } = getCurrentInstance()
@@ -143,7 +143,7 @@ const queryParams = reactive({
   pageNum: 1,
   pageSize: 10,
   sort: undefined,
-  sortType: undefined,
+  sortType: undefined
 })
 // 弹出层标题
 const title = ref('')
@@ -155,8 +155,8 @@ const open = ref(false)
 const state = reactive({
   form: {},
   rules: {
-    name: [{ required: true, message: '目录名不能为空', trigger: 'blur' }],
-  },
+    name: [{ required: true, message: '目录名不能为空', trigger: 'blur' }]
+  }
 })
 
 const { form, rules } = toRefs(state)
@@ -190,7 +190,7 @@ function cancel() {
 function reset() {
   form.value = {
     name: undefined,
-    parentId: 0,
+    parentId: 0
   }
   proxy.resetForm('formRef')
 }
@@ -237,7 +237,7 @@ function handleUpdate(row) {
       opertype.value = 2
 
       form.value = {
-        ...data,
+        ...data
       }
     }
   })
@@ -281,7 +281,7 @@ function handleExport() {
     .$confirm('是否确认导出所有文章目录数据项?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'warning',
+      type: 'warning'
     })
     .then(function () {
       return exportArticleCategory(queryParams)
