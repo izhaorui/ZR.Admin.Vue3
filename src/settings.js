@@ -14,7 +14,7 @@ export default {
   /**
    * 框架主题颜色值
    */
-  theme: '#FF8C00',
+  theme: '#409EFF',
   /**
    * 是否系统布局配置
    */
@@ -79,5 +79,9 @@ export default {
   /**
    * 默认语言
    */
-  defaultLang: 'zh-cn'
+  defaultLang: 'zh-cn',
+  /**
+   * 左侧菜单是否显示New标记
+   */
+  menuShowNew: false
 }

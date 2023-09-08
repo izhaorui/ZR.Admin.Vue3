@@ -9,7 +9,11 @@
           <template #title>
             <span v-if="onlyOneChild.meta.titleKey">{{ $t(onlyOneChild.meta.titleKey) }}</span>
             <span v-else-if="onlyOneChild.meta.title">{{ onlyOneChild.meta.title }}</span>
-            <svg-icon name="new" color="#fff" style="width: 50px; height: 25px" v-if="onlyOneChild.meta.title && onlyOneChild.meta.isNew == 1" />
+            <svg-icon
+              name="new"
+              color="#fff"
+              style="width: 50px; height: 25px"
+              v-if="onlyOneChild.meta.title && onlyOneChild.meta.isNew == 1 && defaultSettings.menuShowNew" />
           </template>
         </el-menu-item>
       </app-link>
@@ -20,7 +24,11 @@
         <svg-icon :name="item.meta && item.meta.icon" />
         <span v-if="item.meta && item.meta.titleKey">{{ $t(item.meta.titleKey) }}</span>
         <span v-else-if="item.meta && item.meta.title">{{ item.meta.title }}</span>
-        <svg-icon name="new" color="#fff" style="width: 50px; height: 25px" v-if="item.meta.title && item.meta.isNew == 1" />
+        <svg-icon
+          name="new"
+          color="#fff"
+          style="width: 50px; height: 25px"
+          v-if="item.meta.title && item.meta.isNew == 1 && defaultSettings.menuShowNew" />
       </template>
 
       <sidebar-item v-for="child in item.children" :key="child.path" :is-nest="true" :item="child" :base-path="resolvePath(child.path)" />
@@ -32,7 +40,7 @@
 import { isExternal } from '@/utils/validate'
 import AppLink from './Link'
 import { getNormalPath } from '@/utils/ruoyi'
-
+import defaultSettings from '@/settings'
 const props = defineProps({
   // route object
   item: {
