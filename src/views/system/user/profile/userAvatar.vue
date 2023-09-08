@@ -65,11 +65,6 @@ export default {
     VueCropper,
     uploadAvatar
   },
-  props: {
-    user: {
-      type: Object
-    }
-  },
   setup() {
     const useStore = useUserStore()
     const { proxy } = getCurrentInstance()
