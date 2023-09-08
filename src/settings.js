@@ -83,5 +83,13 @@ export default {
   /**
    * 左侧菜单是否显示New标记
    */
-  menuShowNew: false
+  menuShowNew: false,
+  /**
+   * 是否显示QR登录
+   */
+  showQrLogin: true,
+  /**
+   * 是否显示手机号登录
+   */
+  showPhoneLogin: true
 }

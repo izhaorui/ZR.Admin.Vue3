@@ -9,8 +9,8 @@
       <div style="padding: 0 25px 5px 25px">
         <el-tabs v-model="loginType" @tab-click="handleLoginType">
           <el-tab-pane :label="$t('login.loginway1')" :name="1"></el-tab-pane>
-          <el-tab-pane :label="$t('login.loginway2')" :name="2"></el-tab-pane>
-          <el-tab-pane :label="$t('login.loginway3')" :name="3"></el-tab-pane>
+          <el-tab-pane :label="$t('login.loginway2')" :name="2" v-if="defaultSettings.showPhoneLogin"></el-tab-pane>
+          <el-tab-pane :label="$t('login.loginway3')" :name="3" v-if="defaultSettings.showQrLogin"></el-tab-pane>
         </el-tabs>
       </div>
 
@@ -40,7 +40,7 @@
           </div>
         </el-form-item>
 
-        <div style="display: flex; justify-content: space-between">
+        <div style="display: flex; justify-content: space-between; align-items: center">
           <el-checkbox v-model="loginForm.rememberMe">{{ $t('login.rememberMe') }}</el-checkbox>
           <span style="font-size: 12px">
             <span @click="handleForgetPwd()" class="forget-pwd">{{ $t('login.forgotPwd') }}</span>
@@ -48,7 +48,7 @@
           </span>
         </div>
 
-        <el-form-item style="width: 100%" :style="{ 'margin-top': captchaOnOff == 'off' ? '20px' : '' }">
+        <el-form-item style="width: 100%" :style="{ 'margin-top': captchaOnOff == 'off' ? '40px' : '' }">
           <el-button :loading="loading" size="default" round type="primary" style="width: 100%" @click.prevent="handleLogin">
             <span v-if="!loading">{{ $t('login.btnLogin') }}</span>
             <span v-else>登 录 中...</span>
@@ -181,10 +181,7 @@ function handleForgetPwd() {
 }
 
 const interval = ref(null)
-const showQrLogin = ref(false)
 function handleShowQrLogin() {
-  // showQrLogin.value = !showQrLogin.value
-
   nextTick(() => {
     generateCode()
   })
