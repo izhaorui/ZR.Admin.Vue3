@@ -16,6 +16,7 @@
     border-radius: 6px;
     width: var(--base-login-width);
     position: relative;
+    height: 420px;
   }
 }
 
@@ -28,7 +29,7 @@
 .login-form {
   padding: 5px 25px 5px 25px;
   position: relative;
-  height: 250px;
+  // height: 250px;
 
   .input-icon {
     height: 30px;
@@ -115,6 +116,7 @@
   text-align: center;
   align-items: center;
   justify-content: space-around;
+  margin-bottom: 20px;
 }
 
 @media screen and (max-width: 500px) {

@@ -40,7 +40,7 @@
 
 <script setup name="phonelogin">
 import { getCodeImg } from '@/api/system/login'
-import useUserStore from '@/store/modules/user'
+// import useUserStore from '@/store/modules/user'
 
 const route = useRoute()
 const { proxy } = getCurrentInstance()
@@ -98,9 +98,4 @@ getCode()
 
 <style lang="scss" scoped>
 @import '@/assets/styles/login.scss';
-.forget-pwd {
-  color: #ccc;
-  margin-right: 10px;
-  cursor: pointer;
-}
 </style>

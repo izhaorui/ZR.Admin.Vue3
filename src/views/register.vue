@@ -162,7 +162,7 @@ getCode()
   background: radial-gradient(220% 105% at top center, #1b2947 10%, #4b76a7 40%, #81acae 65%, #f7f7b6);
 }
 .login-form {
-  height: 380px;
+  padding: 15px 25px 15px 25px;
 }
 .title {
   margin: 0px auto 30px auto;
