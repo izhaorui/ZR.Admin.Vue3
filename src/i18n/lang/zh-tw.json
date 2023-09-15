@@ -116,7 +116,15 @@
     "female": "女",
     "male": "男",
     "sex": "性別",
-    "systemTips": "系統提示"
+    "systemTips": "系統提示",
+    "abnormal": "異常",
+    "normal": "正常",
+    "disable": "停用",
+    "hidden": "隱藏",
+    "show": "顯示",
+    "system": "系統",
+    "default": "默認",
+    "unknow": "未知"
   },
   "btn": {
     "add": "新增",

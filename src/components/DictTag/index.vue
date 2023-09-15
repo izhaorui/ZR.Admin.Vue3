@@ -2,16 +2,27 @@
   <template v-for="(item, index) in props.options">
     <template v-if="values.includes(item.dictValue)">
       <span v-if="item.listClass == 'default' || item.listClass == ''" :key="item.dictValue" :index="index" :class="item.cssClass">
-        {{ item.dictLabel }} <i v-if="showValue">#{{ item.dictValue }}</i>
+        <template v-if="item.langKey">
+          {{ $t(item.langKey) }}
+        </template>
+        <template v-else>
+          {{ item.dictLabel }}
+        </template>
+        <i v-if="showValue">#{{ item.dictValue }}</i>
       </span>
       <el-tag
-        size="small"
         v-else
+        size="small"
         :disable-transitions="true"
         :index="index"
         :type="item.listClass == 'primary' ? '' : item.listClass"
         :class="item.cssClass">
-        {{ item.dictLabel }}
+        <template v-if="item.langKey">
+          {{ $t(item.langKey) }}
+        </template>
+        <template v-else>
+          {{ item.dictLabel }}
+        </template>
         <i v-if="showValue">#{{ item.dictValue }}</i>
       </el-tag>
     </template>

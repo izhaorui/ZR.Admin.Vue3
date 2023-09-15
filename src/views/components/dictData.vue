@@ -32,6 +32,7 @@
         </el-tag>
       </template>
     </el-table-column>
+    <el-table-column label="翻译键值" align="center" prop="langKey" />
     <el-table-column label="字典键值" align="center" prop="dictValue" sortable />
     <el-table-column label="字典排序" align="center" prop="dictSort" sortable />
     <el-table-column label="状态" align="center" prop="status">
@@ -59,6 +60,9 @@
       </el-form-item>
       <el-form-item label="数据标签" prop="dictLabel">
         <el-input v-model="form.dictLabel" placeholder="请输入数据标签" />
+      </el-form-item>
+      <el-form-item label="翻译键值" prop="langKey">
+        <el-input v-model="form.langKey" placeholder="请输入翻译键值" />
       </el-form-item>
       <el-form-item label="数据键值" prop="dictValue">
         <el-input v-model="form.dictValue" placeholder="请输入数据键值" />
@@ -227,7 +231,8 @@ const state = reactive({
   rules: {
     dictLabel: [{ required: true, message: '数据标签不能为空', trigger: 'blur' }],
     dictValue: [{ required: true, message: '数据键值不能为空', trigger: 'blur' }],
-    dictSort: [{ required: true, message: '数据顺序不能为空', trigger: 'blur' }]
+    dictSort: [{ required: true, message: '数据顺序不能为空', trigger: 'blur' }],
+    langKey: [{ pattern: /^[A-Za-z].+$/, message: '输入格式不正确,格式：login.ok', trigger: 'blur' }]
   }
 })
 

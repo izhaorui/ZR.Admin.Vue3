@@ -116,7 +116,15 @@
     "female": "Female",
     "male": "male",
     "sex": "gender",
-    "systemTips": "system hint"
+    "systemTips": "system hint",
+    "default": "default",
+    "hidden": "hide",
+    "show": "show",
+    "system": "system",
+    "abnormal": "abnormal",
+    "unknow": "unknown",
+    "normal": "normal",
+    "disable": "deactivate"
   },
   "btn": {
     "add": "Add",
