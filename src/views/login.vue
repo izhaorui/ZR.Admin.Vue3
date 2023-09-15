@@ -63,7 +63,7 @@
       </div>
 
       <phoneLogin v-show="loginType == 2"></phoneLogin>
-      <oauthLogin></oauthLogin>
+      <oauthLogin v-show="defaultSettings.showOtherLogin"></oauthLogin>
     </div>
 
     <div class="el-login-footer">

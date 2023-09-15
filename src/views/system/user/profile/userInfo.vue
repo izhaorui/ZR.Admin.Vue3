@@ -15,10 +15,10 @@
         <el-radio :label="1">{{ $t('common.female') }}</el-radio>
       </el-radio-group>
     </el-form-item>
-    <el-form-item>
-      <el-button type="primary" icon="Check" @click="submit">{{ $t('btn.save') }}</el-button>
+    <div style="margin-left: 40px">
       <el-button type="danger" icon="Close" @click="close">{{ $t('btn.close') }}</el-button>
-    </el-form-item>
+      <el-button type="primary" icon="Check" @click="submit">{{ $t('btn.save') }}</el-button>
+    </div>
   </el-form>
 </template>
 
@@ -27,8 +27,8 @@ import { updateUserProfile } from '@/api/system/user'
 
 const props = defineProps({
   user: {
-    type: Object,
-  },
+    type: Object
+  }
 })
 
 const { proxy } = getCurrentInstance()
@@ -40,17 +40,17 @@ const rules = ref({
     {
       type: 'email',
       message: "'请输入正确的邮箱地址",
-      trigger: ['blur', 'change'],
-    },
+      trigger: ['blur', 'change']
+    }
   ],
   phonenumber: [
     { required: true, message: '手机号码不能为空', trigger: 'blur' },
     {
       pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
       message: '请输入正确的手机号码',
-      trigger: 'blur',
-    },
-  ],
+      trigger: 'blur'
+    }
+  ]
 })
 
 /** 提交按钮 */

@@ -110,9 +110,16 @@
             prop="phonenumber"
             v-if="columns.showColumn('phonenumber')"
             width="120" />
-          <el-table-column label="状态" align="center" key="status" v-if="columns.showColumn('status')">
+          <el-table-column label="启用" align="center" key="status" v-if="columns.showColumn('status')">
             <template #default="scope">
-              <el-switch v-model="scope.row.status" :active-value="0" :inactive-value="1" @change="handleStatusChange(scope.row)"></el-switch>
+              <el-switch
+                v-model="scope.row.status"
+                :active-value="0"
+                :inactive-value="1"
+                active-text="是"
+                inactive-text="否"
+                inline-prompt
+                @change="handleStatusChange(scope.row)"></el-switch>
             </template>
           </el-table-column>
           <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns.showColumn('createTime')" width="160"></el-table-column>
@@ -121,7 +128,7 @@
               <dict-tag :options="sexOptions" :value="scope.row.sex" />
             </template>
           </el-table-column>
-          <el-table-column prop="avatar" label="头像地址" align="center" v-if="columns.showColumn('avatar')">
+          <el-table-column prop="avatar" label="头像" align="center" v-if="columns.showColumn('avatar')">
             <template #default="scope">
               <el-image
                 preview-teleported
@@ -334,9 +341,9 @@ const columns = ref([
   { key: 3, label: `部门`, visible: true, prop: 'deptName' },
   { key: 4, label: `手机号码`, visible: true, prop: 'phonenumber' },
   { key: 5, label: `状态`, visible: true, prop: 'status' },
-  { key: 6, label: `创建时间`, visible: true, prop: 'createTime' },
-  { key: 7, label: `性别`, visible: false, prop: 'sex' },
-  { key: 8, label: `头像`, visible: false, prop: 'avatar' },
+  { key: 6, label: `创建时间`, visible: false, prop: 'createTime' },
+  { key: 7, label: `性别`, visible: true, prop: 'sex' },
+  { key: 8, label: `头像`, visible: true, prop: 'avatar' },
   { key: 9, label: `邮箱`, visible: false, prop: 'email' },
   { key: 10, label: `最后登录时间`, visible: false, prop: 'loginDate' }
 ])
