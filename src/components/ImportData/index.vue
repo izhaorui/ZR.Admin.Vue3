@@ -11,6 +11,7 @@
       :disabled="isUploading"
       :on-progress="handleFileUploadProgress"
       :on-success="handleFileSuccess"
+      :on-error="handleFileError"
       :auto-upload="true">
       <el-button type="primary" icon="Upload">上传文件</el-button>
 
@@ -66,7 +67,9 @@ const handleFileSuccess = (response, file, fileList) => {
     emit('success', response)
   }
 }
-
+const handleFileError = function (error) {
+  proxy.$modal.msgError('导入数据失败,原因：' + error)
+}
 function importTemplate() {
   proxy.downFile(props.templateUrl)
 }
