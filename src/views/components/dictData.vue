@@ -50,49 +50,70 @@
       </template>
     </el-table-column>
   </el-table>
-  <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
+  <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
 
   <!-- 添加或修改参数配置对话框 -->
   <el-dialog :title="title" v-model="open" draggable width="500px" append-to-body>
     <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
-      <el-form-item label="字典类型">
-        <el-input v-model="form.dictType" :disabled="true" />
-      </el-form-item>
-      <el-form-item label="数据标签" prop="dictLabel">
-        <el-input v-model="form.dictLabel" placeholder="请输入数据标签" />
-      </el-form-item>
-      <el-form-item label="翻译键值" prop="langKey">
-        <el-input v-model="form.langKey" placeholder="请输入翻译键值" />
-      </el-form-item>
-      <el-form-item label="数据键值" prop="dictValue">
-        <el-input v-model="form.dictValue" placeholder="请输入数据键值" />
-      </el-form-item>
-      <el-form-item label="样式属性" prop="cssClass">
-        <!-- <el-input v-model="form.cssClass" placeholder="请输入样式属性" /> -->
-        <el-select v-model="form.cssClass" allow-create filterable clearable="">
-          <el-option v-for="dict in cssClassOptions" :class="dict.value" :key="dict.value" :label="dict.label" :value="dict.value">
-            <span style="float: left" :class="dict.value">{{ dict.label }}</span>
-            <span style="float: right">{{ dict.value }}</span>
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="显示排序" prop="dictSort">
-        <el-input-number v-model="form.dictSort" controls-position="right" :min="0" />
-      </el-form-item>
-      <el-form-item label="回显样式" prop="listClass">
-        <el-select v-model="form.listClass">
-          <el-option v-for="item in listClassOptions" :key="item.value" :label="item.label + '(' + item.value + ')'" :value="item.value">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-radio-group v-model="form.status">
-          <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictValue">{{ dict.dictLabel }}</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="备注" prop="remark">
-        <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
-      </el-form-item>
+      <el-row :gutter="20">
+        <el-col :lg="24">
+          <el-form-item label="字典类型">
+            <el-input v-model="form.dictType" :disabled="true" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="12">
+          <el-form-item label="数据标签" prop="dictLabel">
+            <el-input v-model="form.dictLabel" placeholder="请输入数据标签" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="翻译键值" prop="langKey">
+            <el-input v-model="form.langKey" placeholder="请输入翻译键值" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="24">
+          <el-form-item label="数据键值" prop="dictValue">
+            <el-input v-model="form.dictValue" placeholder="请输入数据键值" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="样式属性" prop="cssClass">
+            <el-select v-model="form.cssClass" allow-create filterable clearable="">
+              <el-option v-for="dict in cssClassOptions" :class="dict.value" :key="dict.value" :label="dict.label" :value="dict.value">
+                <span style="float: left" :class="dict.value">{{ dict.label }}</span>
+                <span style="float: right">{{ dict.value }}</span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="回显样式" prop="listClass">
+            <el-select v-model="form.listClass">
+              <el-option v-for="item in listClassOptions" :key="item.value" :label="item.label + '(' + item.value + ')'" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="显示排序" prop="dictSort">
+            <el-input-number v-model="form.dictSort" controls-position="right" :min="0" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="状态" prop="status">
+            <el-radio-group v-model="form.status">
+              <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictValue">{{ dict.dictLabel }}</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+
+        <el-col :lg="24">
+          <el-form-item label="备注" prop="remark">
+            <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
     <template #footer>
       <div class="dialog-footer">

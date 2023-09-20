@@ -35,12 +35,17 @@ $panGreen: #30b08f;
   --el-text-color-primary: #e5eaf3;
   --el-menu-text-color: var(--el-text-color-primary);
 }
+// 黑色主题
 html.dark {
   /* custom dark bg color */
   // --el-bg-color: #141414;
   --base-color-white: #ffffff;
   --base-text-color-rgba: #ffffff;
   --base-menu-background: #000;
+
+  .current-row {
+    color: #e65d6e;
+  }
 }
 html.cafe {
   filter: sepia(0.9) hue-rotate(315deg) brightness(0.9);

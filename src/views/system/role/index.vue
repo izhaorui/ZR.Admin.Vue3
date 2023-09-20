@@ -29,10 +29,10 @@
     <el-table v-loading="loading" :data="roleList" highlight-current-row @selection-change="handleSelectionChange">
       <el-table-column label="编号" prop="roleId" width="80" />
       <el-table-column label="名称" prop="roleName" />
-      <el-table-column label="显示顺序" prop="roleSort" align="center"></el-table-column>
+      <el-table-column label="显示顺序" prop="roleSort"></el-table-column>
       <el-table-column label="权限字符" prop="roleKey" />
       <el-table-column label="权限范围" prop="dataScope" :formatter="dataScopeFormat"></el-table-column>
-      <el-table-column label="状态" align="center" width="90">
+      <el-table-column label="状态" width="90">
         <template #default="scope">
           <el-switch
             v-model="scope.row.status"
@@ -123,7 +123,7 @@
 
     <!-- 添加或修改角色配置对话框 -->
     <zr-dialog :title="title" v-model="open" width="600px" append-to-body @close="cancel">
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="formRef" :model="form" :rules="rules" label-width="90px">
         <el-row>
           <el-col :lg="12">
             <el-form-item label="角色名称" prop="roleName">
@@ -132,6 +132,16 @@
           </el-col>
           <el-col :lg="12">
             <el-form-item label="权限字符" prop="roleKey">
+              <template #label>
+                <span>
+                  <el-tooltip content="使用： v-hasRole='['admin']'" placement="top">
+                    <el-icon :size="15">
+                      <questionFilled />
+                    </el-icon>
+                  </el-tooltip>
+                  权限字符
+                </span>
+              </template>
               <el-input v-model="form.roleKey" placeholder="请输入权限字符" />
             </el-form-item>
           </el-col>
