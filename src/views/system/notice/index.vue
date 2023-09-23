@@ -68,7 +68,7 @@
     <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
 
     <!-- 添加或修改公告对话框 -->
-    <zr-dialog :title="title" v-model="open" width="780px" @close="cancel" fullScreen>
+    <zr-dialog :title="title" draggable v-model="open" width="580px">
       <el-form ref="noticeRef" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :lg="24">

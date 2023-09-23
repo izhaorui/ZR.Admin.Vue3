@@ -1,13 +1,5 @@
 <template>
-  <el-dialog
-    :width="width"
-    :title="title"
-    :lock-scroll="false"
-    v-model="open"
-    :lockScroll="lockScroll"
-    :fullscreen="isFullscreen"
-    :draggable="draggable"
-    @closed="close">
+  <el-dialog v-bind="$attrs" :fullscreen="isFullscreen" ref="myDialogRef" v-model="open">
     <template #header="{ close, titleId, titleClass }">
       <div class="custom-header">
         <span :id="titleId" :class="titleClass">{{ title }}</span>
@@ -16,9 +8,7 @@
         </span>
       </div>
     </template>
-
     <slot></slot>
-
     <template v-slot:footer>
       <slot name="footer"> </slot>
     </template>
@@ -34,24 +24,11 @@ const props = defineProps({
   title: {
     type: String
   },
-  width: {
-    type: [Number, String],
-    default: 0
-  },
   fullScreen: {
     type: Boolean,
     default: false
-  },
-  draggable: {
-    type: Boolean,
-    default: false
-  },
-  lockScroll: {
-    type: Boolean,
-    default: true
   }
 })
-
 const isFullscreen = ref(false)
 const open = ref(false)
 watch(
@@ -69,13 +46,18 @@ watch(
   { deep: true, immediate: true }
 )
 
-const emit = defineEmits()
 function handleScreen() {
   isFullscreen.value = !isFullscreen.value
 }
-function close() {
-  emit('close')
-}
+const expose = {}
+const myDialogRef = ref()
+onMounted(() => {
+  const entries = Object.entries(myDialogRef.value)
+  for (const [method, fn] of entries) {
+    expose[method] = fn
+  }
+})
+defineExpose(expose)
 </script>
 <style>
 .custom-header {
