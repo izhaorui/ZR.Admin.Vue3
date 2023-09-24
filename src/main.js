@@ -8,6 +8,7 @@ import '@/assets/styles/index.scss' // global css
 import App from './App'
 import router from './router'
 import directive from './directive' // directive
+import vxetb from './vxe-tb'
 // 注册指令
 import plugins from './plugins' // plugins
 import { downFile } from '@/utils/request'
@@ -70,5 +71,5 @@ app.component('svg-icon', SvgIcon)
 app.component('ZrDialog', Dialog)
 
 directive(app)
-
+vxetb(app)
 app.use(pinia).use(router).use(plugins).use(ElementPlus, {}).use(elementIcons).use(vueI18n).mount('#app')

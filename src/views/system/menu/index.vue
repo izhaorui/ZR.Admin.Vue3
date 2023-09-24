@@ -44,78 +44,68 @@
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table
-      v-if="refreshTable"
-      v-loading="loading"
-      :data="menuList"
-      row-key="menuId"
-      :default-expand-all="isExpandAll"
-      border
-      lazy
+    <vxe-table
+      height="600"
+      show-overflow
       ref="listRef"
-      :load="loadMenu"
-      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
-      <el-table-column prop="menuName" :label="$t('m.menuName')" :show-overflow-tooltip="true" width="160">
-        <template #default="scope">
-          <span v-if="scope.row.menuNameKey">
-            {{ $t(scope.row.menuNameKey) }}
-          </span>
-          <span v-else>
-            {{ scope.row.menuName }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="icon" :label="$t('m.icon')" align="center" width="60">
-        <template #default="scope">
-          <svg-icon :name="scope.row.icon" />
-        </template>
-      </el-table-column>
-      <el-table-column prop="menuId" :label="$t('m.menuid')" :show-overflow-tooltip="true" width="80" align="center"></el-table-column>
-      <el-table-column prop="menuType" :label="$t('m.menuType')" align="center" width="80">
+      :loading="loading"
+      :tree-config="{
+        transform: true,
+        rowField: 'menuId',
+        parentField: 'parentId'
+      }"
+      :scroll-y="{ enabled: true, gt: 20 }"
+      :data="menuList">
+      <vxe-column field="menuName" :title="$t('m.menuName')" tree-node width="160"> </vxe-column>
+      <vxe-column field="menuId" :title="$t('m.menuid')"></vxe-column>
+      <vxe-column field="icon" :title="$t('m.icon')" align="center" width="60"> </vxe-column>
+
+      <vxe-column field="menuType" :title="$t('m.menuType')" align="center" width="80">
         <template #default="scope">
           <el-tag type="danger" v-if="scope.row.menuType == 'M' && scope.row.isFrame == 1">{{ $t('m.link') }}</el-tag>
           <el-tag v-else-if="scope.row.menuType == 'C'">{{ $t('m.menu') }}</el-tag>
           <el-tag type="success" v-else-if="scope.row.menuType == 'M'">{{ $t('m.directory') }}</el-tag>
           <el-tag type="warning" v-else-if="scope.row.menuType == 'F'">{{ $t('m.button') }}</el-tag>
         </template>
-      </el-table-column>
-      <el-table-column prop="orderNum" :label="$t('m.sort')" width="90" sortable align="center">
+      </vxe-column>
+      <vxe-column field="orderNum" :title="$t('m.sort')" width="90" sortable align="center">
         <template #default="scope">
-          <span v-show="editIndex != scope.$index" @click="editCurrRow(scope.$index)">{{ scope.row.orderNum }}</span>
+          <span v-show="editIndex != scope.row.menuId" @click="editCurrRow(scope.row.menuId)">{{ scope.row.orderNum }}</span>
           <el-input
             :ref="setColumnsRef"
-            v-show="editIndex == scope.$index"
+            v-show="editIndex == scope.row.menuId"
             v-model="scope.row.orderNum"
             @blur="handleChangeSort(scope.row)"></el-input>
         </template>
-      </el-table-column>
-      <el-table-column prop="perms" :label="$t('m.authorityID')" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="component" :label="$t('m.componentPath')" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="visible" :label="$t('m.isShow')" width="70" align="center">
+      </vxe-column>
+      <vxe-column field="perms" :title="$t('m.authorityID')" show-overflow="title"></vxe-column>
+      <vxe-column field="component" :title="$t('m.componentPath')" show-overflow></vxe-column>
+      <vxe-column field="visible" :title="$t('m.isShow')" width="90" align="center">
         <template #default="scope">
           <dict-tag :options="sys_show_hide" :value="scope.row.visible" />
         </template>
-      </el-table-column>
-      <el-table-column prop="status" :label="$t('m.menuState')" width="80" align="center">
+      </vxe-column>
+      <vxe-column field="status" :title="$t('m.menuState')" width="80" align="center">
         <template #default="scope">
           <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
         </template>
-      </el-table-column>
-      <el-table-column :label="$t('common.addTime')" align="center" prop="createTime" :show-overflow-tooltip="true">
+      </vxe-column>
+      <vxe-column :title="$t('common.addTime')" align="center" field="createTime" show-overflow>
         <template #default="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
-      </el-table-column>
-      <el-table-column :label="$t('btn.operate')" align="center" width="170" class-name="small-padding fixed-width">
+      </vxe-column>
+      <vxe-column :title="$t('btn.operate')" align="center" width="140">
         <template #default="scope">
-          <el-button text size="small" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:menu:edit']"></el-button>
-          <el-button text size="small" icon="Plus" @click="handleAdd(scope.row)" v-hasPermi="['system:menu:add']"></el-button>
-          <el-button text size="small" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:menu:remove']"></el-button>
+          <el-button-group>
+            <el-button text size="small" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:menu:edit']"></el-button>
+            <el-button text size="small" icon="Plus" @click="handleAdd(scope.row)" v-hasPermi="['system:menu:add']"></el-button>
+            <el-button text size="small" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:menu:remove']"></el-button>
+          </el-button-group>
         </template>
-      </el-table-column>
-    </el-table>
+      </vxe-column>
+    </vxe-table>
 
-    <!-- 添加或修改菜单对话框 -->
     <el-dialog :title="title" v-model="open" width="720px" append-to-body>
       <el-form ref="menuRef" :model="form" :rules="rules" label-width="100px">
         <el-row>
@@ -332,7 +322,6 @@
 import { addMenu, delMenu, getMenu, listMenu, updateMenu, changeMenuSort as changeSort, listMenuById } from '@/api/system/menu'
 import SvgIcon from '@/components/SvgIcon'
 import IconSelect from '@/components/IconSelect'
-
 const { proxy } = getCurrentInstance()
 
 var dictParams = [{ dictType: 'sys_show_hide' }, { dictType: 'sys_normal_disable' }]
@@ -386,7 +375,7 @@ function getList(type) {
   if (queryParams.value.parentId != undefined || queryParams.value.menuName != undefined) {
     queryParams.value.menuTypeIds = ''
   } else {
-    queryParams.value.menuTypeIds = 'M,C'
+    queryParams.value.menuTypeIds = 'M,C,F'
   }
   listMenu(queryParams.value).then((response) => {
     menuList.value = response.data
@@ -451,11 +440,26 @@ function handleAdd(row) {
 }
 /** 展开/折叠操作 */
 function toggleExpandAll() {
-  refreshTable.value = false
+  // refreshTable.value = false
   isExpandAll.value = !isExpandAll.value
-  nextTick(() => {
-    refreshTable.value = true
-  })
+  // nextTick(() => {
+  //   refreshTable.value = true
+  // })
+  const $table = listRef.value
+  if ($table) {
+    if (isExpandAll.value) {
+      $table.setAllTreeExpand(true)
+    } else {
+      $table.clearTreeExpand()
+    }
+  }
+}
+const hasExpandRow = (row) => {
+  const $table = listRef.value
+  if ($table) {
+    return $table.isTreeExpandByRow(row)
+  }
+  return false
 }
 /** 修改按钮操作 */
 async function handleUpdate(row) {
@@ -546,23 +550,25 @@ const loadMenu = (row, treeNode, resolve) => {
 function refreshMenu(pid) {
   loading.value = true
   // console.log(loadNodeMap)
-  if (loadNodeMap.size > 0) {
-    const hasNode = loadNodeMap.has(pid)
-    if (hasNode) {
-      const { row, treeNode, resolve } = loadNodeMap.get(pid)
-      proxy.$refs.listRef.store.states.lazyTreeNodeMap[pid] = []
-      loadMenu(row, treeNode, resolve)
-    }
-    loading.value = false
-  } else {
-    getList()
-  }
+  // if (loadNodeMap.size > 0) {
+  //   const hasNode = loadNodeMap.has(pid)
+  //   if (hasNode) {
+  //     const { row, treeNode, resolve } = loadNodeMap.get(pid)
+  //     proxy.$refs.listRef.store.states.lazyTreeNodeMap[pid] = []
+  //     loadMenu(row, treeNode, resolve)
+  //   }
+  //   loading.value = false
+  // } else {
+  //   getList()
+  // }
+  getList()
 }
 
-// listMenu({ menuTypeIds: 'M,C' }).then((response) => {
-//   menuQueryOptions.value = response.data
-// })
+listMenu({ menuTypeIds: 'M,C' }).then((response) => {
+  menuQueryOptions.value = response.data
+})
 
 // 首次列表加载（只加载一层）
-getList(1)
+// getList(1)
+handleQuery()
 </script>

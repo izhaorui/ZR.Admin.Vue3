@@ -40,15 +40,19 @@
     "vue-clipboard3": "^2.0.0",
     "vue-cropper": "1.0.2",
     "vue-i18n": "9.2.2",
-    "vue-router": "^4.2.2"
+    "vue-router": "^4.2.2",
+    "vxe-table": "^4.5.12",
+    "xe-utils": "^3.5.13"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/compiler-sfc": "^3.3.4",
+    "consola": "^3.2.3",
     "sass": "1.45.0",
     "unplugin-auto-import": "0.5.3",
     "vite": "^4.3.9",
     "vite-plugin-compression": "^0.3.6",
+    "vite-plugin-style-import": "^2.0.0",
     "vite-plugin-svg-icons": "1.0.5",
     "vite-plugin-vue-setup-extend": "^0.4.0"
   }
