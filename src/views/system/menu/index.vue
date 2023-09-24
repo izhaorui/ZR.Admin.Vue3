@@ -171,9 +171,9 @@
           </el-col>
           <el-col :lg="24" v-if="form.menuType != 'F'">
             <el-form-item :label="$t('m.icon')" prop="icon">
-              <el-popover placement="bottom-start" :teleported="false" :width="540" :visible="showChooseIcon" trigger="click">
+              <el-popover placement="bottom-start" :width="540" trigger="click">
                 <template #reference>
-                  <el-input v-model="form.icon" placeholder="点击选择图标" @click="showSelectIcon" readonly>
+                  <el-input v-model="form.icon" placeholder="点击选择图标" readonly>
                     <template #prefix>
                       <svg-icon v-if="form.icon" :name="form.icon" />
                       <el-icon v-else>
@@ -423,15 +423,10 @@ function reset() {
   }
   proxy.resetForm('menuRef')
 }
-/** 展示下拉图标 */
-function showSelectIcon() {
-  iconSelectRef.value.reset()
-  showChooseIcon.value = true
-}
+
 /** 选择图标 */
 function selected(name) {
   form.value.icon = name
-  showChooseIcon.value = false
 }
 /** 搜索按钮操作 */
 function handleQuery() {
