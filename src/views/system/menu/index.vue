@@ -65,10 +65,10 @@
       </vxe-column>
       <vxe-column field="menuType" :title="$t('m.menuType')" align="center" width="80">
         <template #default="scope">
-          <el-tag type="danger" v-if="scope.row.menuType == 'M' && scope.row.isFrame == 1">{{ $t('m.link') }}</el-tag>
-          <el-tag v-else-if="scope.row.menuType == 'C'">{{ $t('m.menu') }}</el-tag>
-          <el-tag type="success" v-else-if="scope.row.menuType == 'M'">{{ $t('m.directory') }}</el-tag>
-          <el-tag type="warning" v-else-if="scope.row.menuType == 'F'">{{ $t('m.button') }}</el-tag>
+          <el-tag :disable-transitions="true" type="danger" v-if="scope.row.menuType == 'M' && scope.row.isFrame == 1">{{ $t('m.link') }}</el-tag>
+          <el-tag :disable-transitions="true" v-else-if="scope.row.menuType == 'C'">{{ $t('m.menu') }}</el-tag>
+          <el-tag :disable-transitions="true" type="success" v-else-if="scope.row.menuType == 'M'">{{ $t('m.directory') }}</el-tag>
+          <el-tag :disable-transitions="true" type="warning" v-else-if="scope.row.menuType == 'F'">{{ $t('m.button') }}</el-tag>
         </template>
       </vxe-column>
       <vxe-column field="orderNum" :title="$t('m.sort')" width="90" sortable align="center">
