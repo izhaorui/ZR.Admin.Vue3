@@ -45,7 +45,7 @@
     </el-row>
 
     <vxe-table
-      height="600"
+      :height="tableHeight"
       show-overflow
       ref="listRef"
       :loading="loading"
@@ -57,9 +57,12 @@
       :scroll-y="{ enabled: true, gt: 20 }"
       :data="menuList">
       <vxe-column field="menuName" :title="$t('m.menuName')" tree-node width="160"> </vxe-column>
-      <vxe-column field="menuId" :title="$t('m.menuid')"></vxe-column>
-      <vxe-column field="icon" :title="$t('m.icon')" align="center" width="60"> </vxe-column>
-
+      <vxe-column field="menuId" :title="$t('m.menuid')" width="90"></vxe-column>
+      <vxe-column field="icon" :title="$t('m.icon')" align="center" width="60">
+        <template #default="{ row }">
+          <svg-icon :name="row.icon"></svg-icon>
+        </template>
+      </vxe-column>
       <vxe-column field="menuType" :title="$t('m.menuType')" align="center" width="80">
         <template #default="scope">
           <el-tag type="danger" v-if="scope.row.menuType == 'M' && scope.row.isFrame == 1">{{ $t('m.link') }}</el-tag>
@@ -367,6 +370,7 @@ proxy.getDicts(dictParams).then((response) => {
   })
 })
 
+const tableHeight = ref(document.documentElement.scrollHeight - 245 + 'px')
 const { queryParams, form, rules, sys_show_hide, sys_normal_disable } = toRefs(state)
 
 /** 查询菜单列表 */
@@ -540,12 +544,12 @@ function handleChangeSort(info) {
     })
 }
 // ******************自定义编辑 end **********************
-const loadMenu = (row, treeNode, resolve) => {
-  listMenuById(row.menuId).then((res) => {
-    loadNodeMap.set(row.menuId, { row, treeNode, resolve })
-    resolve(res.data)
-  })
-}
+// const loadMenu = (row, treeNode, resolve) => {
+//   listMenuById(row.menuId).then((res) => {
+//     loadNodeMap.set(row.menuId, { row, treeNode, resolve })
+//     resolve(res.data)
+//   })
+// }
 // 刷新懒加载后的数据
 function refreshMenu(pid) {
   loading.value = true
