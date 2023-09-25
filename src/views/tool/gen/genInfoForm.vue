@@ -187,7 +187,7 @@
           <template #label>
             添加菜单
             <span>
-              <el-tooltip content="将自动添加菜单到菜单栏" placement="top">
+              <el-tooltip content="将会自动生成目录、菜单、按钮" placement="top">
                 <el-icon>
                   <question-filled />
                 </el-icon>

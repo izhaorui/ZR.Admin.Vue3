@@ -49,6 +49,7 @@
       show-overflow
       ref="listRef"
       :loading="loading"
+      :column-config="{ resizable: true }"
       :tree-config="{
         transform: true,
         rowField: 'menuId',

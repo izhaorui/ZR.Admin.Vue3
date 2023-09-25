@@ -5,28 +5,46 @@
       <el-form ref="registerFormRef" :model="registerForm" :rules="registerRules" class="login-form">
         <h3 class="title">{{ title }}</h3>
         <el-form-item prop="username">
-          <el-input v-model="registerForm.username" type="text" auto-complete="off" placeholder="账号">
+          <el-input v-model="registerForm.username" type="text" size="default" auto-complete="off" placeholder="账号">
             <template #prefix>
               <svg-icon name="user" />
             </template>
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="registerForm.password" type="password" auto-complete="off" placeholder="密码" @keyup.enter="handleRegister">
+          <el-input
+            v-model="registerForm.password"
+            type="password"
+            size="default"
+            auto-complete="off"
+            placeholder="密码"
+            @keyup.enter="handleRegister">
             <template #prefix>
               <svg-icon name="password" />
             </template>
           </el-input>
         </el-form-item>
         <el-form-item prop="confirmPassword">
-          <el-input v-model="registerForm.confirmPassword" type="password" auto-complete="off" placeholder="确认密码" @keyup.enter="handleRegister">
+          <el-input
+            v-model="registerForm.confirmPassword"
+            type="password"
+            size="default"
+            auto-complete="off"
+            placeholder="确认密码"
+            @keyup.enter="handleRegister">
             <template #prefix>
               <svg-icon name="password" />
             </template>
           </el-input>
         </el-form-item>
         <el-form-item prop="code" v-if="captchaOnOff">
-          <el-input v-model="registerForm.code" auto-complete="off" placeholder="验证码" style="width: 63%" @keyup.enter="handleRegister">
+          <el-input
+            v-model="registerForm.code"
+            auto-complete="off"
+            size="default"
+            placeholder="验证码"
+            style="width: 63%"
+            @keyup.enter="handleRegister">
             <template #prefix>
               <svg-icon name="validCode" />
             </template>
@@ -163,6 +181,7 @@ getCode()
 }
 .login-form {
   padding: 15px 25px 15px 25px;
+  height: 320px;
 }
 .title {
   margin: 0px auto 30px auto;
