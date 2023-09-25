@@ -209,13 +209,14 @@ export async function downFile(url, params, config) {
           type: 'error'
         })
       }
-      downloadLoadingInstance.close()
     })
-    .catch((err) => {
+    .catch(() => {
       ElMessage({
         message: '下载文件出现错误，请联系管理员！',
         type: 'error'
       })
+    })
+    .finally(() => {
       downloadLoadingInstance.close()
     })
 }

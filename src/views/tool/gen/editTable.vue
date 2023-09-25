@@ -37,7 +37,8 @@
           </el-table-column>
           <el-table-column label="必填" width="60" align="center">
             <template #default="scope">
-              <el-checkbox v-model="scope.row.isRequired"></el-checkbox>
+              <!-- <el-checkbox v-model="scope.row.isRequired"></el-checkbox> -->
+              <el-switch v-model="scope.row.isRequired" />
             </template>
           </el-table-column>
           <el-table-column label="前端" align="center" label-class-name="text-info">
