@@ -7,45 +7,54 @@
         </el-badge>
       </template>
       <div class="layout-navbars-breadcrumb-user-news">
-        <div class="head-box">
-          <div class="head-box-title">通知</div>
-          <div class="head-box-btn" v-if="noticeList.length > 0" @click="onAllReadClick">全部已读</div>
-        </div>
-        <div class="content-box">
-          <template v-if="noticeList.length > 0">
-            <div class="content-box-item" v-for="(v, k) in noticeList" :key="k">
-              <div>{{ v.noticeTitle }}</div>
-              <div class="content-box-msg" v-html="v.noticeContent"></div>
-              <div class="content-box-time">{{ v.createTime }}</div>
+        <el-tabs v-model="noticeType">
+          <el-tab-pane name="0">
+            <template #label>
+              <el-badge :is-dot="newsDot" class="item"> 通知 </el-badge>
+            </template>
+            <div class="content-box">
+              <div class="content-box-item" v-for="item in noticeList" @click="handleDetails(item)">
+                <el-icon :size="30" color="#409EFF"><bell /></el-icon>
+                <div class="content">
+                  <div class="title">{{ item.noticeTitle }}</div>
+                  <div class="content-box-time">{{ dayjs(item.create_time).format('YYYY-MM-DD') }}</div>
+                </div>
+              </div>
             </div>
-          </template>
-          <div class="content-box-empty" v-else>
-            <div class="content-box-empty-margin">
-              <el-icon><Promotion /></el-icon>
-              <div class="mt15">全部已读</div>
-            </div>
-          </div>
-        </div>
+          </el-tab-pane>
+
+          <el-tab-pane label="私信" name="1"> <div class="content-box"></div></el-tab-pane>
+        </el-tabs>
+
         <div class="foot-box" @click="onGoToGiteeClick" v-if="noticeList.length > 0">前往通知中心</div>
       </div>
     </el-popover>
+
+    <el-dialog :title="info.noticeTitle" v-model="show" append-to-body>
+      <div v-html="info.noticeContent"></div>
+    </el-dialog>
   </div>
 </template>
 
 <script setup name="noticeIndex">
 import useSocketStore from '@/store/modules/socket'
-
+import { dayjs } from 'element-plus'
 const { proxy } = getCurrentInstance()
-
+const noticeType = ref('0')
 // 小红点
 const newsDot = ref(false)
-
+const show = ref(false)
 const noticeList = computed(() => {
   return useSocketStore().noticeList
 })
 const noticeDot = computed(() => {
   return useSocketStore().noticeDot
 })
+const info = ref({})
+function handleDetails(item) {
+  show.value = true
+  info.value = item
+}
 // 全部已读点击
 function onAllReadClick() {
   newsDot.value = false
@@ -57,7 +66,7 @@ function onGoToGiteeClick() {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .head-box {
   display: flex;
   border-bottom: 1px solid #ebeef5;
@@ -78,22 +87,29 @@ function onGoToGiteeClick() {
 }
 .content-box {
   font-size: 13px;
+  min-height: 60px;
+  max-height: 200px;
+  overflow-y: scroll;
+
   .content-box-item {
-    padding-top: 12px;
+    display: flex;
+    margin-bottom: 20px;
+    cursor: pointer;
+    &:hover {
+      color: var(--el-color-primary);
+    }
+
     &:last-of-type {
       padding-bottom: 12px;
     }
-    .content-box-msg {
-      color: #999999;
-      margin-top: 5px;
-      margin-bottom: 5px;
-      height: 100px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
+    .icon {
+      width: 30px;
+      height: 30px;
+      margin: 2px 10px 0 0;
     }
+
     .content-box-time {
-      color: #999999;
+      margin-top: 3px;
     }
   }
   .content-box-empty {
