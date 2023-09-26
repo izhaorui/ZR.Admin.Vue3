@@ -50,11 +50,7 @@
       ref="listRef"
       :loading="loading"
       :column-config="{ resizable: true }"
-      :tree-config="{
-        transform: true,
-        rowField: 'menuId',
-        parentField: 'parentId'
-      }"
+      :tree-config="{}"
       :scroll-y="{ enabled: true, gt: 20 }"
       :data="menuList">
       <vxe-column field="menuName" :title="$t('m.menuName')" tree-node width="160"> </vxe-column>
@@ -337,12 +333,9 @@ const title = ref('')
 const menuOptions = ref([])
 const menuQueryOptions = ref([])
 const isExpandAll = ref(false)
-const refreshTable = ref(true)
-const showChooseIcon = ref(false)
 const iconSelectRef = ref(null)
 const menuRef = ref(null)
 const listRef = ref(null)
-const loadNodeMap = new Map()
 const state = reactive({
   form: {},
   queryParams: {
@@ -545,27 +538,10 @@ function handleChangeSort(info) {
     })
 }
 // ******************自定义编辑 end **********************
-// const loadMenu = (row, treeNode, resolve) => {
-//   listMenuById(row.menuId).then((res) => {
-//     loadNodeMap.set(row.menuId, { row, treeNode, resolve })
-//     resolve(res.data)
-//   })
-// }
 // 刷新懒加载后的数据
 function refreshMenu(pid) {
   loading.value = true
-  // console.log(loadNodeMap)
-  // if (loadNodeMap.size > 0) {
-  //   const hasNode = loadNodeMap.has(pid)
-  //   if (hasNode) {
-  //     const { row, treeNode, resolve } = loadNodeMap.get(pid)
-  //     proxy.$refs.listRef.store.states.lazyTreeNodeMap[pid] = []
-  //     loadMenu(row, treeNode, resolve)
-  //   }
-  //   loading.value = false
-  // } else {
-  //   getList()
-  // }
+
   getList()
 }
 
