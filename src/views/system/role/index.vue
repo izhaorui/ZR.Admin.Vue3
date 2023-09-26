@@ -81,7 +81,7 @@
     <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
 
     <!-- 角色菜单弹框 -->
-    <zr-dialog title="角色权限分配" v-model="showRoleScope" width="700px" @close="cancel">
+    <zr-dialog title="角色权限分配" key="role" top="0vh" draggable="" v-model="showRoleScope" width="700px" @close="cancel">
       <el-form :model="form" label-width="80px">
         <el-form-item label="菜单搜索">
           <el-input placeholder="请输入关键字进行过滤" v-model="searchText"></el-input>
@@ -113,6 +113,7 @@
               </div>
             </template>
           </el-tree>
+          <div style="color: red">请在菜单管理里面添加对应的菜单权限</div>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -122,7 +123,7 @@
     </zr-dialog>
 
     <!-- 添加或修改角色配置对话框 -->
-    <zr-dialog :title="title" v-model="open" width="600px" append-to-body @close="cancel">
+    <zr-dialog :title="title" key="roleEdit" v-model="open" append-to-body @close="cancel">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="90px">
         <el-row>
           <el-col :lg="12">
@@ -653,6 +654,8 @@ function customNodeClass(data, node) {
   background: var(--base-bg-main) none;
   border-radius: 4px;
   width: 100%;
+  height: 400px;
+  overflow-y: auto;
 }
 .el-dropdown-link {
   cursor: pointer;
