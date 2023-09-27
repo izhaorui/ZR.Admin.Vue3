@@ -2,15 +2,16 @@
   <div>
     <el-popover placement="bottom" trigger="click" width="400px" popper-class="el-popover-pupop-user-news">
       <template #reference>
-        <el-badge :is-dot="noticeDot" style="line-height: 18px">
+        <el-badge :hidden="noticeDot <= 0" :value="noticeDot" style="line-height: 18px">
           <el-icon><bell /></el-icon>
         </el-badge>
       </template>
       <div class="layout-navbars-breadcrumb-user-news">
+        <div class="read" @click="onAllReadClick">全部已读</div>
         <el-tabs v-model="noticeType">
           <el-tab-pane name="0">
             <template #label>
-              <el-badge :is-dot="newsDot" class="item"> 通知 </el-badge>
+              <el-badge :is-dot="newsDot" class="new-item"> 通知 </el-badge>
             </template>
             <div class="content-box">
               <div class="content-box-item" v-for="item in noticeList" @click="handleDetails(item, 0)">
@@ -20,12 +21,14 @@
                   <div class="content-box-time">{{ dayjs(item.create_time).format('YYYY-MM-DD') }}</div>
                 </div>
               </div>
+
+              <el-empty v-if="noticeList.length <= 0" :image-size="60" description="暂无公告"></el-empty>
             </div>
           </el-tab-pane>
 
           <el-tab-pane name="1">
             <template #label>
-              <el-badge :value="chatList.length"> 私信 </el-badge>
+              <el-badge :hidden="chatDotNum <= 0" :value="chatDotNum" class="new-item"> 私信 </el-badge>
             </template>
             <div class="content-box">
               <div class="content-box-item" v-for="item in chatList" @click="handleDetails(item, 1)">
@@ -38,13 +41,13 @@
                   <div class="content-box-time">{{ formatTime(item.chatTime) }}</div>
                 </div>
               </div>
+              <el-empty v-if="chatList.length <= 0" :image-size="60" description="暂无私信"></el-empty>
             </div>
           </el-tab-pane>
         </el-tabs>
 
         <div class="foot-box">
           <div @click="onGoToGiteeClick" v-if="noticeList.length > 0">前往通知中心</div>
-          <div>全部已读</div>
         </div>
       </div>
     </el-popover>
@@ -52,10 +55,13 @@
     <el-dialog draggable v-model="show" append-to-body>
       <template #header> {{ info.title }} </template>
       <template v-if="info">
-        <div v-if="info.type == 0">
+        <template v-if="noticeType == 0">
           <div v-html="info.item.noticeContent"></div>
-        </div>
-        <msgList v-if="info.type == 1" v-model="info.userId"> </msgList>
+
+          <div class="n_right">{{ info.item.create_by }}</div>
+          <div class="n_right">{{ dayjs(info.item.create_time).format('YYYY-MM-DD HH:mm') }}</div>
+        </template>
+        <msgList v-if="noticeType == 1" v-model="info.userId"> </msgList>
       </template>
     </el-dialog>
   </div>
@@ -76,10 +82,13 @@ const noticeList = computed(() => {
   return useSocketStore().noticeList
 })
 const noticeDot = computed(() => {
-  return useSocketStore().noticeDot
+  return useSocketStore().getAllDotNum()
 })
 const chatList = computed(() => {
   return useSocketStore().getSessionList(useUserStore().userId)
+})
+const chatDotNum = computed(() => {
+  return useSocketStore().newChat
 })
 const info = ref({})
 function handleDetails(item, type) {
@@ -93,7 +102,11 @@ function handleDetails(item, type) {
 // 全部已读点击
 function onAllReadClick() {
   newsDot.value = false
-  proxy.$modal.msg('请自行实现！！！')
+  if (noticeType.value == 1) {
+    useSocketStore().readAll()
+  } else {
+    proxy.$modal.msg('请自行实现！！！')
+  }
 }
 // 前往通知中心点击
 function onGoToGiteeClick() {
@@ -102,29 +115,11 @@ function onGoToGiteeClick() {
 </script>
 
 <style lang="scss" scoped>
-// .head-box {
-//   display: flex;
-//   border-bottom: 1px solid #ebeef5;
-//   box-sizing: border-box;
-//   color: #333333;
-//   justify-content: space-between;
-//   height: 35px;
-//   align-items: center;
-//   .head-box-btn {
-//     color: #1890ff;
-//     font-size: 13px;
-//     cursor: pointer;
-//     opacity: 0.8;
-//     &:hover {
-//       opacity: 1;
-//     }
-//   }
-// }
 .content-box {
   font-size: 13px;
-  min-height: 60px;
-  max-height: 200px;
-  overflow-y: scroll;
+  min-height: 160px;
+  max-height: 230px;
+  overflow: auto;
 
   .content-box-item {
     display: flex;
@@ -154,17 +149,6 @@ function onGoToGiteeClick() {
       margin-top: 3px;
     }
   }
-  .content-box-empty {
-    height: 260px;
-    display: flex;
-    .content-box-empty-margin {
-      margin: auto;
-      text-align: center;
-      i {
-        font-size: 60px;
-      }
-    }
-  }
 }
 .foot-box {
   height: 35px;
@@ -185,5 +169,27 @@ function onGoToGiteeClick() {
 }
 .head-box-title {
   color: var(--base-color-white);
+}
+.layout-navbars-breadcrumb-user-news {
+  position: relative;
+  .read {
+    position: absolute;
+    top: 5px;
+    right: 0;
+    color: #1890ff;
+    cursor: pointer;
+    z-index: 2;
+  }
+}
+.n_right {
+  text-align: right;
+  margin: 10px;
+}
+</style>
+<style>
+.new-item {
+  .is-fixed {
+    right: -3px !important;
+  }
 }
 </style>

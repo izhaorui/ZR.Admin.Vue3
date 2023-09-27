@@ -2,7 +2,7 @@ import useUserStore from './user'
 import signalR from '@/signalr/signalr'
 const useSocketStore = defineStore('socket', {
   persist: {
-    paths: ['chatMessage', 'chatList', 'sessionList'] //存储指定key
+    paths: ['chatMessage', 'chatList', 'sessionList', 'newChat'] //存储指定key
   },
   state: () => ({
     onlineNum: 0,
@@ -28,6 +28,9 @@ const useSocketStore = defineStore('socket', {
     },
     getSessionList(state) {
       return (userid) => state.sessionList[userid] || []
+    },
+    getAllDotNum(state) {
+      return () => state.newChat
     }
   },
   actions: {
@@ -70,6 +73,7 @@ const useSocketStore = defineStore('socket', {
       data.self = data.userId == selfUserId
       this.chatList[sessionId].push(data)
       if (selfUserId == data.userId) return
+      this.newChat++
 
       if (this.sessionList[selfUserId] == undefined) {
         this.sessionList[selfUserId] = []
@@ -90,6 +94,9 @@ const useSocketStore = defineStore('socket', {
             console.error(err.toString())
           })
       })
+    },
+    readAll() {
+      this.newChat = 0
     }
   }
 })
