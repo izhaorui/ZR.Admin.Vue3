@@ -88,10 +88,13 @@ service.interceptors.response.use(
     }
   },
   (error) => {
-    console.log('axios err', error)
+    console.error('axios err', error)
     var duration = 3000
-    let { message } = error
-    if (message == 'Network Error') {
+    let { message, response } = error
+
+    if (response.status == 403) {
+      window.location.href = '/401'
+    } else if (message == 'Network Error') {
       message = '后端接口连接异常'
     } else if (message.includes('timeout')) {
       message = '系统接口请求超时'
