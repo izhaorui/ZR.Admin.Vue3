@@ -26,16 +26,16 @@
       <!-- 上传按钮 -->
       <el-button type="primary" icon="upload" v-if="!drag">选取文件</el-button>
       <!-- 上传提示 -->
-      <template #tip>
+      <template v-slot:tip>
         <div class="el-upload__tip" v-if="showTip">
-          请上传
-          <template v-if="fileSize">
-            大小不超过 <b style="color: #f56c6c">{{ fileSize }}MB</b>
-          </template>
-          <template v-if="fileType && fileType.length > 0">
-            格式为 <b style="color: #f56c6c">{{ fileType.join('/') }}</b>
-          </template>
-          的文件
+          <slot name="tip">
+            <template v-if="fileSize">
+              大小不超过 <b class="text-danger">{{ fileSize }}MB</b>
+            </template>
+            <template v-if="fileType">
+              格式为 <b class="text-danger">{{ fileType.join('/') }}</b>
+            </template>
+          </slot>
         </div>
       </template>
     </el-upload>

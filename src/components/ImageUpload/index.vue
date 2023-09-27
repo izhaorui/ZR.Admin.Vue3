@@ -2,6 +2,7 @@
   <div class="component-upload-image">
     <el-upload
       multiple
+      v-bind="$attrs"
       :action="uploadImgUrl"
       list-type="picture-card"
       :on-success="handleUploadSuccess"
@@ -10,7 +11,7 @@
       :on-error="handleUploadError"
       :on-exceed="handleExceed"
       name="file"
-      :data="data"
+      :data="uploadData"
       :on-remove="handleRemove"
       :show-file-list="true"
       :headers="headers"
@@ -18,18 +19,20 @@
       :on-preview="handlePictureCardPreview"
       :class="{ hide: fileList.length >= limit }">
       <el-icon class="avatar-uploader-icon"><plus /></el-icon>
+
+      <template v-slot:tip>
+        <div class="el-upload__tip" v-if="showTip">
+          <slot name="tip">
+            <template v-if="fileSize">
+              大小不超过 <b class="text-danger">{{ fileSize }}MB</b>
+            </template>
+            <template v-if="fileType">
+              格式为 <b class="text-danger">{{ fileType.join('/') }}</b>
+            </template>
+          </slot>
+        </div>
+      </template>
     </el-upload>
-    <!-- 上传提示 -->
-    <div class="el-upload__tip" v-if="showTip">
-      请上传
-      <template v-if="fileSize">
-        大小不超过 <b style="color: #f56c6c">{{ fileSize }}MB</b>
-      </template>
-      <template v-if="fileType">
-        格式为 <b style="color: #f56c6c">{{ fileType.join('/') }}</b>
-      </template>
-      的文件
-    </div>
 
     <el-dialog v-model="dialogVisible" append-to-body>
       <el-form label-width="100px">
@@ -94,6 +97,7 @@ const uploadImgUrl = ref(baseUrl + import.meta.env.VITE_APP_UPLOAD_URL) // 上�
 const headers = ref({ Authorization: 'Bearer ' + getToken() })
 const fileList = ref([])
 const showTip = computed(() => props.isShowTip && (props.fileType || props.fileSize))
+const uploadData = computed(() => props.data)
 
 watch(
   () => props.modelValue,
@@ -104,11 +108,7 @@ watch(
       // 然后将数组转为对象数组
       fileList.value = list.map((item) => {
         if (typeof item === 'string') {
-          // if (item.indexOf(baseUrl) === -1) {
-          //   item = { name: baseUrl + item, url: baseUrl + item }
-          // } else {
           item = { name: item, url: item }
-          // }
         }
         return item
       })
