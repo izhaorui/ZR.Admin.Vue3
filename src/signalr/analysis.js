@@ -51,18 +51,19 @@ export default {
     })
     // 接收聊天数据
     connection.on('receiveChat', (data) => {
-      const title = `来自${data.userName}的消息通知`
+      const { fromUser, message } = data
+
       useSocketStore().setChat(data)
 
       if (data.userid != useUserStore().userId) {
         ElNotification({
-          title: title,
-          message: data.message,
+          title: fromUser.nickName,
+          message: message,
           type: 'success',
           duration: 3000
         })
       }
-      webNotify({ title: title, body: data.message })
+      webNotify({ title: fromUser.nickName, body: message })
     })
 
     connection.on('onlineInfo', (data) => {

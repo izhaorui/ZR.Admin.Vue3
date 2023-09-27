@@ -111,7 +111,7 @@ function onChat(item) {
       inputErrorMessage: '消息内容不能为空'
     })
     .then(({ value }) => {
-      proxy.signalr.SR.invoke('sendMessage', item.connnectionId, item.userid, value).catch(function (err) {
+      proxy.signalr.SR.invoke('sendMessage', item.userid, value).catch(function (err) {
         console.error(err.toString())
       })
     })
