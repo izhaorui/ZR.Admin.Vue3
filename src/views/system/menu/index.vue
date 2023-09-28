@@ -154,12 +154,7 @@
               <el-input v-model="form.menuNameKey" placeholder="请输入菜单key" />
             </el-form-item>
           </el-col>
-          <el-col :lg="12">
-            <el-form-item :label="$t('m.sort')" prop="orderNum">
-              <el-input-number v-model="form.orderNum" controls-position="right" :min="0" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="24" v-if="form.menuType != 'F'">
+          <el-col :lg="12" v-if="form.menuType != 'F'">
             <el-form-item :label="$t('m.icon')" prop="icon">
               <el-popover placement="bottom-start" :width="540" trigger="click">
                 <template #reference>
@@ -174,6 +169,11 @@
                 </template>
                 <icon-select ref="iconSelectRef" @selected="selected" />
               </el-popover>
+            </el-form-item>
+          </el-col>
+          <el-col :lg="12">
+            <el-form-item :label="$t('m.sort')" prop="orderNum">
+              <el-input-number v-model="form.orderNum" controls-position="right" :min="0" />
             </el-form-item>
           </el-col>
           <el-col :lg="12" v-if="form.menuType != 'F'">

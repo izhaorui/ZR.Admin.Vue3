@@ -43,6 +43,18 @@ html.dark {
   --base-text-color-rgba: #ffffff;
   --base-menu-background: #000;
 
+  // vxe-table黑色样式
+  --vxe-font-color: #98989e;
+  --vxe-primary-color: #2c7ecf;
+  --vxe-icon-background-color: #98989e;
+  --vxe-table-font-color: #98989e;
+  --vxe-table-resizable-color: #95969a;
+  --vxe-table-header-background-color: #28282a;
+  --vxe-table-body-background-color: #151518;
+  --vxe-table-background-color: #4a5663;
+  --vxe-table-border-width: 1px;
+  --vxe-table-border-color: #37373a;
+
   .current-row {
     color: #e65d6e;
   }

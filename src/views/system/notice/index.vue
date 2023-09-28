@@ -94,9 +94,7 @@
             </el-form-item>
           </el-col>
           <el-col :lg="24">
-            <el-form-item label="内容" prop="noticeContent">
-              <editor v-model="form.noticeContent" :toolbarConfig="toolbarConfig" :min-height="196" />
-            </el-form-item>
+            <editor v-model="form.noticeContent" :toolbarConfig="toolbarConfig" :min-height="196" />
           </el-col>
         </el-row>
       </el-form>

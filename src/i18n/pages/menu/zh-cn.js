@@ -2,10 +2,10 @@ export default {
   m: {
     menuName: '菜单名称',
     menuState: '菜单状态',
-    icon: '图标',
+    icon: '菜单图标',
     menuid: '菜单id',
     menuType: '菜单类型',
-    sort: '排序',
+    sort: '菜单排序',
     authorityID: '权限标识',
     componentPath: '组件路径',
     isShow: '是否显示',
