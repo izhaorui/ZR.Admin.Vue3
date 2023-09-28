@@ -14,9 +14,6 @@
         <el-button type="primary" icon="Search" @click="handleQuery">刷新</el-button>
       </el-form-item>
     </el-form>
-    <!-- <el-row :gutter="10" class="mb8">
-      <el-col :span="2"> </el-col>
-    </el-row> -->
     <el-table :data="onlineUsers" v-loading="loading" ref="tableRef" border highlight-current-row v-if="viewSwitch == 1">
       <el-table-column label="No" type="index" width="50" align="center">
         <template #default="scope">
@@ -36,7 +33,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="160">
         <template #default="scope">
-          <el-button text @click="onChat(scope.row)" icon="bell" v-hasRole="['admin']">通知</el-button>
+          <el-button text @click="onChat(scope.row)" icon="ChatDotRound" v-hasRole="['admin']">私信</el-button>
           <el-button text @click="onLock(scope.row)" icon="lock" v-hasPermi="['monitor:online:forceLogout']">强退</el-button>
         </template>
       </el-table-column>
@@ -54,8 +51,8 @@
           </el-descriptions>
           <el-text truncated>{{ item.browser }}</el-text>
           <div>
-            <el-button text @click="onChat(item)" icon="bell" title="通知" v-hasRole="['admin']"></el-button>
-            <el-button text @click="onLock(item)" icon="lock" title="强退" v-hasPermi="['monitor:online:forceLogout']"></el-button>
+            <el-button text @click="onChat(item)" size="small" icon="ChatDotRound" title="私信" v-hasRole="['admin']">私信</el-button>
+            <el-button text @click="onLock(item)" size="small" icon="lock" title="强退" v-hasPermi="['monitor:online:forceLogout']">强退</el-button>
           </div>
         </el-card>
       </el-col>
@@ -104,7 +101,7 @@ getList()
 
 function onChat(item) {
   proxy
-    .$prompt('请输入通知内容', '', {
+    .$prompt('请输入消息内容', '', {
       confirmButtonText: '发送',
       cancelButtonText: '取消',
       inputPattern: /\S/,

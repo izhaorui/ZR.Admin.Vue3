@@ -2,20 +2,21 @@ import useUserStore from './user'
 import signalR from '@/signalr/signalr'
 const useSocketStore = defineStore('socket', {
   persist: {
-    paths: ['chatMessage', 'chatList', 'sessionList', 'newChat'] //存储指定key
+    paths: ['chatMessage', 'chatList', 'sessionList', 'newChat', 'noticeIdArr', 'newNotice'] //存储指定key
   },
   state: () => ({
     onlineNum: 0,
     onlineUsers: [],
     noticeList: [],
-    noticeDot: false,
     //在线用户信息
     onlineInfo: {},
     // 聊天数据
     chatList: {},
     leaveUser: {},
     sessionList: {},
-    newChat: 0
+    newChat: 0,
+    newNotice: 0,
+    noticeIdArr: []
   }),
   getters: {
     /**
@@ -30,7 +31,7 @@ const useSocketStore = defineStore('socket', {
       return (userid) => state.sessionList[userid] || []
     },
     getAllDotNum(state) {
-      return () => state.newChat
+      return () => state.newChat + state.newNotice
     }
   },
   actions: {
@@ -41,7 +42,18 @@ const useSocketStore = defineStore('socket', {
     // 更新系统通知
     setNoticeList(data) {
       this.noticeList = data
-      this.noticeDot = data.length > 0
+
+      const idArr = []
+      data.forEach((ele) => {
+        idArr.push(ele.noticeId)
+      })
+
+      var diffArr = idArr.filter((v) => !this.noticeIdArr.some((item) => item == v))
+
+      if (diffArr.length > 0) {
+        this.newNotice = diffArr.length
+        this.noticeIdArr = idArr
+      }
     },
     setOnlineUsers(data) {
       const { onlineClients, num, leaveUser } = data
@@ -95,8 +107,12 @@ const useSocketStore = defineStore('socket', {
           })
       })
     },
-    readAll() {
-      this.newChat = 0
+    readAll(type) {
+      if (type == 0) {
+        this.newNotice = 0
+      } else if (type == 1) {
+        this.newChat = 0
+      }
     }
   }
 })

@@ -2,7 +2,7 @@
   <div>
     <el-popover placement="bottom" trigger="click" width="400px" popper-class="el-popover-pupop-user-news">
       <template #reference>
-        <el-badge :hidden="noticeDot <= 0" :value="noticeDot" style="line-height: 18px">
+        <el-badge :hidden="allDotNum <= 0" :value="allDotNum" style="line-height: 18px">
           <el-icon><bell /></el-icon>
         </el-badge>
       </template>
@@ -11,7 +11,7 @@
         <el-tabs v-model="noticeType">
           <el-tab-pane name="0">
             <template #label>
-              <el-badge :is-dot="newsDot" class="new-item"> 通知 </el-badge>
+              <el-badge :hidden="newsDot <= 0" :value="newsDot" class="new-item"> 通知 </el-badge>
             </template>
             <div class="content-box">
               <div class="content-box-item" v-for="item in noticeList" @click="handleDetails(item, 0)">
@@ -76,12 +76,14 @@ import { formatTime } from '@/utils/index'
 const { proxy } = getCurrentInstance()
 const noticeType = ref('0')
 // 小红点
-const newsDot = ref(false)
+const newsDot = computed(() => {
+  return useSocketStore().newNotice
+})
 const show = ref(false)
 const noticeList = computed(() => {
   return useSocketStore().noticeList
 })
-const noticeDot = computed(() => {
+const allDotNum = computed(() => {
   return useSocketStore().getAllDotNum()
 })
 const chatList = computed(() => {
@@ -101,12 +103,7 @@ function handleDetails(item, type) {
 }
 // 全部已读点击
 function onAllReadClick() {
-  newsDot.value = false
-  if (noticeType.value == 1) {
-    useSocketStore().readAll()
-  } else {
-    proxy.$modal.msg('请自行实现！！！')
-  }
+  useSocketStore().readAll(noticeType.value)
 }
 // 前往通知中心点击
 function onGoToGiteeClick() {
@@ -152,7 +149,7 @@ function onGoToGiteeClick() {
 }
 .foot-box {
   height: 35px;
-  color: #1890ff;
+  color: var(--el-color-primary);
   font-size: 13px;
   cursor: pointer;
   opacity: 0.8;
@@ -164,21 +161,17 @@ function onGoToGiteeClick() {
     opacity: 1;
   }
 }
-:deep(.el-empty__description p) {
-  font-size: 13px;
-}
-.head-box-title {
-  color: var(--base-color-white);
-}
+
 .layout-navbars-breadcrumb-user-news {
   position: relative;
   .read {
     position: absolute;
-    top: 5px;
+    top: 7px;
     right: 0;
-    color: #1890ff;
+    color: var(--el-color-primary);
     cursor: pointer;
     z-index: 2;
+    font-size: 12px;
   }
 }
 .n_right {
