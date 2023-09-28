@@ -1,8 +1,20 @@
 import defaultSettings from '@/settings'
 import { useDynamicTitle } from '@/utils/dynamicTitle'
 
-const { sideTheme, theme, showSettings, topNav, tagsView, fixedHeader, sidebarLogo, dynamicTitle, showFooter, showWatermark, watermarkText } =
-  defaultSettings
+const {
+  sideTheme,
+  theme,
+  showSettings,
+  topNav,
+  tagsView,
+  fixedHeader,
+  sidebarLogo,
+  dynamicTitle,
+  showFooter,
+  showWatermark,
+  watermarkText,
+  tagsViewPersist
+} = defaultSettings
 
 const storageSetting = JSON.parse(localStorage.getItem('layout-setting')) || ''
 const useSettingsStore = defineStore('settings', {
@@ -18,13 +30,13 @@ const useSettingsStore = defineStore('settings', {
     dynamicTitle: storageSetting.dynamicTitle === undefined ? dynamicTitle : storageSetting.dynamicTitle,
     showFooter: storageSetting.showFooter === undefined ? showFooter : storageSetting.showFooter,
     showWatermark: storageSetting.showWatermark === undefined ? showWatermark : storageSetting.showWatermark,
-    watermarkText: storageSetting.watermarkText === undefined ? watermarkText : storageSetting.watermarkText
+    watermarkText: storageSetting.watermarkText === undefined ? watermarkText : storageSetting.watermarkText,
+    tagsViewPersist: storageSetting.tagsViewPersist === undefined ? tagsViewPersist : storageSetting.tagsViewPersist
   }),
   actions: {
     // 修改布局设置
     changeSetting(data) {
       const { key, value } = data
-      // if (this.hasOwnProperty(key)) {
       if (Object.prototype.hasOwnProperty.call(this.$state, key)) {
         this[key] = value
       }

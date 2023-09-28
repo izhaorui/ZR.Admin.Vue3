@@ -91,5 +91,9 @@ export default {
   /**
    * 是否显示手机号登录
    */
-  showPhoneLogin: true
+  showPhoneLogin: true,
+  /**
+   * 标签页持久化
+   */
+  tagsViewPersist: false
 }

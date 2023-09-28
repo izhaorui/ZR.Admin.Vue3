@@ -1,5 +1,6 @@
 import { login, logout, getInfo, oauthCallback } from '@/api/system/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
+import useTagsViewStore from './tagsView'
 import defAva from '@/assets/images/profile.jpg'
 import cache from '@/plugins/cache'
 import md5 from 'crypto-js/md5'
@@ -121,6 +122,7 @@ const useUserStore = defineStore('user', {
             this.roles = []
             this.permissions = []
             removeToken()
+            useTagsViewStore().visitedViews = []
             resolve(res)
           })
           .catch((error) => {

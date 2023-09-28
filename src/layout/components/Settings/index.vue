@@ -52,7 +52,7 @@
     </div>
 
     <div class="drawer-item">
-      <span>{{ $t('layout.open') }} Tags-Views</span>
+      <span>{{ $t('layout.open') }} 标签页</span>
       <span class="comp-style">
         <el-switch v-model="tagsView" class="drawer-switch" />
       </span>
@@ -87,6 +87,13 @@
       <span>{{ $t('layout.dynamicTitle') }}</span>
       <span class="comp-style">
         <el-switch v-model="dynamicTitle" class="drawer-switch" />
+      </span>
+    </div>
+
+    <div class="drawer-item">
+      <span>标签持久化</span>
+      <span class="comp-style">
+        <el-switch v-model="tabsPersist" class="drawer-switch" />
       </span>
     </div>
 
@@ -185,6 +192,14 @@ const showWatermark = computed({
     changeWatermark()
   }
 })
+
+/**标签持久化 */
+const tabsPersist = computed({
+  get: () => storeSettings.value.tagsViewPersist,
+  set: (val) => {
+    settingsStore.changeSetting({ key: 'tagsViewPersist', value: val })
+  }
+})
 const changeWatermark = () => {
   storeSettings.value.showWatermark ? setWatermark(useUserStore().userInfo.userName) : removeWatermark()
 }
@@ -254,7 +269,8 @@ function saveSetting() {
     sideTheme: storeSettings.value.sideTheme,
     theme: storeSettings.value.theme,
     showFooter: storeSettings.value.showFooter,
-    showWatermark: storeSettings.value.showWatermark
+    showWatermark: storeSettings.value.showWatermark,
+    tagsViewPersist: storeSettings.value.tagsViewPersist
   }
   localStorage.setItem('layout-setting', JSON.stringify(layoutSetting))
   setTimeout(proxy.$modal.closeLoading(), 100)

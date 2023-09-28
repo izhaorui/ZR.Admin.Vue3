@@ -1,4 +1,9 @@
+const storageSetting = JSON.parse(localStorage.getItem('layout-setting')) || ''
+
 const useTagsViewStore = defineStore('tagsView', {
+  persist: {
+    paths: [storageSetting.tagsViewPersist ? 'visitedViews' : ''] //存储指定key
+  },
   state: () => ({
     visitedViews: [],
     cachedViews: [],
