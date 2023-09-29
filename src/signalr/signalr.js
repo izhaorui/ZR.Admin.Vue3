@@ -41,7 +41,6 @@ export default {
       await this.start()
     })
     analysis.onMessage(connection)
-    // this.receiveMsg(connection)
     // 启动
     // this.start();
   },
@@ -70,7 +69,5 @@ export default {
       }
       return false
     }
-  },
-  // 接收消息处理
-  receiveMsg(connection) {}
+  }
 }

@@ -2,7 +2,7 @@ import useUserStore from './user'
 import signalR from '@/signalr/signalr'
 const useSocketStore = defineStore('socket', {
   persist: {
-    paths: ['chatMessage', 'chatList', 'sessionList', 'newChat', 'noticeIdArr', 'newNotice'] //存储指定key
+    paths: ['chatMessage', 'chatList', 'sessionList', 'newChat', 'noticeIdArr', 'newNotice', 'globalErrorMsg'] //存储指定key
   },
   state: () => ({
     onlineNum: 0,
@@ -16,7 +16,9 @@ const useSocketStore = defineStore('socket', {
     sessionList: {},
     newChat: 0,
     newNotice: 0,
-    noticeIdArr: []
+    noticeIdArr: [],
+    // 全局错误提醒
+    globalErrorMsg: {}
   }),
   getters: {
     /**
@@ -113,6 +115,9 @@ const useSocketStore = defineStore('socket', {
       } else if (type == 1) {
         this.newChat = 0
       }
+    },
+    setGlobalError(data) {
+      this.globalErrorMsg = data
     }
   }
 })

@@ -1,5 +1,4 @@
-// import signalr from './signalr'
-import { ElNotification, ElMessage, ElMessageBox } from 'element-plus'
+import { ElNotification, ElMessageBox } from 'element-plus'
 import useSocketStore from '@/store/modules/socket'
 import useUserStore from '@/store/modules/user'
 import { webNotify } from '@/utils/index'
@@ -38,16 +37,21 @@ export default {
 
     // 接收强退通知
     connection.on('forceUser', (data) => {
-      ElMessageBox.alert(`你的账号已被强退，原因：${data.reason || '无'}`, '提示', {
-        confirmButtonText: '确定',
-        callback: () => {
-          useUserStore()
-            .logOut()
-            .then(() => {
-              location.href = import.meta.env.VITE_APP_ROUTER_PREFIX + 'index'
-            })
-        }
-      })
+      // connection.stop().then(() => {
+      //   console.log('Connection stoped')
+      // })
+      // ElMessageBox.alert(`你的账号已被强退，原因：${data.reason || '无'}`, '提示', {
+      //   confirmButtonText: '确定',
+      //   callback: () => {
+
+      //   }
+      // })
+      useSocketStore().setGlobalError({ code: 0, msg: `你的账号已被强退，原因：${data.reason || '无'}` })
+      useUserStore()
+        .logOut()
+        .then(() => {
+          location.href = import.meta.env.VITE_APP_ROUTER_PREFIX + 'error'
+        })
     })
     // 接收聊天数据
     connection.on('receiveChat', (data) => {
@@ -70,7 +74,7 @@ export default {
       useSocketStore().getOnlineInfo(data)
     })
 
-    connection.on('logOut', () => {
+    connection.on(MsgType.LogOut, () => {
       useUserStore()
         .logOut()
         .then(() => {
@@ -86,5 +90,6 @@ export default {
 }
 const MsgType = {
   M001: 'onlineNum',
-  M002: 'connId'
+  M002: 'connId',
+  LogOut: 'logOut'
 }
