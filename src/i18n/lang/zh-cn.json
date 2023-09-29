@@ -91,7 +91,9 @@
     "commonFuncs": "常用功能",
     "openWatermark": "开启水印",
     "workTime": "今日工作时长",
-    "onlineClientNum": "在线设备数"
+    "onlineClientNum": "在线设备数",
+    "tagsView": "标签页",
+    "tagsPersist": "标签持久化"
   },
   "common": {
     "ok": "确定",

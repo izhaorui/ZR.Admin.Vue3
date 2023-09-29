@@ -21,19 +21,10 @@
       <el-radio-group v-model="mode" size="small">
         <el-radio label="dark">{{ $t('layout.darkMode') }}</el-radio>
         <el-radio label="light">{{ $t('layout.lightMode') }}</el-radio>
-        <!-- <el-radio label="cafe">cafe</el-radio> -->
-        <!-- <el-radio label="contrast">contrast</el-radio> -->
+        <!-- <el-radio label="cafe">cafe</el-radio>
+        <el-radio label="contrast">contrast</el-radio> -->
       </el-radio-group>
     </div>
-    <!-- <div class="drawer-item">
-      <span>暗黑模式</span>
-      <span class="comp-style">
-        <el-switch v-model="isDark" class="mt-2" inline-prompt />
-      </span>
-    </div> -->
-    <!-- <h3 class="drawer-title">
-      {{ $t('layout.themeColor') }}
-    </h3> -->
     <div class="drawer-item">
       <span>{{ $t('layout.themeColor') }}</span>
       <span class="comp-style quick-color-wrap">
@@ -52,7 +43,7 @@
     </div>
 
     <div class="drawer-item">
-      <span>{{ $t('layout.open') }} 标签页</span>
+      <span>{{ $t('layout.open') }} {{ $t('layout.tagsView') }}</span>
       <span class="comp-style">
         <el-switch v-model="tagsView" class="drawer-switch" />
       </span>
@@ -91,7 +82,7 @@
     </div>
 
     <div class="drawer-item">
-      <span>标签持久化</span>
+      <span>{{ $t('layout.tagsPersist') }}</span>
       <span class="comp-style">
         <el-switch v-model="tabsPersist" class="drawer-switch" />
       </span>
@@ -107,7 +98,7 @@
 <script setup>
 import 'element-plus/theme-chalk/index.css'
 import 'element-plus/theme-chalk/dark/css-vars.css'
-import { useDark, useCycleList, useColorMode } from '@vueuse/core'
+import { useColorMode } from '@vueuse/core'
 import { useDynamicTitle } from '@/utils/dynamicTitle'
 import { getLightColor } from '@/utils/index'
 import { getmark } from '@/utils/wartermark'
@@ -130,12 +121,10 @@ const mode = useColorMode({
   modes: {
     // custom colors
     contrast: 'dark contrast',
-    cafe: 'cafe'
+    cafe: 'cafe',
+    auto: 'auto'
   }
 })
-const { next } = useCycleList(['light', 'dark', 'cafe', 'contrast'], { initialValue: mode })
-// const  isDark= useDark()
-
 /** 是否需要topnav */
 const topNav = computed({
   get: () => storeSettings.value.topNav,
@@ -316,13 +305,6 @@ defineExpose({
     img {
       width: 48px;
       height: 48px;
-    }
-
-    .custom-img {
-      width: 48px;
-      height: 38px;
-      border-radius: 5px;
-      box-shadow: 1px 1px 2px #898484;
     }
 
     .setting-drawer-block-checbox-selectIcon {

@@ -87,11 +87,13 @@
     "bottomBar": "Footer",
     "identity": "Identity",
     "content1": "The code is completely free and open source, easy to read and understand, and the interface is simple and beautiful, giving you one more choice and reference for your project.",
-    "topNav": "Top nav",
+    "topNav": "top nav",
     "commonFuncs": "Common Functions",
     "openWatermark": "Open Watermark",
     "workTime": "Today's working times(min)",
-    "onlineClientNum": "Number of online devices"
+    "onlineClientNum": "Number of online devices",
+    "tagsView": "tabs",
+    "tagsPersist": "tabs Persist"
   },
   "common": {
     "ok": "Ok",
