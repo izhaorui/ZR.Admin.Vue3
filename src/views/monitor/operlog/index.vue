@@ -27,6 +27,7 @@
           range-separator="-"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          :default-time="defaultTime"
           value-format="YYYY-MM-DD HH:mm:ss"
           :shortcuts="dateOptions"></el-date-picker>
       </el-form-item>
@@ -158,8 +159,8 @@
 </template>
 
 <script setup name="operlog">
-import { list as listOperLog, delOperlog, cleanOperlog, exportOperlog } from '@/api/monitor/operlog'
-
+import { list as listOperLog, delOperlog, cleanOperlog } from '@/api/monitor/operlog'
+import dayjs from 'dayjs'
 const { proxy } = getCurrentInstance()
 // 遮罩层
 const loading = ref(true)
@@ -180,7 +181,8 @@ const statusOptions = ref([])
 // 业务类型（0其它 1新增 2修改 3删除）选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
 const businessTypeOptions = ref([])
 // 日期范围
-const dateRange = ref([])
+const dateRange = ref([dayjs().format('YYYY-MM-DD 00:00:00'), dayjs().format('YYYY-MM-DD 23:59:59')])
+const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 const state = reactive({
   form: {},

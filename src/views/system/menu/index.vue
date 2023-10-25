@@ -41,7 +41,7 @@
       <el-col :span="1.5">
         <el-button type="info" plain icon="Sort" @click="toggleExpandAll">{{ $t('btn.expand') }}/{{ $t('btn.collapse') }}</el-button>
       </el-col>
-      <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
 
     <vxe-table
@@ -68,7 +68,7 @@
           <el-tag :disable-transitions="true" type="warning" v-else-if="scope.row.menuType == 'F'">{{ $t('m.button') }}</el-tag>
         </template>
       </vxe-column>
-      <vxe-column field="orderNum" :title="$t('m.sort')" width="90" sortable align="center">
+      <vxe-column field="orderNum" :title="$t('m.sort')" width="90" sortable align="center" v-if="columns.showColumn('orderNum')">
         <template #default="scope">
           <span v-show="editIndex != scope.row.menuId" @click="editCurrRow(scope.row.menuId)">{{ scope.row.orderNum }}</span>
           <el-input
@@ -90,7 +90,7 @@
           <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
         </template>
       </vxe-column>
-      <vxe-column :title="$t('common.addTime')" align="center" field="createTime" show-overflow>
+      <vxe-column :title="$t('common.addTime')" align="center" field="createTime" show-overflow v-if="columns.showColumn('createTime')">
         <template #default="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
@@ -363,6 +363,11 @@ proxy.getDicts(dictParams).then((response) => {
     state[element.dictType] = element.list
   })
 })
+// 列显隐信息
+const columns = ref([
+  { label: `添加时间`, visible: false, prop: 'createTime' },
+  { label: `排序`, visible: false, prop: 'orderNum' }
+])
 
 const tableHeight = ref(document.documentElement.scrollHeight - 245 + 'px')
 const { queryParams, form, rules, sys_show_hide, sys_normal_disable } = toRefs(state)
