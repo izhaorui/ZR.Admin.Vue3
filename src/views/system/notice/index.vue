@@ -58,6 +58,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
+          <el-button text icon="view" @click="handleOpenPre(scope.row)"> 预览</el-button>
           <el-button text icon="bell" @click="handleNotice(scope.row)" v-hasPermi="['system:notice:edit']"> 通知</el-button>
           <el-button text icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:notice:edit']"> 修改</el-button>
           <el-button text icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:notice:remove']"> 删除</el-button>
@@ -103,6 +104,19 @@
         <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
       </template>
     </zr-dialog>
+
+    <zr-dialog title="预览" draggable v-model="openPreview" width="580px">
+      <template v-if="info">
+        <div style="text-align: center" class="mb10">{{ info.noticeTitle }}</div>
+        <div v-html="info.noticeContent"></div>
+
+        <div class="n_right">{{ info.create_by }}</div>
+        <div class="n_right">{{ dayjs(info.create_time).format('YYYY-MM-DD HH:mm') }}</div>
+      </template>
+      <template #footer>
+        <el-button type="primary" @click="openPreview = false">{{ $t('btn.submit') }}</el-button>
+      </template>
+    </zr-dialog>
   </div>
 </template>
 
@@ -111,6 +125,7 @@
 import Editor from '@/components/Editor'
 import { listNotice, getNotice, delNotice, addNotice, updateNotice, sendNotice } from '@/api/system/notice'
 import { getCurrentInstance } from 'vue'
+import dayjs from 'dayjs'
 
 const { proxy } = getCurrentInstance()
 const noticeList = ref([])
@@ -274,5 +289,18 @@ function handleNotice(row) {
     proxy.$modal.msgSuccess('发送通知成功')
   })
 }
+
+const openPreview = ref(false)
+const info = ref(undefined)
+const handleOpenPre = function (row) {
+  openPreview.value = true
+  info.value = { ...row }
+}
 getList()
 </script>
+<style>
+.n_right {
+  text-align: right;
+  margin: 10px;
+}
+</style>
