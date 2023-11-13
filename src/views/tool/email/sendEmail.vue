@@ -16,6 +16,11 @@
     <el-form-item label="邮件主题" prop="subject">
       <el-input v-model="form.subject"></el-input>
     </el-form-item>
+    <el-form-item label="选择模板" prop="emailTpl">
+      <el-select v-model="form.emailTpl" placeholder="邮件模板" @change="handleSelectTpl" clearable>
+        <el-option v-for="dict in emailTplOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+      </el-select>
+    </el-form-item>
     <el-form-item label="邮件内容" prop="htmlContent">
       <editor v-model="form.htmlContent" />
     </el-form-item>
@@ -32,6 +37,8 @@
 </template>
 <script setup name="sendEmail">
 import { sendEmail } from '@/api/common'
+
+import { listEmailTpl, getEmailTpl } from '@/api/system/emailtpl.js'
 import Editor from '@/components/Editor'
 
 const data = reactive({
@@ -62,6 +69,7 @@ function reset() {
     subject: undefined,
     fileUrl: undefined,
     sendMe: false,
+    emailTpl: undefined,
     toEmails: [
       {
         value: ''
@@ -70,7 +78,26 @@ function reset() {
   }
   proxy.resetForm('formRef')
 }
-
+const emailTplOptions = ref([])
+listEmailTpl({ pageSize: 100 }).then((res) => {
+  const { code, data } = res
+  data.result.filter((element) => {
+    emailTplOptions.value.push({
+      dictLabel: element.name,
+      dictValue: element.id.toString()
+    })
+  })
+})
+function handleSelectTpl(id) {
+  if (!id) return
+  getEmailTpl(id).then((res) => {
+    if (res.code == 200) {
+      form.value.htmlContent = res.data.content
+    } else {
+      form.value.htmlContent = ''
+    }
+  })
+}
 /**
  * 提交
  */
