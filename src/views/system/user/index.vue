@@ -130,26 +130,14 @@
           </el-table-column>
           <el-table-column prop="avatar" label="头像" align="center" v-if="columns.showColumn('avatar')">
             <template #default="scope">
-              <el-image
-                preview-teleported
-                :hide-on-click-modal="true"
-                lazy
-                class="avatar"
-                fit="contain"
-                :src="scope.row.avatar"
-                :preview-src-list="[scope.row.avatar]">
-                <div>
-                  <el-icon :size="15"><document /></el-icon>
-                </div>
-              </el-image>
+              <el-avatar :src="scope.row.avatar" />
             </template>
           </el-table-column>
           <el-table-column prop="email" label="用户邮箱" align="center" v-if="columns.showColumn('email')" />
           <el-table-column prop="loginDate" label="最后登录时间" align="center" v-if="columns.showColumn('loginDate')" />
-          <el-table-column label="操作" align="center" width="110" class-name="small-padding fixed-width">
+          <el-table-column label="操作" align="left" width="110" class-name="small-padding fixed-width">
             <template #default="scope">
-              <el-button v-if="scope.row.userId !== 1" text icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:user:edit']">
-              </el-button>
+              <el-button text icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:user:edit']"> </el-button>
               <el-button v-if="scope.row.userId !== 1" text icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:user:remove']">
               </el-button>
               <el-button
@@ -232,7 +220,12 @@
           <el-col :lg="24">
             <el-form-item label="角色">
               <el-select v-model="form.roleIds" multiple placeholder="请选择角色" style="width: 100%" @change="selectRole($event)">
-                <el-option v-for="item in roleOptions" :key="item.roleId" :label="item.roleName" :value="item.roleId" :disabled="item.status == 1">
+                <el-option
+                  v-for="item in roleOptions"
+                  :key="item.roleId"
+                  :label="item.roleName"
+                  :value="item.roleId"
+                  :disabled="item.status == 1 || form.userId == 1">
                   <span style="float: left">{{ item.roleName }}</span>
                   <span style="float: right">{{ item.roleKey }}</span>
                 </el-option>
