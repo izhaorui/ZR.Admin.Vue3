@@ -26,7 +26,7 @@ service.interceptors.request.use(
       //将token放到请求头发送给服务器,将tokenkey放在请求头中
       config.headers['Authorization'] = 'Bearer ' + getToken()
       config.headers['userid'] = useUserStore().userId
-      config.headers['userName'] = useUserStore().userName
+      config.headers['userName'] = encodeURIComponent(useUserStore().userName)
     }
     const method = config?.method || 'get'
     const header = config?.headers['Content-Type'] ?? ''
@@ -93,7 +93,7 @@ service.interceptors.response.use(
     let { message, response } = error
 
     if (response.status == 403) {
-      window.location.href = '/401'
+      window.location.href = import.meta.env.VITE_APP_ROUTER_PREFIX + '401'
     } else if (message == 'Network Error') {
       message = '后端接口连接异常'
     } else if (message.includes('timeout')) {

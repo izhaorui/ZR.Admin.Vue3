@@ -94,3 +94,25 @@ export function verifyScan(data) {
     data: data
   })
 }
+
+/**
+ * 发送短信验证码
+ * @param {*} data
+ * @returns
+ */
+export function checkMobile(data) {
+  return request({
+    method: 'post',
+    data: data,
+    url: '/checkMobile'
+  })
+}
+
+// 登录方法
+export function phoneLogin(data) {
+  return request({
+    url: '/phoneLogin',
+    method: 'POST',
+    data: data
+  })
+}

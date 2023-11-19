@@ -1,4 +1,4 @@
-import { login, logout, getInfo, oauthCallback } from '@/api/system/login'
+import { login, logout, getInfo, oauthCallback, phoneLogin } from '@/api/system/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import useTagsViewStore from './tagsView'
 import defAva from '@/assets/images/profile.jpg'
@@ -82,6 +82,25 @@ const useUserStore = defineStore('user', {
         this.token = data.token
 
         resolve(data.token) //then处理
+      })
+    },
+    // 手机号登录
+    phoneNumLogin(userInfo) {
+      return new Promise((resolve, reject) => {
+        phoneLogin(userInfo)
+          .then((res) => {
+            if (res.code == 200) {
+              setToken(res.data)
+              this.token = res.data
+              resolve() //then处理
+            } else {
+              console.log('login error ', res)
+              reject(res) //catch处理
+            }
+          })
+          .catch((error) => {
+            reject(error)
+          })
       })
     },
     // 获取用户信息
