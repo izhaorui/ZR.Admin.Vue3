@@ -21,9 +21,6 @@
           {{ $t('btn.add') }}
         </el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button type="primary" v-hasPermi="['tool:email:send']" plain icon="upload" @click="handleSend"> 发送邮件 </el-button>
-      </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
 
@@ -267,9 +264,6 @@ const info = ref(undefined)
 const handleOpenPre = function (row) {
   openPreview.value = true
   info.value = { ...row }
-}
-function handleSend() {
-  proxy.$tab.openPage('/tool/email/sendEmail')
 }
 handleQuery()
 </script>

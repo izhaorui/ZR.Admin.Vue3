@@ -16,19 +16,25 @@
     <el-form-item label="邮件主题" prop="subject">
       <el-input v-model="form.subject"></el-input>
     </el-form-item>
-    <el-form-item label="选择模板" prop="emailTpl">
-      <el-select v-model="form.emailTpl" placeholder="邮件模板" @change="handleSelectTpl" clearable>
-        <el-option v-for="dict in emailTplOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
-      </el-select>
-    </el-form-item>
+    <el-row>
+      <el-form-item label="选择模板" prop="emailTpl">
+        <el-select v-model="form.emailTpl" placeholder="邮件模板" @change="handleSelectTpl" clearable>
+          <el-option v-for="dict in emailTplOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+        </el-select>
+      </el-form-item>
+      <!-- <el-form-item label="发送自己" prop="sendMe">
+        <el-switch v-model="form.sendMe" active-text="是" inactive-text="否"></el-switch>
+      </el-form-item> -->
+      <el-form-item label="是否立即送出" prop="isSend">
+        <el-switch v-model="form.isSend" :active-value="true" :in-active-value="false" active-text="是" inactive-text="否"></el-switch>
+      </el-form-item>
+    </el-row>
+
     <el-form-item label="邮件内容" prop="htmlContent">
       <editor v-model="form.htmlContent" />
     </el-form-item>
     <el-form-item label="发送自己" prop="sendMe">
       <el-switch v-model="form.sendMe" active-text="是" inactive-text="否"></el-switch>
-    </el-form-item>
-    <el-form-item label="是否立即送出" prop="isSend">
-      <el-switch v-model="form.isSend" active-text="是" inactive-text="否"></el-switch>
     </el-form-item>
     <el-form-item label="附件">
       <UploadFile v-model="form.fileUrl" :limit="5" :fileSize="15" :data="{ fileDir: 'email', uploadType: 1 }" />
@@ -38,7 +44,7 @@
     </el-form-item>
   </el-form>
 </template>
-<script setup name="sendEmail">
+<script setup name="sendemail">
 import { sendEmail } from '@/api/common'
 
 import { listEmailTpl, getEmailTpl } from '@/api/system/emailtpl.js'
@@ -78,8 +84,7 @@ function reset() {
       {
         value: ''
       }
-    ],
-    isSend: 0
+    ]
   }
   proxy.resetForm('formRef')
 }

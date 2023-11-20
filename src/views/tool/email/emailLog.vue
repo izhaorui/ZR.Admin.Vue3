@@ -230,18 +230,22 @@ function handlePreview(row) {
 }
 function handleSendEmail() {
   router.push({
-    path: '/tool/email/sendemail'
+    name: 'sendemail'
   })
 }
 
 // 添加&修改 表单提交
 function handleSend(row) {
   const Ids = row.id != undefined ? [row.id] : ids.value
-
-  sendEmail({ idArr: Ids }).then((res) => {
-    getList()
-    proxy.$modal.msgSuccess('发送成功')
-  })
+  proxy.$modal.loading('发送中...')
+  sendEmail({ idArr: Ids })
+    .then(() => {
+      getList() 
+      proxy.$modal.msgSuccess('发送成功')
+    })
+    .finally(() => {
+      proxy.$modal.closeLoading()
+    })
 }
 
 // 删除按钮操作
