@@ -229,7 +229,8 @@ function submitForm() {
         permissionPrefix: info.value.permissionPrefix,
         colNum: info.value.colNum,
         generateRepo: info.value.generateRepo,
-        generateMenu: info.value.generateMenu
+        generateMenu: info.value.generateMenu,
+        useSnowflakeId: info.value.useSnowflakeId
       }
       genTable.params = options
 

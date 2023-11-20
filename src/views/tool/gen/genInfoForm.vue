@@ -117,6 +117,24 @@
         </el-form-item>
       </el-col>
       <el-col :lg="12">
+        <el-form-item prop="useSnowflakeId">
+          <template #label>
+            是否使用雪花id
+            <span>
+              <el-tooltip content="设置成主键的字段将自动设置为雪花id字段" placement="top">
+                <el-icon>
+                  <question-filled />
+                </el-icon>
+              </el-tooltip>
+            </span>
+          </template>
+          <el-radio-group v-model="info.useSnowflakeId">
+            <el-radio :label="true">是</el-radio>
+            <el-radio :label="false">否</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-col>
+      <el-col :lg="12">
         <el-form-item prop="permissionPrefix">
           <template #label>
             权限前缀
@@ -185,9 +203,9 @@
       <el-col :lg="12" v-if="info.genType == '1'">
         <el-form-item prop="generateMenu" label="添加菜单">
           <template #label>
-            添加菜单
+            生成菜单
             <span>
-              <el-tooltip content="将会自动生成目录、菜单、按钮" placement="top">
+              <el-tooltip content="勾选将会自动生成目录、菜单、按钮菜单" placement="top">
                 <el-icon>
                   <question-filled />
                 </el-icon>
