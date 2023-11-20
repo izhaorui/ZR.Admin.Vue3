@@ -27,6 +27,9 @@
     <el-form-item label="发送自己" prop="sendMe">
       <el-switch v-model="form.sendMe" active-text="是" inactive-text="否"></el-switch>
     </el-form-item>
+    <el-form-item label="是否立即送出" prop="isSend">
+      <el-switch v-model="form.isSend" active-text="是" inactive-text="否"></el-switch>
+    </el-form-item>
     <el-form-item label="附件">
       <UploadFile v-model="form.fileUrl" :limit="5" :fileSize="15" :data="{ fileDir: 'email', uploadType: 1 }" />
     </el-form-item>
@@ -41,6 +44,7 @@ import { sendEmail } from '@/api/common'
 import { listEmailTpl, getEmailTpl } from '@/api/system/emailtpl.js'
 import Editor from '@/components/Editor'
 
+const router = useRouter()
 const data = reactive({
   form: {
     fileUrl: '',
@@ -74,7 +78,8 @@ function reset() {
       {
         value: ''
       }
-    ]
+    ],
+    isSend: 0
   }
   proxy.resetForm('formRef')
 }
@@ -120,6 +125,7 @@ function formSubmit() {
         if (res.code == 200) {
           proxy.$message.success('发送成功')
           reset()
+          router.push({ path: '/system/log/EmailLog' })
         }
         proxy.$modal.closeLoading()
       })
