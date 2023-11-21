@@ -269,7 +269,7 @@ const handleOpenPre = function (row) {
   info.value = { ...row }
 }
 function handleSend() {
-  proxy.$tab.openPage('/tool/sendEmail')
+  proxy.$tab.openPage('/tool/email/sendEmail')
 }
 handleQuery()
 </script>

@@ -31,7 +31,12 @@
     <!-- 工具区域 -->
     <el-row :gutter="15" class="mb10">
       <el-col :span="1.5">
-        <el-button type="primary" :disabled="multiple" v-hasPermi="['tool:email:send']" plain icon="upload" @click="handleSend"> 发送 </el-button>
+        <el-button type="primary" v-hasPermi="['tool:email:send']" plain icon="plus" @click="handleSendEmail"> 发送邮件 </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button type="primary" :disabled="multiple" v-hasPermi="['tool:email:send']" plain icon="upload" @click="handleSend">
+          批量发送
+        </el-button>
       </el-col>
 
       <el-col :span="1.5">
@@ -64,9 +69,13 @@
           <DictTag :options="options.isSendOptions" :value="row.isSend"></DictTag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="210" align="center">
+      <el-table-column label="操作" width="200">
         <template #default="scope">
           <el-button type="primary" size="small" icon="view" text @click="handlePreview(scope.row)"> 预览 </el-button>
+
+          <el-button type="danger" size="small" icon="delete" text v-hasPermi="['emaillog:delete']" @click="handleDelete(scope.row)">
+            删除
+          </el-button>
           <el-button
             type="primary"
             size="small"
@@ -76,9 +85,6 @@
             @click="handleSend(scope.row)"
             v-if="scope.row.isSend == 0">
             发送
-          </el-button>
-          <el-button type="danger" size="small" icon="delete" text v-hasPermi="['emaillog:delete']" @click="handleDelete(scope.row)">
-            删除
           </el-button>
         </template>
       </el-table-column>
@@ -97,8 +103,10 @@
 </template>
 
 <script setup name="emaillog">
-import { listEmailLog, sendEmail, delEmailLog, getEmailLog } from '@/api/system/emaillog.js'
+import { listEmailLog, sendEmail, delEmailLog } from '@/api/system/emaillog.js'
 const { proxy } = getCurrentInstance()
+
+const router = useRouter()
 const ids = ref([])
 const loading = ref(false)
 const showSearch = ref(true)
@@ -220,6 +228,12 @@ function handlePreview(row) {
   form.value = row
   open.value = true
 }
+function handleSendEmail() {
+  router.push({
+    path: '/tool/email/sendemail'
+  })
+}
+
 // 添加&修改 表单提交
 function handleSend(row) {
   const Ids = row.id != undefined ? [row.id] : ids.value

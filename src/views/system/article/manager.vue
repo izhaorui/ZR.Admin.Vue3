@@ -135,7 +135,8 @@ function handleQuery() {
 
 /** 新增按钮操作 */
 function handleAdd() {
-  router.replace({ path: '/article/publish' })
+  // router.replace({ path: '/article/publish' })
+  router.push({ path: '/article/publish' })
 }
 
 /** 删除按钮操作 */

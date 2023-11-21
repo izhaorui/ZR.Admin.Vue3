@@ -125,7 +125,7 @@ function formSubmit() {
         if (res.code == 200) {
           proxy.$message.success('发送成功')
           reset()
-          router.push({ path: '/system/log/EmailLog' })
+          router.push({ name: 'emaillog' })
         }
         proxy.$modal.closeLoading()
       })

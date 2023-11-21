@@ -350,7 +350,7 @@ const state = reactive({
     orderNum: [{ required: true, message: '菜单顺序不能为空', trigger: 'blur' }],
     path: [
       { required: true, message: '路由地址不能为空', trigger: 'blur' },
-      { pattern: /^[A-Za-z].+$/, message: '输入格式不正确，字母开头', trigger: 'blur' }
+      { pattern: /^[/A-Za-z].+$/, message: '输入格式不正确，字母开头', trigger: 'blur' }
     ],
     visible: [{ required: true, message: '显示状态不能为空', trigger: 'blur' }]
   },
