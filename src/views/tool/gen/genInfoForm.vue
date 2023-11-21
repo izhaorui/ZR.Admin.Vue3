@@ -30,7 +30,6 @@
           <el-input v-model="info.baseNameSpace" />
         </el-form-item>
       </el-col>
-
       <el-col :lg="12">
         <el-form-item prop="moduleName">
           <template #label>
@@ -106,7 +105,7 @@
           </el-cascader>
         </el-form-item>
       </el-col>
-      <el-col :lg="12">
+      <el-col :lg="24">
         <el-form-item label="默认查询排序字段">
           <el-select v-model="info.sortField" placeholder="请选择字段" class="mr10" clearable="">
             <el-option v-for="item in columns" :key="item.columnId" :label="item.csharpField" :value="item.csharpField"> </el-option>
