@@ -127,7 +127,7 @@
               </el-tooltip>
             </span>
           </template>
-          <el-radio-group v-model="info.useSnowflakeId">
+          <el-radio-group :disabled="info.tplCategory != 'crud'" v-model="info.useSnowflakeId">
             <el-radio :label="true">是</el-radio>
             <el-radio :label="false">否</el-radio>
           </el-radio-group>
