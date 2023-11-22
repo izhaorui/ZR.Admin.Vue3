@@ -180,6 +180,29 @@ export function handleTree(data, id, parentId, children) {
   }
   return tree
 }
+/**
+ * 将自定义数据转换成字典
+ * @param {*} data 数据源
+ * @param {*} dictLabel dictLabel
+ * @param {*} dictValue dictValue
+ */
+export function toDict(data, dictLabel, dictValue) {
+  let config = {
+    label: dictLabel || 'dictLabel',
+    value: dictValue || 'dictValue'
+  }
+
+  var tree = []
+
+  for (let d of data) {
+    let label = d[config.label]
+    let value = d[config.value]
+
+    tree.push({ dictLabel: label, dictValue: value })
+  }
+
+  return tree
+}
 
 /**
  * 参数处理
