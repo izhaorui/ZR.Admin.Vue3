@@ -23,12 +23,12 @@
         <el-button type="primary" plain icon="Plus" @click="handleAdd" v-hasPermi="['system:notice:add']"> {{ $t('btn.add') }}</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success" plain icon="Edit" :disabled="single" @click="handleUpdate" v-hasPermi="['system:notice:edit']">
+        <el-button type="success" plain icon="Edit" :disabled="single" @click="handleUpdate" v-hasPermi="['system:notice:update']">
           {{ $t('btn.edit') }}
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:notice:remove']">
+        <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:notice:delete']">
           {{ $t('btn.delete') }}
         </el-button>
       </el-col>
@@ -56,12 +56,12 @@
           <span>{{ parseTime(scope.row.createTime, 'YYYY-MM-DD') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button text icon="view" @click="handleOpenPre(scope.row)"> 预览</el-button>
-          <el-button text icon="bell" @click="handleNotice(scope.row)" v-hasPermi="['system:notice:edit']"> 通知</el-button>
-          <el-button text icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:notice:edit']"> 修改</el-button>
-          <el-button text icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:notice:remove']"> 删除</el-button>
+          <el-button text icon="bell" @click="handleNotice(scope.row)" v-hasPermi="['system:notice:update']"> 通知</el-button>
+          <el-button text icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:notice:update']"> 修改</el-button>
+          <el-button text icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:notice:delete']"> 删除</el-button>
         </template>
       </el-table-column>
     </el-table>
