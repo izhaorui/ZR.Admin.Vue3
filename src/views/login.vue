@@ -123,6 +123,13 @@ fpPromise
     visitorId = result.visitorId
     userStore.setClientId(visitorId)
   })
+watch(
+  route,
+  (newRoute) => {
+    redirect.value = newRoute.query && newRoute.query.redirect
+  },
+  { immediate: true }
+)
 function handleLogin() {
   proxy.$refs.loginRef.validate((valid) => {
     if (valid) {

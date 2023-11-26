@@ -68,12 +68,17 @@ function close() {
 }
 function change(val) {
   const path = val.path
+  const query = val.query
   if (isHttp(path)) {
     // http(s):// 路径新窗口打开
     const pindex = path.indexOf('http')
     window.open(path.substr(pindex, path.length), '_blank')
   } else {
-    router.push(path)
+    if (query) {
+      router.push({ path: path, query: JSON.parse(query) })
+    } else {
+      router.push(path)
+    }
   }
 
   search.value = ''
@@ -104,7 +109,7 @@ function initFuse(list) {
 }
 // Filter out the routes that can be displayed in the sidebar
 // And generate the internationalized title
-function generateRoutes(routes, basePath = '', prefixTitle = []) {
+function generateRoutes(routes, basePath = '', prefixTitle = [], query = {}) {
   let res = []
 
   for (const r of routes) {
@@ -129,6 +134,9 @@ function generateRoutes(routes, basePath = '', prefixTitle = []) {
         // special case: need to exclude parent router without redirect
         res.push(data)
       }
+    }
+    if (r.query) {
+      data.query = r.query
     }
 
     // recursive child routes
