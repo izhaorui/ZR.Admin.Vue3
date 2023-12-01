@@ -41,7 +41,7 @@
       <el-table-column prop="updateTime" label="更新时间" :show-overflow-tooltip="true" v-if="columns.showColumn('updateTime')" />
       <el-table-column label="操作" width="180">
         <template #default="scope">
-          <el-button icon="view" type="primary" @click="handleOpenPre(scope.row)"></el-button>
+          <el-button icon="view" size="small" type="primary" @click="handleOpenPre(scope.row)"></el-button>
           <el-button
             type="success"
             size="small"
@@ -73,7 +73,7 @@
 
           <el-col :lg="24">
             <el-form-item label="模板内容" prop="content">
-              <editor v-model="form.content" v-if="open"/>
+              <editor v-model="form.content" v-if="open" />
             </el-form-item>
           </el-col>
         </el-row>
