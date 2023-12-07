@@ -114,20 +114,24 @@
 
           <el-col :lg="24">
             <el-form-item label="执行sql语句" prop="sql">
-              <el-input type="textarea" v-model="form.sql" placeholder="请输入执行sql语句" />
+              <code class="hljs" v-html="highlightedCode(form.sql)"></code>
+              <!-- <el-input type="textarea" v-model="form.sql" placeholder="请输入执行sql语句" /> -->
             </el-form-item>
           </el-col>
 
           <el-col :lg="24">
             <el-form-item label="变更前数据" prop="beforeData">
-              <el-input type="textarea" v-model="form.beforeData" placeholder="请输入变更前数据" />
+              <code class="hljs" v-html="highlightedCode(form.beforeData)"></code>
             </el-form-item>
           </el-col>
 
           <el-col :lg="24">
-            <el-form-item label="变更后数据" prop="afterData">
-              <el-input type="textarea" v-model="form.afterData" placeholder="请输入变更后数据" />
+            <el-form-item label="变更后数据">
+              <code class="hljs" v-html="highlightedCode(form.afterData)"></code>
             </el-form-item>
+          </el-col>
+          <el-col :lg="24">
+            <code-diff :old-string="form.beforeData" :new-string="form.afterData" language="json" output-format="side-by-side" />
           </el-col>
 
           <el-col :lg="12">
@@ -158,6 +162,10 @@
 
 <script setup name="sqldifflog">
 import { listSqlDiffLog, delSqlDiffLog } from '@/api/monitor/sqldifflog.js'
+import { CodeDiff } from 'v-code-diff'
+import hljs from 'highlight.js'
+import 'highlight.js/styles/default.css' // 这里有多个样式，自己可以根据需要切换
+
 const { proxy } = getCurrentInstance()
 const ids = ref([])
 const loading = ref(false)
@@ -319,6 +327,9 @@ function handleExport() {
       await proxy.downFile('/monitor/SqlDiffLog/export', { ...queryParams })
     })
 }
-
+function highlightedCode(code) {
+  const result = hljs.highlightAuto(code)
+  return result.value || '&nbsp;'
+}
 handleQuery()
 </script>
