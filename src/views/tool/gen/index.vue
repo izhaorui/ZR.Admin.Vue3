@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form ref="codeform" :inline="true" :model="queryParams">
       <el-form-item label="表名" prop="tableName">
-        <el-input v-model="queryParams.tableName" clearable placeholder="输入要查询的表名" />
+        <el-input v-model="queryParams.tableName" style="width: 200px" clearable placeholder="输入要查询的表名" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="search" @click="getList()">查询</el-button>

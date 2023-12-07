@@ -257,6 +257,24 @@
           </el-checkbox-group>
         </el-form-item>
       </el-col>
+      <el-col :lg="12">
+        <el-form-item>
+          <template #label>
+            是否记录差异化日志
+            <span>
+              <el-tooltip content="表编辑、删除会自动记录差异化日志" placement="top">
+                <el-icon>
+                  <question-filled />
+                </el-icon>
+              </el-tooltip>
+            </span>
+          </template>
+          <el-radio-group v-model="info.enableLog">
+            <el-radio :label="true">是</el-radio>
+            <el-radio :label="false">否</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-col>
     </el-row>
 
     <!-- 树表配置 -->
