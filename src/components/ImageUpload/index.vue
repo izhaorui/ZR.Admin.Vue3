@@ -227,4 +227,7 @@ function copySuccess() {
 .el-upload-list--picture-card {
   --el-upload-list-picture-card-size: unset;
 }
+.el-upload__tip {
+  font-size: 10px;
+}
 </style>
