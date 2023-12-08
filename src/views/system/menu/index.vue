@@ -50,7 +50,13 @@
       ref="listRef"
       :loading="loading"
       :column-config="{ resizable: true }"
-      :tree-config="{}"
+      :tree-config="{
+        parentField: 'parentId',
+        reserve: true
+      }"
+      :row-config="{
+        keyField: 'menuId'
+      }"
       :scroll-y="{ enabled: true, gt: 20 }"
       :data="menuList">
       <vxe-column field="menuName" :title="$t('m.menuName')" tree-node width="160"> </vxe-column>
