@@ -42,6 +42,16 @@
             </template>
           </el-table-column>
           <el-table-column label="前端" align="center" label-class-name="text-info">
+            <template #header>
+              <span>
+                <el-tooltip content="前端表单会显示所有列，如不需要请手动删除即可" placement="top">
+                  <el-icon :size="15">
+                    <questionFilled />
+                  </el-icon>
+                </el-tooltip>
+                前端
+              </span>
+            </template>
             <el-table-column label="列表" width="60" align="center">
               <template #default="scope">
                 <el-checkbox v-model="scope.row.isList"></el-checkbox>
@@ -67,6 +77,16 @@
               </template>
             </el-table-column>
             <el-table-column label="自动填充" width="90" align="center">
+              <template #header>
+                <span>
+                  <el-tooltip content="如果数据库有默认值，选择后会自动插入默认值" placement="top">
+                    <el-icon :size="15">
+                      <questionFilled />
+                    </el-icon>
+                  </el-tooltip>
+                  自动填充
+                </span>
+              </template>
               <template #default="scope">
                 <el-select v-model="scope.row.autoFillType">
                   <el-option label=" " :value="0" />
