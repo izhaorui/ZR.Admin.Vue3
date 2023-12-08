@@ -101,7 +101,7 @@
             </el-form-item>
           </el-col>
           <el-col :lg="24">
-            <el-form-item label="文件目录" prop="storePath">
+            <el-form-item label="存储目录" prop="storePath">
               <template #label>
                 <span>
                   <el-tooltip content="文件目录不填则默认使用本地上传格式：yyyy/MMdd" placement="top">
@@ -109,7 +109,7 @@
                       <questionFilled />
                     </el-icon>
                   </el-tooltip>
-                  文件目录
+                  存储目录
                 </span>
               </template>
               <!-- <el-input v-model="form.storePath" placeholder="请输入文件目录，默认yyyy/MMdd格式" clearable="" auto-complete="" /> -->
@@ -185,7 +185,7 @@
             <el-form-item label="文件名">{{ formView.fileName }}</el-form-item>
           </el-col>
           <el-col :lg="12">
-            <el-form-item label="仓库位置">{{ formView.storePath }}</el-form-item>
+            <el-form-item label="存储目录">{{ formView.storePath }}</el-form-item>
           </el-col>
           <el-col :lg="12">
             <el-form-item label="文件大小">{{ formView.fileSize }}</el-form-item>
@@ -193,9 +193,14 @@
           <el-col :lg="12">
             <el-form-item label="创建人">{{ formView.create_by }}</el-form-item>
           </el-col>
-          <el-col :lg="24" v-if="['.png', '.jpg', '.jpeg'].includes(formView.fileExt)">
+          <el-col :lg="12">
             <el-form-item label="预览">
               <el-image :src="formView.accessUrl" fit="contain" style="width: 100px"></el-image>
+            </el-form-item>
+          </el-col>
+          <el-col :lg="12">
+            <el-form-item label="二维码">
+              <div ref="imgContainerRef" id="imgContainer" class="qrCode"></div>
             </el-form-item>
           </el-col>
           <el-col :lg="24">
@@ -221,6 +226,8 @@
 <script setup name="file">
 import { listSysfile, delSysfile, getSysfile } from '@/api/tool/file.js'
 import { useClipboard } from '@vueuse/core'
+import QRCode from 'qrcodejs2-fixes'
+
 // 选中id数组
 const ids = ref([])
 // 非单个禁用
@@ -380,7 +387,18 @@ function handleView(row) {
     if (code == 200) {
       openView.value = true
       formView.value = data
+      proxy.$nextTick(() => {
+        createQrCode(data.accessUrl)
+      })
     }
+  })
+}
+function createQrCode(url) {
+  document.getElementById('imgContainer').innerHTML = ''
+  new QRCode(document.getElementById('imgContainer'), {
+    text: url,
+    width: 130,
+    height: 130
   })
 }
 // 上传成功方法
@@ -434,5 +452,8 @@ handleQuery()
   height: 32px;
   line-height: 32px;
   border-radius: 16px;
+}
+.qrCode {
+  border: 5px solid var(--el-color-primary);
 }
 </style>
