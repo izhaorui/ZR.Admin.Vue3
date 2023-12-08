@@ -338,7 +338,7 @@
     <el-drawer :title="logTitle" v-model="drawer">
       <el-form :inline="true" @submit.prevent>
         <el-form-item>
-          <el-date-picker v-model="logForm.beginTime" placeholder="请选择时间" :shortcuts="dateOptions" clearable type="date" />
+          <el-date-picker v-model="logForm.beginTime" placeholder="请选择时间"  clearable type="date" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="search" @click="handleJobLog">{{ $t('btn.search') }}</el-button>
