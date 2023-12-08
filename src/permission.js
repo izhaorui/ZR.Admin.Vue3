@@ -7,6 +7,7 @@ import { isHttp } from '@/utils/validate'
 import useUserStore from '@/store/modules/user'
 import useSettingsStore from '@/store/modules/settings'
 import usePermissionStore from '@/store/modules/permission'
+import { getQueryObject } from '@/utils/index'
 NProgress.configure({ showSpinner: false })
 
 const whiteList = ['/login', '/auth-redirect', '/bind', '/register', '/socialLogin', '/error']
@@ -55,8 +56,13 @@ router.beforeEach((to, from, next) => {
       // 在免登录白名单，直接进入
       next()
     } else {
-      console.log('to login')
-      next(`/login?redirect=${encodeURIComponent(to.fullPath)}`) // 否则全部重定向到登录页
+      var toPath = to.fullPath // /index?redirect=/demo
+      var obj = getQueryObject(to.fullPath)
+
+      if (obj.redirect) {
+        toPath = obj.redirect
+      }
+      next(`/login?redirect=${encodeURIComponent(toPath)}`) // 否则全部重定向到登录页
       NProgress.done()
     }
   }
