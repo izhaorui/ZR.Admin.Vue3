@@ -91,16 +91,3 @@
     }
   }
 }
-
-// when menu collapsed
-.el-menu--vertical {
-  // the scroll bar appears when the subMenu is too long
-  > .el-menu--popup {
-    max-height: 100vh;
-    overflow-y: auto;
-
-    &::-webkit-scrollbar {
-      width: 6px;
-    }
-  }
-}
