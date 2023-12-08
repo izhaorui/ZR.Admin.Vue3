@@ -33,14 +33,24 @@
               <el-tag v-for="tag in form.dynamicTags" :key="tag" class="mr10" closable :disable-transitions="false" @close="handleCloseTag(tag)">
                 {{ tag }}
               </el-tag>
-              <el-input v-if="inputVisible" ref="inputRef" v-model="inputValue" @keyup.enter="handleInputConfirm" @blur="handleInputConfirm" />
+              <el-input
+                v-if="inputVisible"
+                style="width: 100px"
+                ref="inputRef"
+                v-model="inputValue"
+                @keyup.enter="handleInputConfirm"
+                @blur="handleInputConfirm" />
 
               <el-button v-else class="button-new-tag" size="small" icon="plus" text @click="showInput">文章标签</el-button>
             </el-form-item>
           </el-col>
 
           <el-form-item label="文章封面">
-            <UploadImage ref="uploadRef" v-model="form.coverUrl" :limit="1" :fileSize="15" :drag="true" />
+            <UploadImage ref="uploadRef" v-model="form.coverUrl" :limit="1" :fileSize="15">
+              <template #icon>
+                <el-icon class="avatar-uploader-icon"><plus /></el-icon>
+              </template>
+            </UploadImage>
           </el-form-item>
           <el-form-item prop="content" label="文章内容">
             <MdEditor v-model="form.content" :onUploadImg="onUploadImg" />

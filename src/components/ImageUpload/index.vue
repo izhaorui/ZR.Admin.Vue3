@@ -17,8 +17,11 @@
       :headers="headers"
       v-model:file-list="fileList"
       :on-preview="handlePictureCardPreview"
+      :style="cssVars"
       :class="{ hide: fileList.length >= limit }">
-      <el-icon class="avatar-uploader-icon"><plus /></el-icon>
+      <slot name="icon">
+        <el-icon class="avatar-uploader-icon"><uploadFilled /></el-icon>
+      </slot>
 
       <template v-slot:tip>
         <div class="el-upload__tip" v-if="showTip">
@@ -63,7 +66,7 @@ const props = defineProps({
   // 图片数量限制
   limit: {
     type: Number,
-    default: 5
+    default: 1
   },
   // 大小限制(MB)
   fileSize: {
@@ -73,7 +76,7 @@ const props = defineProps({
   // 文件类型, 例如['png', 'jpg', 'jpeg']
   fileType: {
     type: Array,
-    default: () => ['png', 'jpg', 'jpeg']
+    default: () => ['png', 'jpg', 'jpeg', 'webp']
   },
   // 是否显示提示
   isShowTip: {
@@ -83,6 +86,12 @@ const props = defineProps({
   // 上传携带的参数
   data: {
     type: Object
+  },
+  style: {
+    type: Object,
+    default: {
+      width: '120px'
+    }
   }
 })
 
@@ -98,7 +107,12 @@ const headers = ref({ Authorization: 'Bearer ' + getToken() })
 const fileList = ref([])
 const showTip = computed(() => props.isShowTip && (props.fileType || props.fileSize))
 const uploadData = computed(() => props.data)
-
+const cssVars = computed(() => {
+  return {
+    '--el-upload-picture-card-size': props.style.width,
+    '--el-upload-list-picture-card-size': props.style.width
+  }
+})
 watch(
   () => props.modelValue,
   (val) => {
@@ -206,3 +220,11 @@ function copySuccess() {
   proxy.$modal.msgSuccess('复制成功')
 }
 </script>
+<style>
+.el-upload--picture-card {
+  --el-upload-picture-card-size: unset;
+}
+.el-upload-list--picture-card {
+  --el-upload-list-picture-card-size: unset;
+}
+</style>
