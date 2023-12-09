@@ -1,5 +1,4 @@
 <template>
-  <!-- 导入表 -->
   <el-dialog title="导入表" v-model="visible" width="900px" top="5vh" append-to-body>
     <el-form ref="queryRef" :inline="true" :rules="rules" :model="queryParams">
       <el-form-item label="数据库" prop="dbName">
@@ -21,8 +20,9 @@
         :data="dbTableList"
         highlight-current-row
         height="300px"
+        :row-key="getRowKey"
         @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column type="selection" :reserve-selection="true" width="55"></el-table-column>
         <el-table-column prop="name" label="表名" sortable="custom" width="380" />
         <el-table-column prop="description" label="表描述" />
       </el-table>
@@ -30,7 +30,7 @@
     </el-row>
     <template #footer>
       <el-button text @click="visible = false">取 消</el-button>
-      <el-button type="primary" @click="handleImportTable">确 定</el-button>
+      <el-button type="primary" :disabled="tables.length <= 0" @click="handleImportTable">确 定</el-button>
     </template>
   </el-dialog>
 </template>
@@ -67,8 +67,7 @@ function clickRow(row) {
 }
 /** 多选框选中数据 */
 function handleSelectionChange(selection) {
-  tables.value = selection.map((item) => item.name)
-  console.log(tables.value)
+  tables.value = selection
 }
 /** 查询表数据 */
 function getList() {
@@ -95,7 +94,7 @@ function resetQuery() {
 /** 导入按钮操作 */
 function handleImportTable() {
   importTable({
-    tables: tables.value.join(','),
+    tables: tables.value,
     dbName: queryParams.dbName
   }).then((res) => {
     proxy.$modal.msgSuccess(res.msg)
@@ -105,7 +104,9 @@ function handleImportTable() {
     }
   })
 }
-
+function getRowKey(row) {
+  return row.name //行的唯一id
+}
 defineExpose({
   show
 })
