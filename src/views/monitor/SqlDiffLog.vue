@@ -328,7 +328,7 @@ function handleExport() {
     })
 }
 function highlightedCode(code) {
-  const result = hljs.highlightAuto(code)
+  const result = hljs.highlightAuto(code || '')
   return result.value || '&nbsp;'
 }
 handleQuery()

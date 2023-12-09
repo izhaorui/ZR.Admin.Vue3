@@ -65,7 +65,7 @@
           <span>{{ scope.row.loginTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" width="100" align="center">
         <template #default="scope">
           <el-button type="danger" text plain icon="delete" @click="handleDelete(scope.row)">删除</el-button>
         </template>

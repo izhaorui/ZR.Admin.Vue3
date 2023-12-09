@@ -1,4 +1,4 @@
-import request from '@/utils/request';
+import request from '@/utils/request'
 
 /**
  * 获取数据库
@@ -6,7 +6,7 @@ import request from '@/utils/request';
 export function codeGetDBList() {
   return request({
     url: 'tool/gen/getDbList',
-    method: 'get',
+    method: 'get'
   })
 }
 /**
@@ -16,7 +16,7 @@ export function listDbTable(data) {
   return request({
     url: 'tool/gen/getTableList',
     method: 'get',
-    params: data,
+    params: data
   })
 }
 /**
@@ -26,7 +26,7 @@ export async function codeGenerator(data) {
   return await request({
     url: 'tool/gen/genCode',
     method: 'POST',
-    data: data,
+    data: data
   })
 }
 
@@ -38,7 +38,7 @@ export async function codeGenerator(data) {
 export function queryColumnInfo(tableId) {
   return request({
     url: 'tool/gen/Column/' + tableId,
-    method: 'GET',
+    method: 'GET'
   })
 }
 
@@ -64,7 +64,7 @@ export function importTable(data) {
   return request({
     url: '/tool/gen/importTable',
     method: 'post',
-    params: data
+    data: data
   })
 }
 // 删除表数据
@@ -98,6 +98,6 @@ export function synchDb(tableId, data) {
   return request({
     url: '/tool/gen/synchDb/' + tableId,
     method: 'get',
-		params: data
+    params: data
   })
 }
