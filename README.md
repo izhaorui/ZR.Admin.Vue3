@@ -19,7 +19,7 @@
 
 ## 🍿在线体验
 - 官方文档：http://www.izhaorui.cn/doc
-- 体验地址：http://www.izhaorui.cn/vue3
+- 体验地址：http://demo.izhaorui.cn/vue3
 - 管理员：admin
 - 密  码：123456
 
