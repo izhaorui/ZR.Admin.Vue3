@@ -6,6 +6,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="search" @click="getList()">查询</el-button>
+        <el-button icon="refresh" @click="handleReset()">重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -75,7 +76,7 @@
     <pagination v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" v-model:total="total" @pagination="getList" />
 
     <!-- 预览界面 -->
-    <zr-dialog fullScreen v-model="preview.open" width="80%" top="5vh" append-to-body>
+    <zr-dialog v-model="preview.open" width="80%" top="5vh" append-to-body>
       <el-tabs v-model="preview.activeName">
         <el-tab-pane v-for="(item, key) in preview.data" :label="item.title" :id="key" :name="key.toString()" :key="key">
           {{ item.path }}
@@ -167,18 +168,18 @@ function handleGenTable(row) {
         tableName: currentSelected.value.name,
         VueVersion: 3
       })
-        .then((res) => {
+        .then(async (res) => {
           const { data } = res
           showGenerate.value = false
           if (row.genType === '1') {
             proxy.$modal.msgSuccess('成功生成到自定义路径')
           } else {
             proxy.$modal.msgSuccess('恭喜你，代码生成完成！')
-            proxy.download(data.path)
+            // proxy.download(data.path)
+            await proxy.downFile('/common/downloadFile', { path: data.path })
           }
-          proxy.$modal.closeLoading()
         })
-        .catch((erre) => {
+        .finally(() => {
           proxy.$modal.closeLoading()
         })
     } else {
@@ -291,6 +292,10 @@ function handleCommand(command, row) {
       handleSynchDb(row)
       break
   }
+}
+function handleReset() {
+  proxy.resetForm('codeform')
+  handleQuery()
 }
 getList()
 </script>
