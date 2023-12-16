@@ -84,7 +84,7 @@
           <h4>{{ $t('layout.frontendTechnology') }}</h4>
           <ul>
             <li>Vue3</li>
-            <li>Vuex</li>
+            <li>Pinia</li>
             <li>Element plus</li>
             <li>Axios</li>
             <li>Sass</li>

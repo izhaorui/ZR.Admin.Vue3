@@ -71,7 +71,7 @@
 import { addArticle, updateArticle, getArticle } from '@/api/article/article.js'
 import { treelistArticleCategory } from '@/api/article/articlecategory.js'
 import { upload } from '@/api/common.js'
-import MdEditor from 'md-editor-v3'
+import { MdEditor } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 
 const { proxy } = getCurrentInstance()

@@ -4,6 +4,7 @@
   "description": "ZRAdmin.NET管理系统",
   "author": "ZR",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build:prod": "vite build",
@@ -15,12 +16,12 @@
     "url": "https://gitee.com/izory/ZrAdminNetCore"
   },
   "dependencies": {
-    "@element-plus/icons-vue": "^0.2.7",
-    "@microsoft/signalr": "^6.0.21",
-    "@vueuse/core": "^8.9.4",
+    "@element-plus/icons-vue": "^2.3.1",
+    "@microsoft/signalr": "^8.0.0",
+    "@vueuse/core": "^10.7.0",
     "@wangeditor/editor": "^5.1.1",
     "@wangeditor/editor-for-vue": "^5.1.11",
-    "axios": "^0.27.2",
+    "axios": "^1.6.2",
     "countup.js": "^2.1.0",
     "crypto-js": "^4.1.1",
     "echarts": "5.2.2",
@@ -30,7 +31,7 @@
     "highlight.js": "^11.5.1",
     "js-cookie": "3.0.1",
     "jsencrypt": "3.2.1",
-    "md-editor-v3": "^1.11.11",
+    "md-editor-v3": "^4.9.0",
     "nprogress": "0.2.0",
     "pinia": "^2.1.6",
     "pinia-plugin-persistedstate": "^3.2.0",
@@ -38,7 +39,7 @@
     "qs": "^6.11.0",
     "sortablejs": "^1.15.0",
     "v-code-diff": "^1.8.0",
-    "vue": "^3.3.4",
+    "vue": "^3.3.11",
     "vue-clipboard3": "^2.0.0",
     "vue-cropper": "1.0.2",
     "vue-i18n": "9.2.2",
@@ -47,15 +48,15 @@
     "xe-utils": "^3.5.13"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue": "^4.5.2",
     "@vue/compiler-sfc": "^3.3.4",
     "consola": "^3.2.3",
-    "sass": "1.45.0",
-    "unplugin-auto-import": "0.5.3",
-    "vite": "^4.3.9",
-    "vite-plugin-compression": "^0.3.6",
+    "sass": "^1.69.5",
+    "unplugin-auto-import": "^0.17.2",
+    "vite": "^5.0.10",
+    "vite-plugin-compression": "^0.5.1",
     "vite-plugin-style-import": "^2.0.0",
-    "vite-plugin-svg-icons": "1.0.5",
+    "vite-plugin-svg-icons": "^2.0.1",
     "vite-plugin-vue-setup-extend": "^0.4.0"
   }
 }
