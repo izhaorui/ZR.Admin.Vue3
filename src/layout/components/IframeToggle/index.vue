@@ -1,13 +1,10 @@
 <template>
-  <transition-group>
-    <inner-link
-      v-for="(item, index) in tagsViewStore.iframeViews"
-      :key="item.path"
-      :iframeId="'iframe' + index"
-      v-show="route.path === item.path"
-      :src="iframeUrl(item.meta.link, item.query)">
-    </inner-link>
-  </transition-group>
+  <inner-link
+    v-for="(item, index) in tagsViewStore.iframeViews"
+    :key="item.path"
+    :iframeId="'iframe' + index"
+    v-show="route.path === item.path"
+    :src="iframeUrl(item.meta.link, item.query)"></inner-link>
 </template>
 
 <script setup>
