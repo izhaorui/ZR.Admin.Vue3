@@ -77,9 +77,18 @@
       <el-table-column prop="storePath" label="存储目录"></el-table-column>
       <el-table-column prop="create_by" label="操作人" align="center" />
       <el-table-column prop="create_time" label="创建日期" align="center" width="150" />
-      <el-table-column label="操作" align="center" width="120">
+      <el-table-column label="操作" align="center" width="160">
         <template #default="scope">
           <el-button text size="small" icon="view" title="查看" @click="handleView(scope.row)"></el-button>
+
+          <el-button
+            text
+            size="small"
+            icon="download"
+            title="下载"
+            v-hasPermi="['tool:file:download']"
+            v-if="scope.row.storeType == 1"
+            @click="handleDown(scope.row)"></el-button>
           <el-button class="copy-btn-main" icon="document-copy" title="复制" text size="small" @click="copyText(scope.row.accessUrl)"> </el-button>
           <el-button v-hasPermi="['tool:file:delete']" title="删除" text size="small" icon="delete" @click="handleDelete(scope.row)"> </el-button>
         </template>
@@ -426,7 +435,9 @@ function submitUpload() {
     }
   })
 }
-
+async function handleDown(item) {
+  await proxy.downFile('/common/downloadFile', { fileId: item.id })
+}
 const { copy, isSupported } = useClipboard()
 const copyText = async (val) => {
   if (isSupported) {
