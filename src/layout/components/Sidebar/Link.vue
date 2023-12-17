@@ -10,11 +10,18 @@ import { isExternal } from '@/utils/validate'
 const props = defineProps({
   to: {
     type: [String, Object],
-    required: true,
+    required: true
   },
+  data: {
+    type: [Object]
+  }
 })
 
 const isExt = computed(() => {
+  const path = props.data?.path
+  if (path && path.startsWith('/link')) {
+    return true
+  }
   return isExternal(props.to)
 })
 
@@ -30,11 +37,11 @@ function linkProps() {
     return {
       href: props.to,
       target: '_blank',
-      rel: 'noopener',
+      rel: 'noopener'
     }
   }
   return {
-    to: props.to,
+    to: props.to
   }
 }
 </script>

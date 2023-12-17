@@ -21,6 +21,21 @@ const props = defineProps({
     default: '300px'
   }
 })
+const xData = ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+const data = [79, 52, 200, 334, 390, 330, 220]
+const color = ['#fa796f', '#54c1fb', '#ca6cd4', '#59dcc1', '#09a4ea', '#e98f4d', '#ea8e49']
+const dataOptions = []
+
+data.forEach((item, index) => {
+  let obj = {
+    value: data[index],
+    itemStyle: {
+      color: color[index]
+    }
+  }
+  dataOptions.push(obj)
+})
+
 function initChart() {
   chart = echarts.init(proxy.$refs.chartRef, 'macarons')
 
@@ -33,7 +48,11 @@ function initChart() {
       }
     },
     title: {
-      text: 'echats标题'
+      text: '销量统计',
+      // 文字属性设置
+      textStyle: {
+        color: '#00e4ff'
+      }
     },
     grid: {
       top: 60,
@@ -45,7 +64,7 @@ function initChart() {
     xAxis: [
       {
         type: 'category',
-        data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子'],
+        data: xData,
         axisTick: {
           alignWithLabel: true
         }
@@ -65,7 +84,7 @@ function initChart() {
         type: 'bar',
         stack: 'vistors',
         barWidth: '40%',
-        data: [79, 52, 200, 334, 390, 330, 220],
+        data: dataOptions,
         animationDuration,
         label: {
           show: true

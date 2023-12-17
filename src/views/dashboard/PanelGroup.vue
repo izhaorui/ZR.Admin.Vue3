@@ -6,8 +6,6 @@
           <svg-icon name="peoples" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <!-- <div class="card-panel-text" v-waves>{{$t('layout.onlineUsers')}}</div>
-          <div id="onlineNum" class="card-panel-num">{{ state.onlineUserNum }}</div> -->
           <el-statistic :title="$t('layout.onlineUsers')" :value="state.onlineNum" />
         </div>
       </div>
@@ -18,8 +16,6 @@
           <svg-icon name="message" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <!-- <div class="card-panel-text" v-waves>{{ $t('layout.message') }}</div>
-          <div class="card-panel-num" id="messageNum">{{ state.chatNum }}</div> -->
           <el-statistic :value="state.order" :title="$t('layout.message')"> </el-statistic>
         </div>
       </div>
@@ -30,8 +26,6 @@
           <svg-icon name="money" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <!-- <div class="card-panel-text" v-waves>{{ $t('layout.amount') }}</div>
-          <div id="amount" class="card-panel-num">{{ state.amount }}</div> -->
           <el-statistic :value="state.order" :title="$t('layout.amount')">
             <template #title>
               <div style="display: inline-flex; align-items: center">{{ $t('layout.amount') }}</div>
@@ -46,8 +40,6 @@
           <svg-icon name="shopping" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <!-- <div class="card-panel-text" v-waves>{{ $t('layout.order') }}</div>
-          <div id="order" class="card-panel-num">{{ state.order }}</div> -->
           <el-statistic :value="state.order" :title="$t('layout.order')">
             <template #title>
               <div style="display: inline-flex; align-items: center">{{ $t('layout.order') }}</div>
@@ -79,10 +71,8 @@
 </template>
 
 <script setup>
-import { CountUp } from 'countup.js'
 import useSocketStore from '@/store/modules/socket'
 const emit = defineEmits()
-const { proxy } = getCurrentInstance()
 
 const state = reactive({
   chatNum: 1390,
@@ -91,12 +81,6 @@ const state = reactive({
   }),
   amount: 99998,
   order: 1999
-})
-onMounted(() => {
-  new CountUp('messageNum', state.chatNum).start(),
-    new CountUp('onlineNum', state.onlineNum).start(),
-    new CountUp('amount', state.amount).start(),
-    new CountUp('order', state.order).start()
 })
 function handleSetLineChartData(type) {
   emit('handleSetLineChartData', type)

@@ -31,11 +31,10 @@
     .sidebar {
       transform: translate(0);
     }
-    .sidebar .svg-icon {
-      margin-right: 5px;
-    }
   }
-
+  .sidebar .svg-icon {
+    margin-right: 5px;
+  }
   // 隐藏侧边栏样式
   .hideSidebar {
     .el-aside {
