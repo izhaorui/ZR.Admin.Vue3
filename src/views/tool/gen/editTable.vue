@@ -236,24 +236,7 @@ function submitForm() {
     if (validateResult) {
       const genTable = Object.assign({}, info.value)
       genTable.columns = columns.value
-
-      // 额外参数拼接
-      var options = {
-        treeCode: info.value.treeCode,
-        treeName: info.value.treeName,
-        treeParentCode: info.value.treeParentCode,
-        parentMenuId: info.value.parentMenuId,
-        sortField: info.value.sortField,
-        sortType: info.value.sortType,
-        checkedBtn: info.value.checkedBtn,
-        permissionPrefix: info.value.permissionPrefix,
-        colNum: info.value.colNum,
-        generateRepo: info.value.generateRepo,
-        generateMenu: info.value.generateMenu,
-        useSnowflakeId: info.value.useSnowflakeId,
-        enableLog: info.value.enableLog
-      }
-      genTable.params = options
+      genTable.params = info.value //单独赋值给额外参数
 
       updateGenTable(genTable)
         .then((res) => {

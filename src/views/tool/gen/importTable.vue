@@ -86,16 +86,13 @@ function handleQuery() {
   queryParams.pageNum = 1
   getList()
 }
-/** 重置按钮操作 */
-function resetQuery() {
-  proxy.resetForm('queryRef')
-  handleQuery()
-}
+
 /** 导入按钮操作 */
 function handleImportTable() {
   importTable({
     tables: tables.value,
-    dbName: queryParams.dbName
+    dbName: queryParams.dbName,
+    frontTpl: 2
   }).then((res) => {
     proxy.$modal.msgSuccess(res.msg)
     if (res.code === 200) {
