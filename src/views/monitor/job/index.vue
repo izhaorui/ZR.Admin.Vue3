@@ -9,7 +9,13 @@
       <el-form-item prop="queryText">
         <el-input v-model="queryParams.queryText" placeholder="请输入计划任务名称" clearable @keyup.enter="handleQuery" @clear="handleQuery" />
       </el-form-item>
-      <el-form-item>
+      <el-form-item prop="isStart">
+        <el-radio-group v-model="queryParams.isStart" @change="handleQuery()">
+          <el-radio-button label="">全部</el-radio-button>
+          <el-radio-button :label="item.dictValue" v-for="item in options.isStartOptions">{{ item.dictLabel }}</el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item prop="viewSwitch">
         <el-radio-group v-model="viewSwitch">
           <el-radio-button label="1">表格</el-radio-button>
           <el-radio-button label="2">卡片</el-radio-button>
@@ -338,7 +344,7 @@
     <el-drawer :title="logTitle" v-model="drawer">
       <el-form :inline="true" @submit.prevent>
         <el-form-item>
-          <el-date-picker v-model="logForm.beginTime" placeholder="请选择时间"  clearable type="date" />
+          <el-date-picker v-model="logForm.beginTime" placeholder="请选择时间" clearable type="date" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="search" @click="handleJobLog">{{ $t('btn.search') }}</el-button>
@@ -385,7 +391,8 @@ const queryParams = reactive({
   pageSize: 10,
   orderby: '',
   sort: '',
-  taskType: undefined
+  taskType: undefined,
+  isStart: undefined
 })
 const columns = ref([
   // { visible: true, prop: 'name', label: '名称' },
