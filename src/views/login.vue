@@ -23,7 +23,13 @@
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="loginForm.password" type="password" auto-complete="off" :placeholder="$t('login.password')" @keyup.enter="handleLogin">
+          <el-input
+            v-model="loginForm.password"
+            show-password
+            type="password"
+            auto-complete="off"
+            :placeholder="$t('login.password')"
+            @keyup.enter="handleLogin">
             <template #prefix>
               <svg-icon name="password" class="input-icon" />
             </template>
