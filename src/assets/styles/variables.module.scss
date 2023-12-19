@@ -58,6 +58,16 @@ html.dark {
   .current-row {
     color: #e65d6e;
   }
+
+  // wangEditor
+  --w-e-textarea-bg-color: #111;
+  --w-e-textarea-color: #fff;
+
+  --w-e-toolbar-color: #fff;
+  --w-e-toolbar-bg-color: #111;
+  --w-e-toolbar-active-color: #ccc;
+  --w-e-toolbar-active-bg-color: #111;
+  /* ...其他... */
 }
 html.cafe {
   filter: sepia(0.9) hue-rotate(315deg) brightness(0.9);

@@ -217,6 +217,7 @@ watch(
 watch(
   () => mode,
   (val) => {
+    settingsStore.changeSetting({ key: 'codeMode', value: val.value })
     if (val.value === 'dark') {
       handleTheme('')
     }

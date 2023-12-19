@@ -13,7 +13,8 @@ const {
   showFooter,
   showWatermark,
   watermarkText,
-  tagsViewPersist
+  tagsViewPersist,
+  codeMode
 } = defaultSettings
 
 const storageSetting = JSON.parse(localStorage.getItem('layout-setting')) || ''
@@ -31,7 +32,8 @@ const useSettingsStore = defineStore('settings', {
     showFooter: storageSetting.showFooter === undefined ? showFooter : storageSetting.showFooter,
     showWatermark: storageSetting.showWatermark === undefined ? showWatermark : storageSetting.showWatermark,
     watermarkText: storageSetting.watermarkText === undefined ? watermarkText : storageSetting.watermarkText,
-    tagsViewPersist: storageSetting.tagsViewPersist === undefined ? tagsViewPersist : storageSetting.tagsViewPersist
+    tagsViewPersist: storageSetting.tagsViewPersist === undefined ? tagsViewPersist : storageSetting.tagsViewPersist,
+    codeMode: storageSetting.codeMode === undefined ? codeMode : storageSetting.codeMode
   }),
   actions: {
     // 修改布局设置

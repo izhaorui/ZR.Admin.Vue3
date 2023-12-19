@@ -53,7 +53,7 @@
             </UploadImage>
           </el-form-item>
           <el-form-item prop="content" label="文章内容">
-            <MdEditor v-model="form.content" :onUploadImg="onUploadImg" />
+            <MdEditor v-model="form.content" :theme="settingsStore.codeMode" :onUploadImg="onUploadImg" />
           </el-form-item>
 
           <el-col :lg="24">
@@ -70,10 +70,12 @@
 <script setup name="articlepublish">
 import { addArticle, updateArticle, getArticle } from '@/api/article/article.js'
 import { treelistArticleCategory } from '@/api/article/articlecategory.js'
+import useSettingsStore from '@/store/modules/settings'
 import { upload } from '@/api/common.js'
 import { MdEditor } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 
+const settingsStore = useSettingsStore()
 const { proxy } = getCurrentInstance()
 const route = useRoute()
 // 文章目录下拉框
@@ -98,7 +100,7 @@ const data = reactive({
     content: [{ required: true, message: '内容不能为空', trigger: 'blur' }]
   }
 })
-
+console.log(settingsStore.codeMode)
 const { form, rules } = toRefs(data)
 
 const cid = route.query.cid
