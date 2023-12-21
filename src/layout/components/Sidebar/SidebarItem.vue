@@ -31,7 +31,12 @@
           v-if="item.meta.title && item.meta.isNew == 1 && defaultSettings.menuShowNew" />
       </template>
 
-      <sidebar-item v-for="child in item.children" :key="child.path" :is-nest="true" :item="child" :base-path="resolvePath(child.path)" />
+      <sidebar-item
+        v-for="(child, index) in item.children"
+        :key="child.path + index"
+        :is-nest="true"
+        :item="child"
+        :base-path="resolvePath(child.path)" />
     </el-sub-menu>
   </template>
 </template>
