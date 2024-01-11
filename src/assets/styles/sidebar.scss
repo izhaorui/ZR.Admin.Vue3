@@ -57,17 +57,17 @@
         font-size: medium;
         margin-right: 0;
       }
-      .el-sub-menu {
-        & > .el-sub-menu__title {
-          & > span {
-            height: 3000px;
-            width: 0;
-            overflow: hidden;
-            visibility: hidden;
-            display: inline-block;
-          }
-        }
-      }
+      // .el-sub-menu {
+      //   & > .el-sub-menu__title {
+      //     & > span {
+      //       height: 3000px;
+      //       width: 0;
+      //       overflow: hidden;
+      //       visibility: hidden;
+      //       display: inline-block;
+      //     }
+      //   }
+      // }
     }
   }
 

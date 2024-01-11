@@ -1,17 +1,7 @@
 <template>
   <el-container :class="classObj" class="app-layout" :style="{ '--current-color': theme }">
-    <!-- 移动端打开菜单遮罩 -->
-    <el-drawer
-      v-if="device === 'mobile'"
-      :size="220"
-      v-model="menuDrawer"
-      :with-header="false"
-      modal-class="sidebar-mobile"
-      direction="ltr"
-      @close="close">
-      <sidebar />
-    </el-drawer>
-    <sidebar v-else-if="!sidebar.hide" />
+    <div v-if="classObj.mobile && classObj.openSidebar" class="drawer__background" @click="handleOutsideClick"></div>
+    <sidebar />
 
     <el-container class="main-container flex-center" :class="{ hasTagsView: needTagsView, sidebarHide: sidebar.hide }">
       <el-header :class="{ 'fixed-header': fixedHeader }">
@@ -48,23 +38,17 @@ import iframeToggle from './components/IframeToggle/index'
 import useAppStore from '@/store/modules/app'
 import useSettingsStore from '@/store/modules/settings'
 import useTagsViewStore from '@/store/modules/tagsView'
+const appStore = useAppStore()
 
 const dev = import.meta.env.DEV
 const settingsStore = useSettingsStore()
 const theme = computed(() => settingsStore.theme)
-const sidebar = computed(() => useAppStore().sidebar)
-const device = computed(() => useAppStore().device)
+const sidebar = computed(() => appStore.sidebar)
+const device = computed(() => appStore.device)
 const needTagsView = computed(() => settingsStore.tagsView)
 const fixedHeader = computed(() => settingsStore.fixedHeader)
 const showFooter = computed(() => settingsStore.showFooter)
-const menuDrawer = computed({
-  get: () => useAppStore().sidebar.opened,
-  set: (val) => {
-    if (device.value !== 'mobile') {
-      useAppStore().toggleSideBar(val)
-    }
-  }
-})
+
 // appMain 模块 start
 const route = useRoute()
 useTagsViewStore().addCachedView(route)
@@ -79,18 +63,22 @@ const classObj = computed(() => ({
   mobile: device.value === 'mobile'
 }))
 
-const { width, height } = useWindowSize()
+const { width } = useWindowSize()
 const WIDTH = 792 // refer to Bootstrap's responsive design
 
 watchEffect(() => {
-  if (device.value === 'mobile' && sidebar.value.opened) {
-    useAppStore().closeSideBar()
-  }
   if (width.value - 1 < WIDTH) {
-    useAppStore().toggleDevice('mobile')
+    appStore.toggleDevice('mobile')
     // useAppStore().closeSideBar()
   } else {
     useAppStore().toggleDevice('desktop')
+
+    if (width.value >= 1200) {
+      //大屏
+      appStore.sidebar.opened = true
+    } else {
+      appStore.closeSideBar()
+    }
   }
 })
 
@@ -98,8 +86,10 @@ const settingRef = ref(null)
 function setLayout() {
   settingRef.value.openSetting()
 }
-function close() {
-  useAppStore().closeSideBar()
+function handleOutsideClick() {
+  if (device.value === 'mobile' && sidebar.value.opened) {
+    useAppStore().closeSideBar()
+  }
 }
 </script>
 
@@ -177,5 +167,14 @@ function close() {
   .el-header {
     --el-header-height: var(--el-header-height) + var(--el-tags-height) !important;
   }
+}
+.drawer__background {
+  position: absolute;
+  top: 0;
+  z-index: 999;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  opacity: 0.3;
 }
 </style>

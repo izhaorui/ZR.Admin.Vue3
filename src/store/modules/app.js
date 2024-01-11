@@ -1,10 +1,10 @@
-import Cookies from 'js-cookie'
+// import Cookies from 'js-cookie'
 import cache from '@/plugins/cache'
 import defaultSettings from '@/settings'
 const useAppStore = defineStore('app', {
   state: () => ({
     sidebar: {
-      opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
+      opened: false, // Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
       // withoutAnimation: false,
       hide: false
     },
@@ -14,18 +14,9 @@ const useAppStore = defineStore('app', {
   }),
   actions: {
     toggleSideBar() {
-      if (this.sidebar.hide) {
-        return false
-      }
       this.sidebar.opened = !this.sidebar.opened
-      if (this.sidebar.opened) {
-        Cookies.set('sidebarStatus', 1)
-      } else {
-        Cookies.set('sidebarStatus', 0)
-      }
     },
     closeSideBar() {
-      Cookies.set('sidebarStatus', 0)
       this.sidebar.opened = false
     },
     toggleDevice(device) {
