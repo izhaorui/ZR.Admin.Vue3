@@ -44,7 +44,11 @@
               <el-button v-else class="button-new-tag" size="small" icon="plus" text @click="showInput">文章标签</el-button>
             </el-form-item>
           </el-col>
-
+          <el-col :lg="24">
+            <el-form-item prop="abstractText" label="文章摘要">
+              <el-input v-model="form.abstractText" type="textarea" show-word-limit maxlength="100" placeholder="请输入文章摘要（必须）" />
+            </el-form-item>
+          </el-col>
           <el-form-item label="文章封面">
             <UploadImage ref="uploadRef" v-model="form.coverUrl" :limit="1" :fileSize="15">
               <template #icon>
@@ -93,11 +97,13 @@ const data = reactive({
     content: undefined,
     status: undefined,
     categoryId: undefined,
-    isPublic: 1
+    isPublic: 1,
+    abstractText: undefined
   },
   rules: {
     title: [{ required: true, message: '标题不能为空', trigger: 'blur' }],
-    content: [{ required: true, message: '内容不能为空', trigger: 'blur' }]
+    content: [{ required: true, message: '内容不能为空', trigger: 'blur' }],
+    abstractText: [{ required: true, message: '摘要不能为空', trigger: 'blur' }]
   }
 })
 console.log(settingsStore.codeMode)

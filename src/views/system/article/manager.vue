@@ -49,7 +49,7 @@
       <el-table-column prop="fmt_type" label="编辑器类型" width="100"> </el-table-column>
       <el-table-column prop="tags" label="标签" width="100" :show-overflow-tooltip="true"> </el-table-column>
       <el-table-column prop="hits" label="点击量" width="80" align="center"> </el-table-column>
-      <!-- <el-table-column prop="content" label="文章内容" :show-overflow-tooltip="true"> </el-table-column> -->
+      <el-table-column prop="abstractText" label="文章摘要" :show-overflow-tooltip="true"> </el-table-column>
       <el-table-column sortable prop="status" align="center" label="状态" width="90">
         <template #default="scope">
           <el-tag :type="scope.row.status == '2' ? 'danger' : 'success'" disable-transitions
@@ -63,7 +63,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间" width="128" :show-overflow-tooltip="true"> </el-table-column>
-      <el-table-column label="操作" align="center" width="230">
+      <el-table-column label="操作" align="center" width="210" fixed="right">
         <template #default="scope">
           <el-button text size="small" icon="view" @click="handleView(scope.row)">查看</el-button>
           <el-button text size="small" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:article:update']">编辑</el-button>
