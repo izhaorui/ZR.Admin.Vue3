@@ -1,25 +1,55 @@
 <template>
   <div class="app-container">
     <el-row :gutter="24" class="mb10">
-      <el-alert title="本项目文章管理只提供基础的后端文章管理模块，文章的浏览自行实现。文章浏览地址在'系统管理->参数配置'" type="success"
-    /></el-row>
-    <el-row :gutter="24">
-      <!-- :model属性用于表单验证使用 比如下面的el-form-item 的 prop属性用于对表单值进行验证操作 -->
-      <el-form :model="queryParams" label-position="left" inline ref="queryForm" label-width="100px" v-show="showSearch" @submit.prevent>
-        <el-form-item label="文章标题" prop="title">
-          <el-input v-model="queryParams.title" placeholder="请输入文章标题" />
-        </el-form-item>
-        <el-form-item label="文章状态" prop="status">
-          <el-select v-model="queryParams.status">
-            <el-option v-for="item in statusOptions" :key="item.dictValue" :label="item.dictLabel" :value="item.dictValue"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
-          <el-button icon="refresh" @click="resetQuery">重置</el-button>
-        </el-form-item>
-      </el-form>
+      <el-alert title="本项目文章管理只提供基础的后端文章管理模块，文章的浏览自行实现。文章浏览地址在'系统管理->参数配置'" type="success" />
     </el-row>
+
+    <el-form :model="queryParams" label-position="left" inline ref="queryForm" v-show="showSearch" @submit.prevent>
+      <el-form-item label="标题" prop="title">
+        <el-input v-model="queryParams.title" placeholder="请输入标题" />
+      </el-form-item>
+      <el-form-item label="摘要" prop="abstractText">
+        <el-input v-model="queryParams.abstractText" placeholder="请输入摘要" />
+      </el-form-item>
+      <el-form-item label="分类" prop="categoryId">
+        <el-cascader
+          class="w100"
+          :options="categoryOptions"
+          :props="{ checkStrictly: true, value: 'categoryId', label: 'name', emitPath: false }"
+          placeholder="请选择分类"
+          clearable
+          v-model="queryParams.categoryId" />
+      </el-form-item>
+
+      <el-form-item prop="status">
+        <el-radio-group v-model="queryParams.status" @change="handleQuery()">
+          <el-radio-button label="">全部</el-radio-button>
+          <el-radio-button v-for="item in statusOptions" :key="item.dictValue" :label="item.dictValue">
+            {{ item.dictLabel }}
+          </el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="是否公开" prop="isPublic">
+        <el-radio-group v-model="queryParams.isPublic" @change="handleQuery()">
+          <el-radio-button label="">全部</el-radio-button>
+          <el-radio-button v-for="item in options.isPublicOptions" :key="item.dictValue" :label="item.dictValue">
+            {{ item.dictLabel }}
+          </el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="是否置顶" prop="isTop">
+        <el-radio-group v-model="queryParams.isTop" @change="handleQuery()">
+          <el-radio-button label="">全部</el-radio-button>
+          <el-radio-button v-for="item in options.isPublicOptions" :key="item.dictValue" :label="item.dictValue">
+            {{ item.dictLabel }}
+          </el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
+        <el-button icon="refresh" @click="resetQuery">重置</el-button>
+      </el-form-item>
+    </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
@@ -28,44 +58,57 @@
       <right-toolbar :showSearch="showSearch"></right-toolbar>
     </el-row>
 
-    <el-table :data="dataList" ref="table" border>
+    <el-table :data="dataList" v-loading="loading" highlight-current-row @sort-change="sortChange" ref="table">
       <el-table-column prop="cid" label="id" width="60" sortable> </el-table-column>
-      <el-table-column prop="title" label="文章标题" width="120" :show-overflow-tooltip="true"> </el-table-column>
-      <el-table-column prop="articleCategoryNav.name" label="文章目录"> </el-table-column>
-      <el-table-column prop="coverUrl" label="文章封面" width="90" :show-overflow-tooltip="true">
+      <el-table-column prop="title" label="标题" width="120" :show-overflow-tooltip="true">
+        <template #default="scope">
+          <el-button link type="primary" @click="handleView(scope.row)">{{ scope.row.title }}</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column prop="articleCategoryNav.name" label="分类"> </el-table-column>
+      <el-table-column prop="coverUrl" label="封面" width="90" :show-overflow-tooltip="true">
         <template #default="{ row }">
-          <el-image
-            preview-teleported
-            :src="row.coverUrl"
-            :preview-src-list="[row.coverUrl]"
-            :hide-on-click-modal="true"
-            fit="contain"
-            lazy
-            class="el-avatar">
-          </el-image>
+          <image-preview :src="row.coverUrl"></image-preview>
         </template>
       </el-table-column>
       <el-table-column prop="authorName" label="作者" width="80"> </el-table-column>
-      <el-table-column prop="fmt_type" label="编辑器类型" width="100"> </el-table-column>
+      <!-- <el-table-column prop="fmt_type" label="编辑器类型" width="100"> </el-table-column> -->
       <el-table-column prop="tags" label="标签" width="100" :show-overflow-tooltip="true"> </el-table-column>
       <el-table-column prop="hits" label="点击量" width="80" align="center"> </el-table-column>
-      <el-table-column prop="abstractText" label="文章摘要" :show-overflow-tooltip="true"> </el-table-column>
+      <el-table-column prop="abstractText" label="摘要" :show-overflow-tooltip="true"> </el-table-column>
       <el-table-column sortable prop="status" align="center" label="状态" width="90">
         <template #default="scope">
-          <el-tag :type="scope.row.status == '2' ? 'danger' : 'success'" disable-transitions
-            >{{ scope.row.status == '2' ? '草稿' : '已发布' }}
-          </el-tag>
+          <el-tag :type="scope.row.status == '2' ? 'danger' : 'success'">{{ scope.row.status == '2' ? '草稿' : '已发布' }} </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="是否公开" align="center" prop="isPublic" width="100">
+      <el-table-column label="置顶" prop="isTop" width="70" align="center" sortable>
         <template #default="scope">
-          <dict-tag :options="options.isPublicOptions" :value="scope.row.isPublic" />
+          <el-switch
+            v-model="scope.row.isTop"
+            inline-prompt
+            active-text="是"
+            inactive-text="否"
+            :active-value="1"
+            :inactive-value="0"
+            @change="handleTopChange(scope.row)"></el-switch>
+        </template>
+      </el-table-column>
+      <el-table-column label="公开" align="center" prop="isPublic" sortable width="70">
+        <template #default="scope">
+          <el-switch
+            v-model="scope.row.isPublic"
+            inline-prompt
+            active-text="是"
+            inactive-text="否"
+            :active-value="1"
+            :inactive-value="0"
+            @change="handleChangePublic(scope.row)"></el-switch>
         </template>
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间" width="128" :show-overflow-tooltip="true"> </el-table-column>
-      <el-table-column label="操作" align="center" width="210" fixed="right">
+      <el-table-column label="操作" align="center" width="130" fixed="right">
         <template #default="scope">
-          <el-button text size="small" icon="view" @click="handleView(scope.row)">查看</el-button>
+          <!-- <el-button text size="small" icon="view" @click="handleView(scope.row)">查看</el-button> -->
           <el-button text size="small" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:article:update']">编辑</el-button>
           <el-popconfirm title="确定删除吗？" @confirm="handleDelete(scope.row)" style="margin-left: 10px">
             <template #reference>
@@ -78,8 +121,9 @@
     <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
   </div>
 </template>
-<script setup name="articleindex">
-import { listArticle, delArticle } from '@/api/article/article.js'
+<script setup name="index">
+import { listArticle, delArticle, topArticle, changeArticlePublic } from '@/api/article/article.js'
+import { treelistArticleCategory } from '@/api/article/articlecategory.js'
 const { proxy } = getCurrentInstance()
 const router = useRouter()
 // 显示搜索条件
@@ -92,10 +136,15 @@ const dataList = ref([])
 const total = ref(0)
 // 文章预览地址
 const previewUrl = ref('')
-
+// 文章目录下拉框
+const categoryOptions = ref([])
+const loading = ref(false)
 const data = reactive({
   form: {},
-  queryParams: {},
+  queryParams: {
+    sort: 'cid',
+    sortType: 'desc'
+  },
   options: {
     isPublicOptions: [
       { dictLabel: '是', dictValue: '1' },
@@ -103,8 +152,21 @@ const data = reactive({
     ]
   }
 })
-
+const queryForm = ref()
 const { queryParams, options } = toRefs(data)
+
+// 自定义排序
+function sortChange(column) {
+  if (column.prop == null || column.order == null) {
+    queryParams.sort = undefined
+    queryParams.sortType = undefined
+  } else {
+    queryParams.sort = column.prop
+    queryParams.sortType = column.order
+  }
+
+  handleQuery()
+}
 
 proxy.getDicts('sys_article_status').then((response) => {
   statusOptions.value = response.data
@@ -113,9 +175,20 @@ proxy.getDicts('sys_article_status').then((response) => {
 proxy.getConfigKey('sys.article.preview.url').then((response) => {
   previewUrl.value = response.data
 })
+
+/** 查询菜单下拉树结构 */
+function getCategoryTreeselect() {
+  treelistArticleCategory().then((res) => {
+    if (res.code == 200) {
+      categoryOptions.value = res.data
+    }
+  })
+}
 // 查询数据
 function getList() {
+  loading.value = true
   listArticle(queryParams.value).then((res) => {
+    loading.value = false
     if (res.code == 200) {
       dataList.value = res.data.result
       total.value = res.data.totalNum
@@ -158,6 +231,16 @@ function handleView(row) {
   var link = `${previewUrl.value}${row.cid}`
   window.open(link)
 }
-
+function handleTopChange(row) {
+  topArticle({ cid: row.cid, isTop: row.isTop }).then((res) => {
+    handleQuery()
+  })
+}
+function handleChangePublic(row) {
+  changeArticlePublic({ cid: row.cid, isPublic: row.isPublic }).then((res) => {
+    handleQuery()
+  })
+}
+getCategoryTreeselect()
 handleQuery()
 </script>

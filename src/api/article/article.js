@@ -21,7 +21,7 @@ export function listNewArticle(query) {
 export function getArticle(Id) {
   return request({
     url: '/Article/' + Id,
-    method: 'get',
+    method: 'get'
   })
 }
 
@@ -30,7 +30,7 @@ export function addArticle(data) {
   return request({
     url: '/Article/add',
     method: 'post',
-    data: data,
+    data: data
   })
 }
 
@@ -58,9 +58,26 @@ export function listArticleCategory() {
   })
 }
 // 查询菜单目录树
-export function listArticleCategoryTree(){
+export function listArticleCategoryTree() {
   return request({
     url: '/Article/CategoryTreeList',
     menubar: 'get'
+  })
+}
+
+// 置顶
+export function topArticle(data) {
+  return request({
+    url: '/Article/top',
+    method: 'put',
+    data: data
+  })
+}
+// 置顶
+export function changeArticlePublic(data) {
+  return request({
+    url: '/Article/ChangePublic',
+    method: 'put',
+    data: data
   })
 }

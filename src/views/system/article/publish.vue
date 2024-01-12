@@ -24,6 +24,16 @@
 
           <el-col :lg="12">
             <el-form-item label="是否公开">
+              <template #label>
+                <span>
+                  <el-tooltip content="不公开只有自己会看到" placement="top">
+                    <el-icon :size="15">
+                      <questionFilled />
+                    </el-icon>
+                  </el-tooltip>
+                  是否公开
+                </span>
+              </template>
               <el-switch v-model="form.isPublic" inline-prompt :active-value="1" :in-active-value="0" active-text="是" inactive-text="否" />
             </el-form-item>
           </el-col>
@@ -34,10 +44,13 @@
                 {{ tag }}
               </el-tag>
               <el-input
+                size="small"
                 v-if="inputVisible"
-                style="width: 100px"
+                style="width: 150px"
                 ref="inputRef"
                 v-model="inputValue"
+                maxLength="8"
+                placeholder="最多8个字符"
                 @keyup.enter="handleInputConfirm"
                 @blur="handleInputConfirm" />
 
@@ -106,7 +119,6 @@ const data = reactive({
     abstractText: [{ required: true, message: '摘要不能为空', trigger: 'blur' }]
   }
 })
-console.log(settingsStore.codeMode)
 const { form, rules } = toRefs(data)
 
 const cid = route.query.cid
@@ -173,6 +185,10 @@ function handleCloseTag(tag) {
 }
 
 const showInput = () => {
+  if (form.value.dynamicTags.length >= 5) {
+    proxy.$modal.msgError('最多5个标签')
+    return
+  }
   inputVisible.value = true
   nextTick(() => {
     inputRef.value.input.focus()
@@ -203,9 +219,6 @@ getCategoryTreeselect()
 </script>
 <style scoped>
 .button-new-tag {
-  /* margin-left: 10px; */
-  height: 32px;
-  line-height: 30px;
   padding-top: 0;
   padding-bottom: 0;
   width: 90px;
