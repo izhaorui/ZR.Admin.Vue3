@@ -15,7 +15,7 @@
           placeholder="请选择上传时间"></el-date-picker>
       </el-form-item>
       <el-form-item label="" prop="storeType">
-        <el-radio-group v-model="queryParams.storeType" placeholder="请选择存储类型">
+        <el-radio-group v-model="queryParams.storeType" @change="handleQuery" placeholder="请选择存储类型">
           <el-radio-button> 全部 </el-radio-button>
           <el-radio-button v-for="item in storeTypeOptions" :key="item.dictValue" :label="item.dictValue">
             {{ item.dictLabel }}
