@@ -147,7 +147,7 @@
           <div class="body">
             <p>
               <el-icon> <promotion /> </el-icon>{{ $t('layout.officialWebsite') }}：
-              <el-link href="http://www.izhaorui.cn/doc" target="_blank"> http://www.izhaorui.cn/doc </el-link>
+              <el-link href="http://www.izhaorui.cn" target="_blank"> http://www.izhaorui.cn </el-link>
             </p>
             <p>
               <el-icon> <UserFilled /> </el-icon>{{ $t('layout.qqGroup') }}：
