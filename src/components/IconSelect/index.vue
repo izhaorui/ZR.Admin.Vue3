@@ -55,7 +55,6 @@ function filterIcons() {
 
 function selectedIcon(name, prefix) {
   const iconName = prefix != undefined ? prefix + name : name
-  console.log(iconName)
   emit('selected', iconName)
   document.body.click()
 }

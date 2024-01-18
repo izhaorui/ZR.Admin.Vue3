@@ -8,7 +8,7 @@ export function listArticleCategory(query) {
   return request({
     url: 'article/ArticleCategory/list',
     method: 'get',
-    params: query,
+    params: query
   })
 }
 
@@ -20,7 +20,7 @@ export function treelistArticleCategory(query) {
   return request({
     url: 'article/ArticleCategory/treelist',
     method: 'get',
-    params: query,
+    params: query
   })
 }
 
@@ -32,7 +32,7 @@ export function addArticleCategory(data) {
   return request({
     url: 'article/ArticleCategory',
     method: 'post',
-    data: data,
+    data: data
   })
 }
 
@@ -44,7 +44,7 @@ export function updateArticleCategory(data) {
   return request({
     url: 'article/ArticleCategory',
     method: 'PUT',
-    data: data,
+    data: data
   })
 }
 
@@ -76,5 +76,13 @@ export function exportArticleCategory(query) {
     url: 'article/ArticleCategory/export',
     method: 'get',
     params: query
+  })
+}
+
+export function changeSort(data) {
+  return request({
+    url: 'article/ArticleCategory/ChangeSort',
+    method: 'get',
+    params: data
   })
 }

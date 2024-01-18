@@ -46,13 +46,31 @@
       ref="tableRef"
       border
       highlight-current-row
+      @sort-change="sortChange"
       @selection-change="handleSelectionChange"
       :default-expand-all="isExpandAll"
       row-key="categoryId"
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
       <el-table-column type="selection" width="50" />
       <el-table-column prop="name" label="目录名" :show-overflow-tooltip="true" />
-      <el-table-column prop="categoryId" label="目录id" align="center" />
+      <el-table-column prop="icon" label="图标">
+        <template #default="{ row }">
+          <svg-icon :name="row.icon" v-if="row.icon"></svg-icon>
+          {{ row.icon }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="categoryId" label="目录id" sortable align="center" />
+      <el-table-column prop="orderNum" label="排序" sortable align="center">
+        <template #default="scope">
+          <span v-show="editIndex != scope.row.categoryId" @click="editCurrRow(scope.row.categoryId)">{{ scope.row.orderNum }}</span>
+          <el-input
+            :ref="setColumnsRef"
+            v-show="editIndex == scope.row.categoryId"
+            v-model="scope.row.orderNum"
+            @blur="handleChangeSort(scope.row)"></el-input>
+        </template>
+      </el-table-column>
+
       <el-table-column prop="createTime" label="添加时间" align="center" :show-overflow-tooltip="true" />
       <el-table-column prop="parentId" label="父级id" align="center" />
 
@@ -75,6 +93,24 @@
           <el-col :lg="24">
             <el-form-item label="目录名" prop="name">
               <el-input v-model="form.name" placeholder="请输入目录名" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="24">
+            <el-form-item label="图标" prop="icon">
+              <el-popover placement="bottom" :width="540" trigger="click">
+                <template #reference>
+                  <el-input v-model="form.icon" placeholder="点击选择图标" readonly>
+                    <template #prefix>
+                      <svg-icon v-if="form.icon" :name="form.icon" />
+                      <el-icon v-else>
+                        <search />
+                      </el-icon>
+                    </template>
+                  </el-input>
+                </template>
+                <icon-select ref="iconSelectRef" @selected="iconSelected" />
+              </el-popover>
             </el-form-item>
           </el-col>
 
@@ -112,9 +148,10 @@ import {
   delArticleCategory,
   updateArticleCategory,
   getArticleCategory,
-  exportArticleCategory
+  exportArticleCategory,
+  changeSort
 } from '@/api/article/articlecategory.js'
-
+import IconSelect from '@/components/IconSelect'
 const { proxy } = getCurrentInstance()
 // 是否展开，默认全部折叠
 const isExpandAll = ref(false)
@@ -190,7 +227,9 @@ function cancel() {
 function reset() {
   form.value = {
     name: undefined,
-    parentId: 0
+    parentId: 0,
+    icon: '',
+    orderNum: 0
   }
   proxy.resetForm('formRef')
 }
@@ -310,6 +349,47 @@ function sortChange(column) {
 
   handleQuery()
 }
+
+function iconSelected(name) {
+  form.value.icon = name
+  document.body.click()
+}
+
+// ******************自定义编辑 start **********************
+// 动态ref设置值
+const columnRefs = ref([])
+const setColumnsRef = (el) => {
+  if (el) {
+    columnRefs.value.push(el)
+  }
+}
+const editIndex = ref(-1)
+// 显示编辑排序
+function editCurrRow(rowId) {
+  editIndex.value = rowId
+
+  setTimeout(() => {
+    columnRefs.value[rowId].focus()
+  }, 100)
+}
+// 保存排序
+function handleChangeSort(info) {
+  editIndex.value = -1
+  proxy
+    .$confirm('是否保存数据?')
+    .then(function () {
+      return changeSort({ value: info.orderNum, id: info.categoryId })
+    })
+    .then(() => {
+      handleQuery()
+
+      proxy.$modal.msgSuccess('修改成功')
+    })
+    .catch(() => {
+      handleQuery()
+    })
+}
+// ******************自定义编辑 end **********************
 
 handleQuery()
 </script>
