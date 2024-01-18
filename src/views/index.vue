@@ -1,5 +1,6 @@
 <template>
   <div class="app-container home">
+    <noticeBar :dataList="noticeList"> </noticeBar>
     <el-row :gutter="20">
       <el-col :sm="24" :lg="24">
         <blockquote class="text-warning" style="font-size: 14px">
@@ -167,6 +168,10 @@
 </template>
 
 <script setup name="index">
+import noticeBar from '@/components/NoticeBar/index'
+
+const noticeList = ref(['官网地址：http://www.izhaorui.cn', 'ZRAdmin.NET后台管理系统'])
+
 import defaultSettings from '@/settings'
 const version = defaultSettings.version
 
