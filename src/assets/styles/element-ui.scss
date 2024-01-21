@@ -148,3 +148,8 @@
     flex-wrap: wrap;
   }
 }
+
+// 修复饿了么 el-select没有宽度
+.el-select {
+  --el-select-width: 200px !important;
+}
