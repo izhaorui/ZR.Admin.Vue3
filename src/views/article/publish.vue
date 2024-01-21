@@ -1,67 +1,71 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="24">
-      <!-- :model属性用于表单验证使用 比如下面的el-form-item 的 prop属性用于对表单值进行验证操作 -->
-      <el-form :model="form" ref="formRef" label-width="100px" :rules="rules" @submit.prevent>
-        <el-row :gutter="20">
-          <el-col :lg="12">
-            <el-form-item label="文章标题" prop="title">
-              <el-input v-model="form.title" placeholder="请输入文章标题（必须）" />
-            </el-form-item>
-          </el-col>
+    <!-- :model属性用于表单验证使用 比如下面的el-form-item 的 prop属性用于对表单值进行验证操作 -->
+    <el-form :model="form" ref="formRef" label-width="100px" :rules="rules" @submit.prevent>
+      <el-row class="mb10">
+        <el-col :lg="24">
+          <el-form-item label="" prop="title">
+            <el-input v-model="form.title" placeholder="请输入文章标题（必须）" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="24">
+          <el-form-item prop="content" label="">
+            <MdEditor v-model="form.content" :theme="settingsStore.codeMode" :onUploadImg="onUploadImg" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="24">
+          <el-form-item prop="abstractText" label="文章摘要">
+            <el-input v-model="form.abstractText" type="textarea" show-word-limit maxlength="100" placeholder="请输入文章摘要（必须）" />
+          </el-form-item>
+        </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="文章分类" prop="categoryId">
-              <el-cascader
-                class="w100"
-                :options="categoryOptions"
-                :props="{ checkStrictly: true, value: 'categoryId', label: 'name', emitPath: false }"
-                placeholder="请选择文章分类"
-                clearable
-                v-model="form.categoryId" />
-            </el-form-item>
-          </el-col>
+        <el-col :lg="5">
+          <el-form-item label="文章分类" prop="categoryId">
+            <el-cascader
+              class="w100"
+              :options="categoryOptions"
+              :props="{ checkStrictly: true, value: 'categoryId', label: 'name', emitPath: false }"
+              placeholder="请选择文章分类"
+              clearable
+              v-model="form.categoryId" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="11">
+          <el-form-item label="文章标签">
+            <el-tag v-for="tag in form.dynamicTags" :key="tag" class="mr10" closable :disable-transitions="false" @close="handleCloseTag(tag)">
+              {{ tag }}
+            </el-tag>
+            <el-input
+              size="small"
+              v-if="inputVisible"
+              style="width: 150px"
+              ref="inputRef"
+              v-model="inputValue"
+              maxLength="8"
+              placeholder="最多8个字符"
+              @keyup.enter="handleInputConfirm"
+              @blur="handleInputConfirm" />
 
-          <el-col :lg="12">
-            <el-form-item label="是否公开">
-              <template #label>
-                <span>
-                  <el-tooltip content="不公开只有自己会看到" placement="top">
-                    <el-icon :size="15">
-                      <questionFilled />
-                    </el-icon>
-                  </el-tooltip>
-                  是否公开
-                </span>
-              </template>
-              <el-switch v-model="form.isPublic" inline-prompt :active-value="1" :in-active-value="0" active-text="是" inactive-text="否" />
-            </el-form-item>
-          </el-col>
+            <el-button v-else class="button-new-tag" size="small" icon="plus" text @click="showInput">文章标签</el-button>
+          </el-form-item>
+        </el-col>
+        <el-col :lg="8">
+          <el-form-item label="是否公开">
+            <template #label>
+              <span>
+                <el-tooltip content="不公开只有自己会看到" placement="top">
+                  <el-icon :size="15">
+                    <questionFilled />
+                  </el-icon>
+                </el-tooltip>
+                是否公开
+              </span>
+            </template>
+            <el-switch v-model="form.isPublic" inline-prompt :active-value="1" :in-active-value="0" active-text="是" inactive-text="否" />
+          </el-form-item>
+        </el-col>
 
-          <el-col :lg="12">
-            <el-form-item label="文章标签">
-              <el-tag v-for="tag in form.dynamicTags" :key="tag" class="mr10" closable :disable-transitions="false" @close="handleCloseTag(tag)">
-                {{ tag }}
-              </el-tag>
-              <el-input
-                size="small"
-                v-if="inputVisible"
-                style="width: 150px"
-                ref="inputRef"
-                v-model="inputValue"
-                maxLength="8"
-                placeholder="最多8个字符"
-                @keyup.enter="handleInputConfirm"
-                @blur="handleInputConfirm" />
-
-              <el-button v-else class="button-new-tag" size="small" icon="plus" text @click="showInput">文章标签</el-button>
-            </el-form-item>
-          </el-col>
-          <el-col :lg="24">
-            <el-form-item prop="abstractText" label="文章摘要">
-              <el-input v-model="form.abstractText" type="textarea" show-word-limit maxlength="100" placeholder="请输入文章摘要（必须）" />
-            </el-form-item>
-          </el-col>
+        <el-col :lg="24">
           <el-form-item label="文章封面">
             <UploadImage ref="uploadRef" v-model="form.coverUrl" :limit="1" :fileSize="15">
               <template #icon>
@@ -69,19 +73,14 @@
               </template>
             </UploadImage>
           </el-form-item>
-          <el-form-item prop="content" label="文章内容">
-            <MdEditor v-model="form.content" :theme="settingsStore.codeMode" :onUploadImg="onUploadImg" />
-          </el-form-item>
+        </el-col>
 
-          <el-col :lg="24">
-            <el-form-item style="text-align: right">
-              <el-button type="success" @click="handlePublish('1')">发布文章</el-button>
-              <el-button @click="handlePublish('2')">存为草稿</el-button>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-    </el-row>
+        <div class="btn-wrap">
+          <el-button type="success" @click="handlePublish('1')">发布文章</el-button>
+          <el-button @click="handlePublish('2')">存为草稿</el-button>
+        </div>
+      </el-row>
+    </el-form>
   </div>
 </template>
 <script setup name="articlepublish">
@@ -228,5 +227,18 @@ getCategoryTreeselect()
 
 .vue-treeselect {
   z-index: 1501;
+}
+
+.btn-wrap {
+  /* bottom: 0; */
+  z-index: 10;
+  width: 100%;
+  top: 0;
+  background: #fff;
+  padding: 5px 20px;
+  border-top: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  /*justify-content: space-around;*/
 }
 </style>

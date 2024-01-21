@@ -8,14 +8,12 @@
 -->
 <template>
   <div class="app-container">
-    <!-- :model属性用于表单验证使用 比如下面的el-form-item 的 prop属性用于对表单值进行验证操作 -->
     <!-- <el-form :model="queryParams" label-position="right" inline ref="queryRef" v-show="showSearch" @submit.prevent>
       <el-form-item>
         <el-button icon="search" type="primary" @click="handleQuery">{{ $t('btn.search') }}</el-button>
         <el-button icon="refresh" @click="resetQuery">{{ $t('btn.reset') }}</el-button>
       </el-form-item>
     </el-form> -->
-    <!-- 工具区域 -->
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" v-hasPermi="['articlecategory:add']" plain icon="plus" @click="handleAdd">

@@ -1,9 +1,5 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="24" class="mb10">
-      <el-alert title="本项目文章管理只提供基础的后端文章管理模块，文章的浏览自行实现。文章浏览地址在'系统管理->参数配置'" type="success" />
-    </el-row>
-
     <el-form :model="queryParams" label-position="left" inline ref="queryForm" v-show="showSearch" @submit.prevent>
       <el-form-item label="标题" prop="title">
         <el-input v-model="queryParams.title" placeholder="请输入标题" />
@@ -108,7 +104,6 @@
       <el-table-column prop="createTime" label="创建时间" width="128" :show-overflow-tooltip="true"> </el-table-column>
       <el-table-column label="操作" align="center" width="130" fixed="right">
         <template #default="scope">
-          <!-- <el-button text size="small" icon="view" @click="handleView(scope.row)">查看</el-button> -->
           <el-button text size="small" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:article:update']">编辑</el-button>
           <el-popconfirm title="确定删除吗？" @confirm="handleDelete(scope.row)" style="margin-left: 10px">
             <template #reference>
@@ -119,11 +114,17 @@
       </el-table-column>
     </el-table>
     <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
+
+    <el-dialog :title="previewInfo.title" v-model="showPreview">
+      <MdPreview show-code-row-number editorId="id1" :modelValue="previewInfo.content" />
+    </el-dialog>
   </div>
 </template>
 <script setup name="index">
-import { listArticle, delArticle, topArticle, changeArticlePublic } from '@/api/article/article.js'
+import { listArticle, delArticle, topArticle, changeArticlePublic, getArticle } from '@/api/article/article.js'
 import { treelistArticleCategory } from '@/api/article/articlecategory.js'
+import { MdPreview } from 'md-editor-v3'
+import 'md-editor-v3/lib/preview.css'
 const { proxy } = getCurrentInstance()
 const router = useRouter()
 // 显示搜索条件
@@ -208,8 +209,7 @@ function handleQuery() {
 
 /** 新增按钮操作 */
 function handleAdd() {
-  // router.replace({ path: '/article/publish' })
-  router.push({ path: '/article/publish' })
+  router.replace({ path: '/article/publish' })
 }
 
 /** 删除按钮操作 */
@@ -227,9 +227,14 @@ function handleUpdate(row) {
   router.push({ path: '/article/publish', query: { cid: row.cid } })
 }
 // 详情
+const previewInfo = ref({})
 function handleView(row) {
-  var link = `${previewUrl.value}${row.cid}`
-  window.open(link)
+  // var link = `${previewUrl.value}${row.cid}`
+  // window.open(link)
+  getArticle(row.cid).then((res) => {
+    previewInfo.value = res.data
+    showPreview.value = true
+  })
 }
 function handleTopChange(row) {
   topArticle({ cid: row.cid, isTop: row.isTop }).then((res) => {
@@ -241,6 +246,9 @@ function handleChangePublic(row) {
     handleQuery()
   })
 }
+
+const showPreview = ref(false)
+
 getCategoryTreeselect()
 handleQuery()
 </script>
