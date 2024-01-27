@@ -21,6 +21,7 @@ const useTagsViewStore = defineStore('tagsView', {
           title: view.meta.title || 'no-name'
         })
       )
+      this.addCachedView(view)
     },
     addVisitedView(view) {
       if (this.visitedViews.some((v) => v.path === view.path)) return
