@@ -34,8 +34,13 @@ const type = computed(() => {
 
 function linkProps() {
   if (isExt.value) {
+    var path = props.to
+    if (path.startsWith('/link')) {
+      path = import.meta.env.VITE_APP_ROUTER_PREFIX + path
+      path = path.replace('//', '/')
+    }
     return {
-      href: props.to,
+      href: path,
       target: '_blank',
       rel: 'noopener'
     }

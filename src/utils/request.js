@@ -68,11 +68,7 @@ service.interceptors.response.use(
         useUserStore()
           .logOut()
           .then(() => {
-            var redirectUrl = window.location.pathname
-
-            if (location.pathname.indexOf(import.meta.env.VITE_APP_ROUTER_PREFIX + '/login') != 0) {
-              location.href = 'index?redirect=' + redirectUrl
-            }
+            location.href = import.meta.env.VITE_APP_ROUTER_PREFIX + 'index'
           })
       })
 
