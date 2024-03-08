@@ -235,9 +235,11 @@ function themeChange(val) {
   theme.value = val
   // 设置element-plus ui主题
   document.documentElement.style.setProperty('--el-color-primary', val)
+  document.documentElement.style.setProperty('--el-color-primary-dark-2', val)
+  var num = mode.value == 'dark' ? 8 : 9
 
   // 颜色变浅
-  for (let i = 1; i <= 9; i++) {
+  for (let i = 1; i <= num; i++) {
     document.documentElement.style.setProperty(`--el-color-primary-light-${i}`, `${getLightColor(val, i / 10)}`)
   }
 }
