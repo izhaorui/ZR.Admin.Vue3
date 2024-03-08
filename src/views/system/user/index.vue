@@ -211,7 +211,7 @@
           </el-col>
           <el-col :lg="24">
             <el-form-item label="岗位">
-              <el-select v-model="form.postIds" multiple placeholder="请选择岗位" class="w100">
+              <el-select v-model="form.postIds" multiple placeholder="请选择岗位" style="width: 100%">
                 <el-option v-for="item in postOptions" :key="item.postId" :label="item.postName" :value="item.postId" :disabled="item.status == 1">
                 </el-option>
               </el-select>
