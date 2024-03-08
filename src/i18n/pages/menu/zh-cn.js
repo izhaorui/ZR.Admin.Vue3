@@ -5,7 +5,7 @@ export default {
     icon: '图标',
     menuid: '菜单id',
     menuType: '菜单类型',
-    sort: '菜单排序',
+    sort: '排序',
     authorityID: '权限标识',
     componentPath: '组件路径',
     isShow: '是否显示',
@@ -18,6 +18,6 @@ export default {
     routePath: '路由地址',
     permissionStr: '权限字符',
     isCache: '是否缓存',
-    menuNameKey: '菜单名(key)',
+    menuNameKey: '菜单名(key)'
   }
 }

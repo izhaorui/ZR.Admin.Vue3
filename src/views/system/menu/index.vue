@@ -372,7 +372,7 @@ proxy.getDicts(dictParams).then((response) => {
 // 列显隐信息
 const columns = ref([
   { label: `添加时间`, visible: false, prop: 'createTime' },
-  { label: `排序`, visible: false, prop: 'orderNum' }
+  { label: `排序`, visible: true, prop: 'orderNum' }
 ])
 
 const tableHeight = ref(document.documentElement.scrollHeight - 245 + 'px')

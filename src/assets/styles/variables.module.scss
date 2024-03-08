@@ -24,6 +24,8 @@ $panGreen: #30b08f;
 
   // 侧边栏图标大小
   --el-menu-icon-width: 14px;
+
+  --vxe-table-column-padding-default: 7px 0 !important;
 }
 
 /***侧边栏深色配置***/
@@ -57,6 +59,12 @@ html.dark {
 
   .current-row {
     color: #e65d6e;
+  }
+
+  .header-search {
+    .el-select {
+      background-color: #000;
+    }
   }
 
   // wangEditor
