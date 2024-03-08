@@ -38,18 +38,24 @@ import icons from './requireIcons'
 import * as elIcons from '@element-plus/icons-vue'
 
 const elementIcons = ref([])
+const elementIconList = ref([])
 for (const key in elIcons) {
   elementIcons.value.push(key)
+  elementIconList.value.push(key)
 }
+// 搜索的图标名
 const iconName = ref('')
 const iconList = ref(icons)
 const activeName = ref('1')
 const emit = defineEmits(['selected'])
 
 function filterIcons() {
-  iconList.value = icons
   if (iconName.value) {
     iconList.value = icons.filter((item) => item.indexOf(iconName.value) !== -1)
+    elementIcons.value = elementIconList.value.filter((item) => item.toLocaleLowerCase().indexOf(iconName.value.toLocaleLowerCase()) !== -1)
+  } else {
+    iconList.value = icons
+    elementIcons.value = elementIconList.value
   }
 }
 
