@@ -153,3 +153,12 @@
 .el-select {
   --el-select-width: 200px !important;
 }
+
+// 按钮样式调整
+.el-button {
+  margin-left: unset !important;
+  margin-right: 12px;
+}
+.el-button:last-child {
+  margin-right: 0;
+}
