@@ -51,8 +51,8 @@
     <el-table v-loading="loading" :data="configList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="参数主键" align="center" prop="configId" />
-      <el-table-column label="参数名称" align="center" prop="configName" :show-overflow-tooltip="true" />
-      <el-table-column label="参数键名" align="center" prop="configKey" :show-overflow-tooltip="true" />
+      <el-table-column label="参数名称" align="center" prop="configName" />
+      <el-table-column label="参数键名" align="center" prop="configKey" />
       <el-table-column label="参数键值" align="center" prop="configValue" />
       <el-table-column label="系统内置" align="center" prop="configType">
         <template #default="scope">
@@ -138,15 +138,15 @@ const queryParams = reactive({
   pageSize: 10,
   configName: undefined,
   configKey: undefined,
-  configType: undefined,
+  configType: undefined
 })
 const state = reactive({
   form: {},
   rules: {
     configName: [{ required: true, message: '参数名称不能为空', trigger: 'blur' }],
     configKey: [{ required: true, message: '参数键名不能为空', trigger: 'blur' }],
-    configValue: [{ required: true, message: '参数键值不能为空', trigger: 'blur' }],
-  },
+    configValue: [{ required: true, message: '参数键值不能为空', trigger: 'blur' }]
+  }
 })
 const formRef = ref()
 const { form, rules } = toRefs(state)
@@ -174,7 +174,7 @@ function reset() {
     configKey: undefined,
     configValue: undefined,
     configType: 'Y',
-    remark: undefined,
+    remark: undefined
   }
   proxy.resetForm('formRef')
 }

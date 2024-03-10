@@ -64,7 +64,7 @@
       <el-table-column label="请求方法" align="center" prop="requestMethod" v-if="columns.showColumn('requestMethod')" />
       <el-table-column label="操作人员" align="center" prop="operName" v-if="columns.showColumn('operName')" />
 
-      <el-table-column label="操作地址" align="center" prop="operIp" width="120">
+      <el-table-column label="操作地址" prop="operIp" width="120">
         <template #default="{ row }">
           <div>{{ row.operLocation }}</div>
           <div>{{ row.operIp }}</div>
@@ -82,8 +82,8 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="日志内容" align="center" prop="errorMsg" :show-overflow-tooltip="true" v-if="columns.showColumn('errorMsg')" />
-      <el-table-column label="操作日期" align="center" prop="operTime" width="180" v-if="columns.showColumn('operTime')">
+      <el-table-column label="日志内容" prop="errorMsg" width="220" v-if="columns.showColumn('errorMsg')" />
+      <el-table-column label="操作日期" prop="operTime" width="100" v-if="columns.showColumn('operTime')">
         <template #default="scope">
           <span>{{ scope.row.operTime }}</span>
         </template>
@@ -202,7 +202,7 @@ const state = reactive({
   }
 })
 const columns = ref([
-  { visible: true, prop: 'operId', label: '操作id' },
+  { visible: false, prop: 'operId', label: '操作id' },
   { visible: true, prop: 'title', label: '系统模块' },
   { visible: true, prop: 'businessType', label: '业务类型' },
   { visible: true, prop: 'requestMethod', label: '请求方式' },
@@ -217,7 +217,7 @@ const columns = ref([
   { visible: false, prop: 'method', label: '操作方法' },
   { visible: false, prop: 'operParam', label: '请求参数' },
   { visible: false, prop: 'jsonResult', label: '返回结果' },
-  { visible: false, prop: 'errorMsg', label: '错误信息' },
+  { visible: true, prop: 'errorMsg', label: '日志内容' },
   { visible: false, prop: 'elapsed', label: '操作用时' }
 ])
 const { form, queryParams, options } = toRefs(state)

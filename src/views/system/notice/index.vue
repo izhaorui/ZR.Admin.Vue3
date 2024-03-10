@@ -38,8 +38,11 @@
     <el-table v-loading="loading" :data="noticeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" align="center" prop="noticeId" width="100" />
-      <el-table-column label="公告标题" align="center" prop="noticeTitle" :show-overflow-tooltip="true" />
-      <el-table-column label="内容" align="center" prop="noticeContent" :show-overflow-tooltip="true" />
+      <el-table-column label="公告标题" align="center" prop="noticeTitle" :show-overflow-tooltip="true">
+        <template #default="{ row }">
+          <el-link type="primary" @click="handleOpenPre(row)">{{ row.noticeTitle }}</el-link>
+        </template>
+      </el-table-column>
       <el-table-column label="公告类型" align="center" prop="noticeType" width="100">
         <template #default="scope">
           <dict-tag :options="typeOptions" :value="scope.row.noticeType" />
