@@ -114,7 +114,7 @@ const showSettings = ref(false)
 const theme = ref(settingsStore.theme)
 const sideTheme = ref(settingsStore.sideTheme)
 const storeSettings = computed(() => settingsStore)
-const predefineColors = ref(['#409EFF', '#ff4500', '#ff8c00', '#ffd700', '#90ee90', '#00ced1', '#1e90ff', '#c71585'])
+const predefineColors = ref(['#409EFF', '#ff4500', '#ff8c00', '#00ced1', '#1e90ff', '#c71585'])
 const { setWatermark, removeWatermark } = getmark()
 // 可以手动更改当前值 model.value = 'cafe'
 const mode = useColorMode({
