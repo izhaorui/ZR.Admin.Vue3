@@ -1,8 +1,8 @@
 <template>
   <el-container :class="classObj" class="app-layout" :style="{ '--current-color': theme }">
     <div v-if="classObj.mobile && classObj.openSidebar" class="drawer__background" @click="handleOutsideClick"></div>
-    <sidebar />
-
+    <sidebar v-else-if="!sidebar.hide && !classObj.mobile" />
+    <sidebar v-if="classObj.mobile" />
     <el-container class="main-container flex-center" :class="{ hasTagsView: needTagsView, sidebarHide: sidebar.hide }">
       <el-header :class="{ 'fixed-header': fixedHeader }">
         <navbar @setLayout="setLayout" />
