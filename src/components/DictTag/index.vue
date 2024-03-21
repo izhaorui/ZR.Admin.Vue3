@@ -1,21 +1,12 @@
 <template>
   <template v-for="(item, index) in dataList">
     <template v-if="values.includes(item.dictValue)">
-      <span v-if="item.listClass == 'default' || item.listClass == ''" :key="item.dictValue" :index="index" :class="item.cssClass">
-        <template v-if="item.langKey">
-          {{ $t(item.langKey) }}
-        </template>
-        <template v-else>
-          {{ item.dictLabel }}
-        </template>
-        <i v-if="showValue">#{{ item.dictValue }}</i>
-      </span>
       <el-tag
-        v-else
+        v-if="dictValues.includes(item.listClass)"
         size="small"
         :disable-transitions="true"
         :index="index"
-        :type="item.listClass == 'primary' ? '' : item.listClass"
+        :type="item.listClass"
         :class="item.cssClass">
         <template v-if="item.langKey">
           {{ $t(item.langKey) }}
@@ -25,6 +16,16 @@
         </template>
         <i v-if="showValue">#{{ item.dictValue }}</i>
       </el-tag>
+
+      <span v-else :key="item.dictValue" :index="index" :class="item.cssClass">
+        <template v-if="item.langKey">
+          {{ $t(item.langKey) }}
+        </template>
+        <template v-else>
+          {{ item.dictLabel }}
+        </template>
+        <i v-if="showValue">#{{ item.dictValue }}</i>
+      </span>
     </template>
   </template>
 </template>
@@ -75,6 +76,7 @@ const values = computed(() => {
     return []
   }
 })
+const dictValues = ref(['primary', 'danger', 'warning', 'info', 'success'])
 </script>
 
 <style scoped>
