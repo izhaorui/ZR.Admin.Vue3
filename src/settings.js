@@ -95,5 +95,9 @@ export default {
   /**
    * 标签页持久化
    */
-  tagsViewPersist: false
+  tagsViewPersist: false,
+  /**
+   * 标签显示icon
+   */
+  tagsShowIcon: true
 }

@@ -93,7 +93,8 @@
     "workTime": "Today's working times(min)",
     "onlineClientNum": "Number of online devices",
     "tagsView": "tabs",
-    "tagsPersist": "tabs Persist"
+    "tagsPersist": "tabs Persist",
+    "tagsShowIcon": "tabas show icon"
   },
   "common": {
     "ok": "Ok",

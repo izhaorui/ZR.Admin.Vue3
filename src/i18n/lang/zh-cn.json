@@ -93,7 +93,8 @@
     "workTime": "今日工作时长",
     "onlineClientNum": "在线设备数",
     "tagsView": "标签页",
-    "tagsPersist": "标签持久化"
+    "tagsPersist": "标签持久化",
+    "tagsShowIcon": "标签显示icon"
   },
   "common": {
     "ok": "确定",

@@ -93,7 +93,8 @@
     "workTime": "今日工作時長(分)",
     "onlineClientNum": "在線設備數",
     "tagsView": "標簽頁",
-    "tagsPersist": "標簽持久化"
+    "tagsPersist": "標簽持久化",
+    "tagsShowIcon": "標簽顯示icon"
   },
   "common": {
     "ok": "確定",

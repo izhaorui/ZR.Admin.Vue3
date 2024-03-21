@@ -8,13 +8,13 @@
         :class="{ active: isActive(tag) }"
         :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
         class="tags-view-item"
-        :style="activeStyle(tag)"
         @click.middle="!isAffix(tag) ? closeSelectedTag(tag) : ''"
         @contextmenu.prevent="openMenu(tag, $event)">
+        <svg-icon v-if="!isActive(tag) && settingsStore.tagsShowIcon" :name="tag.meta && tag.meta.icon" />
         <span v-if="tag.meta && tag.meta.titleKey">{{ $t(tag.meta.titleKey) }}</span>
         <span v-else>{{ tag.title }}</span>
-        <span v-if="!isAffix(tag)" @click.prevent.stop="closeSelectedTag(tag)" style="width: 10px; height: 10px; display: inline-block">
-          <close class="el-icon-close close" style="width: 1em; height: 1em; vertical-align: middle" />
+        <span v-if="!isAffix(tag)" @click.prevent.stop="closeSelectedTag(tag)" class="close-wrap">
+          <close class="close" />
         </span>
       </router-link>
     </scroll-pane>
@@ -39,6 +39,7 @@ import ScrollPane from './ScrollPane'
 import { getNormalPath } from '@/utils/ruoyi'
 import useTagsViewStore from '@/store/modules/tagsView'
 import usePermissionStore from '@/store/modules/permission'
+import useSettingsStore from '@/store/modules/settings'
 import { isHttp } from '@/utils/validate'
 const visible = ref(false)
 const top = ref(0)
@@ -50,7 +51,7 @@ const scrollPaneRef = ref(null)
 const { proxy } = getCurrentInstance()
 const route = useRoute()
 const router = useRouter()
-
+const settingsStore = useSettingsStore()
 const visitedViews = computed(() => useTagsViewStore().visitedViews)
 const routes = computed(() => usePermissionStore().routes)
 
@@ -72,9 +73,6 @@ onMounted(() => {
 
 function isActive(r) {
   return r.path === route.path
-}
-function activeStyle(tag) {
-  if (!isActive(tag)) return {}
 }
 function isAffix(tag) {
   return tag.meta && tag.meta.affix
@@ -236,6 +234,7 @@ function handleScroll() {
   background: var(--base-topBar-background);
   // border-bottom: 1px solid #d8dce5;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
+
   .tags-view-wrapper {
     .tags-view-item {
       display: inline-block;
@@ -249,6 +248,30 @@ function handleScroll() {
       font-size: 12px;
       margin-left: 5px;
       margin-top: 4px;
+      .close {
+        // width: 16px;
+        // height: 16px;
+        // vertical-align: 2px;
+        width: 1em;
+        height: 1em;
+        vertical-align: middle;
+        border-radius: 50%;
+        text-align: center;
+        transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+        transform-origin: 100% 50%;
+        display: none;
+        &:before {
+          transform: scale(0.6);
+          display: inline-block;
+          vertical-align: -3px;
+        }
+        &:hover {
+          background-color: #b4bccc;
+          color: #fff;
+          width: 12px !important;
+          height: 12px !important;
+        }
+      }
       .close {
         display: none;
       }
@@ -272,16 +295,16 @@ function handleScroll() {
         .close {
           display: inline-block !important;
         }
-        &::before {
-          content: '';
-          background: #fff;
-          display: inline-block;
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          position: relative;
-          margin-right: 2px;
-        }
+        // &::before {
+        //   content: '';
+        //   background: #fff;
+        //   display: inline-block;
+        //   width: 8px;
+        //   height: 8px;
+        //   border-radius: 50%;
+        //   position: relative;
+        //   margin-right: 2px;
+        // }
       }
     }
   }
@@ -307,32 +330,12 @@ function handleScroll() {
     }
   }
 }
-</style>
-
-<style lang="scss">
-//reset element css of el-icon-close
-.tags-view-wrapper {
-  .tags-view-item {
-    .el-icon-close {
-      width: 16px;
-      height: 16px;
-      vertical-align: 2px;
-      border-radius: 50%;
-      text-align: center;
-      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-      transform-origin: 100% 50%;
-      &:before {
-        transform: scale(0.6);
-        display: inline-block;
-        vertical-align: -3px;
-      }
-      &:hover {
-        background-color: #b4bccc;
-        color: #fff;
-        width: 12px !important;
-        height: 12px !important;
-      }
-    }
-  }
+.close-wrap {
+  display: inline-block;
+  widows: 1em;
+  width: 1em;
+}
+.svg-icon {
+  margin-right: 5px;
 }
 </style>

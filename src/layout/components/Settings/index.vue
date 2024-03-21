@@ -87,7 +87,12 @@
         <el-switch v-model="tabsPersist" class="drawer-switch" />
       </span>
     </div>
-
+    <div class="drawer-item">
+      <span>{{$t('layout.tagsShowIcon')}}</span>
+      <span class="comp-style">
+        <el-switch v-model="tabsShowIcon" class="drawer-switch" />
+      </span>
+    </div>
     <el-divider />
 
     <el-button type="primary" plain icon="DocumentAdd" @click="saveSetting">{{ $t('layout.saveConfig') }}</el-button>
@@ -189,6 +194,13 @@ const tabsPersist = computed({
     settingsStore.changeSetting({ key: 'tagsViewPersist', value: val })
   }
 })
+/**标签显示icon */
+const tabsShowIcon = computed({
+  get: () => storeSettings.value.tagsShowIcon,
+  set: (val) => {
+    settingsStore.changeSetting({ key: 'tagsShowIcon', value: val })
+  }
+})
 const changeWatermark = () => {
   storeSettings.value.showWatermark ? setWatermark(useUserStore().userInfo.userName) : removeWatermark()
 }
@@ -262,7 +274,8 @@ function saveSetting() {
     theme: storeSettings.value.theme,
     showFooter: storeSettings.value.showFooter,
     showWatermark: storeSettings.value.showWatermark,
-    tagsViewPersist: storeSettings.value.tagsViewPersist
+    tagsViewPersist: storeSettings.value.tagsViewPersist,
+    tagsShowIcon: storeSettings.value.tagsShowIcon
   }
   localStorage.setItem('layout-setting', JSON.stringify(layoutSetting))
   setTimeout(proxy.$modal.closeLoading(), 100)
