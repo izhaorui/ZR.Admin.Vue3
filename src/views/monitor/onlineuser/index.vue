@@ -6,8 +6,8 @@
       </el-form-item>
       <el-form-item>
         <el-radio-group v-model="viewSwitch">
-          <el-radio-button label="1">表格</el-radio-button>
-          <el-radio-button label="2">卡片</el-radio-button>
+          <el-radio-button value="1">表格</el-radio-button>
+          <el-radio-button value="2">卡片</el-radio-button>
         </el-radio-group>
       </el-form-item>
       <el-form-item>

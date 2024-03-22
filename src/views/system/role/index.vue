@@ -107,7 +107,7 @@
             <template #default="{ node, data }">
               <div class="custom-tree-node">
                 <span style="float: left">{{ node.label }}</span>
-                <span style="float;right: ;margin-left: 10px;">
+                <span style="float: right; margin-left: 10px">
                   <el-tag v-if="data.status == 1" type="danger">停用</el-tag>
                 </span>
               </div>
@@ -165,7 +165,7 @@
           <el-col :lg="12">
             <el-form-item label="状态">
               <el-radio-group v-model="form.status">
-                <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="parseInt(dict.dictValue)">{{ dict.dictLabel }}</el-radio>
+                <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :value="parseInt(dict.dictValue)">{{ dict.dictLabel }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>

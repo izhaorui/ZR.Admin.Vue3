@@ -21,8 +21,8 @@
           <span>
             显示方式：
             <el-radio-group v-model="form.showtype">
-              <el-radio label="line-by-line">line-by-line</el-radio>
-              <el-radio label="side-by-side">side-by-side</el-radio>
+              <el-radio value="line-by-line">line-by-line</el-radio>
+              <el-radio value="side-by-side">side-by-side</el-radio>
             </el-radio-group>
           </span>
         </el-col>

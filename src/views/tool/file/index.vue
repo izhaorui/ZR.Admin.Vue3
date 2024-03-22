@@ -16,8 +16,8 @@
       </el-form-item>
       <el-form-item label="" prop="storeType">
         <el-radio-group v-model="queryParams.storeType" @change="handleQuery" placeholder="请选择存储类型">
-          <el-radio-button> 全部 </el-radio-button>
-          <el-radio-button v-for="item in storeTypeOptions" :key="item.dictValue" :label="item.dictValue">
+          <el-radio-button value=""> 全部 </el-radio-button>
+          <el-radio-button v-for="item in storeTypeOptions" :key="item.dictValue" :value="item.dictValue">
             {{ item.dictLabel }}
           </el-radio-button>
         </el-radio-group>
@@ -103,7 +103,7 @@
           <el-col :lg="24">
             <el-form-item label="存储类型" prop="storeType">
               <el-radio-group v-model="form.storeType" placeholder="请选择存储类型">
-                <el-radio-button v-for="item in storeTypeOptions" :key="item.dictValue" :label="parseInt(item.dictValue)">
+                <el-radio-button v-for="item in storeTypeOptions" :key="item.dictValue" :value="parseInt(item.dictValue)">
                   {{ item.dictLabel }}
                 </el-radio-button>
               </el-radio-group>
@@ -138,7 +138,7 @@
           <el-col :lg="24">
             <el-form-item label="文件名规则" prop="fileNameType">
               <el-radio-group v-model="form.fileNameType" placeholder="请选择文件名存储类型">
-                <el-radio v-for="item in fileNameTypeOptions" :key="item.dictValue" :label="parseInt(item.dictValue)">
+                <el-radio v-for="item in fileNameTypeOptions" :key="item.dictValue" :value="parseInt(item.dictValue)">
                   {{ item.dictLabel }}
                 </el-radio>
               </el-radio-group>

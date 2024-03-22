@@ -120,8 +120,8 @@
             <el-option v-for="item in columns" :key="item.columnId" :label="item.csharpField" :value="item.csharpField"> </el-option>
           </el-select>
 
-          <el-radio v-model="info.sortType" label="asc">正序</el-radio>
-          <el-radio v-model="info.sortType" label="desc">倒序</el-radio>
+          <el-radio v-model="info.sortType" value="asc">正序</el-radio>
+          <el-radio v-model="info.sortType" value="desc">倒序</el-radio>
         </el-form-item>
       </el-col>
       <el-col :lg="12">
@@ -137,8 +137,8 @@
             </span>
           </template>
           <el-radio-group :disabled="info.tplCategory != 'crud'" v-model="info.useSnowflakeId">
-            <el-radio :label="true">是</el-radio>
-            <el-radio :label="false">否</el-radio>
+            <el-radio :value="true">是</el-radio>
+            <el-radio :value="false">否</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-col>
@@ -169,8 +169,8 @@
               </el-tooltip>
             </span>
           </template>
-          <el-radio v-model="info.genType" label="0">zip压缩包</el-radio>
-          <el-radio v-model="info.genType" label="1">自定义路径</el-radio>
+          <el-radio v-model="info.genType" value="0">zip压缩包</el-radio>
+          <el-radio v-model="info.genType" value="1">自定义路径</el-radio>
         </el-form-item>
       </el-col>
 
@@ -202,8 +202,8 @@
             </span>
           </template>
           <el-radio-group v-model="info.generateRepo">
-            <el-radio :label="1">是</el-radio>
-            <el-radio :label="0">否</el-radio>
+            <el-radio :value="1">是</el-radio>
+            <el-radio :value="0">否</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-col>
@@ -226,14 +226,14 @@
 
       <el-col :lg="12">
         <el-form-item prop="colNum" label="一行显示列">
-          <el-radio v-model="info.colNum" :label="12">2列</el-radio>
-          <el-radio v-model="info.colNum" :label="24">1列</el-radio>
+          <el-radio v-model="info.colNum" :value="12">2列</el-radio>
+          <el-radio v-model="info.colNum" :value="24">1列</el-radio>
         </el-form-item>
       </el-col>
       <el-col :lg="12">
         <el-form-item prop="operBtnStyle" label="操作按钮样式">
-          <el-radio v-model="info.operBtnStyle" :label="1">button</el-radio>
-          <el-radio v-model="info.operBtnStyle" :label="2">text button</el-radio>
+          <el-radio v-model="info.operBtnStyle" :value="1">button</el-radio>
+          <el-radio v-model="info.operBtnStyle" :value="2">text button</el-radio>
         </el-form-item>
       </el-col>
       <el-col :lg="24" v-show="info.tplCategory != 'select'">
@@ -279,8 +279,8 @@
             </span>
           </template>
           <el-radio-group v-model="info.enableLog">
-            <el-radio :label="true">是</el-radio>
-            <el-radio :label="false">否</el-radio>
+            <el-radio :value="true">是</el-radio>
+            <el-radio :value="false">否</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-col>

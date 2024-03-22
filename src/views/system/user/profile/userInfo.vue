@@ -11,8 +11,8 @@
     </el-form-item>
     <el-form-item :label="$t('common.sex')">
       <el-radio-group v-model="user.sex">
-        <el-radio :label="0">{{ $t('common.male') }}</el-radio>
-        <el-radio :label="1">{{ $t('common.female') }}</el-radio>
+        <el-radio :value="0">{{ $t('common.male') }}</el-radio>
+        <el-radio :value="1">{{ $t('common.female') }}</el-radio>
       </el-radio-group>
     </el-form-item>
     <div style="margin-left: 40px">

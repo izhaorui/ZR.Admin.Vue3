@@ -49,7 +49,7 @@
       <el-table-column prop="userId" align="center" label="用户Id" width="150" />
       <el-table-column prop="userName" align="center" label="用户名" width="150" />
       <el-table-column prop="nickName" align="center" label="用户昵称" width="150" />
-      <el-table-column prop="status" align="center" label="账号状态" width="80">
+      <el-table-column prop="status" align="center" label="账号状态" width="110">
         <template #default="scope">
           <dict-tag :options="statusOptions" :value="scope.row.status" />
         </template>

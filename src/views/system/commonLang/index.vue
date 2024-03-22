@@ -20,8 +20,8 @@
       </el-form-item>
       <el-form-item :label="$t('showWay')">
         <el-radio-group v-model="queryParams.showMode">
-          <el-radio-button label="1">表格</el-radio-button>
-          <el-radio-button label="2">行列</el-radio-button>
+          <el-radio-button value="1">表格</el-radio-button>
+          <el-radio-button value="2">行列</el-radio-button>
         </el-radio-group>
       </el-form-item>
       <el-form-item :label="$t('common.addTime')">

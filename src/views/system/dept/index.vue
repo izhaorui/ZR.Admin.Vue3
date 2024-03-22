@@ -2,10 +2,10 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch">
       <el-form-item label="部门名称" prop="deptName">
-        <el-input v-model="queryParams.deptName" placeholder="请输入部门名称" clearable @keyup.enter="handleQuery" />
+        <el-input v-model="queryParams.deptName" placeholder="请输入部门名称" @keyup.enter="handleQuery" />
       </el-form-item>
       <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="部门状态" clearable>
+        <el-select v-model="queryParams.status" placeholder="部门状态">
           <el-option v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
         </el-select>
       </el-form-item>
@@ -33,9 +33,12 @@
       row-key="deptId"
       :default-expand-all="isExpandAll"
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
-      <el-table-column prop="deptName" label="部门名称" width="260"></el-table-column>
+      <el-table-column prop="deptName" label="部门名称" width="240"></el-table-column>
       <el-table-column prop="deptId" label="部门id"></el-table-column>
       <el-table-column prop="leader" label="负责人" width="100"></el-table-column>
+      <el-table-column prop="phone" label="联系电话" width="120"></el-table-column>
+      <el-table-column prop="email" label="邮箱" width="120"></el-table-column>
+      <el-table-column prop="userNum" label="部门人数" width="100"></el-table-column>
       <el-table-column prop="orderNum" label="排序"></el-table-column>
       <el-table-column label="状态" align="center" prop="status">
         <template #default="scope">
@@ -47,7 +50,7 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="200">
+      <el-table-column label="操作" width="200">
         <template #default="scope">
           <el-button text size="small" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dept:update']">
             {{ $t('btn.edit') }}
@@ -112,7 +115,7 @@
           <el-col :lg="12">
             <el-form-item label="部门状态">
               <el-radio-group v-model="form.status">
-                <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :label="parseInt(dict.dictValue)">{{ dict.dictLabel }}</el-radio>
+                <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :value="parseInt(dict.dictValue)">{{ dict.dictLabel }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>

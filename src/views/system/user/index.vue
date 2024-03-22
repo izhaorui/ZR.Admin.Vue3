@@ -138,7 +138,7 @@
           <el-table-column label="操作" align="left" width="110" class-name="small-padding fixed-width">
             <template #default="scope">
               <el-button text icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:user:edit']"> </el-button>
-              <el-button v-if="scope.row.userId !== 1" text icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:user:remove']">
+              <el-button v-if="!scope.row.isAdmin" text icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:user:remove']">
               </el-button>
               <el-button
                 v-if="scope.row.userId !== 1"

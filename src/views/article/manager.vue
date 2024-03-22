@@ -19,24 +19,24 @@
 
       <el-form-item prop="status">
         <el-radio-group v-model="queryParams.status" @change="handleQuery()">
-          <el-radio-button label="">全部</el-radio-button>
-          <el-radio-button v-for="item in statusOptions" :key="item.dictValue" :label="item.dictValue">
+          <el-radio-button value="">全部</el-radio-button>
+          <el-radio-button v-for="item in statusOptions" :key="item.dictValue" :value="item.dictValue">
             {{ item.dictLabel }}
           </el-radio-button>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="是否公开" prop="isPublic">
         <el-radio-group v-model="queryParams.isPublic" @change="handleQuery()">
-          <el-radio-button label="">全部</el-radio-button>
-          <el-radio-button v-for="item in options.isPublicOptions" :key="item.dictValue" :label="item.dictValue">
+          <el-radio-button value="">全部</el-radio-button>
+          <el-radio-button v-for="item in options.isPublicOptions" :key="item.dictValue" :value="item.dictValue">
             {{ item.dictLabel }}
           </el-radio-button>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="是否置顶" prop="isTop">
         <el-radio-group v-model="queryParams.isTop" @change="handleQuery()">
-          <el-radio-button label="">全部</el-radio-button>
-          <el-radio-button v-for="item in options.isPublicOptions" :key="item.dictValue" :label="item.dictValue">
+          <el-radio-button value="">全部</el-radio-button>
+          <el-radio-button v-for="item in options.isPublicOptions" :key="item.dictValue" :value="item.dictValue">
             {{ item.dictLabel }}
           </el-radio-button>
         </el-radio-group>
@@ -144,7 +144,10 @@ const data = reactive({
   form: {},
   queryParams: {
     sort: 'cid',
-    sortType: 'desc'
+    sortType: 'desc',
+    status: '',
+    isPublic: '',
+    isTop: ''
   },
   options: {
     isPublicOptions: [

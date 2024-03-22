@@ -19,8 +19,8 @@
     </div>
     <div class="drawer-item">
       <el-radio-group v-model="mode" size="small">
-        <el-radio label="dark">{{ $t('layout.darkMode') }}</el-radio>
-        <el-radio label="light">{{ $t('layout.lightMode') }}</el-radio>
+        <el-radio value="dark">{{ $t('layout.darkMode') }}</el-radio>
+        <el-radio value="light">{{ $t('layout.lightMode') }}</el-radio>
         <!-- <el-radio label="cafe">cafe</el-radio>
         <el-radio label="contrast">contrast</el-radio> -->
       </el-radio-group>
@@ -88,7 +88,7 @@
       </span>
     </div>
     <div class="drawer-item">
-      <span>{{$t('layout.tagsShowIcon')}}</span>
+      <span>{{ $t('layout.tagsShowIcon') }}</span>
       <span class="comp-style">
         <el-switch v-model="tabsShowIcon" class="drawer-switch" />
       </span>

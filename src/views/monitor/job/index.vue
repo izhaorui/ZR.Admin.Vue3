@@ -11,14 +11,14 @@
       </el-form-item>
       <el-form-item prop="isStart">
         <el-radio-group v-model="queryParams.isStart" @change="handleQuery()">
-          <el-radio-button label="">全部</el-radio-button>
-          <el-radio-button :label="item.dictValue" v-for="item in options.isStartOptions">{{ item.dictLabel }}</el-radio-button>
+          <el-radio-button value="">全部</el-radio-button>
+          <el-radio-button :value="item.dictValue" v-for="item in options.isStartOptions">{{ item.dictLabel }}</el-radio-button>
         </el-radio-group>
       </el-form-item>
       <el-form-item prop="viewSwitch">
         <el-radio-group v-model="viewSwitch">
-          <el-radio-button label="1">表格</el-radio-button>
-          <el-radio-button label="2">卡片</el-radio-button>
+          <el-radio-button value="1">表格</el-radio-button>
+          <el-radio-button value="2">卡片</el-radio-button>
         </el-radio-group>
       </el-form-item>
       <el-form-item>
@@ -227,9 +227,9 @@
           <el-col :lg="24">
             <el-form-item label="任务类型" prop="taskType">
               <el-radio-group v-model="form.taskType">
-                <el-radio :label="1">执行程序集</el-radio>
-                <el-radio :label="2">执行url</el-radio>
-                <el-radio :label="3">执行SQL语句</el-radio>
+                <el-radio :value="1">执行程序集</el-radio>
+                <el-radio :value="2">执行url</el-radio>
+                <el-radio :value="3">执行SQL语句</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -392,7 +392,7 @@ const queryParams = reactive({
   orderby: '',
   sort: '',
   taskType: undefined,
-  isStart: undefined
+  isStart: ''
 })
 const columns = ref([
   // { visible: true, prop: 'name', label: '名称' },
