@@ -59,5 +59,12 @@ export default defineComponent({
   vertical-align: -0.15em;
   fill: currentColor;
   overflow: hidden;
+
+  &:hover {
+    outline: none;
+  }
+  &:focus {
+    outline: none;
+  }
 }
 </style>

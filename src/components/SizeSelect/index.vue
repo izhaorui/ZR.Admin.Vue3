@@ -23,7 +23,7 @@ const { proxy } = getCurrentInstance()
 const sizeOptions = ref([
   { label: proxy.$t('layout.large'), value: 'large' },
   { label: proxy.$t('layout.default'), value: 'default' },
-  { label: proxy.$t('layout.small'), value: 'small' },
+  { label: proxy.$t('layout.small'), value: 'small' }
 ])
 
 // function refreshView() {
@@ -44,11 +44,3 @@ function handleSetSize(size) {
   setTimeout('window.location.reload()', 1000)
 }
 </script>
-
-<style lang="scss" scoped>
-.size-icon--style {
-  font-size: 18px;
-  line-height: 50px;
-  padding-right: 7px;
-}
-</style>

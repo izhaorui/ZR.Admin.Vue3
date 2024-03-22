@@ -17,29 +17,31 @@
       <size-select title="布局大小" class="right-menu-item" />
       <LangSelect title="语言设置" class="right-menu-item" />
 
-      <el-dropdown @command="handleCommand" class="right-menu-item avatar-container" trigger="hover">
-        <span class="avatar-wrapper">
-          <el-avatar :size="25" shape="circle" class="user-avatar" :src="userStore.avatar" />
-          <span class="name">{{ userStore.name }}</span>
-          <el-icon><ArrowDown /></el-icon>
-        </span>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <router-link to="/user/profile">
-              <el-dropdown-item>{{ $t('layout.personalCenter') }}</el-dropdown-item>
-            </router-link>
-            <el-dropdown-item command="setLayout">
-              <span>{{ $t('layout.layoutSetting') }}</span>
-            </el-dropdown-item>
-            <el-dropdown-item command="copyToken" v-if="dev">
-              <span>复制token</span>
-            </el-dropdown-item>
-            <el-dropdown-item divided command="logout">
-              <span>{{ $t('layout.logOut') }}</span>
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
+      <div class="right-menu-item">
+        <el-dropdown @command="handleCommand" trigger="click" style="vertical-align: middle">
+          <span class="avatar-wrapper">
+            <el-avatar :size="25" shape="circle" class="user-avatar" :src="userStore.avatar" />
+            <span class="name">{{ userStore.name }}</span>
+            <el-icon><ArrowDown /></el-icon>
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <router-link to="/user/profile">
+                <el-dropdown-item>{{ $t('layout.personalCenter') }}</el-dropdown-item>
+              </router-link>
+              <el-dropdown-item command="setLayout">
+                <span>{{ $t('layout.layoutSetting') }}</span>
+              </el-dropdown-item>
+              <el-dropdown-item command="copyToken" v-if="dev">
+                <span>复制token</span>
+              </el-dropdown-item>
+              <el-dropdown-item divided command="logout">
+                <span>{{ $t('layout.logOut') }}</span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
     </div>
   </div>
 </template>
@@ -154,45 +156,40 @@ function setLayout() {
     left: 50px;
   }
 
-  .errLog-container {
-    display: inline-block;
-    vertical-align: top;
-  }
-
   .right-menu {
     display: flex;
     justify-content: flex-end;
     align-items: center;
 
-    &:focus {
-      outline: none;
-    }
-
     .right-menu-item {
       padding: 0 8px;
       color: var(--base-topBar-color);
       vertical-align: text-bottom;
+      outline: none;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.025);
+      }
     }
 
-    .avatar-container {
-      .avatar-wrapper {
-        display: flex;
-        align-items: center;
-        .user-avatar {
-          cursor: pointer;
-          width: 30px;
-          height: 30px;
-          border-radius: 50%;
-          vertical-align: middle;
-          margin-right: 5px;
-        }
-        .name {
-          font-size: 12px;
-        }
-        i {
-          cursor: pointer;
-          margin-left: 10px;
-        }
+    .avatar-wrapper {
+      display: flex;
+      align-items: center;
+      .user-avatar {
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        vertical-align: middle;
+        margin-right: 5px;
+      }
+      .name {
+        font-size: 12px;
+      }
+      i {
+        cursor: pointer;
+        margin-left: 10px;
       }
     }
   }
