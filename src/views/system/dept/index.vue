@@ -77,14 +77,26 @@
         <el-row :gutter="20">
           <el-col :lg="24" v-if="form.parentId !== 0">
             <el-form-item label="上级部门" prop="parentId">
-              <el-tree-select
+              <!-- <el-tree-select
                 v-model="form.parentId"
                 :data="deptOptions"
                 :props="{ value: 'deptId', label: 'deptName', children: 'children' }"
                 value-key="deptId"
                 placeholder="选择上级部门"
                 check-strictly
-                :render-after-expand="false" />
+                :render-after-expand="false" /> -->
+              <el-cascader
+                class="w100"
+                :options="deptOptions"
+                :props="{ checkStrictly: true, value: 'deptId', label: 'deptName', emitPath: false }"
+                placeholder="请选择上级菜单"
+                clearable
+                v-model="form.parentId">
+                <template #default="{ node, data }">
+                  <span>{{ data.deptName }}</span>
+                  <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+                </template>
+              </el-cascader>
             </el-form-item>
           </el-col>
           <el-col :lg="12">

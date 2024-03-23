@@ -113,7 +113,7 @@
     </vxe-table>
 
     <el-dialog :title="title" v-model="open" width="720px" append-to-body>
-      <el-form ref="menuRef" :model="form" :rules="rules" label-width="100px">
+      <el-form ref="menuRef" :model="form" :rules="rules" label-width="110px">
         <el-row>
           <el-col :lg="24">
             <el-form-item :label="$t('m.parentMenu')">
@@ -146,7 +146,7 @@
             </el-form-item>
           </el-col>
           <el-col :lg="12">
-            <el-form-item label="菜单名(key)" prop="menuNameKey">
+            <el-form-item label="菜单名" prop="menuNameKey">
               <template #label>
                 <span>
                   <el-tooltip content="多语言翻译key：eg：menu.system，不需要多语言的可不用填写" placement="top">
@@ -157,7 +157,7 @@
                   {{ $t('m.menuNameKey') }}
                 </span>
               </template>
-              <el-input v-model="form.menuNameKey" placeholder="请输入菜单key" />
+              <el-input v-model="form.menuNameKey" placeholder="请输入菜单名翻译key" />
             </el-form-item>
           </el-col>
           <el-col :lg="12" v-if="form.menuType != 'F'">

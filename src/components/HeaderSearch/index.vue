@@ -69,7 +69,12 @@ function close() {
 function change(val) {
   const path = val.path
   const query = val.query
-  if (isHttp(path)) {
+  if (path.startsWith('/link')) {
+    var path2 = import.meta.env.VITE_APP_ROUTER_PREFIX + path
+    path2 = path2.replace('//', '/')
+
+    window.open(path2, '_blank')
+  } else if (isHttp(path)) {
     // http(s):// 路径新窗口打开
     const pindex = path.indexOf('http')
     window.open(path.substr(pindex, path.length), '_blank')
