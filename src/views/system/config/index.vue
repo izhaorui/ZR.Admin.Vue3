@@ -21,29 +21,29 @@
           end-placeholder="结束日期"></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="search" size="small" @click="handleQuery">{{ $t('btn.search') }}</el-button>
-        <el-button icon="refresh" size="small" @click="resetQuery">{{ $t('btn.reset') }}</el-button>
+        <el-button type="primary" icon="search" @click="handleQuery">{{ $t('btn.search') }}</el-button>
+        <el-button icon="refresh" @click="resetQuery">{{ $t('btn.reset') }}</el-button>
       </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" plain icon="plus" size="small" @click="handleAdd" v-hasPermi="['system:config:add']">
+        <el-button type="primary" plain icon="plus" @click="handleAdd" v-hasPermi="['system:config:add']">
           {{ $t('btn.add') }}
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success" plain icon="edit" size="small" :disabled="single" @click="handleUpdate" v-hasPermi="['system:config:edit']">
+        <el-button type="success" plain icon="edit" :disabled="single" @click="handleUpdate" v-hasPermi="['system:config:edit']">
           {{ $t('btn.edit') }}
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="delete" size="small" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:config:remove']">
+        <el-button type="danger" plain icon="delete" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:config:remove']">
           {{ $t('btn.delete') }}
         </el-button>
       </el-col>
       <!-- <el-col :span="1.5">
-        <el-button type="danger" plain icon="refresh" size="small" @click="handleRefreshCache" v-hasPermi="['system:config:remove']">刷新缓存</el-button>
+        <el-button type="danger" plain icon="refresh" @click="handleRefreshCache" v-hasPermi="['system:config:remove']">刷新缓存</el-button>
       </el-col> -->
       <right-toolbar :showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
