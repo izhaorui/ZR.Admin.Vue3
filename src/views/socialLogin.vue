@@ -4,8 +4,12 @@
     <el-form ref="loginRef" :model="loginForm" class="login-form">
       <h3 class="title">{{ defaultSettings.title }}</h3>
 
-      <div v-if="!loading" style="text-align: center" class="pb20">
-        <el-empty v-if="!loading" description="未获取到授权信息，请返回重新授权登录" />
+      <div v-if="!loading" style="text-align: center; color: red" class="pb20">
+        <el-result icon="warning" :sub-title="errorMsg">
+          <!-- <template #extra>
+            <el-button type="primary">Back</el-button>
+          </template> -->
+        </el-result>
         <router-link class="link-type" :to="'/login'">返回{{ $t('login.btnLogin') }}</router-link>
       </div>
       <div v-else class="loading">登 录 中...</div>
@@ -36,6 +40,7 @@ callbackQuery.value = getQueryObject()
 redirect.value = route.query.redirect
 authSource.value = route.query.authSource
 
+const errorMsg = ref('未获取到授权信息，请返回重新授权登录')
 // const userInfo = computed(() => {
 //   return userStore.userInfo
 // })
@@ -50,7 +55,8 @@ if (callbackQuery.value && callbackQuery.value.state != null) {
     })
     .catch((error) => {
       console.error('login-error', error)
-      proxy.$modal.msgError(error.msg)
+      // proxy.$modal.msgError(error.msg)
+      errorMsg.value = error.msg
       loading.value = false
     })
 }
