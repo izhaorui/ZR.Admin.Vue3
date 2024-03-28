@@ -32,7 +32,16 @@
     "personalCenter": "Personal",
     "menuPermi": "Menu permissions",
     "assignUsers": "Authorized user",
-    "cacheMonitor": "Cache monitoring"
+    "cacheMonitor": "Cache monitoring",
+    "dataScreen": "dataScreen",
+    "emailList": "Mail management",
+    "emailTemplate": "Email templates",
+    "emailLog": "Mail records",
+    "articleCategory": "Article category",
+    "userOnlineLog": "User online logs",
+    "dataDiffLog": "Data discrepancy logs",
+    "smsLog": "SMS logs",
+    "zujianDemo": "Demo"
   },
   "tagsView": {
     "refresh": "refresh",
@@ -94,7 +103,9 @@
     "onlineClientNum": "Number of online devices",
     "tagsView": "tabs",
     "tagsPersist": "tabs Persist",
-    "tagsShowIcon": "tabas show icon"
+    "tagsShowIcon": "tabas show icon",
+    "navMode": "nav mode",
+    "sideColor": "side color"
   },
   "common": {
     "ok": "Ok",

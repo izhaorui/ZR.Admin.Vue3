@@ -8,7 +8,7 @@
     :ellipsis="false">
     <template v-for="(item, index) in topMenus">
       <el-menu-item :style="{ '--theme': theme }" :index="item.path" :key="index" v-if="index < visibleNumber">
-        <svg-icon :name="item.meta.icon" />
+        <svg-icon class="menu-icon" :name="item.meta.icon" />
         <!-- {{ item.meta.title }} -->
         <template v-if="item.meta.titleKey" #title>
           {{ $t(item.meta.titleKey) }}
@@ -24,8 +24,13 @@
       <template #title>{{ $t('btn.more') }}</template>
       <template v-for="(item, index) in topMenus">
         <el-menu-item :index="item.path" :key="index" v-if="index >= visibleNumber">
-          <svg-icon :name="item.meta.icon" />
-          <span style="margin-left: 5px">{{ item.meta.title }}</span>
+          <svg-icon class="menu-icon" :name="item.meta.icon" />
+          <template v-if="item.meta.titleKey" #title>
+            {{ $t(item.meta.titleKey) }}
+          </template>
+          <template v-else-if="item.meta.title" #title>
+            {{ item.meta.title }}
+          </template>
         </el-menu-item>
       </template>
     </el-sub-menu>
@@ -121,7 +126,11 @@ function setVisibleNumber() {
 function handleSelect(key, keyPath) {
   currentIndex.value = key
   const route = routers.value.find((item) => item.path === key)
-  if (isHttp(key)) {
+  if (key.startsWith('/link')) {
+    var path = import.meta.env.VITE_APP_ROUTER_PREFIX + key
+    path = path.replace('//', '/')
+    window.open(key, '_blank')
+  } else if (isHttp(key)) {
     // http(s):// 路径新窗口打开
     window.open(key, '_blank')
   } else if (!route || !route.children) {
@@ -170,24 +179,28 @@ onMounted(() => {
 })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 // 修改默认样式
-.topmenu-container.el-menu--horizontal > .el-menu-item {
+.el-menu--horizontal > .el-menu-item {
   height: 50px !important;
   line-height: 50px !important;
-  color: #999093 !important;
   padding: 0 5px !important;
   margin: 0 10px !important;
 }
-.el-menu--horizontal > .el-menu-item .svg-icon {
+.el-menu--horizontal .menu-icon {
   margin-right: 5px;
 }
 /* sub-menu item */
-.topmenu-container.el-menu--horizontal > .el-sub-menu .el-sub-menu__title {
-  height: 50px !important;
-  line-height: 50px !important;
-  color: #999093 !important;
+.el-menu--horizontal > .el-sub-menu .el-sub-menu__title {
+  height: var(--base-header-height) !important;
+  line-height: var(--base-header-height) !important;
   padding: 0 5px !important;
   margin: 0 10px !important;
+}
+.el-menu--horizontal.el-menu {
+  border-bottom: unset !important;
+}
+.el-menu--horizontal {
+  height: var(--base-header-height);
 }
 </style>

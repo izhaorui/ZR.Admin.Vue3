@@ -32,7 +32,16 @@
     "personalCenter": "個人中心",
     "menuPermi": "菜單權限",
     "assignUsers": "分配用戶",
-    "cacheMonitor": "緩存監控"
+    "cacheMonitor": "緩存監控",
+    "dataScreen": "數據大屏",
+    "emailList": "郵件管理",
+    "emailTemplate": "郵件模板",
+    "emailLog": "郵件記錄",
+    "articleCategory": "文章目錄",
+    "userOnlineLog": "用戶在線日誌",
+    "dataDiffLog": "數據差異日誌",
+    "smsLog": "短信記錄",
+    "zujianDemo": "組件示例"
   },
   "tagsView": {
     "refresh": "重繪",
@@ -94,7 +103,9 @@
     "onlineClientNum": "在線設備數",
     "tagsView": "標簽頁",
     "tagsPersist": "標簽持久化",
-    "tagsShowIcon": "標簽顯示icon"
+    "tagsShowIcon": "標簽顯示icon",
+    "navMode": "導航模式",
+    "sideColor": "側邊欄顏色"
   },
   "common": {
     "ok": "確定",
