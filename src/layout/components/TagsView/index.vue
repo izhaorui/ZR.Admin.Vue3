@@ -10,7 +10,7 @@
         class="tags-view-item"
         @click.middle="!isAffix(tag) ? closeSelectedTag(tag) : ''"
         @contextmenu.prevent="openMenu(tag, $event)">
-        <svg-icon v-if="!isActive(tag) && settingsStore.tagsShowIcon" :name="tag.meta && tag.meta.icon" />
+        <svg-icon v-if="settingsStore.tagsShowIcon" :name="tag.meta && tag.meta.icon" />
         <span v-if="tag.meta && tag.meta.titleKey">{{ $t(tag.meta.titleKey) }}</span>
         <span v-else>{{ tag.title }}</span>
         <span v-if="!isAffix(tag)" @click.prevent.stop="closeSelectedTag(tag)" class="close-wrap">
@@ -231,9 +231,9 @@ function handleScroll() {
 .tags-view-container {
   height: var(--base-tags-height);
   width: 100%;
-  background: var(--base-topBar-background);
   // border-bottom: 1px solid #d8dce5;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
+  // box-shadow: 0 1px 3px 0 #888, 0 0 3px 0 #888;
+  box-shadow: 0 0 1px #888;
 
   .tags-view-wrapper {
     .tags-view-item {

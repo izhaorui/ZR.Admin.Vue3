@@ -15,11 +15,29 @@ const {
   watermarkText,
   tagsViewPersist,
   codeMode,
-  tagsShowIcon
+  tagsShowIcon,
+  navType
 } = defaultSettings
 
 const storageSetting = JSON.parse(localStorage.getItem('layout-setting')) || ''
-const useSettingsStore = defineStore('settings', {
+const useSettingsStore = defineStore('layout-setting', {
+  persist: {
+    paths: [
+      'theme',
+      'sideTheme',
+      'topNav',
+      'tagsView',
+      'fixedHeader',
+      'sidebarLogo',
+      'dynamicTitle',
+      'showFooter',
+      'showWatermark',
+      'tagsViewPersist',
+      'codeMode',
+      'tagsShowIcon',
+      'navType'
+    ] //存储指定key
+  },
   state: () => ({
     title: '',
     theme: storageSetting.theme || theme,
@@ -35,7 +53,8 @@ const useSettingsStore = defineStore('settings', {
     watermarkText: storageSetting.watermarkText === undefined ? watermarkText : storageSetting.watermarkText,
     tagsViewPersist: storageSetting.tagsViewPersist === undefined ? tagsViewPersist : storageSetting.tagsViewPersist,
     codeMode: storageSetting.codeMode === undefined ? codeMode : storageSetting.codeMode,
-    tagsShowIcon: storageSetting.tagsShowIcon === undefined ? tagsShowIcon : storageSetting.tagsShowIcon
+    tagsShowIcon: storageSetting.tagsShowIcon === undefined ? tagsShowIcon : storageSetting.tagsShowIcon,
+    navType: storageSetting.navType === undefined ? navType : storageSetting.navType
   }),
   actions: {
     // 修改布局设置

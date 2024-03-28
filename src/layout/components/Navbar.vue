@@ -1,13 +1,14 @@
 <template>
-  <div class="navbar" :class="appStore.device">
-    <hamburger id="hamburger-container" :is-active="appStore.sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+  <div class="navbar" :data-theme="sideTheme" :class="appStore.device + ' nav' + settingsStore.navType">
+    <hamburger :is-active="appStore.sidebar.opened" :class="appStore.device" class="hamburger-container" @toggleClick="toggleSideBar" />
     <template v-if="appStore.device == 'desktop'">
-      <breadcrumb id="breadcrumb-container" class="breadcrumb-container" v-if="!settingsStore.topNav" />
-      <top-nav id="topmenu-container" class="topmenu-container" v-if="settingsStore.topNav" />
+      <breadcrumb class="breadcrumb-container" v-if="settingsStore.navType == 1" />
+      <top-nav class="topmenu-container" v-if="settingsStore.navType == 2" />
+      <TopBar v-if="settingsStore.navType == 3"></TopBar>
     </template>
 
     <div class="right-menu">
-      <header-search id="header-search" class="right-menu-item" />
+      <header-search class="right-menu-item" />
       <Notice title="通知" class="right-menu-item" />
       <template v-if="appStore.device == 'desktop'">
         <zr-git title="源码地址" class="right-menu-item" />
@@ -22,16 +23,16 @@
           <span class="avatar-wrapper">
             <el-avatar :size="25" shape="circle" class="user-avatar" :src="userStore.avatar" />
             <span class="name">{{ userStore.name }}</span>
-            <el-icon><ArrowDown /></el-icon>
+            <!-- <el-icon><ArrowDown /></el-icon> -->
           </span>
           <template #dropdown>
             <el-dropdown-menu>
               <router-link to="/user/profile">
                 <el-dropdown-item>{{ $t('layout.personalCenter') }}</el-dropdown-item>
               </router-link>
-              <el-dropdown-item command="setLayout">
+              <!-- <el-dropdown-item command="setLayout">
                 <span>{{ $t('layout.layoutSetting') }}</span>
-              </el-dropdown-item>
+              </el-dropdown-item> -->
               <el-dropdown-item command="copyToken" v-if="dev">
                 <span>复制token</span>
               </el-dropdown-item>
@@ -41,6 +42,9 @@
             </el-dropdown-menu>
           </template>
         </el-dropdown>
+      </div>
+      <div class="right-menu-item mr10" @click="handleCommand('setLayout')">
+        <el-icon><Setting /></el-icon>
       </div>
     </div>
   </div>
@@ -60,6 +64,7 @@ import LangSelect from '@/components/LangSelect/index'
 import useAppStore from '@/store/modules/app'
 import useUserStore from '@/store/modules/user'
 import useSettingsStore from '@/store/modules/settings'
+import TopBar from './TopBar'
 // import { useClipboard } from '@vueuse/core'
 import useClipboard from 'vue-clipboard3'
 const { toClipboard } = useClipboard()
@@ -120,13 +125,14 @@ function setLayout() {
 </script>
 
 <style lang="scss" scoped>
-.el-menu {
-  // display: inline-table;
-  border-bottom: none;
-  .el-menu-item {
-    vertical-align: center;
+.nav3 {
+  .desktop {
+    &.hamburger-container {
+      display: none;
+    }
   }
 }
+
 .navbar {
   height: var(--base-header-height);
   line-height: var(--base-header-height);
@@ -134,6 +140,10 @@ function setLayout() {
   position: relative;
   background: var(--base-topBar-background);
   // box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+
+  &.desktop {
+    display: flex;
+  }
 
   .hamburger-container {
     line-height: var(--base-header-height);
@@ -149,17 +159,16 @@ function setLayout() {
   }
 
   .breadcrumb-container {
-    float: left;
+    flex: 1;
   }
   .topmenu-container {
-    position: absolute;
-    left: 50px;
+    flex: 1;
   }
 
   .right-menu {
     display: flex;
-    justify-content: flex-end;
     align-items: center;
+    justify-content: flex-end;
 
     .right-menu-item {
       padding: 0 8px;

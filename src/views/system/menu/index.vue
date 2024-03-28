@@ -134,9 +134,9 @@
           <el-col :lg="24">
             <el-form-item :label="$t('m.menuType')" prop="menuType">
               <el-radio-group v-model="form.menuType">
-                <el-radio label="M">{{ $t('m.directory') }}</el-radio>
-                <el-radio label="C">{{ $t('m.menu') }}</el-radio>
-                <el-radio label="F">{{ $t('m.button') }}</el-radio>
+                <el-radio value="M">{{ $t('m.directory') }}</el-radio>
+                <el-radio value="C">{{ $t('m.menu') }}</el-radio>
+                <el-radio value="F">{{ $t('m.button') }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -195,8 +195,8 @@
                 </span>
               </template>
               <el-radio-group v-model="form.isFrame">
-                <el-radio label="1">{{ $t('common.yes') }}</el-radio>
-                <el-radio label="0">{{ $t('common.no') }}</el-radio>
+                <el-radio value="1">{{ $t('common.yes') }}</el-radio>
+                <el-radio value="0">{{ $t('common.no') }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -275,8 +275,8 @@
                 </span>
               </template>
               <el-radio-group v-model="form.isCache">
-                <el-radio label="0">{{ $t('common.yes') }}</el-radio>
-                <el-radio label="1">{{ $t('common.no') }}</el-radio>
+                <el-radio value="0">{{ $t('common.yes') }}</el-radio>
+                <el-radio value="1">{{ $t('common.no') }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -293,7 +293,7 @@
                 </span>
               </template>
               <el-radio-group v-model="form.visible">
-                <el-radio v-for="dict in sys_show_hide" :key="dict.dictValue" :label="dict.dictValue">{{ dict.dictLabel }}</el-radio>
+                <el-radio v-for="dict in sys_show_hide" :key="dict.dictValue" :value="dict.dictValue">{{ dict.dictLabel }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -310,7 +310,7 @@
                 </span>
               </template>
               <el-radio-group v-model="form.status">
-                <el-radio v-for="dict in sys_normal_disable" :key="dict.dictValue" :label="dict.dictValue">{{ dict.dictLabel }}</el-radio>
+                <el-radio v-for="dict in sys_normal_disable" :key="dict.dictValue" :value="dict.dictValue">{{ dict.dictLabel }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -355,7 +355,7 @@ const state = reactive({
     menuNameKey: [{ pattern: /^[A-Za-z].+$/, message: '输入格式不正确', trigger: 'blur' }],
     orderNum: [{ required: true, message: '菜单顺序不能为空', trigger: 'blur' }],
     path: [
-      { required: true, message: '路由地址不能为空', trigger: 'blur' },
+      { required: false, message: '路由地址不能为空', trigger: 'blur' },
       { pattern: /^[/A-Za-z].+$/, message: '输入格式不正确，字母开头', trigger: 'blur' }
     ],
     visible: [{ required: true, message: '显示状态不能为空', trigger: 'blur' }]

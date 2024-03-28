@@ -99,5 +99,9 @@ export default {
   /**
    * 标签显示icon
    */
-  tagsShowIcon: true
+  tagsShowIcon: true,
+  /**
+   * 导航模式 1、侧边栏 2、混合 3、纯顶部
+   */
+  navType: 1
 }

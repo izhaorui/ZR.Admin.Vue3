@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar-logo-container" :class="{ collapse: collapse }">
+  <div class="logo-container" :class="{ collapse: collapse }">
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
         <img v-if="logo" :src="logo" class="sidebar-logo" />
@@ -20,13 +20,13 @@ import useSettingsStore from '@/store/modules/settings'
 defineProps({
   collapse: {
     type: Boolean,
-    required: true,
-  },
+    required: true
+  }
 })
 
 const title = ref(import.meta.env.VITE_APP_TITLE)
-const settingsStore = useSettingsStore();
-const sideTheme = computed(() => settingsStore.sideTheme);
+const settingsStore = useSettingsStore()
+const sideTheme = computed(() => settingsStore.sideTheme)
 </script>
 
 <style lang="scss" scoped>
@@ -39,12 +39,12 @@ const sideTheme = computed(() => settingsStore.sideTheme);
   opacity: 0;
 }
 
-.sidebar-logo-container {
+.logo-container {
   position: relative;
-  width: 100%;
+  min-width: var(--el-aside-width);
   height: 50px;
   line-height: 50px;
-  background: var(--base-menu-background);
+  // background: var(--base-menu-background);
   text-align: center;
   overflow: hidden;
 

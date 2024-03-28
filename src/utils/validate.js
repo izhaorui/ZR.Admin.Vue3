@@ -9,7 +9,12 @@ export function isHttp(url) {
   }
   return false
 }
-
+export function isLink(url) {
+  if (url) {
+    return url.indexOf('/link') !== -1
+  }
+  return false
+}
 /**
  * 判断path是否为外链
  * @param {string} path

@@ -1,3 +1,6 @@
+.menu-icon {
+  margin-right: 5px;
+}
 #app {
   .sidebar {
     position: relative;
@@ -31,9 +34,6 @@
     .sidebar {
       transform: translate(0);
     }
-  }
-  .sidebar .svg-icon {
-    margin-right: 5px;
   }
   // 隐藏侧边栏样式
   .hideSidebar {
@@ -85,7 +85,9 @@
 
     &.hideSidebar {
       .sidebar {
-        display: none;
+        pointer-events: none;
+        transform: translate3d(-220px, 0, 0);
+        transition-duration: 0.3s;
       }
     }
   }

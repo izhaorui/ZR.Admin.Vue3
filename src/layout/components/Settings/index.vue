@@ -1,46 +1,55 @@
 <template>
-  <el-drawer v-model="showSettings" :withHeader="false" direction="rtl" size="300px">
-    <div class="setting-drawer-title">
-      <h3 class="drawer-title">{{ $t('layout.themeStyleSet') }}</h3>
-    </div>
-    <div class="setting-drawer-block-checbox">
-      <div class="item" @click="handleTheme('theme-dark')">
-        <img src="@/assets/images/dark.svg" alt="dark" />
-        <div v-if="sideTheme === 'theme-dark'" class="setting-drawer-block-checbox-selectIcon" style="display: block">
-          <el-icon><Check /></el-icon>
+  <el-drawer v-model="showSettings" title="系统设置" :with-header="false" direction="rtl" size="330px">
+    <!-- <div class="setting-drawer-title">
+      <h3 class="drawer-title">导航模式</h3>
+    </div> -->
+    <el-divider>{{ $t('layout.navMode') }}</el-divider>
+    <div class="nav-wrap">
+      <el-tooltip content="左侧菜单" placement="bottom">
+        <div class="item left" @click="handleNavType(1)" :class="{ activeItem: navType == 1 }">
+          <b></b>
+          <b></b>
         </div>
-      </div>
-      <div class="item" @click="handleTheme('theme-light')">
-        <img src="@/assets/images/light.svg" alt="light" />
-        <div v-if="sideTheme === 'theme-light'" class="setting-drawer-block-checbox-selectIcon" style="display: block">
-          <el-icon><Check /></el-icon>
+      </el-tooltip>
+
+      <el-tooltip content="混合菜单" placement="bottom">
+        <div class="item mix" @click="handleNavType(2)" :class="{ activeItem: navType == 2 }">
+          <b></b>
+          <b></b>
         </div>
-      </div>
+      </el-tooltip>
+      <el-tooltip content="顶部菜单" placement="bottom">
+        <div class="item top" @click="handleNavType(3)" :class="{ activeItem: navType == 3 }">
+          <b></b>
+          <b></b>
+        </div>
+      </el-tooltip>
     </div>
-    <div class="drawer-item">
-      <el-radio-group v-model="mode" size="small">
+    <div class="drawer-item" style="text-align: center">
+      <!-- <el-radio-group v-model="mode" size="small">
         <el-radio value="dark">{{ $t('layout.darkMode') }}</el-radio>
         <el-radio value="light">{{ $t('layout.lightMode') }}</el-radio>
-        <!-- <el-radio label="cafe">cafe</el-radio>
-        <el-radio label="contrast">contrast</el-radio> -->
-      </el-radio-group>
+      </el-radio-group> -->
+      <el-divider> {{ $t('layout.themeStyleSet') }} </el-divider>
+      <el-switch v-model="mode" inactive-icon="Sunny" active-icon="Moon" active-value="dark" inactive-value="light"></el-switch>
+    </div>
+    <div class="drawer-item">
+      <!-- <div>侧边栏颜色</div> -->
+      <el-divider> {{ $t('layout.sideColor') }} </el-divider>
+
+      <div class="mt10">
+        <span class="color-item" :style="{ 'background-color': item.color }" v-for="item in sideColors" @click="handleSideTheme(item.name)">
+          <svg-icon name="ele-check" :style="{ '--color': sideTheme == item.name ? '' : 'transparent' }" class="sideActive"></svg-icon>
+        </span>
+      </div>
     </div>
     <div class="drawer-item">
       <span>{{ $t('layout.themeColor') }}</span>
       <span class="comp-style quick-color-wrap">
-        <!-- <span :style="{ 'background-color': item }" v-for="item in predefineColors" @change="themeChange(item)"></span> -->
         <el-color-picker v-model="theme" :predefine="predefineColors" @change="themeChange" />
       </span>
     </div>
     <el-divider />
-
-    <h3 class="drawer-title">{{ $t('layout.sysLayoutSet') }}</h3>
-    <div class="drawer-item">
-      <span>{{ $t('layout.open') }} {{ $t('layout.topNav') }}</span>
-      <span class="comp-style">
-        <el-switch v-model="topNav" class="drawer-switch" />
-      </span>
-    </div>
 
     <div class="drawer-item">
       <span>{{ $t('layout.open') }} {{ $t('layout.tagsView') }}</span>
@@ -95,7 +104,7 @@
     </div>
     <el-divider />
 
-    <el-button type="primary" plain icon="DocumentAdd" @click="saveSetting">{{ $t('layout.saveConfig') }}</el-button>
+    <!-- <el-button type="primary" plain icon="DocumentAdd" @click="saveSetting">{{ $t('layout.saveConfig') }}</el-button> -->
     <el-button plain icon="Refresh" @click="resetSetting">{{ $t('layout.resetConfig') }}</el-button>
   </el-drawer>
 </template>
@@ -120,6 +129,10 @@ const theme = ref(settingsStore.theme)
 const sideTheme = ref(settingsStore.sideTheme)
 const storeSettings = computed(() => settingsStore)
 const predefineColors = ref(['#409EFF', '#ff4500', '#ff8c00', '#00ced1', '#1e90ff', '#c71585'])
+const sideColors = ref([
+  { color: '#324157', name: 'theme-black' },
+  { color: '#fff', name: '' }
+])
 const { setWatermark, removeWatermark } = getmark()
 // 可以手动更改当前值 model.value = 'cafe'
 const mode = useColorMode({
@@ -139,6 +152,13 @@ const topNav = computed({
       appStore.toggleSideBarHide(false)
       permissionStore.setSidebarRouters(permissionStore.defaultRoutes)
     }
+  }
+})
+/**导航类型 */
+const navType = computed({
+  get: () => storeSettings.value.navType,
+  set: (val) => {
+    settingsStore.changeSetting({ key: 'navType', value: val })
   }
 })
 /** 是否需要tagview */
@@ -231,7 +251,27 @@ watch(
   (val) => {
     settingsStore.changeSetting({ key: 'codeMode', value: val.value })
     if (val.value === 'dark') {
-      handleTheme('')
+      handleSideTheme('')
+    }
+  },
+  {
+    immediate: true,
+    deep: true
+  }
+)
+// 导航模式
+watch(
+  () => navType,
+  (val) => {
+    //侧边栏
+    if (val.value == 1) {
+      appStore.toggleSideBarHide(false)
+      permissionStore.setSidebarRouters(permissionStore.defaultRoutes)
+    }
+    //top
+    if (val.value == 3) {
+      appStore.toggleSideBarHide(true)
+      permissionStore.setSidebarRouters(permissionStore.defaultRoutes)
     }
   },
   {
@@ -255,29 +295,32 @@ function themeChange(val) {
     document.documentElement.style.setProperty(`--el-color-primary-light-${i}`, `${getLightColor(val, i / 10)}`)
   }
 }
-function handleTheme(val) {
+function handleSideTheme(val) {
   settingsStore.changeSetting({ key: 'sideTheme', value: val })
   sideTheme.value = val
   const body = document.documentElement
   if (val == 'theme-black') body.setAttribute('data-theme', 'theme-black')
   else body.removeAttribute('data-theme')
 }
+function handleNavType(val) {
+  settingsStore.changeSetting({ key: 'navType', value: val })
+}
 function saveSetting() {
   proxy.$modal.loading('正在保存到本地，请稍候...')
-  let layoutSetting = {
-    topNav: storeSettings.value.topNav,
-    tagsView: storeSettings.value.tagsView,
-    fixedHeader: storeSettings.value.fixedHeader,
-    sidebarLogo: storeSettings.value.sidebarLogo,
-    dynamicTitle: storeSettings.value.dynamicTitle,
-    sideTheme: storeSettings.value.sideTheme,
-    theme: storeSettings.value.theme,
-    showFooter: storeSettings.value.showFooter,
-    showWatermark: storeSettings.value.showWatermark,
-    tagsViewPersist: storeSettings.value.tagsViewPersist,
-    tagsShowIcon: storeSettings.value.tagsShowIcon
-  }
-  localStorage.setItem('layout-setting', JSON.stringify(layoutSetting))
+  // let layoutSetting = {
+  //   topNav: storeSettings.value.topNav,
+  //   tagsView: storeSettings.value.tagsView,
+  //   fixedHeader: storeSettings.value.fixedHeader,
+  //   sidebarLogo: storeSettings.value.sidebarLogo,
+  //   dynamicTitle: storeSettings.value.dynamicTitle,
+  //   sideTheme: storeSettings.value.sideTheme,
+  //   theme: storeSettings.value.theme,
+  //   showFooter: storeSettings.value.showFooter,
+  //   showWatermark: storeSettings.value.showWatermark,
+  //   tagsViewPersist: storeSettings.value.tagsViewPersist,
+  //   tagsShowIcon: storeSettings.value.tagsShowIcon
+  // }
+  // localStorage.setItem('layout-setting', JSON.stringify(layoutSetting))
   setTimeout(proxy.$modal.closeLoading(), 100)
   setTimeout('window.location.reload()', 200)
 }
@@ -305,35 +348,64 @@ defineExpose({
     font-size: 14px;
   }
 }
-.setting-drawer-block-checbox {
+
+// 导航模式
+.nav-wrap {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   margin-top: 10px;
   margin-bottom: 20px;
 
+  .activeItem {
+    border: 2px solid var(--el-color-primary) !important;
+  }
+
   .item {
     position: relative;
     margin-right: 16px;
     border-radius: 2px;
     cursor: pointer;
+    width: 50px;
+    height: 50px;
+    border-radius: 4px;
+    background: #f0f2f5;
+    box-shadow: 0 1px 2.5px #0000002e;
+  }
 
-    img {
-      width: 48px;
-      height: 48px;
+  .left {
+    b:first-child {
+      display: block;
+      height: 30%;
+      background: #fff;
     }
-
-    .setting-drawer-block-checbox-selectIcon {
+    b:last-child {
+      width: 30%;
+      background: #1b2a47;
       position: absolute;
-      top: 0;
-      right: 0;
-      width: 100%;
       height: 100%;
-      padding-top: 15px;
-      padding-left: 24px;
-      color: #1890ff;
-      font-weight: 700;
-      font-size: 14px;
+      top: 0;
+    }
+  }
+  .mix {
+    b:first-child {
+      border-radius: 4px 0;
+      display: block;
+      height: 30%;
+      background: #1b2a47;
+    }
+    b:last-child {
+      width: 30%;
+      background: #1b2a47;
+      position: absolute;
+      height: 70%;
+    }
+  }
+  .top {
+    b:first-child {
+      display: block;
+      height: 30%;
+      background: #1b2a47;
     }
   }
 }
@@ -343,6 +415,20 @@ defineExpose({
   padding: 12px 0;
   font-size: 14px;
 
+  .color-item {
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    margin-right: 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    position: relative;
+  }
+  .sideActive {
+    width: 1.6em;
+    height: 1.6em;
+  }
   .comp-style {
     float: right;
     margin: -3px 8px 0px 0px;

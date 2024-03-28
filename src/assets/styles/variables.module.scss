@@ -25,16 +25,22 @@ $panGreen: #30b08f;
   // 侧边栏图标大小
   --el-menu-icon-width: 14px;
 
+  --el-menu-horizontal-height: 50px;
+
   --vxe-table-column-padding-default: 7px 0 !important;
 }
 
 /***侧边栏深色配置***/
-[data-theme='theme-dark'] {
+[data-theme='theme-black'] {
   --base-menu-background: #324157;
   --base-logo-title-color: #ffffff;
-  // // el-ement ui 设置
+  --base-topBar-background: #324157;
+  --base-topBar-color: #fff;
+  --el-text-color-regular: #fff;
+  // el-ement ui 设置
   // --el-fill-color-blank: #304156;
   --el-text-color-primary: #e5eaf3;
+  --base-color-white: #ffffff;
   --el-menu-text-color: var(--el-text-color-primary);
 }
 // 黑色主题
@@ -44,6 +50,7 @@ html.dark {
   --base-color-white: #ffffff;
   --base-text-color-rgba: #ffffff;
   --base-menu-background: #000;
+  --base-topBar-background: #000;
 
   // vxe-table黑色样式
   --vxe-font-color: #98989e;
