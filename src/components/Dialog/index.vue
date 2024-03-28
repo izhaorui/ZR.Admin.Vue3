@@ -65,8 +65,8 @@ defineExpose(expose)
 }
 .fullscreen {
   position: absolute;
-  right: 13px;
-  top: 5px;
+  right: 8px;
+  top: 0;
   cursor: pointer;
   width: 27px;
   height: 27px;

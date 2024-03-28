@@ -38,8 +38,13 @@
       <el-divider> {{ $t('layout.sideColor') }} </el-divider>
 
       <div class="mt10">
-        <span class="color-item" :style="{ 'background-color': item.color }" v-for="item in sideColors" @click="handleSideTheme(item.name)">
-          <svg-icon name="ele-check" :style="{ '--color': sideTheme == item.name ? '' : 'transparent' }" class="sideActive"></svg-icon>
+        <span
+          class="color-item"
+          :class="{ sideActive: item.name == sideTheme }"
+          :style="{ 'background-color': item.color }"
+          v-for="item in sideColors"
+          @click="handleSideTheme(item.name)">
+          <svg-icon name="ele-check"></svg-icon>
         </span>
       </div>
     </div>
@@ -364,13 +369,13 @@ defineExpose({
   .item {
     position: relative;
     margin-right: 16px;
-    border-radius: 2px;
     cursor: pointer;
-    width: 50px;
-    height: 50px;
+    width: 56px;
+    height: 48px;
     border-radius: 4px;
     background: #f0f2f5;
-    box-shadow: 0 1px 2.5px #0000002e;
+    border: 2px solid transparent;
+    // box-shadow: 0 1px 2.5px #0000002e;
   }
 
   .left {
@@ -385,11 +390,12 @@ defineExpose({
       position: absolute;
       height: 100%;
       top: 0;
+      border-radius: 4px 0 0 4px;
     }
   }
   .mix {
     b:first-child {
-      border-radius: 4px 0;
+      border-radius: 4px 4px 0 0;
       display: block;
       height: 30%;
       background: #1b2a47;
@@ -399,6 +405,7 @@ defineExpose({
       background: #1b2a47;
       position: absolute;
       height: 70%;
+      border-radius: 0 0 0 4px;
     }
   }
   .top {
@@ -406,6 +413,7 @@ defineExpose({
       display: block;
       height: 30%;
       background: #1b2a47;
+      border-radius: 4px 4px 0 0;
     }
   }
 }
@@ -416,18 +424,24 @@ defineExpose({
   font-size: 14px;
 
   .color-item {
-    width: 22px;
-    height: 22px;
+    width: 25px;
+    height: 25px;
     display: inline-flex;
     margin-right: 10px;
     cursor: pointer;
     border-radius: 3px;
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
     position: relative;
+    --color: transparent;
+
+    .el-icon {
+      height: 1.6em;
+      width: 1.6em;
+    }
   }
   .sideActive {
-    width: 1.6em;
-    height: 1.6em;
+    --color: #fff;
+    border: 2px solid var(--el-color-primary);
   }
   .comp-style {
     float: right;

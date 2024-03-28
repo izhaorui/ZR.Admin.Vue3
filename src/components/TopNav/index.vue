@@ -113,7 +113,7 @@ const activeMenu = computed(() => {
     }
   } else if (!route.children) {
     activePath = path
-    appStore.toggleSideBarHide(true)
+    //appStore.toggleSideBarHide(true)
   }
   activeRoutes(activePath)
   return activePath
@@ -142,7 +142,8 @@ function handleSelect(key, keyPath) {
     } else {
       router.push({ path: key })
     }
-    appStore.toggleSideBarHide(true)
+    activeRoutes(key)
+    // appStore.toggleSideBarHide(true)
   } else {
     // 显示左侧联动菜单
     activeRoutes(key)
@@ -154,16 +155,12 @@ function activeRoutes(key) {
   var routes = []
   if (childrenMenus.value && childrenMenus.value.length > 0) {
     childrenMenus.value.map((item) => {
-      if (key == item.parentPath || (key == 'index' && '' == item.path)) {
+      if (key == item.parentPath || (item.parentPath == '/' && key == item.path) || (key == '/index' && '' == item.path)) {
         routes.push(item)
       }
     })
   }
-  if (routes.length > 0) {
-    permissionStore.setSidebarRouters(routes)
-  } else {
-    // appStore.toggleSideBarHide(true)
-  }
+  permissionStore.setSidebarRouters(routes)
   return routes
 }
 
