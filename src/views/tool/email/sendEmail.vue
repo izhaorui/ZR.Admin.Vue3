@@ -1,6 +1,6 @@
 <template>
   <el-form class="mt10" ref="formRef" :model="form" label-width="110px" :rules="rules">
-    <el-form-item
+    <!-- <el-form-item
       v-for="(domain, index) in form.toEmails"
       :prop="'toEmails.' + index + '.value'"
       :label="'收件邮箱' + (index === 0 ? '' : index)"
@@ -12,6 +12,22 @@
       <el-input v-model="domain.value" style="width: 300px"></el-input>
       <el-button class="ml10" @click="addDomain" icon="plus" />
       <el-button class="ml10" @click.prevent="removeDomain(domain)" icon="minus" />
+    </el-form-item> -->
+    <el-form-item label="接收人" prop="toEmails">
+      <el-tag v-for="tag in form.toEmails" :key="tag" class="mr10" closable @close="handleCloseTag(tag)">
+        {{ tag }}
+      </el-tag>
+      <el-input
+        size="small"
+        v-if="inputVisible"
+        style="width: 180px"
+        ref="inputRef"
+        v-model="inputValue"
+        placeholder="请输入邮箱地址"
+        @keyup.enter="handleInputConfirm"
+        @blur="handleInputConfirm" />
+
+      <el-button v-else class="button-new-tag" size="small" icon="plus" text @click="showInput">收件人邮箱</el-button>
     </el-form-item>
     <el-form-item label="邮件主题" prop="subject">
       <el-input v-model="form.subject"></el-input>
@@ -55,15 +71,13 @@ const data = reactive({
   form: {
     fileUrl: '',
     htmlContent: '',
-    toEmails: [
-      {
-        value: ''
-      }
-    ]
+    toEmails: [],
+    email: ''
   },
   rules: {
     subject: [{ required: true, message: '主题不能为空', trigger: 'blur' }],
-    content: [{ required: true, message: '内容不能为空', trigger: 'blur' }]
+    content: [{ required: true, message: '内容不能为空', trigger: 'blur' }],
+    toEmails: [{ required: true, message: '收件人不能为空', trigger: 'blur' }]
   }
 })
 
@@ -71,23 +85,6 @@ const { form, rules } = toRefs(data)
 const { proxy } = getCurrentInstance()
 const formRef = ref(null)
 const open = ref(false)
-// 表单重置
-function reset() {
-  form.value = {
-    toUser: undefined,
-    htmlContent: undefined,
-    subject: undefined,
-    fileUrl: undefined,
-    sendMe: false,
-    emailTpl: undefined,
-    toEmails: [
-      {
-        value: ''
-      }
-    ]
-  }
-  proxy.resetForm('formRef')
-}
 const emailTplOptions = ref([])
 listEmailTpl({ pageSize: 100 }).then((res) => {
   const { code, data } = res
@@ -116,20 +113,19 @@ function formSubmit() {
     //开启校验
     if (valid) {
       proxy.$modal.loading('loading...')
-      var emails = []
-      form.value.toEmails.filter((x) => {
-        emails.push(x.value)
-      })
+      // var emails = []
+      // form.value.toEmails.filter((x) => {
+      //   emails.push(x.value)
+      // })
       var p = {
         ...form.value,
-        toUser: emails.toString()
+        toUser: form.value.toEmails.toString()
       }
       // 如果校验通过，请求接口，允许提交表单
       sendEmail(p).then((res) => {
         open.value = false
         if (res.code == 200) {
           proxy.$message.success('发送成功')
-          reset()
           router.push({ name: 'emaillog' })
         }
         proxy.$modal.closeLoading()
@@ -162,6 +158,36 @@ function addDomain() {
     value: '',
     key: Date.now()
   })
+}
+const inputVisible = ref(false)
+const inputRef = ref()
+const inputValue = ref('')
+function handleCloseTag(tag) {
+  form.value.toEmails.splice(form.value.toEmails.indexOf(tag), 1)
+}
+
+const showInput = () => {
+  if (form.value.toEmails.length >= 5) {
+    proxy.$modal.msgError('最多5个标签')
+    return
+  }
+  inputVisible.value = true
+  nextTick(() => {
+    inputRef.value.input.focus()
+  })
+}
+// 标签确认
+function handleInputConfirm() {
+  if (inputValue.value) {
+    const regEmail = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/
+    if (!regEmail.test(inputValue.value)) {
+      proxy.$modal.msgError('请输入有效的邮箱')
+      return
+    }
+    form.value.toEmails.push(inputValue.value)
+  }
+  inputVisible.value = false
+  inputValue.value = ''
 }
 </script>
 <style scoped>
