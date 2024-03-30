@@ -14,7 +14,7 @@
         </el-tabs>
       </div>
 
-      <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form" v-show="loginType == 1">
+      <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form" v-if="loginType == 1">
         <el-form-item prop="username">
           <el-input v-model="loginForm.username" type="text" auto-complete="off" :placeholder="$t('login.account')">
             <template #prefix>
@@ -61,15 +61,10 @@
           </span>
         </div>
       </el-form>
-      <div class="qr-wrap login-form" v-show="loginType == 3">
-        <div class="login-scan-container">
-          <div ref="imgContainerRef" id="imgContainer" class="qrCode"></div>
-          <div class="mt10 text-muted">{{ $t('login.tip_scan_code') }}</div>
-        </div>
-      </div>
 
-      <phoneLogin v-show="loginType == 2"></phoneLogin>
-      <oauthLogin v-show="defaultSettings.showOtherLogin"></oauthLogin>
+      <qrLogin ref="qrLoginRef" v-if="loginType == 3"></qrLogin>
+      <phoneLogin v-if="loginType == 2"></phoneLogin>
+      <oauthLogin v-if="defaultSettings.showOtherLogin"></oauthLogin>
     </div>
 
     <div class="el-login-footer">
@@ -86,10 +81,9 @@ import defaultSettings from '@/settings'
 import starBackground from '@/views/components/starBackground.vue'
 import LangSelect from '@/components/LangSelect/index.vue'
 import useUserStore from '@/store/modules/user'
-import QRCode from 'qrcodejs2-fixes'
-import { verifyScan, generateQrcode } from '@/api/system/login'
 import oauthLogin from './components/Login/oauthLogin.vue'
 import phoneLogin from './components/Login/phoneLogin.vue'
+import qrLogin from './components/Login/qrLogin.vue'
 
 var visitorId = ''
 const fpPromise = import('https://openfpcdn.io/fingerprintjs/v3').then((FingerprintJS) => FingerprintJS.load())
@@ -112,7 +106,12 @@ const loginRules = {
   password: [{ required: true, trigger: 'blur', message: '请输入您的密码' }],
   code: [{ required: true, trigger: 'change', message: '请输入验证码' }]
 }
-const loginType = ref(1)
+const loginType = computed({
+  get: () => userStore.loginType,
+  set: (val) => {
+    userStore.loginType = val
+  }
+})
 const codeUrl = ref('')
 const loading = ref(false)
 // 验证码开关
@@ -200,81 +199,36 @@ function handleForgetPwd() {
   proxy.$modal.msg('请联系管理员')
 }
 
-const interval = ref(null)
+function handleLoginType(t) {
+  // const val = t.paneName
+
+  if (userStore.loginType == 3) {
+    nextTick(() => {
+      proxy.$refs.qrLoginRef.clearQr()
+    })
+  }
+}
+watch(
+  () => userStore.loginType,
+  (val) => {
+    if (val == 3) {
+      handleShowQrLogin()
+    }
+  },
+  {
+    immediate: true
+  }
+)
 function handleShowQrLogin() {
   nextTick(() => {
-    generateCode()
+    proxy.$refs.qrLoginRef.generateCode()
   })
-}
-// 生成二维码
-function generateCode() {
-  clearQr()
-  var uuid = getUuid()
-
-  document.getElementById('imgContainer').innerHTML = '正在生成中...'
-  generateQrcode({ uuid, deviceId: visitorId }).then((res) => {
-    const { code, data } = res
-    document.getElementById('imgContainer').innerHTML = ''
-
-    if (code == 200) {
-      new QRCode(document.getElementById('imgContainer'), {
-        // text: 'https://qm.qq.com/cgi-bin/qm/qr?k=kgt4HsckdljU0VM-0kxND6d_igmfuPlL&authKey=r55YUbruiKQ5iwC/folG7KLCmZ++Y4rQVgNlvLbUniUMkbk24Y9+zNuOmOnjAjRc&noverify=0',
-        text: JSON.stringify(data.codeContent),
-        width: 160,
-        height: 160
-      })
-    }
-  })
-  interval.value = setInterval(() => {
-    verifyScan({ uuid: uuid, deviceId: userStore.clientId })
-      .then((res) => {
-        const { code, data } = res
-        if (data.status == -1) {
-          clearQr()
-          document.getElementById('imgContainer').innerHTML = '二维码已过期'
-        } else if (data.status == 2) {
-          userStore
-            .scanLogin(data)
-            .then(() => {
-              proxy.$modal.msgSuccess(proxy.$t('login.loginSuccess'))
-              router.push({ path: redirect.value || '/' })
-            })
-            .catch((error) => {
-              console.error(error)
-              proxy.$modal.msgError(error.msg)
-            })
-          clearQr()
-        }
-      })
-      .catch(() => {
-        clearQr()
-      })
-  }, 1000)
-}
-function clearQr() {
-  clearInterval(interval.value)
-  interval.value = null
-}
-function getUuid() {
-  var temp_url = URL.createObjectURL(new Blob())
-  var uuid = temp_url.toString().replace('-', '') // blob:https://xxx.com/b250d159-e1b6-4a87-9002-885d90033be3
-  URL.revokeObjectURL(temp_url)
-  return uuid.substr(uuid.lastIndexOf('/') + 1)
-}
-function handleLoginType(t) {
-  const val = t.paneName
-
-  if (val == 3) {
-    handleShowQrLogin()
-  } else {
-    clearQr()
-  }
 }
 getCode()
 getCookie()
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '@/assets/styles/login.scss';
 .forget-pwd {
   color: #ccc;

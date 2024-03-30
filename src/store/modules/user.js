@@ -6,7 +6,11 @@ import cache from '@/plugins/cache'
 import md5 from 'crypto-js/md5'
 
 const useUserStore = defineStore('user', {
+  persist: {
+    paths: ['loginType', 'clientId'] //存储指定key
+  },
   state: () => ({
+    loginType: 1,
     userInfo: '',
     token: getToken(),
     name: '',
@@ -16,7 +20,7 @@ const useUserStore = defineStore('user', {
     userId: 0,
     authSource: '',
     userName: '',
-    clientId: cache.local.get('clientId')
+    clientId: ''
   }),
   actions: {
     setAuthSource(source) {
@@ -159,7 +163,6 @@ const useUserStore = defineStore('user', {
     },
     setClientId(clientId) {
       this.clientId = clientId
-      cache.local.set('clientId', clientId)
     },
     refreshToken(token) {
       setToken(token)
