@@ -162,8 +162,8 @@
 .el-button:last-child {
   margin-right: 0;
 }
-
-.el-menu--horizontal .el-menu-item {
-  height: var(--base-header-height) !important;
-  line-height: var(--base-header-height) !important;
+// 解决top布局一级菜单高度不整齐
+.topbar-menu .el-menu-item {
+  height: unset;
+  line-height: unset;
 }
