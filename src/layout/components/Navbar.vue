@@ -36,6 +36,9 @@
               <el-dropdown-item command="copyToken" v-if="dev">
                 <span>复制token</span>
               </el-dropdown-item>
+              <el-dropdown-item command="clear">
+                <span>清空缓存</span>
+              </el-dropdown-item>
               <el-dropdown-item divided command="logout">
                 <span>{{ $t('layout.logOut') }}</span>
               </el-dropdown-item>
@@ -64,6 +67,7 @@ import LangSelect from '@/components/LangSelect/index'
 import useAppStore from '@/store/modules/app'
 import useUserStore from '@/store/modules/user'
 import useSettingsStore from '@/store/modules/settings'
+import useSocketStore from '@/store/modules/socket'
 import TopBar from './TopBar'
 // import { useClipboard } from '@vueuse/core'
 import useClipboard from 'vue-clipboard3'
@@ -88,6 +92,9 @@ function handleCommand(command) {
       break
     case 'copyToken':
       copyText(userStore.token)
+      break
+    case 'clear':
+      useSocketStore().clear()
       break
     default:
       break

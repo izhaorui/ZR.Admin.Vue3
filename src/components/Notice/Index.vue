@@ -15,14 +15,20 @@
             </template>
             <div class="content-box">
               <div class="content-box-item" v-for="item in noticeList" @click="handleDetails(item, 0)">
-                <el-icon :size="30" color="#409EFF"><bell /></el-icon>
+                <div class="left">
+                  <svg-icon name="gonggao" size="16"></svg-icon>
+                </div>
                 <div class="content">
-                  <div class="title">{{ item.noticeTitle }}</div>
+                  <div class="title">
+                    <el-tag size="small" v-if="item.noticeType == 1">通知</el-tag>
+                    <el-tag size="small" type="warning" v-if="item.noticeType == 2">公告</el-tag>
+                    {{ item.noticeTitle }}
+                  </div>
                   <div class="content-box-time">{{ dayjs(item.create_time).format('YYYY-MM-DD') }}</div>
                 </div>
               </div>
 
-              <el-empty v-if="noticeList.length <= 0" :image-size="60" description="暂无公告"></el-empty>
+              <el-empty v-if="noticeList.length <= 0" :image-size="60" description="暂无通知"></el-empty>
             </div>
           </el-tab-pane>
 
@@ -51,24 +57,12 @@
         </div>
       </div>
     </el-popover>
-
-    <el-dialog draggable v-model="show" append-to-body>
-      <template #header> {{ info.title }} </template>
-      <template v-if="info">
-        <template v-if="noticeType == 0">
-          <div v-html="info.item.noticeContent"></div>
-
-          <div class="n_right">{{ info.item.create_by }}</div>
-          <div class="n_right">{{ dayjs(info.item.create_time).format('YYYY-MM-DD HH:mm') }}</div>
-        </template>
-        <msgList v-if="noticeType == 1" v-model="info.userId"> </msgList>
-      </template>
-    </el-dialog>
+    <noticeInfo ref="noticeInfoRef"></noticeInfo>
   </div>
 </template>
 
 <script setup name="noticeIndex">
-import msgList from '@/views/components/msgList.vue'
+import noticeInfo from './noticeInfo.vue'
 import useSocketStore from '@/store/modules/socket'
 import useUserStore from '@/store/modules/user'
 import { dayjs } from 'element-plus'
@@ -79,10 +73,10 @@ const noticeType = ref('0')
 const newsDot = computed(() => {
   return useSocketStore().newNotice
 })
-const show = ref(false)
 const noticeList = computed(() => {
   return useSocketStore().noticeList
 })
+
 const allDotNum = computed(() => {
   return useSocketStore().getAllDotNum()
 })
@@ -92,14 +86,15 @@ const chatList = computed(() => {
 const chatDotNum = computed(() => {
   return useSocketStore().newChat
 })
-const info = ref({})
+const noticeInfoRef = ref()
 function handleDetails(item, type) {
-  show.value = true
+  var info = {}
   if (type == 0) {
-    info.value = { type, item, title: item.noticeTitle }
+    info = { type, ...item, title: item.noticeTitle }
   } else if (type == 1) {
-    info.value = { type, title: item.fromUser.nickName, userId: item.userId }
+    info = { type, title: item.fromUser.nickName, userId: item.userId }
   }
+  proxy.$refs['noticeInfoRef'].handleOpen(type, info)
 }
 // 全部已读点击
 function onAllReadClick() {
@@ -119,6 +114,14 @@ function onGoToGiteeClick() {
   overflow: auto;
 
   .content-box-item {
+    .left {
+      display: flex;
+      align-items: center;
+
+      .svg-icon {
+        width: 20px;
+      }
+    }
     display: flex;
     margin-bottom: 20px;
     cursor: pointer;
@@ -173,10 +176,6 @@ function onGoToGiteeClick() {
     z-index: 2;
     font-size: 12px;
   }
-}
-.n_right {
-  text-align: right;
-  margin: 10px;
 }
 </style>
 <style>

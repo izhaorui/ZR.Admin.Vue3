@@ -2,12 +2,16 @@ import useUserStore from './user'
 import signalR from '@/signalr/signalr'
 const useSocketStore = defineStore('socket', {
   persist: {
-    paths: ['chatMessage', 'chatList', 'sessionList', 'newChat', 'noticeIdArr', 'newNotice', 'globalErrorMsg'] //存储指定key
+    paths: ['chatMessage', 'chatList', 'sessionList', 'newChat', 'noticeIdArr', 'newNotice', 'globalErrorMsg', 'promptNoticeReadList'] //存储指定key
   },
   state: () => ({
     onlineNum: 0,
     onlineUsers: [],
     noticeList: [],
+    //弹框通知（公告）
+    promptNoticeList: [],
+    //弹框通知已读
+    promptNoticeReadList: [],
     //在线用户信息
     onlineInfo: {},
     // 聊天数据
@@ -44,18 +48,22 @@ const useSocketStore = defineStore('socket', {
     // 更新系统通知
     setNoticeList(data) {
       this.noticeList = data
-
-      const idArr = []
+      var gonggaoNoticeList = data.filter((x) => x.noticeType == 2)
+      const allNoticeIdArr = []
       data.forEach((ele) => {
-        idArr.push(ele.noticeId)
+        allNoticeIdArr.push(ele.noticeId)
       })
 
-      var diffArr = idArr.filter((v) => !this.noticeIdArr.some((item) => item == v))
+      var diffArr = allNoticeIdArr.filter((v) => !this.noticeIdArr.some((item) => item == v))
 
       if (diffArr.length > 0) {
         this.newNotice = diffArr.length
-        this.noticeIdArr = idArr
+        this.noticeIdArr = allNoticeIdArr
       }
+
+      var unReadeGongGao = gonggaoNoticeList.filter((v) => !this.promptNoticeReadList.some((item) => item == v.noticeId))
+
+      this.promptNoticeList = unReadeGongGao
     },
     setOnlineUsers(data) {
       const { onlineClients, num, leaveUser } = data
@@ -116,8 +124,16 @@ const useSocketStore = defineStore('socket', {
         this.newChat = 0
       }
     },
+    readPromptNotice(id) {
+      this.promptNoticeReadList.push(id)
+    },
     setGlobalError(data) {
       this.globalErrorMsg = data
+    },
+    clear() {
+      this.promptNoticeReadList = []
+      this.noticeIdArr = []
+      this.globalErrorMsg = {}
     }
   }
 })

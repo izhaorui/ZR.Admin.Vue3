@@ -32,13 +32,18 @@
           {{ $t('btn.delete') }}
         </el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button type="warning" plain icon="download" @click="handleExport" v-hasPermi="['system:notice:export']">
+          {{ $t('btn.export') }}
+        </el-button>
+      </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="noticeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" align="center" prop="noticeId" width="100" />
-      <el-table-column label="公告标题" align="center" prop="noticeTitle" :show-overflow-tooltip="true">
+      <el-table-column label="公告标题" prop="noticeTitle" :show-overflow-tooltip="true">
         <template #default="{ row }">
           <el-link type="primary" @click="handleOpenPre(row)">{{ row.noticeTitle }}</el-link>
         </template>
@@ -292,7 +297,18 @@ function handleNotice(row) {
     proxy.$modal.msgSuccess('发送通知成功')
   })
 }
-
+// 导出按钮操作
+function handleExport() {
+  proxy
+    .$confirm('是否确认导出通知公告表数据项?', '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+    .then(async () => {
+      await proxy.downFile('/system/Notice/export', { ...queryParams })
+    })
+}
 const openPreview = ref(false)
 const info = ref(undefined)
 const handleOpenPre = function (row) {
