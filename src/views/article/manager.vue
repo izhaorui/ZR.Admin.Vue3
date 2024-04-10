@@ -25,6 +25,14 @@
           </el-radio-button>
         </el-radio-group>
       </el-form-item>
+      <el-form-item prop="articleType">
+        <el-radio-group v-model="queryParams.articleType" @change="handleQuery()">
+          <el-radio-button value="">全部</el-radio-button>
+          <el-radio-button v-for="item in articleTypeOptions" :key="item.dictValue" :value="item.dictValue">
+            {{ item.dictLabel }}
+          </el-radio-button>
+        </el-radio-group>
+      </el-form-item>
       <el-form-item label="是否公开" prop="isPublic">
         <el-radio-group v-model="queryParams.isPublic" @change="handleQuery()">
           <el-radio-button value="">全部</el-radio-button>
@@ -55,21 +63,28 @@
     </el-row>
 
     <el-table :data="dataList" v-loading="loading" highlight-current-row @sort-change="sortChange" ref="table">
-      <el-table-column prop="cid" label="id" width="60" sortable> </el-table-column>
+      <!-- <el-table-column prop="cid" label="id" width="60" sortable> </el-table-column> -->
+      <el-table-column prop="cid" label="文章信息">
+        <template #default="{ row }">
+          <div>内容ID：{{ row.cid }}</div>
+          <div>作者：{{ row.authorName }}</div>
+          <div v-if="articleCategoryNav">分类：{{ articleCategoryNav.name }}</div>
+          <div>标签：{{ row.tags }}</div>
+        </template>
+      </el-table-column>
       <el-table-column prop="title" label="标题" width="120" :show-overflow-tooltip="true">
         <template #default="scope">
           <el-button link type="primary" @click="handleView(scope.row)">{{ scope.row.title }}</el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="articleCategoryNav.name" label="分类"> </el-table-column>
       <el-table-column prop="coverUrl" label="封面" width="90" :show-overflow-tooltip="true">
         <template #default="{ row }">
-          <image-preview :src="row.coverUrl"></image-preview>
+          <image-preview :src="row.coverUrl" split=","></image-preview>
         </template>
       </el-table-column>
-      <el-table-column prop="authorName" label="作者" width="80"> </el-table-column>
+      <!-- <el-table-column prop="authorName" label="作者" width="80"> </el-table-column> -->
       <!-- <el-table-column prop="fmt_type" label="编辑器类型" width="100"> </el-table-column> -->
-      <el-table-column prop="tags" label="标签" width="100" :show-overflow-tooltip="true"> </el-table-column>
+      <!-- <el-table-column prop="tags" label="标签" width="100" :show-overflow-tooltip="true"> </el-table-column> -->
       <el-table-column prop="hits" label="点击量" width="80" align="center"> </el-table-column>
       <el-table-column prop="abstractText" label="摘要" :show-overflow-tooltip="true"> </el-table-column>
       <el-table-column sortable prop="status" align="center" label="状态" width="90">
@@ -77,7 +92,7 @@
           <el-tag :type="scope.row.status == '2' ? 'danger' : 'success'">{{ scope.row.status == '2' ? '草稿' : '已发布' }} </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="置顶" prop="isTop" width="70" align="center" sortable>
+      <el-table-column label="置顶" prop="isTop" width="90" align="center" sortable>
         <template #default="scope">
           <el-switch
             v-model="scope.row.isTop"
@@ -89,7 +104,7 @@
             @change="handleTopChange(scope.row)"></el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="公开" align="center" prop="isPublic" sortable width="70">
+      <el-table-column label="公开" align="center" prop="isPublic" sortable width="90">
         <template #default="scope">
           <el-switch
             v-model="scope.row.isPublic"
@@ -104,10 +119,10 @@
       <el-table-column prop="createTime" label="创建时间" width="128" :show-overflow-tooltip="true"> </el-table-column>
       <el-table-column label="操作" align="center" width="130" fixed="right">
         <template #default="scope">
-          <el-button text size="small" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:article:update']">编辑</el-button>
+          <el-button text size="small" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:article:update']"></el-button>
           <el-popconfirm title="确定删除吗？" @confirm="handleDelete(scope.row)" style="margin-left: 10px">
             <template #reference>
-              <el-button text size="small" icon="delete" v-hasPermi="['system:article:delete']">删除</el-button>
+              <el-button text size="small" icon="delete" v-hasPermi="['system:article:delete']"></el-button>
             </template>
           </el-popconfirm>
         </template>
@@ -147,7 +162,8 @@ const data = reactive({
     sortType: 'desc',
     status: '',
     isPublic: '',
-    isTop: ''
+    isTop: '',
+    articleType: ''
   },
   options: {
     isPublicOptions: [
@@ -156,6 +172,8 @@ const data = reactive({
     ]
   }
 })
+
+const articleTypeOptions = ref([])
 const queryForm = ref()
 const { queryParams, options } = toRefs(data)
 
@@ -175,7 +193,9 @@ function sortChange(column) {
 proxy.getDicts('sys_article_status').then((response) => {
   statusOptions.value = response.data
 })
-
+proxy.getDicts('sys_article_type').then((response) => {
+  articleTypeOptions.value = response.data
+})
 proxy.getConfigKey('sys.article.preview.url').then((response) => {
   previewUrl.value = response.data
 })
