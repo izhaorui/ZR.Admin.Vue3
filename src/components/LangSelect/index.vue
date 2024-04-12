@@ -42,4 +42,7 @@ function handleLanguageChange(lang) {
   line-height: 50px;
   padding-right: 7px;
 }
+.svg-icon {
+  color: var(--base-topBar-color);
+}
 </style>

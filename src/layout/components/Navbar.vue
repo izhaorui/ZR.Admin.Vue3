@@ -184,6 +184,10 @@ function setLayout() {
       outline: none;
       cursor: pointer;
 
+      .el-dropdown {
+        color: unset !important;
+      }
+
       &:hover {
         background-color: rgba(0, 0, 0, 0.025);
       }

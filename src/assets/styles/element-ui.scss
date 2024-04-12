@@ -167,3 +167,9 @@
   height: unset;
   line-height: unset;
 }
+// 顶部导航宽度
+.nav3 {
+  .el-sub-menu__title {
+    --el-menu-base-level-padding: 5px;
+  }
+}
