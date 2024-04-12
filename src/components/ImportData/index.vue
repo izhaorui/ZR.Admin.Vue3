@@ -22,6 +22,7 @@
         </div>
       </template>
     </el-upload>
+    <slot></slot>
   </div>
 </template>
 <script setup>
