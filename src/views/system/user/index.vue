@@ -4,7 +4,7 @@
       <!--部门数据-->
       <el-col :span="4" :xs="24">
         <div class="head-container">
-          <el-input v-model="deptName" placeholder="请输入部门名称" clearable prefix-icon="el-icon-search" style="margin-bottom: 20px" />
+          <el-input v-model="deptName" placeholder="请输入部门名称" clearable prefix-icon="search" style="margin-bottom: 20px" />
         </div>
         <div class="head-container">
           <el-tree
@@ -16,7 +16,16 @@
             node-key="id"
             highlight-current
             default-expand-all
-            @node-click="handleNodeClick" />
+            @node-click="handleNodeClick">
+            <template #default="{ node, data }">
+              <span class="custom-tree-node">
+                <span>
+                  <svg-icon name="index" v-if="data.children && data.children.length > 0"></svg-icon>
+                  {{ node.label }}
+                </span>
+              </span>
+            </template>
+          </el-tree>
         </div>
       </el-col>
       <!--用户数据-->
@@ -61,7 +70,7 @@
             </el-button>
           </el-col>
           <el-col :span="1.5">
-            <el-button type="danger" plain icon="Delete" :disabled="single" @click="handleDelete" v-hasPermi="['system:user:remove']">
+            <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete" v-hasPermi="['system:user:remove']">
               {{ $t('btn.delete') }}
             </el-button>
           </el-col>
@@ -80,7 +89,7 @@
         </el-row>
 
         <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="50" align="center" />
+          <el-table-column type="selection" width="50" align="center" :selectable="checkSelectable" />
           <el-table-column label="用户编号" align="center" key="userId" prop="userId" v-if="columns.showColumn('userId')" />
           <el-table-column
             label="登录名"
@@ -621,6 +630,9 @@ function submitForm() {
       }
     }
   })
+}
+function checkSelectable(row) {
+  return row.userId != 1 ? true : false
 }
 /**
  * 解决编辑时角色选中不了问题
