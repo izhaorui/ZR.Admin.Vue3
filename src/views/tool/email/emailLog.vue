@@ -12,6 +12,13 @@
       <el-form-item label="邮件主题" prop="subject">
         <el-input v-model="queryParams.subject" placeholder="请输入邮件主题" />
       </el-form-item>
+      <el-form-item label="是否送出" prop="isSend">
+        <el-radio-group v-model="queryParams.isSend">
+          <el-radio label="全部" value=""></el-radio>
+          <el-radio label="是" :value="1"></el-radio>
+          <el-radio label="否" :value="0"></el-radio>
+        </el-radio-group>
+      </el-form-item>
       <el-form-item label="发送时间">
         <el-date-picker
           v-model="dateRangeAddTime"
@@ -58,6 +65,7 @@
       @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="50" align="center" />
       <el-table-column prop="id" label="Id" align="center" v-if="columns.showColumn('id')" />
+      <el-table-column prop="fromName" label="发送人" />
       <el-table-column prop="fromEmail" label="发送邮箱" :show-overflow-tooltip="true" v-if="columns.showColumn('fromEmail')" />
       <el-table-column prop="subject" label="邮件主题" :show-overflow-tooltip="true" v-if="columns.showColumn('subject')" />
       <el-table-column prop="toEmails" label="接收邮箱" :show-overflow-tooltip="true" v-if="columns.showColumn('toEmails')" />
@@ -117,7 +125,8 @@ const queryParams = reactive({
   sortType: 'desc',
   fromEmail: undefined,
   subject: undefined,
-  addTime: undefined
+  addTime: undefined,
+  isSend: ''
 })
 const columns = ref([
   { visible: false, prop: 'id', label: 'Id' },
@@ -134,8 +143,6 @@ const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23,
 
 // 发送时间时间范围
 const dateRangeAddTime = ref([])
-
-var dictParams = []
 
 function getList() {
   proxy.addDateRange(queryParams, dateRangeAddTime.value, 'AddTime')
@@ -185,7 +192,7 @@ function sortChange(column) {
 
 /*************** form操作 ***************/
 const formRef = ref()
-const title = ref('')
+
 // 操作类型 1、add 2、edit 3、view
 const opertype = ref(0)
 const open = ref(false)
@@ -204,26 +211,13 @@ const state = reactive({
   }
 })
 
-const { form, rules, options, single, multiple } = toRefs(state)
+const { form, options, single, multiple } = toRefs(state)
 
 // 关闭dialog
 function cancel() {
   open.value = false
-  reset()
 }
 
-// 重置表单
-function reset() {
-  form.value = {
-    id: null,
-    fromEmail: null,
-    subject: null,
-    toEmails: null,
-    emailContent: null,
-    addTime: null
-  }
-  proxy.resetForm('formRef')
-}
 function handlePreview(row) {
   form.value = row
   open.value = true
@@ -240,7 +234,7 @@ function handleSend(row) {
   proxy.$modal.loading('发送中...')
   sendEmail({ idArr: Ids })
     .then(() => {
-      getList() 
+      getList()
       proxy.$modal.msgSuccess('发送成功')
     })
     .finally(() => {

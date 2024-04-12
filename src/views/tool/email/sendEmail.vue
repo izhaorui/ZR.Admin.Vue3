@@ -13,6 +13,11 @@
       <el-button class="ml10" @click="addDomain" icon="plus" />
       <el-button class="ml10" @click.prevent="removeDomain(domain)" icon="minus" />
     </el-form-item> -->
+    <el-form-item label="发送邮箱" prop="fromName">
+      <el-select v-model="form.fromName" placeholder="请选择发送邮箱">
+        <el-option v-for="dict in sendEmailOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+      </el-select>
+    </el-form-item>
     <el-form-item label="接收人" prop="toEmails">
       <el-tag v-for="tag in form.toEmails" :key="tag" class="mr10" closable @close="handleCloseTag(tag)">
         {{ tag }}
@@ -72,16 +77,24 @@ const data = reactive({
     fileUrl: '',
     htmlContent: '',
     toEmails: [],
-    email: ''
+    email: '',
+    fromName: 'system'
   },
   rules: {
+    fromName: [{ required: true, message: '发送邮箱不能为空', trigger: 'blur' }],
     subject: [{ required: true, message: '主题不能为空', trigger: 'blur' }],
     content: [{ required: true, message: '内容不能为空', trigger: 'blur' }],
     toEmails: [{ required: true, message: '收件人不能为空', trigger: 'blur' }]
-  }
+  },
+  sendEmailOptions: [
+    {
+      dictLabel: 'system',
+      dictValue: 'system'
+    }
+  ]
 })
 
-const { form, rules } = toRefs(data)
+const { form, rules, sendEmailOptions } = toRefs(data)
 const { proxy } = getCurrentInstance()
 const formRef = ref(null)
 const open = ref(false)
