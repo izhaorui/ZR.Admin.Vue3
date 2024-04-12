@@ -43,21 +43,21 @@ export function updateArticle(data) {
   })
 }
 
-// 删除菜单
+// 删除文章
 export function delArticle(id) {
   return request({
     url: '/Article/' + id,
     method: 'delete'
   })
 }
-// 查询菜单目录
+// 查询目录
 export function listArticleCategory() {
   return request({
     url: '/Article/CategoryList',
     method: 'get'
   })
 }
-// 查询菜单目录树
+// 查询文章目录树
 export function listArticleCategoryTree() {
   return request({
     url: '/Article/CategoryTreeList',
@@ -73,7 +73,7 @@ export function topArticle(data) {
     data: data
   })
 }
-// 置顶
+// 修改是否公开
 export function changeArticlePublic(data) {
   return request({
     url: '/Article/ChangePublic',
