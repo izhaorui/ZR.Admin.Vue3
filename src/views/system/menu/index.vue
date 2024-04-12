@@ -324,7 +324,7 @@
   </div>
 </template>
 
-<script setup name="sysmenu">
+<script setup name="menu">
 import { addMenu, delMenu, getMenu, listMenu, updateMenu, changeMenuSort as changeSort, listMenuById } from '@/api/system/menu'
 import SvgIcon from '@/components/SvgIcon'
 import IconSelect from '@/components/IconSelect'
