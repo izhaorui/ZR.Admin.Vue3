@@ -234,7 +234,7 @@ getCategoryTreeselect()
   z-index: 10;
   width: 100%;
   top: 0;
-  background: #fff;
+  /* background: #fff; */
   padding: 5px 20px;
   border-top: 1px solid #ccc;
   display: flex;

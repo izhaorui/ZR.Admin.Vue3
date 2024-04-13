@@ -66,7 +66,7 @@
       <!-- <el-table-column prop="cid" label="id" width="60" sortable> </el-table-column> -->
       <el-table-column prop="cid" label="文章信息">
         <template #default="{ row }">
-          <div>内容ID：{{ row.cid }}</div>
+          <div>内容id：{{ row.cid }}</div>
           <div>作者：{{ row.authorName }}</div>
           <div v-if="articleCategoryNav">分类：{{ articleCategoryNav.name }}</div>
           <div>标签：{{ row.tags }}</div>

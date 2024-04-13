@@ -115,7 +115,7 @@
 
     <zr-dialog title="预览" draggable v-model="openPreview" width="580px">
       <template v-if="info">
-        <div style="text-align: center" class="mb10">{{ info.noticeTitle }}</div>
+        <h2 style="text-align: center; margin-top: 0" class="mb10">{{ info.noticeTitle }}</h2>
         <div v-html="info.noticeContent"></div>
 
         <div class="n_right">{{ info.create_by }}</div>
