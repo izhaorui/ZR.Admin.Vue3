@@ -235,6 +235,8 @@ getCategoryTreeselect()
 .btn-wrap {
   z-index: 10;
   width: 100%;
+  top: 0;
+  /* background: #fff; */
   padding: 5px 20px;
   display: flex;
   align-items: center;
