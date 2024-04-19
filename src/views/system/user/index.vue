@@ -316,7 +316,7 @@ const total = ref(0)
 const title = ref('')
 const dateRange = ref([])
 const deptName = ref('')
-const deptOptions = ref(undefined)
+const deptOptions = ref([])
 const initPassword = ref(undefined)
 const postOptions = ref([])
 const roleOptions = ref([])
@@ -416,7 +416,7 @@ watch(deptName, (val) => {
 /** 查询部门下拉树结构 */
 function getTreeselect() {
   treeselect().then((response) => {
-    deptOptions.value = response.data
+    deptOptions.value = [{ id: 0, label: '未知部门', children: [] }, ...response.data]
   })
 }
 /** 查询用户列表 */
