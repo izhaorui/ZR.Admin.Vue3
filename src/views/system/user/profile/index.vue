@@ -45,11 +45,11 @@
       </el-col>
       <el-col :span="18" :xs="24">
         <el-card>
-          <template v-slot:header>
+          <!-- <template v-slot:header>
             <div class="clearfix">
               <span>{{ $t('user.basicInfo') }}</span>
             </div>
-          </template>
+          </template> -->
           <el-tabs v-model="activeTab">
             <el-tab-pane :label="$t('user.basicInfo')" name="userinfo">
               <userInfo :user="state.user" />
@@ -110,7 +110,7 @@ getUser()
 
 .list-group-item {
   border-bottom: 1px solid #e7eaec;
-  border-top: 1px solid #e7eaec;
+  /* border-top: 1px solid #e7eaec; */
   margin-bottom: -1px;
   padding: 11px 0px;
   font-size: 13px;

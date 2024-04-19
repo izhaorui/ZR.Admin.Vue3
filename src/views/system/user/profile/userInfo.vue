@@ -1,13 +1,13 @@
 <template>
-  <el-form ref="userRef" :model="user" :rules="rules" label-width="130px" label-position="left">
+  <el-form ref="userRef" :model="user" :rules="rules" label-width="100px" label-position="left" style="max-width: 350px">
     <el-form-item :label="$t('user.nickName')" prop="nickName">
-      <el-input v-model="user.nickName" maxlength="30" />
+      <el-input v-model="user.nickName" maxlength="20" :show-word-limit="true" />
     </el-form-item>
     <el-form-item :label="$t('user.phoneNumber')" prop="phonenumber">
-      <el-input v-model="user.phonenumber" maxlength="11" />
+      <el-input v-model="user.phonenumber" maxlength="11" :show-word-limit="true" />
     </el-form-item>
     <el-form-item :label="$t('user.userEmail')" prop="email">
-      <el-input v-model="user.email" maxlength="50" />
+      <el-input v-model="user.email" maxlength="50" :show-word-limit="true" />
     </el-form-item>
     <el-form-item :label="$t('common.sex')">
       <el-radio-group v-model="user.sex">

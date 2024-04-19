@@ -1,10 +1,9 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true">
       <el-form-item>
         <el-date-picker
           v-model="dateRange"
-          size="small"
           style="width: 240px"
           value-format="YYYY-MM-DD"
           type="daterange"
@@ -24,14 +23,14 @@
       <el-table-column label="系统模块" align="center" prop="title" :show-overflow-tooltip="true" />
       <el-table-column prop="businessType" label="业务类型" align="center">
         <template #default="scope">
-          <dict-tag :options="options.businessTypeOptions" :value="scope.row.businessType" />
+          <dict-tag :options="options.sys_oper_type" :value="scope.row.businessType" />
         </template>
       </el-table-column>
       <el-table-column label="请求方式" align="center" prop="requestMethod" />
       <el-table-column label="操作地点" align="center" prop="operLocation" :show-overflow-tooltip="true" />
       <el-table-column label="操作状态" align="center" prop="status">
         <template #default="{ row }">
-          <dict-tag :options="options.statusOptions" :value="row.status"></dict-tag>
+          <dict-tag :options="options.sys_common_status" :value="row.status"></dict-tag>
         </template>
       </el-table-column>
 
@@ -57,10 +56,7 @@ const loading = ref(true)
 const total = ref(0)
 // 表格数据
 const list = ref([])
-// 类型数据字典
-const statusOptions = ref([])
-// 业务类型（0其它 1新增 2修改 3删除）选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
-const businessTypeOptions = ref([])
+
 // 日期范围
 const dateRange = ref([])
 
@@ -76,19 +72,16 @@ const state = reactive({
   },
   options: {
     //业务类型（0其它 1新增 2修改 3删除）选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
-    businessTypeOptions: [],
-    statusOptions: []
+    sys_oper_type: [],
+    sys_common_status: []
   }
 })
 const { form, queryParams, options } = toRefs(state)
 
-var dictParams = [
-  { dictType: 'sys_oper_type', columnName: 'businessTypeOptions' },
-  { dictType: 'sys_common_status', columnName: 'statusOptions' },
-]
+var dictParams = [{ dictType: 'sys_oper_type' }, { dictType: 'sys_common_status' }]
 proxy.getDicts(dictParams).then((response) => {
   response.data.forEach((element) => {
-    state.options[element.columnName] = element.list
+    state.options[element.dictType] = element.list
   })
 })
 

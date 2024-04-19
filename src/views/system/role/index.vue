@@ -106,8 +106,8 @@
             :props="{ children: 'children', label: 'label', class: customNodeClass }">
             <template #default="{ node, data }">
               <div class="custom-tree-node">
-                <span style="float: left">{{ node.label }}</span>
-                <span style="float: right; margin-left: 10px">
+                <span class="fl" :title="data.permission">{{ node.label }}</span>
+                <span class="fr ml10">
                   <el-tag v-if="data.status == 1" type="danger">停用</el-tag>
                 </span>
               </div>
@@ -468,7 +468,7 @@ function handleCheckedTreeConnect(value, type) {
 // 菜单筛选
 function menuFilterNode(value, data) {
   if (!value) return true
-  return data.label.indexOf(value) !== -1
+  return data.label.indexOf(value) !== -1 || (data.permission && data.permission.indexOf(value) !== -1)
 }
 
 /** 新增按钮操作 */

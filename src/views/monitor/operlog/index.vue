@@ -9,12 +9,12 @@
       </el-form-item>
       <el-form-item label="业务类型" prop="businessType">
         <el-select v-model="queryParams.businessType" placeholder="操作类型" clearable>
-          <el-option v-for="dict in options.businessTypeOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+          <el-option v-for="dict in options.sys_oper_type" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
         </el-select>
       </el-form-item>
       <el-form-item label="操作状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="操作状态" clearable>
-          <el-option v-for="dict in options.statusOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+          <el-option v-for="dict in options.sys_common_status" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
         </el-select>
       </el-form-item>
       <el-form-item label="请求参数" prop="operParam">
@@ -58,7 +58,7 @@
       <el-table-column label="系统模块" align="center" prop="title" :show-overflow-tooltip="true" v-if="columns.showColumn('title')" />
       <el-table-column prop="businessType" label="业务类型" align="center" v-if="columns.showColumn('businessType')">
         <template #default="scope">
-          <dict-tag :options="options.businessTypeOptions" :value="scope.row.businessType" />
+          <dict-tag :options="options.sys_oper_type" :value="scope.row.businessType" />
         </template>
       </el-table-column>
       <el-table-column label="请求方法" align="center" prop="requestMethod" v-if="columns.showColumn('requestMethod')" />
@@ -72,7 +72,7 @@
       </el-table-column>
       <el-table-column label="操作状态" align="center" prop="status" v-if="columns.showColumn('status')">
         <template #default="{ row }">
-          <dict-tag :options="options.statusOptions" :value="row.status"></dict-tag>
+          <dict-tag :options="options.sys_common_status" :value="row.status"></dict-tag>
         </template>
       </el-table-column>
       <el-table-column label="用时" align="center" prop="elapsed" v-if="columns.showColumn('elapsed')">
@@ -123,12 +123,12 @@
           </el-col>
           <el-col :lg="12">
             <el-form-item label="操作类型：">
-              <dict-tag :options="options.businessTypeOptions" :value="form.businessType" />
+              <dict-tag :options="options.sys_oper_type" :value="form.businessType" />
             </el-form-item>
           </el-col>
           <el-col :lg="12">
             <el-form-item label="操作状态：">
-              <dict-tag :options="options.statusOptions" :value="form.status"></dict-tag>
+              <dict-tag :options="options.sys_common_status" :value="form.status"></dict-tag>
             </el-form-item>
           </el-col>
           <el-col :lg="12">
@@ -176,10 +176,7 @@ const total = ref(0)
 const list = ref([])
 // 是否显示弹出层
 const open = ref(false)
-// 类型数据字典
-const statusOptions = ref([])
-// 业务类型（0其它 1新增 2修改 3删除）选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
-const businessTypeOptions = ref([])
+
 // 日期范围
 const dateRange = ref([dayjs().format('YYYY-MM-DD 00:00:00'), dayjs().format('YYYY-MM-DD 23:59:59')])
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
@@ -221,13 +218,10 @@ const columns = ref([
   { visible: false, prop: 'elapsed', label: '操作用时' }
 ])
 const { form, queryParams, options } = toRefs(state)
-var dictParams = [
-  { dictType: 'sys_oper_type', columnName: 'businessTypeOptions' },
-  { dictType: 'sys_common_status', columnName: 'statusOptions' }
-]
+var dictParams = [{ dictType: 'sys_oper_type' }, { dictType: 'sys_common_status' }]
 proxy.getDicts(dictParams).then((response) => {
   response.data.forEach((element) => {
-    state.options[element.columnName] = element.list
+    state.options[element.dictType] = element.list
   })
 })
 /** 查询登录日志 */
@@ -246,7 +240,7 @@ function getList() {
 }
 // 操作日志状态字典翻译
 function statusFormat(row, column) {
-  return proxy.selectDictLabel(statusOptions.value, row.status)
+  return proxy.selectDictLabel(sys_common_status.value, row.status)
 }
 /** 搜索按钮操作 */
 function handleQuery() {

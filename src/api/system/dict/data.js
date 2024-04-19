@@ -19,10 +19,17 @@ export function getData(dictCode) {
 
 // 根据字典类型查询字典数据信息
 export function getDicts(dictType) {
-  if (typeof (dictType) === "object") {
+  if (typeof dictType === 'object') {
+    var data = dictType.map((x) => {
+      if (typeof x === 'object') {
+        return x.dictType
+      } else {
+        return x
+      }
+    })
     return request({
-      url: '/system/dict/data/types',
-      data: dictType,
+      url: '/system/dict/data/dicts',
+      data: data,
       method: 'post'
     })
   } else {
