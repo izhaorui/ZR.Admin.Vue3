@@ -131,7 +131,7 @@
     <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
 
     <el-dialog :title="previewInfo.title" v-model="showPreview">
-      <MdPreview show-code-row-number editorId="id1" :modelValue="previewInfo.content" />
+      <MdPreview show-code-row-number editorId="id1" :theme="settingsStore.codeMode" :modelValue="previewInfo.content" />
     </el-dialog>
   </div>
 </template>
@@ -140,6 +140,8 @@ import { listArticle, delArticle, topArticle, changeArticlePublic, getArticle } 
 import { treelistArticleCategory } from '@/api/article/articlecategory.js'
 import { MdPreview } from 'md-editor-v3'
 import 'md-editor-v3/lib/preview.css'
+import useSettingsStore from '@/store/modules/settings'
+const settingsStore = useSettingsStore()
 const { proxy } = getCurrentInstance()
 const router = useRouter()
 // 显示搜索条件

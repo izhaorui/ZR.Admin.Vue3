@@ -44,8 +44,8 @@
     <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="130px">
       <template #default="scope">
         <div v-if="scope.row.dictCode > 0">
-          <el-button text size="small" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dict:edit']">编辑</el-button>
-          <el-button text size="small" icon="delete" @click="handleDelete(scope.row)" v-hasPermi="['system:dict:remove']">删除 </el-button>
+          <el-button text size="default" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dict:edit']"></el-button>
+          <el-button text size="default" icon="delete" @click="handleDelete(scope.row)" v-hasPermi="['system:dict:remove']"> </el-button>
         </div>
       </template>
     </el-table-column>
@@ -63,8 +63,8 @@
         </el-col>
 
         <el-col :lg="12">
-          <el-form-item label="数据标签" prop="dictLabel">
-            <el-input v-model="form.dictLabel" placeholder="请输入数据标签" />
+          <el-form-item label="字典标签" prop="dictLabel">
+            <el-input v-model="form.dictLabel" placeholder="请输入字典标签" />
           </el-form-item>
         </el-col>
         <el-col :lg="12">
