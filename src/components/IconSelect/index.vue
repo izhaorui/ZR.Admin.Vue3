@@ -16,7 +16,7 @@
       <el-tab-pane label="svg-icon" name="1">
         <div class="icon-list">
           <div class="icon-item mb10" v-for="(item, index) in iconList" :key="index" @click="selectedIcon(item, '')">
-            <svg-icon :name="item" style="height: 30px; width: 16px" />
+            <svg-icon :name="item" style="height: 20px; width: 20px" />
             <div class="name">{{ item }}</div>
           </div>
         </div>
@@ -24,10 +24,17 @@
       <el-tab-pane label="Element-UI Icons" name="2">
         <div class="icon-list">
           <div class="icon-item mb10" v-for="item of elementIcons" :key="item" @click="selectedIcon(item, 'ele-')">
-            <svg-icon :name="'ele-' + item" style="height: 30px; width: 16px" />
+            <svg-icon :name="'ele-' + item" style="height: 25px; width: 25px" />
             <div class="name">{{ item }}</div>
           </div>
         </div>
+      </el-tab-pane>
+      <el-tab-pane label="网络图" name="3">
+        <el-input v-model="iconName" placeholder="请输入网络路径">
+          <template #append>
+            <el-button type="primary" @click="selectedImgIcon()">确定</el-button>
+          </template>
+        </el-input>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -65,6 +72,10 @@ function selectedIcon(name, prefix) {
   document.body.click()
 }
 
+function selectedImgIcon() {
+  emit('selected', iconName.value)
+  document.body.click()
+}
 function reset() {
   iconName.value = ''
   iconList.value = icons
@@ -89,6 +100,10 @@ defineExpose({
     .icon-item {
       cursor: pointer;
       text-align: center;
+
+      .name {
+        font-size: 11px;
+      }
     }
   }
 }

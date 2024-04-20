@@ -1,6 +1,6 @@
 <script>
 import { h, resolveComponent } from 'vue'
-
+import { isHttp } from '@/utils/validate'
 export default defineComponent({
   props: {
     // svg 图标组件名字
@@ -17,15 +17,31 @@ export default defineComponent({
     color: {
       type: String,
       default: ''
+    },
+    size: {
+      type: String,
+      default: '20px'
     }
   },
   setup(props) {
-    if (props.name?.startsWith('ele')) {
+    if (isHttp(props.name)) {
+      return () =>
+        h('img', {
+          src: props.name,
+          style: {
+            width: props.size
+          },
+          class: props.className
+        })
+    } else if (props.name?.startsWith('ele')) {
       return () =>
         h(
           'i',
           {
-            class: 'el-icon'
+            class: 'el-icon',
+            style: {
+              width: props.size
+            }
           },
           [h(resolveComponent(props.name.replace('ele-', '')))]
         )
