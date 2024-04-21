@@ -8,12 +8,22 @@
 -->
 <template>
   <div class="app-container">
-    <!-- <el-form :model="queryParams" label-position="right" inline ref="queryRef" v-show="showSearch" @submit.prevent>
+    <el-form :model="queryParams" label-position="right" inline ref="queryRef" v-show="showSearch" @submit.prevent>
       <el-form-item>
+        <el-radio-group v-model="queryParams.categoryType" @change="handleQuery()">
+          <el-radio-button value="">全部</el-radio-button>
+          <el-radio-button v-for="item in categoryTypeOptions" :key="item.dictValue" :value="item.dictValue">
+            {{ item.dictLabel }}
+          </el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+
+      <!-- <el-form-item>
         <el-button icon="search" type="primary" @click="handleQuery">{{ $t('btn.search') }}</el-button>
         <el-button icon="refresh" @click="resetQuery">{{ $t('btn.reset') }}</el-button>
-      </el-form-item>
-    </el-form> -->
+      </el-form-item> -->
+    </el-form>
+
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" v-hasPermi="['articlecategory:add']" plain icon="plus" @click="handleAdd">
@@ -51,10 +61,15 @@
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
       <el-table-column type="selection" width="50" />
       <el-table-column prop="name" label="目录名" :show-overflow-tooltip="true" />
-      <el-table-column prop="icon" label="图标">
+      <el-table-column prop="icon" label="图标" :show-overflow-tooltip="true">
         <template #default="{ row }">
           <svg-icon :name="row.icon" v-if="row.icon"></svg-icon>
           {{ row.icon }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="categoryType" label="分类" align="center">
+        <template #default="{ row }">
+          <dict-tag :options="categoryTypeOptions" :value="row.categoryType"></dict-tag>
         </template>
       </el-table-column>
       <el-table-column prop="categoryId" label="目录id" sortable align="center" />
@@ -81,13 +96,32 @@
     </el-table>
 
     <!-- 添加或修改文章目录对话框 -->
-    <el-dialog :title="title" :lock-scroll="false" v-model="open" width="400px">
+    <el-dialog :title="title" :lock-scroll="false" v-model="open" width="550px">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="80px">
         <el-row :gutter="20">
-          <el-col :lg="24" v-if="opertype == 2">
-            <el-form-item label="目录id">{{ form.categoryId }}</el-form-item>
+          <el-col :lg="24">
+            <el-form-item label="父级id" prop="parentId">
+              <el-cascader
+                class="w100"
+                :options="dataList"
+                :props="{ checkStrictly: true, value: 'categoryId', label: 'name', emitPath: false }"
+                placeholder="请选择上级菜单"
+                clearable
+                v-model="form.parentId">
+                <template #default="{ node, data }">
+                  <span>{{ data.name }}</span>
+                  <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+                </template>
+              </el-cascader>
+            </el-form-item>
           </el-col>
-
+          <el-col :lg="24">
+            <el-form-item label="目录分类" prop="categoryType">
+              <el-select v-model="form.categoryType" placeholder="请选择分类" clearable>
+                <el-option v-for="dict in categoryTypeOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="parseInt(dict.dictValue)" />
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col :lg="24">
             <el-form-item label="目录名" prop="name">
               <el-input v-model="form.name" placeholder="请输入目录名" />
@@ -113,19 +147,8 @@
           </el-col>
 
           <el-col :lg="24">
-            <el-form-item label="父级id" prop="parentId">
-              <el-cascader
-                class="w100"
-                :options="dataList"
-                :props="{ checkStrictly: true, value: 'categoryId', label: 'name', emitPath: false }"
-                placeholder="请选择上级菜单"
-                clearable
-                v-model="form.parentId">
-                <template #default="{ node, data }">
-                  <span>{{ data.name }}</span>
-                  <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
-                </template>
-              </el-cascader>
+            <el-form-item label="排序" prop="orderNum">
+              <el-input-number v-model="form.orderNum" placeholder="请输入排序值" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -178,7 +201,8 @@ const queryParams = reactive({
   pageNum: 1,
   pageSize: 10,
   sort: undefined,
-  sortType: undefined
+  sortType: undefined,
+  categoryType: ''
 })
 // 弹出层标题
 const title = ref('')
@@ -190,7 +214,8 @@ const open = ref(false)
 const state = reactive({
   form: {},
   rules: {
-    name: [{ required: true, message: '目录名不能为空', trigger: 'blur' }]
+    name: [{ required: true, message: '目录名不能为空', trigger: 'blur' }],
+    categoryType: [{ required: true, message: '目录分类不能为空', trigger: 'blur' }]
   }
 })
 
@@ -227,7 +252,8 @@ function reset() {
     name: undefined,
     parentId: 0,
     icon: '',
-    orderNum: 0
+    orderNum: 0,
+    categoryType: undefined
   }
   proxy.resetForm('formRef')
 }
@@ -244,6 +270,9 @@ function handleAdd() {
   open.value = true
   title.value = '添加'
   opertype.value = 1
+  if (queryParams.categoryType) {
+    form.value.categoryType = parseInt(queryParams.categoryType)
+  }
 }
 
 // 删除按钮操作
@@ -388,6 +417,11 @@ function handleChangeSort(info) {
     })
 }
 // ******************自定义编辑 end **********************
+
+const categoryTypeOptions = ref([])
+proxy.getDicts('article_category_type').then((response) => {
+  categoryTypeOptions.value = response.data
+})
 
 handleQuery()
 </script>

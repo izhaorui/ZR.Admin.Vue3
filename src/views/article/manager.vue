@@ -68,7 +68,7 @@
         <template #default="{ row }">
           <div>内容id：{{ row.cid }}</div>
           <div>作者：{{ row.authorName }}</div>
-          <div v-if="articleCategoryNav">分类：{{ articleCategoryNav.name }}</div>
+          <div v-if="row.articleCategoryNav">分类：{{ row.articleCategoryNav.name }}</div>
           <div>标签：{{ row.tags }}</div>
         </template>
       </el-table-column>

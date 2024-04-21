@@ -217,6 +217,9 @@ getInfo(cid)
 getCategoryTreeselect()
 </script>
 <style scoped>
+.app-container {
+  position: relative;
+}
 .button-new-tag {
   padding-top: 0;
   padding-bottom: 0;
@@ -230,15 +233,10 @@ getCategoryTreeselect()
 }
 
 .btn-wrap {
-  /* bottom: 0; */
   z-index: 10;
   width: 100%;
-  top: 0;
-  /* background: #fff; */
   padding: 5px 20px;
-  border-top: 1px solid #ccc;
   display: flex;
   align-items: center;
-  /*justify-content: space-around;*/
 }
 </style>
