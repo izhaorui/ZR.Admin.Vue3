@@ -38,7 +38,7 @@
     "qs": "^6.11.0",
     "sortablejs": "^1.15.0",
     "v-code-diff": "^1.8.0",
-    "vue": "^3.3.11",
+    "vue": "^3.4.23",
     "vue-clipboard3": "^2.0.0",
     "vue-countup-v3": "^1.4.0",
     "vue-cropper": "1.0.2",
