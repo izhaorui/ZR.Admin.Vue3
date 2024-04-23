@@ -107,6 +107,7 @@
             <el-button text size="small" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:menu:edit']"></el-button>
             <el-button text size="small" icon="Plus" @click="handleAdd(scope.row)" v-hasPermi="['system:menu:add']"></el-button>
             <el-button text size="small" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:menu:remove']"></el-button>
+            <el-button text type="danger" plain size="small" icon="Delete" @click="handleDeleteAll(scope.row)"> 所有</el-button>
           </el-button-group>
         </template>
       </vxe-column>
@@ -325,7 +326,7 @@
 </template>
 
 <script setup name="menu">
-import { addMenu, delMenu, getMenu, listMenu, updateMenu, changeMenuSort as changeSort, listMenuById } from '@/api/system/menu'
+import { addMenu, delMenu, getMenu, listMenu, updateMenu, changeMenuSort as changeSort, delAllMenu } from '@/api/system/menu'
 import SvgIcon from '@/components/SvgIcon'
 import IconSelect from '@/components/IconSelect'
 const { proxy } = getCurrentInstance()
@@ -506,6 +507,20 @@ function handleDelete(row) {
     .confirm('是否确认删除名称为"' + row.menuName + '"的数据项?')
     .then(function () {
       return delMenu(row.menuId)
+    })
+    .then(() => {
+      // getList()
+      refreshMenu(row.parentId)
+      proxy.$modal.msgSuccess('删除成功')
+    })
+    .catch(() => {})
+}
+/** 删除按钮操作 */
+function handleDeleteAll(row) {
+  proxy.$modal
+    .confirm('是否确认删除名称为"' + row.menuName + '"的所有数据项?')
+    .then(function () {
+      return delAllMenu(row.menuId)
     })
     .then(() => {
       // getList()
