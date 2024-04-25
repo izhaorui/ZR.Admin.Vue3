@@ -1,5 +1,6 @@
 <template>
   <div class="top-right-btn">
+    <slot></slot>
     <el-tooltip class="item" effect="dark" content="显隐列" placement="top" v-if="data">
       <el-dropdown :hide-on-click="false" style="margin-right: 10px" trigger="click">
         <el-button circle icon="menu" />
