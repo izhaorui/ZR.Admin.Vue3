@@ -1,23 +1,33 @@
 <template>
-  <el-form class="mt10" ref="formRef" :model="form" label-width="110px" :rules="rules">
-    <!-- <el-form-item
-      v-for="(domain, index) in form.toEmails"
-      :prop="'toEmails.' + index + '.value'"
-      :label="'收件邮箱' + (index === 0 ? '' : index)"
-      :key="domain.key"
-      :rules="[
-        { required: true, message: '邮箱不能为空', trigger: 'blur' },
-        { message: '请输入正确的邮箱地址', trigger: ['blur', 'change'], type: 'email' }
-      ]">
-      <el-input v-model="domain.value" style="width: 300px"></el-input>
-      <el-button class="ml10" @click="addDomain" icon="plus" />
-      <el-button class="ml10" @click.prevent="removeDomain(domain)" icon="minus" />
-    </el-form-item> -->
-    <el-form-item label="发送邮箱" prop="fromName">
-      <el-select v-model="form.fromName" placeholder="请选择发送邮箱">
-        <el-option v-for="dict in sendEmailOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
-      </el-select>
-    </el-form-item>
+  <el-form class="mt10" ref="formRef" :model="form" label-width="100px" :rules="rules">
+    <el-row>
+      <el-col :lg="6">
+        <el-form-item label="发送邮箱" prop="fromName">
+          <el-select v-model="form.fromName" placeholder="请选择发送邮箱">
+            <el-option v-for="dict in sendEmailOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :lg="6">
+        <el-form-item label="选择模板" prop="emailTpl">
+          <el-select v-model="form.emailTpl" placeholder="邮件模板" @change="handleSelectTpl" clearable>
+            <el-option v-for="dict in emailTplOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col :lg="6">
+        <el-form-item label="是否立即送出" prop="isSend">
+          <el-switch v-model="form.isSend" :active-value="true" :in-active-value="false" active-text="是" inactive-text="否"></el-switch>
+        </el-form-item>
+      </el-col>
+
+      <el-col :lg="6">
+        <el-form-item label="发送自己" prop="sendMe">
+          <el-switch v-model="form.sendMe" active-text="是" inactive-text="否"></el-switch>
+        </el-form-item>
+      </el-col>
+    </el-row>
+
     <el-form-item label="接收人" prop="toEmails">
       <el-tag v-for="tag in form.toEmails" :key="tag" class="mr10" closable @close="handleCloseTag(tag)">
         {{ tag }}
@@ -37,25 +47,9 @@
     <el-form-item label="邮件主题" prop="subject">
       <el-input v-model="form.subject"></el-input>
     </el-form-item>
-    <el-row>
-      <el-form-item label="选择模板" prop="emailTpl">
-        <el-select v-model="form.emailTpl" placeholder="邮件模板" @change="handleSelectTpl" clearable>
-          <el-option v-for="dict in emailTplOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
-        </el-select>
-      </el-form-item>
-      <!-- <el-form-item label="发送自己" prop="sendMe">
-        <el-switch v-model="form.sendMe" active-text="是" inactive-text="否"></el-switch>
-      </el-form-item> -->
-      <el-form-item label="是否立即送出" prop="isSend">
-        <el-switch v-model="form.isSend" :active-value="true" :in-active-value="false" active-text="是" inactive-text="否"></el-switch>
-      </el-form-item>
-    </el-row>
 
     <el-form-item label="邮件内容" prop="htmlContent">
       <editor v-model="form.htmlContent" />
-    </el-form-item>
-    <el-form-item label="发送自己" prop="sendMe">
-      <el-switch v-model="form.sendMe" active-text="是" inactive-text="否"></el-switch>
     </el-form-item>
     <el-form-item label="附件">
       <UploadFile v-model="form.fileUrl" :limit="5" :fileSize="15" :data="{ fileDir: 'email', uploadType: 1 }" />

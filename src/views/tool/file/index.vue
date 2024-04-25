@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    <!-- :model属性用于表单验证使用 比如下面的el-form-item 的 prop属性用于对表单值进行验证操作 -->
     <el-form :model="queryParams" label-position="left" inline ref="queryForm" v-show="showSearch" @submit.prevent>
       <el-form-item label="" prop="fileId">
         <el-input v-model="queryParams.fileId" placeholder="请输入文件id" clearable />
@@ -39,7 +38,7 @@
           {{ $t('btn.delete') }}
         </el-button>
       </el-col>
-      <right-toolbar :showSearch="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch="showSearch" @queryTable="getList"> </right-toolbar>
     </el-row>
 
     <!-- 数据区域 -->
