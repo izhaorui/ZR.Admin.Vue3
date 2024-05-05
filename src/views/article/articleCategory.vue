@@ -67,6 +67,11 @@
           {{ row.icon }}
         </template>
       </el-table-column>
+      <el-table-column prop="bgImg" label="背景" :show-overflow-tooltip="true">
+        <template #default="{ row }">
+          <image-preview :src="row.bgImg" split=","></image-preview>
+        </template>
+      </el-table-column>
       <el-table-column prop="categoryType" label="分类" align="center">
         <template #default="{ row }">
           <dict-tag :options="categoryTypeOptions" :value="row.categoryType"></dict-tag>
@@ -83,7 +88,7 @@
             @blur="handleChangeSort(scope.row)"></el-input>
         </template>
       </el-table-column>
-
+      <el-table-column prop="introduce" label="介绍" :show-overflow-tooltip="true" />
       <el-table-column prop="createTime" label="添加时间" align="center" :show-overflow-tooltip="true" />
       <el-table-column prop="parentId" label="父级id" align="center" />
 
@@ -149,6 +154,16 @@
           <el-col :lg="24">
             <el-form-item label="排序" prop="orderNum">
               <el-input-number v-model="form.orderNum" placeholder="请输入排序值" />
+            </el-form-item>
+          </el-col>
+          <el-col :lg="24">
+            <el-form-item label="介绍" prop="introduce">
+              <el-input v-model="form.introduce" placeholder="请输入介绍" />
+            </el-form-item>
+          </el-col>
+          <el-col :lg="24">
+            <el-form-item label="背景图" prop="bgImg">
+              <UploadImage ref="uploadRef" v-model="form.bgImg" :limit="1" :fileSize="15"> </UploadImage>
             </el-form-item>
           </el-col>
         </el-row>
