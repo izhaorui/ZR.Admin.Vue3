@@ -13,7 +13,7 @@
     <template #footer v-if="showType == 0">
       <div class="text-center footer">
         <el-button class="next" @click="onNext" link v-if="openNoticeList.length > 1">下一条</el-button>
-        <el-button icon="check" plain type="primary" @click="onReadClick(info)">我已已读</el-button>
+        <el-button icon="check" plain type="primary" @click="onReadClick(info)">我已阅读</el-button>
       </div>
     </template>
   </el-dialog>

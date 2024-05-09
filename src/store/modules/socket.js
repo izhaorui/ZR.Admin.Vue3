@@ -20,6 +20,7 @@ const useSocketStore = defineStore('socket', {
     sessionList: {},
     newChat: 0,
     newNotice: 0,
+    newSysMsg: 0,
     noticeIdArr: [],
     // 全局错误提醒
     globalErrorMsg: {}
@@ -36,14 +37,33 @@ const useSocketStore = defineStore('socket', {
     getSessionList(state) {
       return (userid) => state.sessionList[userid] || []
     },
-    getAllDotNum(state) {
-      return () => state.newChat + state.newNotice
+    /**
+     * 获取所有未读小红点
+     * @param {*} state
+     * @returns
+     */
+    getAllDotNum() {
+      return this.newChat + this.newNotice + this.newSysMsg
+    },
+    /**
+     * 获取所有小红点
+     * @returns
+     */
+    getMsgNum() {
+      return {
+        noticeNum: this.newNotice,
+        chatNum: this.newChat,
+        sysMsgNum: this.newSysMsg
+      }
     }
   },
   actions: {
     //更新在线人数
     setOnlineUserNum(num) {
       this.onlineNum = num
+    },
+    setSysMsgNum(num) {
+      this.newSysMsg = num
     },
     // 更新系统通知
     setNoticeList(data) {
@@ -117,11 +137,17 @@ const useSocketStore = defineStore('socket', {
           })
       })
     },
+    /**
+     * 消息已读
+     * @param {*} type
+     */
     readAll(type) {
       if (type == 0) {
         this.newNotice = 0
       } else if (type == 1) {
         this.newChat = 0
+      } else if (type == 2) {
+        this.newSysMsg = 0
       }
     },
     readPromptNotice(id) {
