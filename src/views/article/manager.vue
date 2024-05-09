@@ -79,13 +79,15 @@
       </el-table-column>
       <el-table-column prop="coverUrl" label="封面" width="90" :show-overflow-tooltip="true">
         <template #default="{ row }">
-          <image-preview :src="row.coverUrl" split=","></image-preview>
+          <image-preview :src="row.coverUrl" split="," v-if="row.coverUrl"></image-preview>
         </template>
       </el-table-column>
       <!-- <el-table-column prop="authorName" label="作者" width="80"> </el-table-column> -->
       <!-- <el-table-column prop="fmt_type" label="编辑器类型" width="100"> </el-table-column> -->
       <!-- <el-table-column prop="tags" label="标签" width="100" :show-overflow-tooltip="true"> </el-table-column> -->
       <el-table-column prop="hits" label="点击量" width="80" align="center"> </el-table-column>
+      <el-table-column prop="praiseNum" label="赞" width="80" align="center"> </el-table-column>
+      <el-table-column prop="commentNum" label="评论" width="80" align="center"> </el-table-column>
       <el-table-column prop="abstractText" label="摘要" :show-overflow-tooltip="true"> </el-table-column>
       <el-table-column sortable prop="status" align="center" label="状态" width="90">
         <template #default="scope">

@@ -167,7 +167,10 @@ const state = reactive({
   form: {},
   options: {
     // 发送类型 选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
-    sendTypeOptions: [{ dictLabel: '登录', dictValue: '1' }]
+    sendTypeOptions: [
+      { dictLabel: '登录', dictValue: '0' },
+      { dictLabel: '绑定', dictValue: '1' }
+    ]
   }
 })
 

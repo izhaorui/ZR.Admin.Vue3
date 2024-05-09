@@ -227,7 +227,7 @@ getCode()
 getCookie()
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '@/assets/styles/login.scss';
 .forget-pwd {
   color: #ccc;

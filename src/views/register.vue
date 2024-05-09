@@ -103,9 +103,9 @@ const registerRules = reactive({
   username: [
     { required: true, trigger: 'blur', message: '请输入您的账号' },
     {
-      min: 2,
+      min: 5,
       max: 20,
-      message: '用户账号长度必须介于 2 和 20 之间',
+      message: '用户账号长度必须介于 5 和 20 之间',
       trigger: 'blur'
     }
   ],

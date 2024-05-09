@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!-- :model属性用于表单验证使用 比如下面的el-form-item 的 prop属性用于对表单值进行验证操作 -->
-    <el-form :model="form" ref="formRef" label-width="100px" :rules="rules" @submit.prevent>
+    <el-form :model="form" ref="formRef" :rules="rules" @submit.prevent>
       <el-row class="mb10">
         <el-col :lg="24">
           <el-form-item label="" prop="title">
@@ -14,13 +14,13 @@
           </el-form-item>
         </el-col>
         <el-col :lg="24">
-          <el-form-item prop="abstractText" label="文章摘要">
+          <el-form-item prop="abstractText">
             <el-input v-model="form.abstractText" type="textarea" show-word-limit maxlength="100" placeholder="请输入文章摘要（必须）" />
           </el-form-item>
         </el-col>
 
         <el-col :lg="5">
-          <el-form-item label="文章分类" prop="categoryId">
+          <el-form-item prop="categoryId">
             <el-cascader
               class="w100"
               :options="categoryOptions"
@@ -31,7 +31,7 @@
           </el-form-item>
         </el-col>
         <el-col :lg="11">
-          <el-form-item label="文章标签">
+          <el-form-item>
             <el-tag v-for="tag in form.dynamicTags" :key="tag" class="mr10" closable :disable-transitions="false" @close="handleCloseTag(tag)">
               {{ tag }}
             </el-tag>
@@ -50,7 +50,7 @@
           </el-form-item>
         </el-col>
         <el-col :lg="8">
-          <el-form-item label="是否公开">
+          <el-form-item>
             <template #label>
               <span>
                 <el-tooltip content="不公开只有自己会看到" placement="top">
@@ -66,8 +66,8 @@
         </el-col>
 
         <el-col :lg="24">
-          <el-form-item label="文章封面">
-            <UploadImage ref="uploadRef" v-model="form.coverUrl" :limit="1" :fileSize="15">
+          <el-form-item>
+            <UploadImage ref="uploadRef" v-model="form.coverUrl" :limit="1" :fileSize="15" style="width: 90px">
               <template #icon>
                 <el-icon class="avatar-uploader-icon"><plus /></el-icon>
               </template>
