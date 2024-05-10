@@ -1,12 +1,22 @@
 <template>
   <el-dialog draggable v-model="open" append-to-body>
-    <template #header> {{ info.title }} </template>
+    <template #header>
+      <div class="text-center">
+        {{ info.title }}
+      </div>
+    </template>
     <template v-if="info">
       <template v-if="showType == 0">
-        <div v-html="info.noticeContent"></div>
+        <el-scrollbar>
+          <div class="content-wrap" v-html="info.noticeContent"></div>
+        </el-scrollbar>
 
-        <div class="n_right">{{ info.create_by }}</div>
-        <div class="n_right">{{ dayjs(info.create_time).format('YYYY-MM-DD HH:mm') }}</div>
+        <div class="n_right">
+          {{ info.publisher }}
+        </div>
+        <div class="n_right">
+          {{ dayjs(info.create_time).format('YYYY-MM-DD HH:mm') }}
+        </div>
       </template>
       <msgList v-if="showType == 1" v-model="info.userId"> </msgList>
     </template>
@@ -84,9 +94,12 @@ defineExpose({
 })
 </script>
 <style lang="scss" scoped>
+.content-wrap {
+  height: 50vh;
+}
 .n_right {
   text-align: right;
-  margin: 10px;
+  margin: 5px;
 }
 
 .footer {
