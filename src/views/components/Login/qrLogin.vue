@@ -86,5 +86,15 @@ defineExpose({
   width: 160px;
   height: 160px;
   line-height: 160px;
+  margin: 0 auto;
+}
+
+.login-scan-container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  justify-content: space-around;
+  margin-bottom: 20px;
 }
 </style>
