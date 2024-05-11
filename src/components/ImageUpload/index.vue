@@ -4,7 +4,7 @@
       multiple
       v-bind="$attrs"
       :action="uploadImgUrl"
-      list-type="picture-card"
+      :list-type="listType"
       :on-success="handleUploadSuccess"
       :before-upload="handleBeforeUpload"
       :limit="limit"
@@ -92,6 +92,10 @@ const props = defineProps({
     default: {
       width: '120px'
     }
+  },
+  listType: {
+    type: String,
+    default: 'picture-card'
   }
 })
 

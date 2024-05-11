@@ -4,9 +4,6 @@
       <el-form-item label="公告标题" prop="noticeTitle">
         <el-input v-model="queryParams.noticeTitle" placeholder="请输入公告标题" clearable @keyup.enter="handleQuery" />
       </el-form-item>
-      <el-form-item label="操作人员" prop="createBy">
-        <el-input v-model="queryParams.createBy" placeholder="请输入操作人员" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
       <el-form-item label="类型" prop="noticeType">
         <el-select v-model="queryParams.noticeType" placeholder="公告类型" clearable>
           <el-option v-for="dict in options.sys_notice_type" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
@@ -161,20 +158,10 @@ function handleSelectionChange(selection) {
 }
 /** 新增按钮操作 */
 function handleAdd() {
-  // reset()
-  // open.value = true
-  // title.value = '添加公告'
   proxy.$refs.publishRef.handleAdd()
 }
 /**修改按钮操作 */
 function handleUpdate(row) {
-  // reset()
-  // const noticeId = row.noticeId || ids.value
-  // getNotice(noticeId).then((response) => {
-  //   form.value = response.data
-  //   open.value = true
-  //   title.value = '修改公告'
-  // })
   proxy.$refs.publishRef.handleUpdate(row)
 }
 /** 删除按钮操作 */

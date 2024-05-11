@@ -38,7 +38,8 @@
         </el-col>
         <el-col :lg="12">
           <el-form-item label="结束时间" prop="endTime">
-            <el-date-picker v-model="form.endTime" :disabled-date="disabledDate" type="datetime" placeholder="选择日期时间"> </el-date-picker>
+            <el-date-picker v-model="form.endTime" :disabled-date="disabledDate" type="datetime" placeholder="选择日期时间">
+            </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :lg="24">
@@ -74,8 +75,8 @@ const data = reactive({
   rules: {
     noticeTitle: [{ required: true, message: '公告标题不能为空', trigger: 'blur' }],
     noticeType: [{ required: true, message: '公告类型不能为空', trigger: 'change' }],
-    beginTime: [{ required: true, message: '开始时间不能为空', trigger: 'change' }],
-    endTime: [{ required: true, message: '结束时间不能为空', trigger: 'change' }]
+    beginTime: [{ required: false, message: '开始时间不能为空', trigger: 'change' }],
+    endTime: [{ required: false, message: '结束时间不能为空', trigger: 'change' }]
   }
 })
 const { form, rules } = toRefs(data)
