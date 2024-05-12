@@ -81,3 +81,16 @@ export function changeArticlePublic(data) {
     data: data
   })
 }
+
+/**
+ * 审核
+ * @param type 审核类型 pass ,reject
+ * @param ids id
+ */
+export function auditArticle(type, ids, data) {
+  return request({
+    url: `article/${type}/${ids}`,
+    method: 'PUT',
+    params: data
+  })
+}
