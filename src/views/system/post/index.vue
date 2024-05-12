@@ -55,7 +55,7 @@
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="150">
         <template #default="scope">
           <el-button text size="small" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:post:edit']">
             {{ $t('btn.edit') }}

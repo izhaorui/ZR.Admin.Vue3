@@ -76,6 +76,9 @@
       <el-col :span="1.5">
         <el-button type="primary" plain icon="plus" v-hasPermi="['system:article:add']" size="small" @click="handleAdd">发布文章</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button type="danger" plain icon="plus" v-hasPermi="['system:article:add']" size="small" @click="handleMonents">发布动态</el-button>
+      </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
 
@@ -155,7 +158,13 @@
       <el-table-column label="操作" align="center" width="180" fixed="right">
         <template #default="scope">
           <el-button size="small" icon="view" @click="handleView(scope.row)"> </el-button>
-          <el-button size="small" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:article:update']"> </el-button>
+          <el-button
+            size="small"
+            icon="edit"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['system:article:update']"
+            v-if="scope.row.articleType == 0">
+          </el-button>
           <el-popconfirm title="确定删除吗？" @confirm="handleDelete(scope.row)" style="margin-left: 10px">
             <template #reference>
               <el-button size="small" icon="delete" v-hasPermi="['system:article:delete']"></el-button>
@@ -230,7 +239,6 @@ const columns = ref([
   { visible: false, prop: 'abstractText', label: '摘要' },
   { visible: false, prop: 'isTop', label: '置顶' }
 ])
-const articleTypeOptions = ref([])
 const queryForm = ref()
 const { queryParams, options } = toRefs(data)
 
@@ -285,7 +293,11 @@ function handleQuery() {
 
 /** 新增按钮操作 */
 function handleAdd() {
-  router.replace({ path: '/article/publish' })
+  router.push({ path: '/article/publish' })
+}
+
+function handleMonents() {
+  router.push({ path: '/article/publishMonents' })
 }
 
 /** 删除按钮操作 */
