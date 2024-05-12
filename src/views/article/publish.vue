@@ -161,7 +161,7 @@ function handlePublish(status) {
         updateArticle(form.value).then((res) => {
           if (res.code == 200) {
             proxy.$modal.msgSuccess('修改文章成功')
-            proxy.$tab.closeOpenPage({ path: '/tool/article/index' })
+            proxy.$tab.closeOpenPage({ path: '/article/index' })
           } else {
             proxy.$modal.msgError('修改文章失败')
           }

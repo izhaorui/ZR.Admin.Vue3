@@ -189,8 +189,6 @@ const single = ref(true)
 const multiple = ref(true)
 // 显示搜索条件
 const showSearch = ref(true)
-// 文章状态下拉框
-const statusOptions = ref([])
 // 数据列表
 const dataList = ref([])
 // 总记录数
