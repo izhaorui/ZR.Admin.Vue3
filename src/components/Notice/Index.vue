@@ -136,14 +136,14 @@ function handleDetails(item, type) {
  * @param {*} item
  */
 function handleRead(item) {
-  readSysUserMsg(item.msgId).then(() => {
+  readSysUserMsg(item.msgId, 1).then(() => {
     init()
   })
 }
 // 全部已读点击
 function onAllReadClick() {
   if (noticeType.value == 2) {
-    readSysUserMsg(0).then(() => {
+    readSysUserMsg(0, 1).then(() => {
       init()
     })
   }
@@ -156,7 +156,7 @@ function onGoToGiteeClick() {
 
 const sysList = ref([])
 function init() {
-  listMySysUserMsg({ isRead: 0 }).then((res) => {
+  listMySysUserMsg({ isRead: 0, msgType: 1 }).then((res) => {
     const { result, totalNum } = res.data
     sysList.value = result
 

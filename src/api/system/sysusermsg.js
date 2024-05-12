@@ -73,9 +73,10 @@ export async function exportSysUserMsg(query) {
  * 已读用户系统消息
  * @param data
  */
-export function readSysUserMsg(msgId) {
+export function readSysUserMsg(msgId, msgType) {
   return request({
-    url: 'SysUserMsg/read/' + msgId,
-    method: 'post'
+    url: 'SysUserMsg/read/' + msgId + '/' + msgType,
+    method: 'post',
+    params: { msgType }
   })
 }
