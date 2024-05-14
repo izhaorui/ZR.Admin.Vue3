@@ -8,6 +8,7 @@
             <el-input v-model="form.noticeTitle" placeholder="请输入公告标题" />
           </el-form-item>
         </el-col>
+
         <el-col :lg="12">
           <el-form-item label="公告类型" prop="noticeType">
             <el-radio-group v-model="form.noticeType">
@@ -26,9 +27,14 @@
             </el-radio-group>
           </el-form-item>
         </el-col>
-        <el-col :lg="24">
+        <el-col :lg="12">
           <el-form-item label="发布者" prop="publisher">
             <el-input v-model="form.publisher" placeholder="请输入发布者" />
+          </el-form-item>
+        </el-col>
+        <el-col :lg="12">
+          <el-form-item label="是否弹出" prop="popup">
+            <el-switch v-model="form.popup" :inactiveValue="0" :activeValue="1" />
           </el-form-item>
         </el-col>
         <el-col :lg="12">
@@ -38,8 +44,7 @@
         </el-col>
         <el-col :lg="12">
           <el-form-item label="结束时间" prop="endTime">
-            <el-date-picker v-model="form.endTime" :disabled-date="disabledDate" type="datetime" placeholder="选择日期时间">
-            </el-date-picker>
+            <el-date-picker v-model="form.endTime" :disabled-date="disabledDate" type="datetime" placeholder="选择日期时间"> </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :lg="24">
@@ -104,6 +109,7 @@ const toolbarConfig = ref({
     'justifyJustify', // 两端对齐
     'justifyLeft', // 左对齐
     'justifyRight', // 右对齐
+    'emotion',
     'fullScreen' // 全屏
   ]
 })
@@ -123,7 +129,8 @@ function reset() {
     status: 0,
     beginTime: undefined,
     endTime: undefined,
-    publisher: undefined
+    publisher: undefined,
+    popup: 0
   }
   proxy.resetForm('noticeRef')
 }

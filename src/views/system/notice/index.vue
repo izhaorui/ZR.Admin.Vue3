@@ -58,6 +58,11 @@
         </template>
       </el-table-column>
       <el-table-column label="发布人" align="center" prop="publisher" />
+      <el-table-column label="是否弹出" align="center" prop="popup">
+        <template #default="scope">
+          <DictTag :options="options.popupStatus" :value="scope.row.popup"></DictTag>
+        </template>
+      </el-table-column>
       <el-table-column label="创建者" align="center" prop="createBy" width="100" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="100">
         <template #default="scope">
@@ -119,7 +124,8 @@ const data = reactive({
   },
   options: {
     sys_notice_type: [],
-    sys_notice_status: []
+    sys_notice_status: [],
+    popupStatus: [{ dictLabel: '是', dictValue: '1' }]
   }
 })
 

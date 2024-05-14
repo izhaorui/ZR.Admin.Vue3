@@ -8,7 +8,7 @@ const useSocketStore = defineStore('socket', {
     onlineNum: 0,
     onlineUsers: [],
     noticeList: [],
-    //弹框通知（公告）
+    //未读（公告）
     promptNoticeList: [],
     //弹框通知已读
     promptNoticeReadList: [],
@@ -16,11 +16,17 @@ const useSocketStore = defineStore('socket', {
     onlineInfo: {},
     // 聊天数据
     chatList: {},
+    // 离开用户信息
     leaveUser: {},
+    // 会话列表
     sessionList: {},
+    //私信未读数
     newChat: 0,
+    //通知未读数
     newNotice: 0,
+    //系统消息未读数
     newSysMsg: 0,
+    //所有通知id
     noticeIdArr: [],
     // 全局错误提醒
     globalErrorMsg: {}
@@ -68,10 +74,9 @@ const useSocketStore = defineStore('socket', {
     // 更新系统通知
     setNoticeList(data) {
       this.noticeList = data
-      var gonggaoNoticeList = data.filter((x) => x.noticeType == 2)
-      const allNoticeIdArr = []
-      data.forEach((ele) => {
-        allNoticeIdArr.push(ele.noticeId)
+      var gonggaoNoticeList = data.filter((x) => x.popup == 1)
+      const allNoticeIdArr = data.map((x) => {
+        return x.noticeId
       })
 
       var diffArr = allNoticeIdArr.filter((v) => !this.noticeIdArr.some((item) => item == v))
@@ -81,9 +86,8 @@ const useSocketStore = defineStore('socket', {
         this.noticeIdArr = allNoticeIdArr
       }
 
-      var unReadeGongGao = gonggaoNoticeList.filter((v) => !this.promptNoticeReadList.some((item) => item == v.noticeId))
-
-      this.promptNoticeList = unReadeGongGao
+      // 未读弹框通知
+      this.promptNoticeList = gonggaoNoticeList.filter((v) => !this.promptNoticeReadList.some((item) => item == v.noticeId))
     },
     setOnlineUsers(data) {
       const { onlineClients, num, leaveUser } = data

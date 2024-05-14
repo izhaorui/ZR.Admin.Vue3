@@ -1,11 +1,7 @@
 <template>
-  <el-dialog draggable v-model="open" append-to-body>
-    <template #header>
-      <div class="text-center">
-        {{ info.title }}
-      </div>
-    </template>
+  <zr-dialog draggable v-model="open" append-to-body>
     <template v-if="info">
+      <div class="text-center title">{{ info.title }}</div>
       <template v-if="showType == 0">
         <el-scrollbar>
           <div class="content-wrap" v-html="info.noticeContent"></div>
@@ -26,7 +22,7 @@
         <el-button icon="check" plain type="primary" @click="onReadClick(info)">我已阅读</el-button>
       </div>
     </template>
-  </el-dialog>
+  </zr-dialog>
 </template>
 <script setup>
 import msgList from '@/views/components/msgList.vue'
@@ -39,6 +35,7 @@ const showType = ref(0)
 const openNoticeList = computed(() => {
   return useSocketStore().promptNoticeList
 })
+
 onMounted(() => {
   watch(
     () => openNoticeList.value,
@@ -108,5 +105,9 @@ defineExpose({
     position: absolute;
     right: 0;
   }
+}
+.title {
+  font-size: 23px;
+  font-weight: bold;
 }
 </style>

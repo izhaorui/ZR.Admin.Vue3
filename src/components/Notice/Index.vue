@@ -13,23 +13,27 @@
             <el-badge :show-zero="false" :value="dotNumInfo.noticeNum"> 通知 </el-badge>
           </template>
           <div class="content-box">
-            <div class="content-box-item" v-for="item in noticeList" @click="handleDetails(item, 0)">
-              <div class="left">
-                <svg-icon name="gonggao" color="#fff" size="16"></svg-icon>
-              </div>
-              <div class="content">
-                <div class="title">
-                  {{ item.noticeTitle }}
+            <el-scrollbar>
+              <div class="content-box-item" v-for="item in noticeList">
+                <div class="left">
+                  <svg-icon name="gonggao" color="#fff" size="16"></svg-icon>
                 </div>
-                <div class="content-box-time">{{ dayjs(item.create_time).format('YYYY-MM-DD') }}</div>
+                <div class="content" @click="handleDetails(item, 0)">
+                  <div class="title">
+                    {{ item.noticeTitle }}
+                  </div>
+                  <div class="content-box-time">{{ dayjs(item.create_time).format('YYYY-MM-DD') }}</div>
+                </div>
+                <!-- <div v-if="!readList.includes(item.noticeId)">
+                  <el-button text @click="handleReadNotice(item)">已读</el-button>
+                </div> -->
               </div>
-            </div>
-
+            </el-scrollbar>
             <el-empty v-if="noticeList.length <= 0" :image-size="60"></el-empty>
           </div>
           <div class="foot-box">
             <div class="read" @click="onAllReadClick" v-show="dotNumInfo.noticeNum > 0">标记当前页已读</div>
-            <div class="goNotice" @click="onGoToGiteeClick">前往通知中心</div>
+            <div class="goNotice" @click="handleToNotice" v-if="settings.noticeUrl">前往通知中心</div>
           </div>
         </el-tab-pane>
 
@@ -38,27 +42,29 @@
             <el-badge :show-zero="false" :value="dotNumInfo.chatNum"> 私信 </el-badge>
           </template>
           <div class="content-box">
-            <div class="content-box-item" v-for="item in chatList" @click="handleDetails(item, 1)">
-              <el-avatar :src="item.fromUser.avatar"></el-avatar>
-              <div class="content">
-                <div class="title">
-                  <span class="name">{{ item.fromUser.nickName }}</span>
-                  说：{{ item.message }}
+            <el-scrollbar>
+              <div class="content-box-item" v-for="item in chatList" @click="handleDetails(item, 1)">
+                <el-avatar :src="item.fromUser.avatar"></el-avatar>
+                <div class="content">
+                  <div class="title">
+                    <span class="name">{{ item.fromUser.nickName }}</span>
+                    回复：{{ item.message }}
+                  </div>
+                  <div class="content-box-time">{{ formatTime(item.chatTime) }}</div>
                 </div>
-                <div class="content-box-time">{{ formatTime(item.chatTime) }}</div>
               </div>
-            </div>
-            <el-empty v-if="chatList.length <= 0" :image-size="60"></el-empty>
+              <el-empty v-if="chatList.length <= 0" :image-size="60"></el-empty>
+            </el-scrollbar>
           </div>
           <div class="foot-box">
             <div class="read" @click="onAllReadClick" v-if="dotNumInfo.chatNum > 0">标记当前页已读</div>
-            <div class="goNotice" @click="onGoToGiteeClick">前往通知中心</div>
           </div>
         </el-tab-pane>
         <el-tab-pane name="2">
           <template #label>
             <el-badge :show-zero="false" :value="dotNumInfo.sysMsgNum"> 系统 </el-badge>
           </template>
+
           <div class="content-box">
             <el-scrollbar>
               <div class="content-box-item" v-for="item in sysList">
@@ -80,7 +86,6 @@
           </div>
           <div class="foot-box">
             <div class="read" @click="onAllReadClick" v-if="dotNumInfo.sysMsgNum > 0">标记当前页已读</div>
-            <div class="goNotice" @click="onGoToGiteeClick">前往通知中心</div>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -96,6 +101,7 @@ import useSocketStore from '@/store/modules/socket'
 import useUserStore from '@/store/modules/user'
 import { dayjs } from 'element-plus'
 import { formatTime } from '@/utils/index'
+import settings from '@/settings'
 const { proxy } = getCurrentInstance()
 const socketStore = useSocketStore()
 const noticeType = ref('0')
@@ -149,9 +155,15 @@ function onAllReadClick() {
   }
   useSocketStore().readAll(noticeType.value)
 }
+/**
+ * 已读通知
+ */
+function handleReadNotice(item) {
+  useSocketStore().readPromptNotice(item.noticeId)
+}
 // 前往通知中心点击
-function onGoToGiteeClick() {
-  window.open('https://gitee.com/izory/ZrAdminNetCore')
+function handleToNotice() {
+  window.open(settings.noticeUrl)
 }
 
 const sysList = ref([])
@@ -170,8 +182,7 @@ init()
 .content-box {
   font-size: 13px;
   height: 200px;
-
-  // overflow: auto;
+  overflow: hidden;
 
   .content-box-item {
     margin-bottom: 10px;
@@ -214,11 +225,9 @@ init()
   color: var(--el-color-primary);
   font-size: 13px;
   cursor: pointer;
-  // display: flex;
-  // align-items: center;
-  // justify-content: space-between;
+  height: 25px;
+  line-height: 25px;
   border-top: 1px solid #eee;
-  padding: 6px 0 0 0;
 
   .read {
     top: 7px;
