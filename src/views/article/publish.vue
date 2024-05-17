@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    <!-- :model属性用于表单验证使用 比如下面的el-form-item 的 prop属性用于对表单值进行验证操作 -->
     <el-form :model="form" ref="formRef" :rules="rules" @submit.prevent>
       <el-row class="mb10">
         <el-col :lg="24">
@@ -10,7 +9,7 @@
         </el-col>
         <el-col :lg="24">
           <el-form-item prop="content" label="">
-            <MdEditor v-model="form.content" :theme="settingsStore.codeMode" :onUploadImg="onUploadImg" />
+            <MdEditor v-model="form.content" :showToolbarName="true" :theme="settingsStore.codeMode" :onUploadImg="onUploadImg" />
           </el-form-item>
         </el-col>
         <el-col :lg="24">
@@ -20,7 +19,7 @@
         </el-col>
 
         <el-col :lg="5">
-          <el-form-item prop="categoryId">
+          <el-form-item prop="categoryId" label="分类" label-position="100px">
             <el-cascader
               class="w100"
               :options="categoryOptions"
@@ -30,8 +29,8 @@
               v-model="form.categoryId" />
           </el-form-item>
         </el-col>
-        <el-col :lg="11">
-          <el-form-item>
+        <el-col :lg="24">
+          <el-form-item label="标签">
             <el-tag v-for="tag in form.dynamicTags" :key="tag" class="mr10" closable :disable-transitions="false" @close="handleCloseTag(tag)">
               {{ tag }}
             </el-tag>
@@ -69,18 +68,21 @@
           <el-form-item>
             <UploadImage ref="uploadRef" v-model="form.coverUrl" :limit="1" :fileSize="15" style="width: 90px">
               <template #icon>
-                <el-icon class="avatar-uploader-icon"><plus /></el-icon>
+                <div class="upload-wrap">
+                  <el-icon class="avatar-uploader-icon"><plus /></el-icon>
+                  <div>请选择封面</div>
+                </div>
               </template>
             </UploadImage>
           </el-form-item>
         </el-col>
-
-        <div class="btn-wrap">
-          <el-button type="success" @click="handlePublish('1')">发布文章</el-button>
-          <el-button @click="handlePublish('2')">存为草稿</el-button>
-        </div>
       </el-row>
     </el-form>
+
+    <div class="btn-wrap">
+      <el-button type="success" @click="handlePublish('1')">发布文章</el-button>
+      <el-button @click="handlePublish('2')" v-if="!info || info.status == 2">存为草稿</el-button>
+    </div>
   </div>
 </template>
 <script setup name="articlepublish">
@@ -110,7 +112,8 @@ const data = reactive({
     status: undefined,
     categoryId: undefined,
     isPublic: 1,
-    abstractText: undefined
+    abstractText: undefined,
+    editorType: 'markdown'
   },
   rules: {
     title: [{ required: true, message: '标题不能为空', trigger: 'blur' }],
@@ -160,8 +163,12 @@ function handlePublish(status) {
       if (form.value.cid != undefined) {
         updateArticle(form.value).then((res) => {
           if (res.code == 200) {
-            proxy.$modal.msgSuccess('修改文章成功')
-            proxy.$tab.closeOpenPage({ path: '/article/index' })
+            if (status == 1) {
+              proxy.$modal.msgSuccess('发布文章成功')
+              proxy.$tab.closeOpenPage({ path: '/article/index' })
+            } else {
+              proxy.$modal.msgSuccess('保存成功')
+            }
           } else {
             proxy.$modal.msgError('修改文章失败')
           }
@@ -169,8 +176,13 @@ function handlePublish(status) {
       } else {
         addArticle(form.value).then((res) => {
           if (res.code == 200) {
-            proxy.$modal.msgSuccess('发布文章成功')
-            proxy.$tab.closeOpenPage({ path: '/tool/article/index' })
+            form.value.cid = res.data
+            if (status == 1) {
+              proxy.$modal.msgSuccess('发布文章成功')
+              proxy.$tab.closeOpenPage({ path: '/article/index' })
+            } else {
+              proxy.$modal.msgSuccess('保存成功')
+            }
           } else {
             proxy.$modal.msgError('发布文章失败')
           }
@@ -201,11 +213,13 @@ function handleInputConfirm() {
   inputVisible.value = false
   inputValue.value = ''
 }
+const info = ref()
 function getInfo(cid) {
   if (!cid || cid == undefined) return
   getArticle(cid).then((res) => {
     if (res.code == 200) {
       var data = res.data
+      info.value = data
       form.value = {
         ...data,
         dynamicTags: data.tags != null && data.tags.length > 0 ? data.tags.split(',') : []
@@ -228,17 +242,21 @@ getCategoryTreeselect()
   vertical-align: bottom;
 }
 
-.vue-treeselect {
-  z-index: 1501;
+.upload-wrap {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  color: #ccc;
 }
-
 .btn-wrap {
   z-index: 10;
   width: 100%;
-  top: 0;
-  /* background: #fff; */
-  padding: 5px 20px;
+  /* top: 0; */
+  background: #fff;
+  padding: 3px 20px;
   display: flex;
   align-items: center;
+  position: fixed;
+  bottom: var(--base-footer-height);
 }
 </style>

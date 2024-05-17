@@ -9,7 +9,7 @@
         </el-col>
         <el-col :lg="24">
           <el-form-item prop="content" label="">
-            <el-input type="textarea" rows="10" placeholder="说点什么吧" maxlength="500" show-word-limit v-model="form.content"></el-input>
+            <el-input type="textarea" rows="10" placeholder="说点什么吧" show-word-limit v-model="form.content"></el-input>
           </el-form-item>
         </el-col>
 
@@ -21,12 +21,25 @@
           </el-form-item>
         </el-col>
         <el-col :lg="24">
+          <el-form-item prop="commentSwitch" label="评论权限">
+            <el-select clearable v-model="form.commentSwitch">
+              <el-option v-for="item in options.sys_comment_permi" :label="item.dictLabel" :value="parseInt(item.dictValue)"> </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :lg="24">
           <el-form-item prop="topicId" label="选择话题">
-            <el-radio-group v-model="form.topicId">
-              <el-radio-button v-for="item in topicList" :key="item.topicId" :value="item.topicId">
-                {{ item.topicName }}
-              </el-radio-button>
-            </el-radio-group>
+            <el-select clearable v-model="form.topicId">
+              <el-option v-for="item of topicList" :label="item.topicName" :value="item.topicId"> </el-option>
+              <!-- <template #footer>
+                <el-button v-if="!isAdding" text bg size="small" @click="isAdding = true"> 添加话题 </el-button>
+                <template v-else>
+                  <el-input v-model="topicName" class="option-input" placeholder="输入话题名" size="small" />
+                  <el-button type="primary" size="small" @click="onAddTopic"> 确定 </el-button>
+                  <el-button size="small" @click="isAdding = false">取消</el-button>
+                </template>
+              </template> -->
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :lg="8">
@@ -49,7 +62,10 @@
           <el-form-item>
             <UploadImage ref="uploadRef" v-model="form.coverUrl" :limit="9" :fileSize="15" style="width: 90px">
               <template #icon>
-                <el-icon class="avatar-uploader-icon"><plus /></el-icon>
+                <div class="upload-wrap">
+                  <el-icon><plus /></el-icon>
+                  <div>请选择</div>
+                </div>
               </template>
             </UploadImage>
           </el-form-item>
@@ -69,7 +85,8 @@ const { proxy } = getCurrentInstance()
 
 // 文章目录下拉框
 const categoryOptions = ref([])
-
+const topicName = ref('')
+const isAdding = ref(false)
 const formRef = ref()
 
 const data = reactive({
@@ -82,15 +99,24 @@ const data = reactive({
     isPublic: 1,
     articleType: 2,
     topicId: undefined,
-    tags: ''
+    tags: '',
+    commentSwitch: 0
   },
   rules: {
     title: [{ required: false, message: '标题不能为空', trigger: 'blur' }],
     content: [{ required: true, message: '内容不能为空', trigger: 'blur' }]
+  },
+  options: {
+    sys_comment_permi: []
   }
 })
-const { form, rules } = toRefs(data)
+const { form, rules, options } = toRefs(data)
 
+proxy.getDicts(['sys_comment_permi']).then((response) => {
+  response.data.forEach((element) => {
+    data.options[element.dictType] = element.list
+  })
+})
 /** 查询菜单下拉树结构 */
 function getCategoryTreeselect() {
   listArticleCategory({ categoryType: 1, pageSize: 100 }).then((res) => {
@@ -121,11 +147,17 @@ function handlePublish(status) {
     }
   })
 }
-
+function onAddTopic() {}
 getCategoryTreeselect()
 </script>
 <style scoped>
 .app-container {
   position: relative;
+}
+.upload-wrap {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  color: #ccc;
 }
 </style>

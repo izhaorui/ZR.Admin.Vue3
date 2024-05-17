@@ -154,22 +154,28 @@
             disabled></el-switch>
         </template>
       </el-table-column>
-      <el-table-column prop="createTime" label="发布时间" width="128" :show-overflow-tooltip="true"> </el-table-column>
-      <el-table-column label="操作" align="center" width="180" fixed="right">
+      <el-table-column prop="createTime" label="发布时间" width="128" :show-overflow-tooltip="true">
         <template #default="scope">
-          <el-button size="small" icon="view" @click="handleView(scope.row)"> </el-button>
-          <el-button
-            size="small"
-            icon="edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:article:update']"
-            v-if="scope.row.articleType == 0">
-          </el-button>
-          <el-popconfirm title="确定删除吗？" @confirm="handleDelete(scope.row)" style="margin-left: 10px">
-            <template #reference>
-              <el-button size="small" icon="delete" v-hasPermi="['system:article:delete']"></el-button>
-            </template>
-          </el-popconfirm>
+          {{ showTime(scope.row.createTime) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="130" fixed="right">
+        <template #default="scope">
+          <el-button-group>
+            <el-button size="small" icon="view" @click="handleView(scope.row)"> </el-button>
+            <el-button
+              size="small"
+              icon="edit"
+              @click="handleUpdate(scope.row)"
+              v-hasPermi="['system:article:update']"
+              v-if="scope.row.articleType == 0">
+            </el-button>
+            <el-popconfirm title="确定删除吗？" @confirm="handleDelete(scope.row)" style="margin-left: 10px">
+              <template #reference>
+                <el-button size="small" type="danger" icon="delete" v-hasPermi="['system:article:delete']"></el-button>
+              </template>
+            </el-popconfirm>
+          </el-button-group>
         </template>
       </el-table-column>
     </el-table>
@@ -185,6 +191,7 @@
 import { listArticle, delArticle, auditArticle, getArticle } from '@/api/article/article.js'
 import { treelistArticleCategory } from '@/api/article/articlecategory.js'
 import { MdPreview } from 'md-editor-v3'
+import { showTime } from '@/utils/index'
 import 'md-editor-v3/lib/preview.css'
 import useSettingsStore from '@/store/modules/settings'
 const settingsStore = useSettingsStore()
@@ -297,7 +304,7 @@ function handleAdd() {
 }
 
 function handleMonents() {
-  router.push({ path: '/article/publishMonents' })
+  router.push({ path: '/article/publishMoments' })
 }
 
 /** 删除按钮操作 */
