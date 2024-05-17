@@ -4,6 +4,8 @@ import UploadFile from '@/components/FileUpload'
 import ImagePreview from '@/components/ImagePreview'
 import DictTag from '@/components/DictTag'
 import Dialog from '@/components/Dialog'
+import MyTable from '@/components/MyTable'
+
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
 		SvgIcon: typeof SvgIcon,
@@ -11,6 +13,7 @@ declare module '@vue/runtime-core' {
 		DictTag: typeof DictTag,
 		ImagePreview: typeof ImagePreview,
 		UploadFile: typeof UploadFile,
-		ZrDialog: typeof Dialog
+		ZrDialog: typeof Dialog,
+		MyTable: typeof MyTable
   }
 }
