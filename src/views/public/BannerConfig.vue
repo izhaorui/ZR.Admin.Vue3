@@ -43,78 +43,44 @@
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
 
-    <el-table
-      :data="dataList"
+    <myTable
+      row-key="id"
       v-loading="loading"
-      ref="table"
-      border
+      :columns="columns"
+      :data="dataList"
+      :dicts="options"
       header-cell-class-name="el-table-header-cell"
-      highlight-current-row
       @sort-change="sortChange">
-      <el-table-column prop="id" label="广告id" align="center" v-if="columns.showColumn('id')" />
-      <el-table-column prop="title" label="标题" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('title')" />
-      <el-table-column prop="content" label="说明" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('content')" />
-      <el-table-column prop="link" label="链接" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('link')" />
-      <el-table-column prop="imgUrl" label="图片" align="center" v-if="columns.showColumn('imgUrl')">
-        <template #default="scope">
-          <ImagePreview :src="scope.row.imgUrl" v-if="scope.row.imgUrl"></ImagePreview>
-        </template>
-      </el-table-column>
-      <el-table-column prop="jumpType" label="跳转类型" align="center" v-if="columns.showColumn('jumpType')">
-        <template #default="scope">
-          <dict-tag :options="options.jumpTypeOptions" :value="scope.row.jumpType" />
-        </template>
-      </el-table-column>
-      <el-table-column prop="addTime" label="添加时间" :show-overflow-tooltip="true" v-if="columns.showColumn('addTime')" />
-      <el-table-column prop="clicksNumber" label="点击次数" align="center" v-if="columns.showColumn('clicksNumber')" />
-      <el-table-column prop="showStatus" label="是否显示" align="center" v-if="columns.showColumn('showStatus')">
-        <template #default="scope">
-          <dict-tag :options="options.sys_show_hide" :value="scope.row.showStatus" />
-        </template>
-      </el-table-column>
-      <el-table-column prop="adType" label="广告类型" align="center" v-if="columns.showColumn('adType')">
-        <template #default="scope">
-          <dict-tag :options="options.sys_ad_type" :value="scope.row.adType" />
-        </template>
-      </el-table-column>
-      <el-table-column label="显示时间" width="130" v-if="columns.showColumn('beginTime')">
-        <template #default="{ row }">
-          <div>{{ row.beginTime }}</div>
-          <div>{{ row.endTime }}</div>
-        </template>
-      </el-table-column>
-      <el-table-column prop="sortId" label="排序id" width="90" sortable align="center" v-if="columns.showColumn('sortId')">
-        <template #default="scope">
-          <span v-show="editIndex != scope.$index" @click="editCurrRow(scope.$index)">{{ scope.row.sortId }}</span>
-          <el-input
-            :ref="setColumnsRef"
-            v-show="editIndex == scope.$index"
-            v-model="scope.row.sortId"
-            @blur="handleChangeSort(scope.row)"></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" width="120">
-        <template #default="scope">
-          <el-button
-            type="success"
-            size="small"
-            icon="edit"
-            title="编辑"
-            v-hasPermi="['bannerconfig:edit']"
-            @click="handleUpdate(scope.row)"></el-button>
-          <el-button
-            type="danger"
-            size="small"
-            icon="delete"
-            title="删除"
-            v-hasPermi="['bannerconfig:delete']"
-            @click="handleDelete(scope.row)"></el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+      <!-- <template #tableColumn>
+        <el-table-column type="selection" width="50" align="center" :selectable="checkSelectable" />
+      </template> -->
+      <template #beginTime="{ row }">
+        <div>{{ row.beginTime }}</div>
+        <div>{{ row.endTime }}</div>
+      </template>
+      <template #sortId="{ scope }">
+        <span v-show="editIndex != scope.$index" @click="editCurrRow(scope.$index)">{{ scope.row.sortId }}</span>
+        <el-input :ref="setColumnsRef" v-show="editIndex == scope.$index" v-model="scope.row.sortId" @blur="handleChangeSort(scope.row)"></el-input>
+      </template>
+      <template #actions="{ scope }">
+        <el-button
+          type="success"
+          size="small"
+          icon="edit"
+          title="编辑"
+          v-hasPermi="['bannerconfig:edit']"
+          @click="handleUpdate(scope.row)"></el-button>
+        <el-button
+          type="danger"
+          size="small"
+          icon="delete"
+          title="删除"
+          v-hasPermi="['bannerconfig:delete']"
+          @click="handleDelete(scope.row)"></el-button>
+      </template>
+    </myTable>
     <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
 
-    <!-- 添加或修改广告管理对话框 -->
     <el-dialog :title="title" :lock-scroll="false" v-model="open" width="600">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
         <el-row :gutter="20">
@@ -206,8 +172,8 @@ const showSearch = ref(true)
 const queryParams = reactive({
   pageNum: 1,
   pageSize: 10,
-  sort: '',
-  sortType: 'asc',
+  sort: 'id',
+  sortType: 'desc',
   title: undefined,
   jumpType: undefined,
   showStatus: undefined,
@@ -217,15 +183,22 @@ const columns = ref([
   { visible: true, prop: 'id', label: 'id' },
   { visible: true, prop: 'title', label: '标题' },
   { visible: true, prop: 'content', label: '说明' },
-  { visible: true, prop: 'link', label: '链接' },
-  { visible: true, prop: 'imgUrl', label: '图片' },
-  { visible: true, prop: 'jumpType', label: '跳转类型' },
+  { visible: true, prop: 'link', label: '链接', showOverflowTooltip: true },
+  { visible: true, prop: 'imgUrl', label: '图片', type: 'img' },
+  { visible: true, prop: 'jumpType', label: '跳转类型', type: 'dict', dictType: 'jumpTypeOptions' },
   { visible: false, prop: 'addTime', label: '添加时间' },
   { visible: true, prop: 'clicksNumber', label: '点击次数' },
-  { visible: true, prop: 'showStatus', label: '是否显示' },
-  { visible: true, prop: 'adType', label: '广告类型' },
-  { visible: true, prop: 'beginTime', label: '显示时间' },
-  { visible: true, prop: 'sortId', label: '排序id' }
+  { visible: true, prop: 'showStatus', label: '是否显示', type: 'dict', dictType: 'sys_show_hide' },
+  { visible: true, prop: 'adType', label: '广告类型', type: 'dict', dictType: 'sys_ad_type' },
+  { visible: true, prop: 'beginTime', label: '显示时间', type: 'slot', width: '130' },
+  { visible: true, prop: 'sortId', label: '排序id', type: 'slot' },
+  {
+    visible: true,
+    prop: 'actions',
+    label: '操作',
+    type: 'slot',
+    width: '120'
+  }
 ])
 const total = ref(0)
 const dataList = ref([])
