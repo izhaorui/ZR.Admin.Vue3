@@ -43,8 +43,8 @@
 
     <el-table v-loading="loading" :data="list" border @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="访问编号" align="center" prop="infoId" width="80" />
-      <el-table-column label="用户名称" align="center" prop="userName" />
+      <!-- <el-table-column label="访问编号" align="center" prop="infoId" width="80" /> -->
+      <el-table-column label="用户名称" align="center" prop="userName" width="100" />
       <el-table-column label="登录地址" align="center" prop="ipaddr" width="130">
         <template #default="{ row }">
           <div>{{ row.loginLocation }}</div>
@@ -52,17 +52,18 @@
         </template>
       </el-table-column>
       <!-- <el-table-column label="登录地点" align="center" prop="loginLocation"  /> -->
-      <el-table-column label="浏览器" align="center" prop="browser" />
+      <el-table-column label="浏览器" prop="browser" />
+      <el-table-column label="客户端id" prop="clientId" :show-overflow-tooltip="true" />
       <el-table-column label="操作系统" align="center" prop="os" />
-      <el-table-column label="操作状态" align="center" prop="status">
+      <el-table-column label="操作状态" align="center" prop="status" width="90">
         <template #default="{ row }">
           <dict-tag :options="statusOptions" :value="row.status"></dict-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作信息" align="center" prop="msg" />
-      <el-table-column label="登录日期" align="center" prop="loginTime" width="180">
+      <el-table-column label="登录日期" align="center" prop="loginTime" width="100">
         <template #default="scope">
-          <span>{{ scope.row.loginTime }}</span>
+          <span>{{ showTime(scope.row.loginTime) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="100" align="center">
@@ -78,7 +79,7 @@
 
 <script setup name="logininfor">
 import { list as queryList, delLogininfor, cleanLogininfor, exportLogininfor } from '@/api/monitor/logininfor'
-
+import { showTime } from '@/utils'
 // 遮罩层
 const loading = ref(true)
 // 选中数组

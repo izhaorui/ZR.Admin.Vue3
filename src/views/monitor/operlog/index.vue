@@ -7,8 +7,11 @@
       <el-form-item label="操作人员" prop="operName">
         <el-input v-model="queryParams.operName" placeholder="请输入操作人员" clearable @keyup.enter="handleQuery" />
       </el-form-item>
-      <el-form-item label="业务类型" prop="businessType">
-        <el-select v-model="queryParams.businessType" placeholder="操作类型" clearable>
+      <el-form-item label="业务类型">
+        <el-select v-model="queryParams.businessTypes" collapse-tags collapse-tags-tooltip multiple placeholder="操作类型" clearable>
+          <template #header>
+            <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll"> All </el-checkbox>
+          </template>
           <el-option v-for="dict in options.sys_oper_type" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
         </el-select>
       </el-form-item>
@@ -85,14 +88,14 @@
       <el-table-column label="日志内容" prop="errorMsg" width="220" v-if="columns.showColumn('errorMsg')" />
       <el-table-column label="操作日期" prop="operTime" width="100" v-if="columns.showColumn('operTime')">
         <template #default="scope">
-          <span>{{ scope.row.operTime }}</span>
+          <span>{{ showTime(scope.row.operTime) }}</span>
         </template>
       </el-table-column>
 
       <el-table-column prop="method" label="操作方法" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('method')" />
       <el-table-column prop="operParam" label="请求参数" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('operParam')" />
       <el-table-column prop="jsonResult" label="返回结果" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('jsonResult')" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="140">
+      <el-table-column label="操作" align="center" width="130">
         <template #default="scope">
           <el-button size="small" text icon="view" @click="handleView(scope.row, scope.index)" v-hasPermi="['monitor:operlog:query']">
             详细
@@ -160,6 +163,7 @@
 
 <script setup name="operlog">
 import { list as listOperLog, delOperlog, cleanOperlog } from '@/api/monitor/operlog'
+import { showTime } from '@/utils'
 import dayjs from 'dayjs'
 const { proxy } = getCurrentInstance()
 // 遮罩层
@@ -190,12 +194,13 @@ const state = reactive({
     operName: undefined,
     businessType: undefined,
     status: undefined,
-    operParam: undefined
+    operParam: undefined,
+    businessTypes: []
   },
   options: {
+    statusOptions: [],
     //业务类型（0其它 1新增 2修改 3删除）选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
-    businessTypeOptions: [],
-    statusOptions: []
+    sys_oper_type: []
   }
 })
 const columns = ref([
@@ -238,10 +243,7 @@ function getList() {
     }
   })
 }
-// 操作日志状态字典翻译
-function statusFormat(row, column) {
-  return proxy.selectDictLabel(sys_common_status.value, row.status)
-}
+
 /** 搜索按钮操作 */
 function handleQuery() {
   queryParams.value.pageNum = 1
@@ -250,6 +252,7 @@ function handleQuery() {
 /** 重置按钮操作 */
 function resetQuery() {
   dateRange.value = []
+  state.queryParams.businessTypes = []
   proxy.resetForm('queryForm')
   handleQuery()
 }
@@ -332,5 +335,33 @@ function handleExport() {
       await proxy.downFile('/monitor/OperLog/export', { ...queryParams.value })
     })
 }
+const checkAll = ref(false)
+const indeterminate = ref(false)
+/**
+ *
+ * @param {*} row
+ */
+function handleCheckAll(val) {
+  indeterminate.value = false
+  if (val) {
+    queryParams.value.businessTypes = options.value.sys_oper_type.map((_) => _.dictValue)
+  } else {
+    queryParams.value.businessTypes = []
+  }
+}
+watch(
+  () => queryParams.value.businessTypes,
+  (val) => {
+    if (val.length === 0) {
+      checkAll.value = false
+      indeterminate.value = false
+    } else if (val.length === options.value.sys_oper_type.length) {
+      checkAll.value = true
+      indeterminate.value = false
+    } else {
+      indeterminate.value = true
+    }
+  }
+)
 handleQuery()
 </script>
