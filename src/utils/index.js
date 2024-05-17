@@ -1,3 +1,4 @@
+import { dayjs } from 'element-plus'
 import { parseTime } from './ruoyi'
 import { useWebNotification } from '@vueuse/core'
 
@@ -31,6 +32,24 @@ export function formatTime(time, option) {
     return parseTime(time, option)
   } else {
     return d.getMonth() + 1 + '月' + d.getDate() + '日' + d.getHours() + '时' + d.getMinutes() + '分'
+  }
+}
+
+/**
+ * @param {number} time
+ * @param {string} option
+ * @returns {string}
+ */
+export function showTime(time) {
+  const d = new Date(time)
+  const now = Date.now()
+  var y1 = d.getFullYear()
+  var y2 = dayjs(now).year()
+
+  if (y1 == y2) {
+    return parseTime(time, 'MM-DD HH:mm')
+  } else {
+    return parseTime(time, 'YYYY-MM-DD')
   }
 }
 

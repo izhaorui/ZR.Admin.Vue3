@@ -9,6 +9,15 @@ export function list(query) {
   })
 }
 
+// 查询我的登录日志列表
+export function queryMylist(query) {
+  return request({
+    url: '/monitor/logininfor/mylist',
+    method: 'get',
+    params: query
+  })
+}
+
 // 删除登录日志
 export function delLogininfor(infoId) {
   return request({

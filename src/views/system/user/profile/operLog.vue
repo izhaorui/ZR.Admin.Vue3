@@ -34,7 +34,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="日志内容" align="center" prop="errorMsg" :show-overflow-tooltip="true" />
+      <!-- <el-table-column label="日志内容" align="center" prop="errorMsg" :show-overflow-tooltip="true" /> -->
       <el-table-column label="操作日期" align="center" prop="operTime" width="180">
         <template #default="scope">
           <span>{{ scope.row.operTime }}</span>

@@ -60,6 +60,9 @@
             <el-tab-pane :label="$t('menu.operLog')" name="log">
               <operLog></operLog>
             </el-tab-pane>
+            <el-tab-pane :label="$t('menu.loginLog')" name="loginlog">
+              <loginLog></loginLog>
+            </el-tab-pane>
           </el-tabs>
         </el-card>
       </el-col>
@@ -72,6 +75,7 @@ import userAvatar from './userAvatar'
 import userInfo from './userInfo'
 import resetPwd from './resetPwd'
 import operLog from './operLog.vue'
+import loginLog from './loginLog.vue'
 import { getUserProfile } from '@/api/system/user'
 
 const activeTab = ref('userinfo')

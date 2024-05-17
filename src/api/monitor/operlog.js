@@ -1,11 +1,15 @@
 import request from '@/utils/request'
+import QS from 'qs'
 
 // 查询操作日志列表
 export function list(query) {
   return request({
     url: '/monitor/operlog/list',
     method: 'get',
-    params: query
+    params: query,
+    paramsSerializer: function (params) {
+      return QS.stringify(params, { indices: false })
+    }
   })
 }
 
