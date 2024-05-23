@@ -17,9 +17,9 @@ import pageLoginEn from './pages/login/en.json'
 import pageLoginTw from './pages/login/zh-tw.json'
 
 // 菜单页面
-import pagemenuCn from './pages/menu/zh-cn'
-import pagemenuEn from './pages/menu/en'
-import pagemenuTw from './pages/menu/zh-tw'
+import pagemenuCn from './pages/menu/zh-cn.json'
+import pagemenuEn from './pages/menu/en.json'
+import pagemenuTw from './pages/menu/zh-tw.json'
 
 const i18n = createI18n({
   // 全局注入 $t 函数

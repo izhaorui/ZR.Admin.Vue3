@@ -20,6 +20,10 @@
             <div class="name">{{ item }}</div>
           </div>
         </div>
+        <div class="help text-muted mt5" @click="handleHelp">
+          <svg-icon name="question"></svg-icon>
+          如何增加icon
+        </div>
       </el-tab-pane>
       <el-tab-pane label="Element-UI Icons" name="2">
         <div class="icon-list">
@@ -43,7 +47,7 @@
 <script setup>
 import icons from './requireIcons'
 import * as elIcons from '@element-plus/icons-vue'
-
+const { proxy } = getCurrentInstance()
 const elementIcons = ref([])
 const elementIconList = ref([])
 for (const key in elIcons) {
@@ -80,7 +84,9 @@ function reset() {
   iconName.value = ''
   iconList.value = icons
 }
-
+function handleHelp() {
+  proxy.$modal.msg('请将svg图标放置在目录/src/assets/icons/svg里面')
+}
 defineExpose({
   reset
 })
@@ -106,5 +112,8 @@ defineExpose({
       }
     }
   }
+}
+.help {
+  cursor: pointer;
 }
 </style>
