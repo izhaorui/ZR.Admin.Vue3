@@ -1,5 +1,5 @@
 <template>
-  <div style="border: 1px solid #ccc">
+  <div style="border: 1px solid #ccc" v-if="show">
     <Toolbar style="border-bottom: 1px solid #ccc" :editor="editorRef" :defaultConfig="toolbarConfig" :mode="mode" />
     <Editor
       style="height: 300px; overflow-y: hidden"
@@ -21,7 +21,7 @@ const emit = defineEmits()
 const props = defineProps({
   placeholder: {
     type: String,
-    default: () => '请输入内容'
+    default: () => '请输入内容...'
   },
   // 工具栏
   toolbarConfig: {
@@ -32,7 +32,7 @@ const props = defineProps({
 })
 const mode = ref('default')
 const show = ref(false)
-const valueHtml = ref()
+const valueHtml = ref('')
 const editorConfig = {
   MENU_CONF: {
     uploadImage: {
@@ -98,6 +98,7 @@ const editorConfig = {
 }
 
 onBeforeUnmount(() => {
+  console.log('editor销毁')
   const editor = editorRef.value
   if (editor == null) return
   editor.destroy()
@@ -120,4 +121,8 @@ watch(
     valueHtml.value = value
   }
 )
+onMounted(() => {
+  show.value = true
+  valueHtml.value = props.modelValue
+})
 </script>
