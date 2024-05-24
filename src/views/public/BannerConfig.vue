@@ -55,8 +55,8 @@
         <el-table-column type="selection" width="50" align="center" :selectable="checkSelectable" />
       </template> -->
       <template #beginTime="{ row }">
-        <div>{{ row.beginTime }}</div>
-        <div>{{ row.endTime }}</div>
+        <div>{{ showTime(row.beginTime) }}</div>
+        <div>{{ showTime(row.endTime) }}</div>
       </template>
       <template #sortId="{ scope }">
         <span v-show="editIndex != scope.$index" @click="editCurrRow(scope.$index)">{{ scope.row.sortId }}</span>
@@ -166,6 +166,7 @@
 <script setup name="bannerconfig">
 import { listBannerConfig, addBannerConfig, delBannerConfig, updateBannerConfig, getBannerConfig, changeSort } from '@/api/public/bannerconfig.js'
 const { proxy } = getCurrentInstance()
+import { showTime } from '@/utils'
 const ids = ref([])
 const loading = ref(false)
 const showSearch = ref(true)
@@ -190,7 +191,7 @@ const columns = ref([
   { visible: true, prop: 'clicksNumber', label: '点击次数' },
   { visible: true, prop: 'showStatus', label: '是否显示', type: 'dict', dictType: 'sys_show_hide' },
   { visible: true, prop: 'adType', label: '广告类型', type: 'dict', dictType: 'sys_ad_type' },
-  { visible: true, prop: 'beginTime', label: '显示时间', type: 'slot', width: '130' },
+  { visible: true, prop: 'beginTime', label: '显示时间', type: 'slot', width: '130', align: 'left' },
   { visible: true, prop: 'sortId', label: '排序id', type: 'slot' },
   {
     visible: true,
