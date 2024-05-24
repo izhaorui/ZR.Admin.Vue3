@@ -10,35 +10,32 @@
       @onChange="handleChange" />
   </div>
 </template>
-<script>
+<script setup>
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
-import { onBeforeUnmount, ref, shallowRef } from 'vue'
+
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { getToken } from '@/utils/auth'
 import useUserStore from '@/store/modules/user'
-export default {
-  components: { Editor, Toolbar },
-  props: {
-    placeholder: {
-      type: String,
-      default: () => '请输入内容'
-    },
-    modelValue: String,
-    // 工具栏
-    toolbarConfig: {
-      type: [Object],
-      default: () => {}
-    }
+const editorRef = shallowRef()
+const emit = defineEmits()
+const props = defineProps({
+  placeholder: {
+    type: String,
+    default: () => '请输入内容'
   },
-  setup(props, { emit }) {
-    const editorRef = shallowRef()
-    const valueHtml = ref(props.modelValue)
-    const editorConfig = {
-      MENU_CONF: {},
-      placeholder: props.placeholder
-    }
-    //上传图片
-    editorConfig.MENU_CONF['uploadImage'] = {
+  // 工具栏
+  toolbarConfig: {
+    type: [Object],
+    default: () => {}
+  },
+  modelValue: [Object, String]
+})
+const mode = ref('default')
+const show = ref(false)
+const valueHtml = ref()
+const editorConfig = {
+  MENU_CONF: {
+    uploadImage: {
       server: import.meta.env.VITE_APP_BASE_API + '/common/UploadFile',
       // form-data fieldName ，默认值 'wangeditor-uploaded-image'
       fieldName: 'file',
@@ -66,31 +63,24 @@ export default {
           insertFn(res.data.url)
         )
       }
-    }
-    //上传视频
-    editorConfig.MENU_CONF['uploadVideo'] = {
+    },
+    uploadVideo: {
       server: import.meta.env.VITE_APP_BASE_API + '/common/UploadFile',
       // form-data fieldName ，默认值 'wangeditor-uploaded-video'
       fieldName: 'file',
-
       // 单个文件的最大体积限制，默认为 10M
       maxFileSize: 5 * 1024 * 1024, // 5M
-
       // 最多可上传几个文件，默认为 5
       maxNumberOfFiles: 3,
-
       // 选择文件时的类型限制，默认为 ['video/*'] 。如不想限制，则设置为 []
       allowedFileTypes: ['video/*'],
-
       // 将 meta 拼接到 url 参数中，默认 false
       metaWithUrl: false,
-
       // 自定义增加 http  header
       headers: {
         Authorization: 'Bearer ' + getToken(),
         userid: useUserStore().userId
       },
-
       // 跨域是否传递 cookie ，默认为 false
       withCredentials: true,
       // 超时时间，默认为 30 秒
@@ -103,37 +93,31 @@ export default {
         )
       }
     }
-    onBeforeUnmount(() => {
-      const editor = editorRef.value
-      if (editor == null) return
-      editor.destroy()
-    })
-    const handleCreated = (editor) => {
-      editorRef.value = editor
-    }
-    const handleChange = (editor) => {
-      emit('update:modelValue', editor.getHtml())
-    }
-    watch(
-      () => props.modelValue,
-      (value) => {
-        const editor = editorRef.value
-        if (value == undefined) {
-          editor.clear()
-          return
-        }
-        valueHtml.value = value
-      }
-    )
-    return {
-      editorRef,
-      valueHtml,
-      mode: 'default',
-      editorConfig,
-      handleCreated,
-      handleChange,
-      toolbarConfig: props.toolbarConfig
-    }
-  }
+  },
+  placeholder: props.placeholder
 }
+
+onBeforeUnmount(() => {
+  const editor = editorRef.value
+  if (editor == null) return
+  editor.destroy()
+})
+const handleCreated = (editor) => {
+  editorRef.value = editor
+}
+const handleChange = (editor) => {
+  emit('update:modelValue', editor.getHtml())
+}
+watch(
+  () => props.modelValue,
+  (value) => {
+    show.value = true
+    const editor = editorRef.value
+    if (value == undefined) {
+      editor.clear()
+      return
+    }
+    valueHtml.value = value
+  }
+)
 </script>
