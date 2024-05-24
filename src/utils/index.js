@@ -377,7 +377,9 @@ export function webNotify(optinos) {
     lang: 'en',
     renotify: true,
     tag: 'tag',
-    body: optinos.body
+    body: optinos.body,
+    icon: optinos.icon,
+    requireInteraction: true
   })
   if (isSupported) {
     show()
