@@ -1,33 +1,11 @@
 <!--
- * @Descripttion: (话题/article_topic)
+ * @Descripttion: (文章话题/article_topic)
  * @Author: (admin)
- * @Date: (2024-05-12)
+ * @Date: (2024-05-24)
 -->
 <template>
   <div>
     <el-form :model="queryParams" label-position="right" inline ref="queryRef" v-show="showSearch" @submit.prevent>
-      <el-form-item label="话题名" prop="topicName">
-        <el-input v-model="queryParams.topicName" placeholder="请输入话题名" />
-      </el-form-item>
-      <el-form-item label="创建时间">
-        <el-date-picker
-          v-model="dateRangeAddTime"
-          type="datetimerange"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          value-format="YYYY-MM-DD HH:mm:ss"
-          :default-time="defaultTime"
-          :shortcuts="dateOptions">
-        </el-date-picker>
-      </el-form-item>
-      <!-- <el-form-item label="话题分类" prop="topicType">
-        <el-select clearable v-model="queryParams.topicType" placeholder="请选择话题分类">
-          <el-option v-for="item in options.topicTypeOptions" :key="item.dictValue" :label="item.dictLabel" :value="item.dictValue">
-            <span class="fl">{{ item.dictLabel }}</span>
-            <span class="fr" style="color: var(--el-text-color-secondary)">{{ item.dictValue }}</span>
-          </el-option>
-        </el-select>
-      </el-form-item> -->
       <el-form-item>
         <el-button icon="search" type="primary" @click="handleQuery">{{ $t('btn.search') }}</el-button>
         <el-button icon="refresh" @click="resetQuery">{{ $t('btn.reset') }}</el-button>
@@ -64,35 +42,35 @@
         align="center"
         :show-overflow-tooltip="true"
         v-if="columns.showColumn('topicDescription')" />
-      <el-table-column prop="joinNum" label="参与/发起次数" align="center" v-if="columns.showColumn('joinNum')" />
-      <el-table-column prop="viewNum" label="浏览次数" align="center" v-if="columns.showColumn('viewNum')" />
+      <el-table-column prop="joinNum" label="参与次数" align="center" v-if="columns.showColumn('joinNum')" />
       <el-table-column prop="addTime" label="创建时间" :show-overflow-tooltip="true" v-if="columns.showColumn('addTime')" />
-      <!-- <el-table-column prop="topicType" label="话题分类" align="center" v-if="columns.showColumn('topicType')">
-        <template #default="scope">
-          <dict-tag :options="options.topicTypeOptions" :value="scope.row.topicType" />
-        </template>
-      </el-table-column> -->
       <el-table-column label="操作" width="160">
         <template #default="scope">
-          <el-button-group>
-            <el-button text v-hasPermi="['articletopic:edit']" type="success" icon="edit" title="编辑" @click="handleUpdate(scope.row)">
-              编辑
-            </el-button>
-            <el-button text v-hasPermi="['articletopic:delete']" type="danger" icon="delete" title="删除" @click="handleDelete(scope.row)">
-              删除
-            </el-button>
-          </el-button-group>
+          <el-button
+            type="success"
+            size="small"
+            icon="edit"
+            title="编辑"
+            v-hasPermi="['articletopic:edit']"
+            @click="handleUpdate(scope.row)"></el-button>
+          <el-button
+            type="danger"
+            size="small"
+            icon="delete"
+            title="删除"
+            v-hasPermi="['articletopic:delete']"
+            @click="handleDelete(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
     <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
 
-    <el-dialog :title="title" :lock-scroll="false" v-model="open">
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
+    <el-dialog :title="title" :lock-scroll="false" v-model="open" width="400">
+      <el-form ref="formRef" :model="form" :rules="rules" label-width="90px">
         <el-row :gutter="20">
-          <el-col :lg="12">
+          <el-col :lg="24">
             <el-form-item label="话题名" prop="topicName">
-              <el-input v-model="form.topicName" :disabled="opertype == 2" placeholder="请输入话题名" />
+              <el-input v-model="form.topicName" placeholder="请输入话题名" :disabled="opertype == 2" />
             </el-form-item>
           </el-col>
 
@@ -101,18 +79,6 @@
               <el-input type="textarea" v-model="form.topicDescription" placeholder="请输入话题描述" />
             </el-form-item>
           </el-col>
-
-          <!-- <el-col :lg="12">
-            <el-form-item label="话题分类" prop="topicType">
-              <el-select v-model="form.topicType" placeholder="请选择话题分类">
-                <el-option
-                  v-for="item in options.topicTypeOptions"
-                  :key="item.dictValue"
-                  :label="item.dictLabel"
-                  :value="parseInt(item.dictValue)"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col> -->
         </el-row>
       </el-form>
       <template #footer v-if="opertype != 3">
@@ -132,33 +98,25 @@ const showSearch = ref(true)
 const queryParams = reactive({
   pageNum: 1,
   pageSize: 10,
-  sort: '',
-  sortType: 'desc',
-  topicName: undefined,
-  addTime: undefined,
-  topicType: undefined
+  sort: 'topicid',
+  sortType: 'desc'
 })
 const columns = ref([
-  { visible: true, prop: 'topicId', label: '话题ID' },
-  { visible: true, prop: 'topicName', label: '话题名' },
-  { visible: true, prop: 'topicDescription', label: '话题描述' },
-  { visible: true, prop: 'joinNum', label: '参与/发起次数' },
-  { visible: true, prop: 'viewNum', label: '浏览次数' },
-  { visible: true, prop: 'addTime', label: '创建时间' },
-  { visible: true, prop: 'topicType', label: '话题分类' }
+  { visible: true, align: 'left', type: '', prop: 'topicId', label: '话题ID' },
+  { visible: true, align: 'left', type: '', prop: 'topicName', label: '话题名', showOverflowTooltip: true },
+  { visible: true, align: 'left', type: '', prop: 'topicDescription', label: '话题描述', showOverflowTooltip: true },
+  { visible: true, align: 'left', type: '', prop: 'joinNum', label: '参与次数' },
+  { visible: true, align: 'left', type: '', prop: 'addTime', label: '创建时间', showOverflowTooltip: true }
+  //{ visible: false, prop: 'actions', label: '操作', type: 'slot', width: '160' }
 ])
 const total = ref(0)
 const dataList = ref([])
 const queryRef = ref()
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
-// 创建时间时间范围
-const dateRangeAddTime = ref([])
-
 var dictParams = []
 
 function getList() {
-  proxy.addDateRange(queryParams, dateRangeAddTime.value, 'AddTime')
   loading.value = true
   listArticleTopic(queryParams).then((res) => {
     const { code, data } = res
@@ -178,8 +136,6 @@ function handleQuery() {
 
 // 重置查询操作
 function resetQuery() {
-  // 创建时间时间范围
-  dateRangeAddTime.value = []
   proxy.resetForm('queryRef')
   handleQuery()
 }
@@ -208,12 +164,10 @@ const state = reactive({
   multiple: true,
   form: {},
   rules: {
+    topicId: [{ required: true, message: '话题ID不能为空', trigger: 'blur', type: 'number' }],
     topicName: [{ required: true, message: '话题名不能为空', trigger: 'blur' }]
   },
-  options: {
-    // 话题分类 选项列表 格式 eg:{ dictLabel: '标签', dictValue: '0'}
-    topicTypeOptions: []
-  }
+  options: {}
 })
 
 const { form, rules, options, single, multiple } = toRefs(state)
@@ -231,9 +185,7 @@ function reset() {
     topicName: null,
     topicDescription: null,
     joinNum: null,
-    viewNum: null,
-    addTime: null,
-    topicType: null
+    addTime: null
   }
   proxy.resetForm('formRef')
 }
@@ -242,7 +194,7 @@ function reset() {
 function handleAdd() {
   reset()
   open.value = true
-  title.value = '添加话题'
+  title.value = '添加文章话题'
   opertype.value = 1
 }
 // 修改按钮操作
@@ -253,7 +205,7 @@ function handleUpdate(row) {
     const { code, data } = res
     if (code == 200) {
       open.value = true
-      title.value = '修改话题'
+      title.value = '修改文章话题'
       opertype.value = 2
 
       form.value = {
@@ -306,13 +258,13 @@ function handleDelete(row) {
 // 导出按钮操作
 function handleExport() {
   proxy
-    .$confirm('是否确认导出话题数据项?', '警告', {
+    .$confirm('是否确认导出文章话题数据项?', '警告', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
     })
     .then(async () => {
-      await proxy.downFile('/content/ArticleTopic/export', { ...queryParams })
+      await proxy.downFile('/article/ArticleTopic/export', { ...queryParams })
     })
 }
 
