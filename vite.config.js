@@ -34,6 +34,7 @@ export default defineConfig(({ mode, command }) => {
       sourcemap: command === 'build' ? false : 'inline',
       outDir: 'dist', //指定输出目录
       assetsDir: 'assets', //指定静态资源存储目录(相对于outDir)
+      chunkSizeWarningLimit: 2000, //Adjust the limit to your desired value in KB
       // 将js、css文件分离到单独文件夹
       rollupOptions: {
         output: {
