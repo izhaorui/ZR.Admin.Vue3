@@ -125,12 +125,12 @@ service.interceptors.response.use(
  */
 export function get(url, params) {
   return new Promise((resolve, reject) => {
-    axios
+    service
       .get(url, {
         params: params
       })
       .then((res) => {
-        resolve(res.data)
+        resolve(res)
       })
       .catch((err) => {
         reject(err)
@@ -140,12 +140,12 @@ export function get(url, params) {
 
 export function post(url, params) {
   return new Promise((resolve, reject) => {
-    axios
+    service
       .post(url, {
         params: params
       })
       .then((res) => {
-        resolve(res.data)
+        resolve(res)
       })
       .catch((err) => {
         reject(err)
@@ -160,10 +160,10 @@ export function post(url, params) {
  */
 export function postForm(url, data, config) {
   return new Promise((resolve, reject) => {
-    axios
+    service
       .post(url, data, config)
       .then((res) => {
-        resolve(res.data)
+        resolve(res)
       })
       .catch((err) => {
         reject(err)

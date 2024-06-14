@@ -69,11 +69,10 @@
         <div style="float: left; width: 50%">
           <h4>{{ $t('layout.backendTechnology') }}</h4>
           <ul>
-            <li>NET7</li>
+            <li>NET8</li>
             <li>JWT</li>
             <li>SqlSugar</li>
             <li>Quartz.Net</li>
-            <li>MySql</li>
             <li>Mapster</li>
             <li>MiniExcel</li>
             <li>Redis</li>
