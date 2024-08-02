@@ -107,7 +107,17 @@
             </el-radio-group>
           </el-form-item>
         </el-col>
+        <el-col :lg="12">
+          <el-form-item label="扩展1" prop="extend1">
+            <el-input v-model="form.extend1" placeholder="请输入扩展内容"></el-input>
+          </el-form-item>
+        </el-col>
 
+        <el-col :lg="12">
+          <el-form-item label="扩展2" prop="extend2">
+            <el-input v-model="form.extend2" placeholder="请输入扩展内容"></el-input>
+          </el-form-item>
+        </el-col>
         <el-col :lg="24">
           <el-form-item label="备注" prop="remark">
             <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
