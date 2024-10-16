@@ -1,7 +1,6 @@
 <template>
   <div :class="{ hidden: hidden }" class="pagination-container">
     <el-pagination
-      small
       background
       v-model:current-page="currentPage"
       v-model:page-size="pageSize"
