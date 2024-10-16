@@ -24,7 +24,7 @@
     "axios": "^1.6.2",
     "crypto-js": "^4.1.1",
     "echarts": "5.2.2",
-    "element-plus": "^2.7.2",
+    "element-plus": "^2.8.5",
     "file-saver": "2.0.5",
     "fuse.js": "6.4.6",
     "highlight.js": "^11.5.1",
