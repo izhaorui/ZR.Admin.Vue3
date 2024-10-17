@@ -15,7 +15,7 @@
       </el-form-item>
     </el-form>
 
-    <el-table v-loading="loading" :data="list" border @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="list" border>
       <el-table-column label="IP地址" align="center" prop="ipaddr" width="130">
         <template #default="{ row }">
           <div>{{ row.ipaddr }}</div>
