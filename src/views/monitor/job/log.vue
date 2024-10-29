@@ -60,7 +60,7 @@
       <el-table-column label="作业用时" align="center" prop="elapsed">
         <template #default="scope">
           <span :style="scope.row.elapsed < 1000 ? 'color:green' : scope.row.elapsed < 3000 ? 'color:orange' : 'color:red'">
-            {{ Math.floor(scope.row.elapsed) / 1000 }} ms
+            {{ Math.floor(scope.row.elapsed) / 1000 }} s
           </span>
         </template>
       </el-table-column>
