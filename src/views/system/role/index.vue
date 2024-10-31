@@ -539,7 +539,7 @@ const router = useRouter()
 /** 分配用户操作 */
 function handleAuthUser(row) {
   const roleId = row.roleId
-  var hasPermi = proxy.$auth.hasPermi(['system:role:authorize', 'system:roleusers:list'])
+  var hasPermi = proxy.$auth.hasPermiAnd(['system:role:authorize', 'system:roleusers:list'])
   if (hasPermi) {
     router.push({ path: '/system/roleusers', query: { roleId } })
   } else {
