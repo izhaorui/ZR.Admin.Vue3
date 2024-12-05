@@ -58,6 +58,19 @@ export function updateData(data) {
   })
 }
 
+// 状态修改
+export function changeStatus(dictCode, status) {
+  const data = {
+    dictCode,
+    status
+  }
+  return request({
+    url: '/system/dict/data/changeStatus',
+    method: 'put',
+    data: data
+  })
+}
+
 // 删除字典数据
 export function delData(dictCode) {
   return request({

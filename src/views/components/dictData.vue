@@ -1,5 +1,5 @@
 <template>
-  <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+  <el-form :model="queryParams" ref="queryForm" :inline="true">
     <el-form-item label="字典名称" prop="dictType">
       <el-select v-model="queryParams.dictType">
         <el-option v-for="item in typeOptions" :key="item.dictId" :label="item.dictName" :value="item.dictType" />
@@ -21,7 +21,7 @@
       <el-button type="primary" plain icon="plus" @click="handleAdd" v-hasPermi="['system:dict:add']">新增数据</el-button>
     </el-col>
   </el-row>
-  <el-table :data="dataList">
+  <el-table :data="dataList" border>
     <!-- <el-table-column type="selection" width="55" align="center" /> -->
     <el-table-column label="字典编码" align="center" prop="dictCode" />
     <el-table-column label="字典标签" align="center" prop="dictLabel">
@@ -35,9 +35,16 @@
     <el-table-column label="翻译键值" align="center" prop="langKey" />
     <el-table-column label="字典键值" align="center" prop="dictValue" sortable />
     <el-table-column label="字典排序" align="center" prop="dictSort" sortable />
-    <el-table-column label="状态" align="center" prop="status">
+    <el-table-column label="状态" align="center" prop="status" width="120">
       <template #default="scope">
-        <dict-tag :options="statusOptions" :value="scope.row.status" />
+        <!-- <dict-tag :options="statusOptions" :value="scope.row.status" /> -->
+        <el-switch
+          v-model="scope.row.status"
+          active-value="0"
+          inactive-value="1"
+          active-text="启用"
+          inactive-text="停用"
+          @click="handleStatusChange(scope.row)"></el-switch>
       </template>
     </el-table-column>
     <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
@@ -134,7 +141,7 @@
   </el-dialog>
 </template>
 <script setup name="dictData">
-import { listData, getData, delData, addData, updateData } from '@/api/system/dict/data'
+import { listData, getData, delData, addData, updateData, changeStatus } from '@/api/system/dict/data'
 import { listType, getType } from '@/api/system/dict/type'
 const { proxy } = getCurrentInstance()
 const props = defineProps({
@@ -382,6 +389,26 @@ function handleDelete(row) {
     .then(() => {
       getList()
       proxy.$modal.msgSuccess('删除成功')
+    })
+}
+
+function handleStatusChange(row) {
+  const text = row.status == '0' ? '启用' : '停用'
+
+  proxy
+    .$confirm(`确认要${text} [${row.dictLabel}]吗?`, '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+    .then(function () {
+      return changeStatus(row.dictCode, row.status)
+    })
+    .then(() => {
+      proxy.$modal.msgSuccess(text + '成功')
+    })
+    .catch(function () {
+      row.status = row.status == 0 ? 1 : 0
     })
 }
 </script>
