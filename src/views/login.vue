@@ -228,7 +228,7 @@ getCookie()
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/login.scss';
+@use '@/assets/styles/login.scss';
 .forget-pwd {
   color: #ccc;
   margin-left: 10px;

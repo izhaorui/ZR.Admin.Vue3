@@ -122,18 +122,20 @@
 
           <div class="body">
             <table style="width: 100%; text-align: center">
-              <tr>
-                <td>微信小程序</td>
-                <td>H5</td>
-              </tr>
-              <tr>
-                <td>
-                  <img src="@/assets/images/qrcode.jpg" alt="donate" style="width: 160px" />
-                </td>
-                <td>
-                  <img src="@/assets/images/qrcodeH5.png" alt="donate" style="width: 160px" />
-                </td>
-              </tr>
+              <tbody>
+                <tr>
+                  <td>微信小程序</td>
+                  <td>H5</td>
+                </tr>
+                <tr>
+                  <td>
+                    <img src="@/assets/images/qrcode.jpg" alt="donate" style="width: 160px" />
+                  </td>
+                  <td>
+                    <img src="@/assets/images/qrcodeH5.png" alt="donate" style="width: 160px" />
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </el-card>

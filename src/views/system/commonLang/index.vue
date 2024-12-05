@@ -8,7 +8,6 @@
 -->
 <template>
   <div class="app-container">
-    <!-- :model属性用于表单验证使用 比如下面的el-form-item 的 prop属性用于对表单值进行验证操作 -->
     <el-form :model="queryParams" label-position="right" inline ref="queryRef" v-show="showSearch" @submit.prevent>
       <el-form-item :label="$t('language')" prop="langCode">
         <el-select v-model="queryParams.langCode" placeholder="请选择语言code">
@@ -20,8 +19,8 @@
       </el-form-item>
       <el-form-item :label="$t('showWay')">
         <el-radio-group v-model="queryParams.showMode">
-          <el-radio-button value="1">表格</el-radio-button>
-          <el-radio-button value="2">行列</el-radio-button>
+          <el-radio-button :value="1">表格</el-radio-button>
+          <el-radio-button :value="2">行列</el-radio-button>
         </el-radio-group>
       </el-form-item>
       <el-form-item :label="$t('common.addTime')">

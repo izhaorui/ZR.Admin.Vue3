@@ -125,5 +125,5 @@ function changeData() {
 }
 </script>
 <style lang="scss">
-@import url(./index.scss);
+@use './index.scss';
 </style>

@@ -94,7 +94,7 @@ function handleOutsideClick() {
 </script>
 
 <style lang="scss">
-@import '@/assets/styles/mixin.scss';
+@use '@/assets/styles/mixin.scss';
 
 .main-container {
   min-height: 100%;
@@ -104,7 +104,7 @@ function handleOutsideClick() {
 }
 
 .app-layout {
-  @include clearfix;
+  // @include clearfix;
   // position: relative;
   height: 100%;
   width: 100%;

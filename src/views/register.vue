@@ -169,7 +169,7 @@ getCode()
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-@import '@/assets/styles/login.scss';
+@use '@/assets/styles/login.scss';
 .register {
   display: flex;
   justify-content: center;
