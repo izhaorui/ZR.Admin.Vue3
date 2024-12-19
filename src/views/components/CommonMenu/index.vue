@@ -6,7 +6,8 @@
           <el-icon><CloseBold /></el-icon>
         </span>
         <router-link :to="item.path">
-          <svg-icon :name="item.icon" class-name="card-panel-icon mb10" :color="item.color" />
+          <svg-icon :name="item.icon" class-name="card-panel-icon mb10" :color="item.color" v-if="item.icon" />
+          <svg-icon name="menu" class-name="card-panel-icon mb10" v-else></svg-icon>
           <div class="title">{{ item.menuTitle }}</div>
         </router-link>
       </div>
