@@ -93,7 +93,7 @@
         </el-form-item>
         <el-form-item label="系统内置" prop="configType">
           <el-radio-group v-model="form.configType">
-            <el-radio v-for="dict in sysYesNoOptions" :key="dict.dictValue" :value="dict.dictValue">{{ dict.dictLabel }}</el-radio>
+            <el-radio-button v-for="dict in sysYesNoOptions" :key="dict.dictValue" :value="dict.dictValue">{{ dict.dictLabel }}</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="remark">

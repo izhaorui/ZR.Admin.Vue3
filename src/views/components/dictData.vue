@@ -6,9 +6,10 @@
       </el-select>
     </el-form-item>
     <el-form-item label="状态" prop="status">
-      <el-select v-model="queryParams.status" placeholder="数据状态" clearable>
-        <el-option v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
-      </el-select>
+      <el-radio-group v-model="queryParams.status" placeholder="数据状态" @change="handleQuery()">
+        <el-radio-button label="全部" value="" />
+        <el-radio-button v-for="dict in statusOptions" :key="dict.dictValue" :label="dict.dictLabel" :value="dict.dictValue" />
+      </el-radio-group>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
@@ -24,7 +25,7 @@
   <el-table :data="dataList" border>
     <!-- <el-table-column type="selection" width="55" align="center" /> -->
     <el-table-column label="字典编码" align="center" prop="dictCode" />
-    <el-table-column label="字典标签" align="center" prop="dictLabel">
+    <el-table-column label="字典标签" align="center" prop="dictLabel" width="140">
       <template #default="scope">
         <span v-if="scope.row.listClass == '' || scope.row.listClass == 'default'" :class="scope.row.cssClass">{{ scope.row.dictLabel }}</span>
         <el-tag v-else :type="scope.row.listClass == 'primary' ? '' : scope.row.listClass" :class="scope.row.cssClass"
@@ -35,20 +36,21 @@
     <el-table-column label="翻译键值" align="center" prop="langKey" />
     <el-table-column label="字典键值" align="center" prop="dictValue" sortable />
     <el-table-column label="字典排序" align="center" prop="dictSort" sortable />
-    <el-table-column label="状态" align="center" prop="status" width="120">
+    <el-table-column label="启用" align="center" prop="status" width="90">
       <template #default="scope">
         <!-- <dict-tag :options="statusOptions" :value="scope.row.status" /> -->
         <el-switch
           v-model="scope.row.status"
           active-value="0"
           inactive-value="1"
-          active-text="启用"
-          inactive-text="停用"
+          active-text="是"
+          inactive-text="否"
+          inline-prompt
           @click="handleStatusChange(scope.row)"></el-switch>
       </template>
     </el-table-column>
     <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
-    <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="130px">
+    <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="90">
       <template #default="scope">
         <div v-if="scope.row.dictCode > 0">
           <el-button text size="default" icon="edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dict:edit']"></el-button>
@@ -259,7 +261,7 @@ const queryParams = reactive({
   pageSize: 10,
   dictName: undefined,
   dictType: undefined,
-  status: undefined
+  status: ''
 })
 // 表单参数
 
@@ -358,13 +360,13 @@ function submitForm() {
   proxy.$refs['formRef'].validate((valid) => {
     if (valid) {
       if (form.value.dictCode != undefined) {
-        updateData(form.value).then((response) => {
+        updateData(form.value).then(() => {
           proxy.$modal.msgSuccess('修改成功')
           open.value = false
           getList()
         })
       } else {
-        addData(form.value).then((response) => {
+        addData(form.value).then(() => {
           proxy.$modal.msgSuccess('新增成功')
           open.value = false
           getList()
@@ -408,7 +410,7 @@ function handleStatusChange(row) {
       proxy.$modal.msgSuccess(text + '成功')
     })
     .catch(function () {
-      row.status = row.status == 0 ? 1 : 0
+      row.status = row.status == '0' ? '1' : '0'
     })
 }
 </script>
