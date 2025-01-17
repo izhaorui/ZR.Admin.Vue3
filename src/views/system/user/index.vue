@@ -208,14 +208,18 @@
           <el-col :lg="12">
             <el-form-item label="用户性别">
               <el-radio-group v-model="form.sex" placeholder="请选择用户性别">
-                <el-radio v-for="dict in sexOptions" :key="dict.dictValue" :value="parseInt(dict.dictValue)">{{ dict.dictLabel }}</el-radio>
+                <el-radio-button v-for="dict in sexOptions" :key="dict.dictValue" :value="parseInt(dict.dictValue)">{{
+                  dict.dictLabel
+                }}</el-radio-button>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :lg="12">
             <el-form-item label="用户状态">
               <el-radio-group v-model="form.status">
-                <el-radio v-for="dict in statusOptions" :key="dict.dictValue" :value="parseInt(dict.dictValue)">{{ dict.dictLabel }}</el-radio>
+                <el-radio-button v-for="dict in statusOptions" :key="dict.dictValue" :value="parseInt(dict.dictValue)">{{
+                  dict.dictLabel
+                }}</el-radio-button>
               </el-radio-group>
             </el-form-item>
           </el-col>
