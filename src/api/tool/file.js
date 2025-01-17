@@ -1,45 +1,45 @@
 import request from '@/utils/request'
 
 /**
-* 文件存储分页查询
-* @param {查询条件} data
-*/
+ * 文件存储分页查询
+ * @param {查询条件} data
+ */
 export function listSysfile(query) {
   return request({
     url: 'tool/file/list',
     method: 'get',
-    params: query,
+    params: query
   })
 }
 
 /**
-* 新增文件存储
-* @param data
-*/
+ * 新增文件存储
+ * @param data
+ */
 export function addSysfile(data) {
   return request({
     url: 'tool/file',
     method: 'post',
-    data: data,
+    data: data
   })
 }
 
 /**
-* 修改文件存储
-* @param data
-*/
+ * 修改文件存储
+ * @param data
+ */
 export function updateSysfile(data) {
   return request({
     url: 'tool/file',
     method: 'PUT',
-    data: data,
+    data: data
   })
 }
 
 /**
-* 获取文件存储详情
-* @param {Id}
-*/
+ * 获取文件存储详情
+ * @param {Id}
+ */
 export function getSysfile(id) {
   return request({
     url: 'tool/file/' + id,
@@ -48,9 +48,9 @@ export function getSysfile(id) {
 }
 
 /**
-* 删除文件存储
-* @param {主键} pid
-*/
+ * 删除文件存储
+ * @param {主键} pid
+ */
 export function delSysfile(pid) {
   return request({
     url: 'tool/file/' + pid,
@@ -66,4 +66,3 @@ export function exportSysfile(query) {
     params: query
   })
 }
-

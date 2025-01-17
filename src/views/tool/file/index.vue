@@ -1,6 +1,22 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" label-position="left" inline ref="queryForm" v-show="showSearch" @submit.prevent>
+      <el-form-item label="" prop="storeType">
+        <el-radio-group v-model="queryParams.storeType" @change="handleQuery" placeholder="请选择存储类型">
+          <el-radio-button value=""> 全部 </el-radio-button>
+          <el-radio-button v-for="item in storeTypeOptions" :key="item.dictValue" :value="item.dictValue">
+            {{ item.dictLabel }}
+          </el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="存储分类" prop="classifyType">
+        <el-select clearable v-model="queryParams.classifyType" placeholder="请选择存储分类">
+          <el-option v-for="item in classifyTypeOptions" :key="item.dictValue" :label="item.dictLabel" :value="item.dictValue">
+            <span class="fl">{{ item.dictLabel }}</span>
+            <span class="fr" style="color: var(--el-text-color-secondary)">{{ item.dictValue }}</span>
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="" prop="fileId">
         <el-input v-model="queryParams.fileId" placeholder="请输入文件id" clearable />
       </el-form-item>
@@ -11,16 +27,10 @@
           range-separator="-"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          placeholder="请选择上传时间"></el-date-picker>
+          placeholder="请选择上传时间"
+          :shortcuts="dateOptions"></el-date-picker>
       </el-form-item>
-      <el-form-item label="" prop="storeType">
-        <el-radio-group v-model="queryParams.storeType" @change="handleQuery" placeholder="请选择存储类型">
-          <el-radio-button value=""> 全部 </el-radio-button>
-          <el-radio-button v-for="item in storeTypeOptions" :key="item.dictValue" :value="item.dictValue">
-            {{ item.dictLabel }}
-          </el-radio-button>
-        </el-radio-group>
-      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="search" @click="handleQuery">{{ $t('btn.search') }}</el-button>
         <el-button icon="refresh" @click="resetQuery">{{ $t('btn.reset') }}</el-button>
@@ -44,7 +54,13 @@
     <!-- 数据区域 -->
     <el-table :data="dataList" v-loading="loading" ref="table" border highlight-current-row @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="50" align="center" />
-      <el-table-column prop="id" label="文件id" width="150" :show-overflow-tooltip="true" />
+      <el-table-column prop="id" label="文件id" width="150" :show-overflow-tooltip="true">
+        <template #default="scope">
+          <el-button text size="small" type="success" @click="handleView(scope.row)">
+            {{ scope.row.id }}
+          </el-button>
+        </template>
+      </el-table-column>
       <el-table-column prop="fileName" label="文件名" align="left" width="180" :show-overflow-tooltip="true">
         <template #default="scope">
           <el-link type="primary" :href="scope.row.accessUrl" target="_blank">{{ scope.row.fileName }}</el-link>
@@ -73,6 +89,20 @@
           <dict-tag :options="storeTypeOptions" :value="parseInt(scope.row.storeType)" />
         </template>
       </el-table-column> -->
+      <el-table-column prop="classifyType" label="存储分类" align="center" width="100px">
+        <template #default="scope">
+          <!-- <dict-tag :options="classifyTypeOptions" :value="scope.row.classifyType" /> -->
+          <el-select
+            v-model="scope.row.classifyType"
+            clearable
+            @change="handleClassifyChange(scope.row)"
+            size="small"
+            style="width: 90px"
+            placeholder="选择分类">
+            <el-option v-for="item in classifyTypeOptions" :key="item.dictValue" :label="item.dictLabel" :value="item.dictValue"></el-option>
+          </el-select>
+        </template>
+      </el-table-column>
       <el-table-column prop="storePath" label="存储目录"></el-table-column>
       <el-table-column prop="create_by" label="操作人" align="center" />
       <el-table-column prop="create_time" label="创建日期" align="center">
@@ -80,10 +110,8 @@
           {{ showTime(row.create_time) }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="160">
+      <el-table-column label="操作" align="center" width="110">
         <template #default="scope">
-          <el-button text size="small" icon="view" title="查看" @click="handleView(scope.row)"></el-button>
-
           <el-button
             text
             size="small"
@@ -112,6 +140,16 @@
             </el-form-item>
           </el-col>
           <el-col :lg="24">
+            <el-form-item label="文件名规则" prop="fileNameType">
+              <el-radio-group v-model="form.fileNameType" placeholder="请选择文件名存储类型">
+                <el-radio-button v-for="item in fileNameTypeOptions" :key="item.dictValue" :value="parseInt(item.dictValue)">
+                  {{ item.dictLabel }}
+                </el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="24">
             <el-form-item label="存储目录" prop="storePath">
               <template #label>
                 <span>
@@ -137,15 +175,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :lg="24">
-            <el-form-item label="文件名规则" prop="fileNameType">
-              <el-radio-group v-model="form.fileNameType" placeholder="请选择文件名存储类型">
-                <el-radio v-for="item in fileNameTypeOptions" :key="item.dictValue" :value="parseInt(item.dictValue)">
-                  {{ item.dictLabel }}
-                </el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
+
           <el-col :lg="24" v-if="form.fileNameType == 2">
             <el-form-item label="自定文件名" prop="fileName">
               <el-input v-model="form.fileName" placeholder="请输入文件名" clearable="" />
@@ -172,11 +202,13 @@
       </template>
     </el-dialog>
 
-    <el-dialog :lock-scroll="false" v-model="openView">
+    <el-dialog :lock-scroll="false" v-model="openView" draggable="">
       <el-form ref="form" :model="formView" :rules="rules" label-width="90px" label-position="left">
         <el-row>
           <el-col :lg="12">
-            <el-form-item label="文件id">{{ formView.id }}</el-form-item>
+            <el-form-item label="存储分类">
+              <dict-tag :options="classifyTypeOptions" :value="formView.classifyType" />
+            </el-form-item>
           </el-col>
           <el-col :lg="12">
             <el-form-item label="源文件名">{{ formView.realName }}</el-form-item>
@@ -204,13 +236,13 @@
             <el-form-item label="创建人">{{ formView.create_by }}</el-form-item>
           </el-col>
           <el-col :lg="12">
-            <el-form-item label="预览">
-              <el-image :src="formView.accessUrl" fit="contain" style="width: 100px"></el-image>
+            <el-form-item label="二维码">
+              <div ref="imgContainerRef" id="imgContainer" class="qrCode"></div>
             </el-form-item>
           </el-col>
           <el-col :lg="12">
-            <el-form-item label="二维码">
-              <div ref="imgContainerRef" id="imgContainer" class="qrCode"></div>
+            <el-form-item label="预览">
+              <el-image :src="formView.accessUrl" fit="contain" style="width: 100px"></el-image>
             </el-form-item>
           </el-col>
           <el-col :lg="24">
@@ -234,7 +266,7 @@
   </div>
 </template>
 <script setup name="file">
-import { listSysfile, delSysfile, getSysfile } from '@/api/tool/file.js'
+import { listSysfile, delSysfile, getSysfile, updateSysfile } from '@/api/tool/file.js'
 import { useClipboard } from '@vueuse/core'
 import QRCode from 'qrcodejs2-fixes'
 import { showTime } from '@/utils'
@@ -276,6 +308,8 @@ const saveDirOptions = ref([
   { dictLabel: 'video', dictValue: 'video' },
   { dictLabel: 'avatar', dictValue: 'avatar' }
 ])
+const classifyTypeOptions = ref([])
+
 // 数据列表
 const dataList = ref([])
 // 总记录数
@@ -330,6 +364,9 @@ function getList() {
     }
   })
 }
+proxy.getDicts('sys_classify_type').then((response) => {
+  classifyTypeOptions.value = response.data
+})
 // 取消按钮
 function cancel() {
   open.value = false
@@ -447,6 +484,13 @@ const copyText = async (val) => {
   } else {
     proxy.$modal.msgError('当前浏览器不支持')
   }
+}
+function handleClassifyChange(row) {
+  console.log(row)
+
+  updateSysfile(row).then(() => {
+    proxy.$modal.msgSuccess('修改成功')
+  })
 }
 handleQuery()
 </script>
