@@ -154,12 +154,8 @@
               <el-icon> <UserFilled /> </el-icon>{{ $t('layout.qqGroup') }}：
               <s>满191349103</s>
               <s>满462862273</s>
-
-              <el-link
-                target="_black"
-                href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=GZyydSOdrYq0hY-tPiDGeGNfQRQ3905-&authKey=eiZEzg8ey6BRldoBpPtmgA8NOFNCTkQTG0iXHznncMHYSeZdV6rwth2k9WKJ1FrM&noverify=0&group_code=658227537">
-                &nbsp;658227537
-              </el-link>
+              <s>即将满658227537</s>
+              <el-link target="_black" href="https://qm.qq.com/q/e8uHl134qc"> &nbsp;1026662023 </el-link>
             </p>
           </div>
         </el-card>
