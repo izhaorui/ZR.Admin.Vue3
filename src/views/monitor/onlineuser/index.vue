@@ -77,7 +77,7 @@ const queryParams = reactive({
 const onlineNum = computed(() => {
   return useSocketStore().onlineNum
 })
-const viewSwitch = ref(1)
+const viewSwitch = ref('1')
 const loading = ref(false)
 const onlineUsers = ref([])
 const total = ref(0)
