@@ -122,7 +122,6 @@ function logout() {
         location.href = import.meta.env.VITE_APP_ROUTER_PREFIX + 'index'
       })
     })
-    .catch(() => {})
 }
 
 const emits = defineEmits(['setLayout'])

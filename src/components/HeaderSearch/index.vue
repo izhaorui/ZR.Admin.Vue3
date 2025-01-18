@@ -186,6 +186,8 @@ function handleLove(item) {
 
 onMounted(() => {
   searchPool.value = generateRoutes(routes.value)
+
+  window.addEventListener('keydown', handleKeydown)
 })
 
 watchEffect(() => {
@@ -202,6 +204,21 @@ watch(show, (value) => {
 
 watch(searchPool, (list) => {
   initFuse(list)
+})
+
+const handleKeydown = (event) => {
+  if (event.ctrlKey && event.key === 'f') {
+    event.preventDefault()
+    click()
+  }
+  // else if (event.altKey && event.key === 'h') {
+  //   event.preventDefault()
+  //   alert('返回主页！')
+  // }
+}
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleKeydown)
 })
 </script>
 
