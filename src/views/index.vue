@@ -154,7 +154,7 @@
               <el-icon> <UserFilled /> </el-icon>{{ $t('layout.qqGroup') }}：
               <s>满191349103</s>
               <s>满462862273</s>
-              <s>即将满658227537</s>
+              <s>满658227537</s>
               <el-link target="_black" href="https://qm.qq.com/q/e8uHl134qc"> &nbsp;1026662023 </el-link>
             </p>
           </div>
