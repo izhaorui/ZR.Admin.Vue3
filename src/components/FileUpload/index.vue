@@ -15,7 +15,8 @@
       :headers="headers"
       :auto-upload="autoUpload"
       class="upload-file-uploader"
-      ref="fileUpload">
+      ref="fileUpload"
+      v-if="!disabled">
       <!-- 拖拽上传 -->
       <template v-if="drag">
         <el-icon class="el-icon--upload">
@@ -46,7 +47,7 @@
           <svg-icon class-name="doc-icon" name="documentation" />
           {{ file.name }}
         </el-link>
-        <div class="ele-upload-list__item-content-action">
+        <div class="ele-upload-list__item-content-action" v-if="!disabled">
           <el-link :underline="false" @click="handleDelete(index)" type="danger">删除</el-link>
         </div>
       </li>
@@ -92,6 +93,11 @@ const props = defineProps({
   // 上传携带的参数
   data: {
     type: Object
+  },
+  // 禁用组件（仅查看文件）
+  disabled: {
+    type: Boolean,
+    default: false
   }
 })
 
