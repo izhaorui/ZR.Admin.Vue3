@@ -49,7 +49,7 @@ const open = ref(false)
 const fuse = ref(undefined)
 const headerSearchSelectRef = ref(null)
 const router = useRouter()
-const routes = computed(() => usePermissionStore().routes)
+const routes = computed(() => usePermissionStore().defaultRoutes)
 
 function click() {
   open.value = !open.value
