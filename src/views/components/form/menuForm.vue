@@ -118,19 +118,21 @@
             </template>
           </el-form-item>
         </el-col>
-        <!-- <el-col :lg="12" v-if="form.menuType == 'C'">
-            <el-form-item>
-              <el-input v-model="form.query" placeholder="请输入路由参数" maxlength="255" />
-              <template #label>
+        <el-col :lg="12" v-if="form.menuType == 'C'">
+          <el-form-item>
+            <el-input v-model="form.query" placeholder="请输入路由参数" maxlength="255" />
+            <template #label>
+              <span>
                 <el-tooltip content='访问路由的默认传递参数，如：`{"id": 1, "name": "ry"}`' placement="top">
                   <el-icon :size="15">
                     <questionFilled />
                   </el-icon>
                 </el-tooltip>
                 路由参数
-              </template>
-            </el-form-item>
-          </el-col> -->
+              </span>
+            </template>
+          </el-form-item>
+        </el-col>
 
         <el-col :lg="12" v-if="form.menuType != 'F'">
           <el-form-item>

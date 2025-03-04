@@ -18,6 +18,7 @@
     "routePath": "routePath",
     "permissionStr": "permission",
     "isCache": "isCache",
-    "menuNameKey": "menuNameKey"
+    "menuNameKey": "menuNameKey",
+    "route_query": "route query"
   }
 }

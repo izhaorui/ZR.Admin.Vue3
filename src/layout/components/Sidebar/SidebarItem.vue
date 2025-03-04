@@ -103,6 +103,7 @@ function resolvePath(routePath, routeQuery) {
     return props.basePath
   }
   if (routeQuery) {
+    console.log(`路由参数${routePath}-${routeQuery}`)
     let query = JSON.parse(routeQuery)
     return {
       path: getNormalPath(props.basePath + '/' + routePath),

@@ -98,6 +98,7 @@
           <dict-tag :options="options.sys_normal_disable" :value="scope.row.status" />
         </template>
       </vxe-column>
+      <vxe-column field="query" :title="$t('m.route_query')" show-overflow align="center" v-if="columns.showColumn('query')"> </vxe-column>
       <vxe-column :title="$t('common.addTime')" align="center" field="createTime" show-overflow v-if="columns.showColumn('createTime')">
         <template #default="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -179,6 +180,7 @@ proxy.getDicts(dictParams).then((response) => {
 })
 // 列显隐信息
 const columns = ref([
+  { label: `路由参数`, visible: false, prop: 'query' },
   { label: `添加时间`, visible: false, prop: 'createTime' },
   { label: `排序`, visible: true, prop: 'orderNum' }
 ])
