@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="title" v-model="open" width="720px" append-to-body>
+  <el-dialog draggable="" :title="title" v-model="open" width="720px" append-to-body>
     <el-form ref="menuRef" :model="form" :rules="rules" label-width="110px">
       <el-row>
         <el-col :lg="24">
@@ -24,6 +24,7 @@
               <el-radio-button value="M">{{ $t('m.directory') }}M</el-radio-button>
               <el-radio-button value="C">{{ $t('m.menu') }}C</el-radio-button>
               <el-radio-button value="F">{{ $t('m.button') }}F</el-radio-button>
+              <el-radio-button value="L">{{ $t('m.link') }}L</el-radio-button>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -69,7 +70,7 @@
             <el-input-number v-model="form.orderNum" controls-position="right" :min="0" />
           </el-form-item>
         </el-col>
-        <el-col :lg="12" v-if="form.menuType != 'F'">
+        <el-col :lg="12" v-if="!['F'].includes(form.menuType)">
           <el-form-item prop="path">
             <template #label>
               <span>
@@ -81,10 +82,10 @@
                 {{ $t('m.routePath') }}
               </span>
             </template>
-            <el-input v-model="form.path" placeholder="请输入路由地址" />
+            <el-input v-model="form.path" placeholder="请输入路由地址"> </el-input>
           </el-form-item>
         </el-col>
-        <el-col :lg="12" v-if="form.menuType != 'F'">
+        <el-col :lg="12" v-if="!['F', 'M', 'L'].includes(form.menuType)">
           <el-form-item prop="component">
             <template #label>
               <span>
@@ -134,7 +135,7 @@
           </el-form-item>
         </el-col>
 
-        <el-col :lg="12" v-if="form.menuType != 'F'">
+        <el-col :lg="12" v-if="form.menuType == 'L'">
           <el-form-item>
             <template #label>
               <span>
@@ -147,8 +148,8 @@
               </span>
             </template>
             <el-radio-group v-model="form.isFrame">
-              <el-radio value="0">{{ $t('common.no') }}</el-radio>
-              <el-radio value="1">{{ $t('common.yes') }}</el-radio>
+              <el-radio-button value="0">{{ $t('common.no') }}</el-radio-button>
+              <el-radio-button value="1">{{ $t('common.yes') }}</el-radio-button>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -237,12 +238,23 @@ const state = reactive({
       { required: false, message: '路由地址不能为空', trigger: 'blur' },
       { pattern: /^[/A-Za-z].+$/, message: '输入格式不正确，字母开头', trigger: 'blur' }
     ],
-    visible: [{ required: true, message: '显示状态不能为空', trigger: 'blur' }]
+    visible: [{ required: true, message: '显示状态不能为空', trigger: 'blur' }],
+    component: [{ required: true, message: '组件地址不能为空', trigger: 'blur' }]
   },
   sys_show_hide: [],
   sys_normal_disable: []
 })
 const { form, rules } = toRefs(state)
+
+// 监听 isRequired 变化，动态更新校验规则
+watch(
+  () => form.value.menuType,
+  (newVal) => {
+    if (newVal) {
+      rules.value.path[0].required = ['C', 'L'].includes(newVal) ? true : false
+    }
+  }
+)
 
 /** 取消按钮 */
 function cancel() {

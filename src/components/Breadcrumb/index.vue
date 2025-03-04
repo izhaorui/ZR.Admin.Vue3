@@ -49,10 +49,12 @@ function findPathNum(str, char = '/') {
 }
 function getMatched(pathList, routeList, matched) {
   let data = routeList.find((item) => item.path == pathList[0])
-  matched.push(data)
-  if (data.children && pathList.length) {
-    pathList.shift()
-    getMatched(pathList, data.children, matched)
+  if (data) {
+    matched.push(data)
+    if (data.children && pathList.length) {
+      pathList.shift()
+      getMatched(pathList, data.children, matched)
+    }
   }
 }
 function isDashboard(route) {

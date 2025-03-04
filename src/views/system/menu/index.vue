@@ -74,6 +74,7 @@
           <el-tag :disable-transitions="true" v-else-if="scope.row.menuType == 'C'">{{ $t('m.menu') }}</el-tag>
           <el-tag :disable-transitions="true" type="success" v-else-if="scope.row.menuType == 'M'">{{ $t('m.directory') }}</el-tag>
           <el-tag :disable-transitions="true" type="warning" v-else-if="scope.row.menuType == 'F'">{{ $t('m.button') }}</el-tag>
+          <el-tag :disable-transitions="true" type="danger" v-else-if="scope.row.menuType == 'L'">{{ $t('m.link') }}</el-tag>
         </template>
       </vxe-column>
       <vxe-column field="orderNum" :title="$t('m.sort')" width="110" sortable align="center" v-if="columns.showColumn('orderNum')">
@@ -87,6 +88,7 @@
         </template>
       </vxe-column>
       <vxe-column field="perms" :title="$t('m.authorityID')" show-overflow="title"></vxe-column>
+      <vxe-column field="path" :title="$t('m.routePath')" show-overflow v-if="columns.showColumn('path')"></vxe-column>
       <vxe-column field="component" :title="$t('m.componentPath')" show-overflow></vxe-column>
       <vxe-column field="visible" :title="$t('m.isShow')" width="90" align="center">
         <template #default="scope">
@@ -163,12 +165,18 @@ const state = reactive({
   queryParams: {
     menuName: undefined,
     visible: undefined,
-    menuTypeIds: 'M,C',
+    menuTypeIds: 'M,C,L',
     parentId: undefined
   },
   options: {
     sys_show_hide: [],
-    sys_normal_disable: []
+    sys_normal_disable: [],
+    menuTypeOptions: [
+      { dictLabel: proxy.$t('m.menu'), dictValue: 'C' },
+      { dictLabel: proxy.$t('m.directory'), dictValue: 'M' },
+      { dictLabel: proxy.$t('m.button'), dictValue: 'F' },
+      { dictLabel: '按钮', dictValue: 'L' }
+    ]
   }
 })
 const { queryParams, options } = toRefs(state)
@@ -180,6 +188,7 @@ proxy.getDicts(dictParams).then((response) => {
 })
 // 列显隐信息
 const columns = ref([
+  { label: `路由地址`, visible: true, prop: 'path' },
   { label: `路由参数`, visible: false, prop: 'query' },
   { label: `添加时间`, visible: false, prop: 'createTime' },
   { label: `排序`, visible: true, prop: 'orderNum' }
@@ -193,7 +202,7 @@ function getList(type) {
   if (queryParams.value.parentId != undefined || queryParams.value.menuName != undefined) {
     queryParams.value.menuTypeIds = ''
   } else {
-    queryParams.value.menuTypeIds = 'M,C,F'
+    queryParams.value.menuTypeIds = 'M,C,F,L'
   }
   listMenu(queryParams.value).then((response) => {
     menuList.value = response.data
@@ -205,7 +214,7 @@ function getList(type) {
 }
 /** 查询菜单下拉树结构 */
 function getTreeselect() {
-  listMenu({ menuTypeIds: 'M,C,F' }).then((response) => {
+  listMenu({ menuTypeIds: 'M,C,F,L' }).then((response) => {
     menuOptions.value = response.data
   })
 }
@@ -311,9 +320,11 @@ function refreshMenu(pid) {
   loading.value = true
 
   getList()
+
+  getTreeselect()
 }
 
-listMenu({ menuTypeIds: 'M,C' }).then((response) => {
+listMenu({ menuTypeIds: 'M,C,L' }).then((response) => {
   menuQueryOptions.value = response.data
 })
 

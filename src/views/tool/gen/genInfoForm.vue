@@ -498,7 +498,7 @@ function setSubTableColumns(value) {
 /** 查询菜单下拉树结构 */
 function getMenuTreeselect() {
   /** 查询菜单下拉列表 */
-  listMenu({ menuTypeIds: 'M,C' }).then((response) => {
+  listMenu({ menuTypeIds: 'M,C,L' }).then((response) => {
     menuOptions.value = response.data
   })
 }
