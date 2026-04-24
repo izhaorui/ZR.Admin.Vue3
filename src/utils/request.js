@@ -5,6 +5,7 @@ import errorCode from '@/utils/errorCode'
 import useUserStore from '@/store/modules/user'
 import { blobValidate, delEmptyQueryNodes } from '@/utils/ruoyi'
 import { saveAs } from 'file-saver'
+import useAppStore from '@/store/modules/app'
 
 let downloadLoadingInstance
 // 解决后端跨域获取不到cookie问题
@@ -28,7 +29,12 @@ service.interceptors.request.use(
       config.headers['userid'] = useUserStore().userId
       config.headers['userName'] = encodeURIComponent(useUserStore().userName)
     }
-    config.headers['tenantId'] = useUserStore().tenantId
+    config.headers['tenantId'] = useUserStore().tenantId // 添加Accept-Language头
+    const appStore = useAppStore()
+    const lang = appStore.lang || 'zh-cn'
+    // 转换语言格式为标准格式，如zh-cn -> zh-CN
+    const acceptLanguage = lang.toLowerCase().replace(/^([a-z]+)-([a-z]+)$/, (_, language, region) => `${language}-${region.toUpperCase()}`)
+    config.headers['Accept-Language'] = acceptLanguage
     const method = config?.method || 'get'
     const header = config?.headers['Content-Type'] ?? ''
 
