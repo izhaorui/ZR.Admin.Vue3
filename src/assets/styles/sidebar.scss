@@ -34,32 +34,25 @@
 
     // 垂直状态下的侧边栏增加背景
     .el-menu--vertical {
-      .el-sub-menu {
-        border-radius: 8px;
-        margin: 0px 5px;
-      }
       .el-menu-item {
         position: relative;
-        margin: 0px 5px;
-        border-radius: 8px;
-        transition: all 0.25s ease;
 
         /* 选中状态 */
         &.is-active {
           background-color: var(--base-menu-active-bg);
-          font-weight: 500;
         }
 
-        // &.is-active::before {
-        //   content: '';
-        //   position: absolute;
-        //   left: 0;
-        //   top: 0px;
-        //   bottom: 0px;
-        //   width: 5px;
-        //   background: linear-gradient(180deg, #409eff, #66b1ff);
-        //   border-radius: 2px;
-        // }
+        /* 选中状态 */
+        &.is-active::before {
+          content: '';
+          position: absolute;
+          right: 3px;
+          top: 0px;
+          bottom: 0px;
+          width: 3px;
+          background: var(--el-menu-active-color);
+          border-radius: 2px;
+        }
       }
     }
   }

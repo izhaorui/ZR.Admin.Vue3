@@ -40,8 +40,8 @@
                 </el-option>
               </el-select>
             </el-form-item> -->
-            <el-form-item label="" prop="fileId">
-              <el-input v-model="queryParams.fileId" placeholder="请输入文件id" clearable />
+            <el-form-item prop="realName">
+              <el-input v-model="queryParams.realName" style="width: 140px" placeholder="请输入原文件名" clearable />
             </el-form-item>
             <el-form-item>
               <el-date-picker
@@ -81,6 +81,8 @@
                 {{ $t('btn.export') }}
               </el-button>
             </el-col>
+
+            <right-toolbar @queryTable="getList" :columns="columns"></right-toolbar>
           </el-row>
 
           <!-- 数据区域 -->
@@ -93,7 +95,48 @@
                 </el-text>
               </template>
             </el-table-column>
-            <el-table-column prop="fileName" label="文件名" align="left" width="100" :show-overflow-tooltip="true"> </el-table-column>
+            <el-table-column
+              prop="realName"
+              label="原文件名"
+              align="left"
+              width="100"
+              :show-overflow-tooltip="true"
+              v-if="columns.showColumn('realName')">
+              <template #default="scope">
+                <el-popover
+                  :width="320"
+                  placement="bottom-start"
+                  trigger="manual"
+                  v-model:visible="scope.row._renameVisible"
+                  popper-class="file-rename-popover">
+                  <template #reference>
+                    <span class="rename-trigger" @click="openRenamePopover(scope.row)" @dblclick="openRenamePopover(scope.row)">
+                      {{ scope.row.realName }}
+                    </span>
+                  </template>
+                  <div class="rename-popover-content">
+                    <el-input
+                      v-model="scope.row._renameRealName"
+                      placeholder="请输入新文件名"
+                      clearable
+                      @keyup.enter.prevent="handleRenameConfirm(scope.row)"
+                      @keyup.esc.prevent="cancelRename(scope.row)" />
+                    <div class="rename-popover-actions">
+                      <el-button size="small" @click="cancelRename(scope.row)">{{ $t('btn.cancel') }}</el-button>
+                      <el-button type="primary" size="small" @click="handleRenameConfirm(scope.row)">{{ $t('btn.submit') }}</el-button>
+                    </div>
+                  </div>
+                </el-popover>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="fileName"
+              label="文件名"
+              align="left"
+              width="100"
+              v-if="columns.showColumn('fileName')"
+              :show-overflow-tooltip="true">
+            </el-table-column>
             <el-table-column prop="accessUrl" align="center" label="预览图" width="80">
               <template #default="{ row }">
                 <el-image
@@ -126,10 +169,10 @@
                 </el-select>
               </template>
             </el-table-column> -->
-            <el-table-column prop="storePath" label="存储目录"></el-table-column>
-            <el-table-column prop="groupName" label="分组名" align="center"></el-table-column>
-            <el-table-column prop="create_by" label="操作人" align="center" />
-            <el-table-column prop="create_time" label="创建日期" align="center">
+            <el-table-column prop="storePath" label="存储目录" v-if="columns.showColumn('storePath')"></el-table-column>
+            <el-table-column prop="groupName" label="分组名" align="center" v-if="columns.showColumn('groupName')"></el-table-column>
+            <el-table-column prop="create_by" label="操作人" align="center" v-if="columns.showColumn('create_by')" />
+            <el-table-column prop="create_time" label="创建日期" align="center" v-if="columns.showColumn('create_time')">
               <template #default="{ row }">
                 {{ showTime(row.create_time) }}
               </template>
@@ -240,7 +283,7 @@
             </el-form-item>
           </el-col> -->
           <el-col :lg="12">
-            <el-form-item label="源文件名">{{ formView.realName }}</el-form-item>
+            <el-form-item label="原文件名">{{ formView.realName }}</el-form-item>
           </el-col>
           <el-col :lg="12">
             <el-form-item label="文件类型">
@@ -318,10 +361,7 @@ const title = ref('')
 // 是否显示弹出层
 const open = ref(false)
 const openView = ref(false)
-// 表单
-const formRef = ref(null)
 const formView = ref({})
-const uploadRef = ref(null)
 // 上传时间时间范围
 const dateRangeAddTime = ref([])
 // 存储类型选项列表
@@ -341,8 +381,15 @@ const saveDirOptions = ref([
   { dictLabel: 'video', dictValue: 'video' },
   { dictLabel: 'avatar', dictValue: 'avatar' }
 ])
-const classifyTypeOptions = ref([])
 
+// 列显隐信息
+const columns = ref([
+  { label: `原文件名`, visible: true, prop: 'realName' },
+  { label: `文件名`, visible: false, prop: 'fileName' },
+  { label: `存储目录`, visible: true, prop: 'storePath' },
+  { label: `操作人`, visible: true, prop: 'create_by' },
+  { label: `创建日期`, visible: true, prop: 'create_time' }
+])
 // 数据列表
 const dataList = ref([])
 // 总记录数
@@ -524,6 +571,40 @@ function handleClassifyChange(row) {
   })
 }
 
+function openRenamePopover(row) {
+  row._renameRealName = row.realName
+  row._renameVisible = true
+}
+
+async function handleRenameConfirm(row) {
+  const nextRealName = (row._renameRealName || '').trim()
+  if (!nextRealName) {
+    proxy.$modal.msgError('文件名不能为空')
+    return
+  }
+  if (nextRealName === row.realName) {
+    row._renameVisible = false
+    return
+  }
+  try {
+    const payload = { ...row, realName: nextRealName }
+    delete payload._renameVisible
+    delete payload._renameRealName
+    await updateSysfile(payload)
+    row.realName = nextRealName
+    row._renameVisible = false
+    proxy.$modal.msgSuccess('重命名成功')
+    getList()
+  } catch (error) {
+    proxy.$modal.msgError('重命名失败')
+  }
+}
+
+function cancelRename(row) {
+  row._renameVisible = false
+  row._renameRealName = row.realName
+}
+
 const handleAddGroup = () => {
   nextTick(() => {
     proxy.$refs.moveFileGroupRef.handleAdd()
@@ -576,6 +657,21 @@ handleQuery()
   height: 32px;
   line-height: 32px;
   border-radius: 16px;
+}
+.rename-trigger {
+  cursor: pointer;
+  color: var(--el-color-primary);
+  word-break: break-all;
+}
+.rename-popover-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.rename-popover-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
 }
 .qrCode {
   border: 5px solid var(--el-color-primary);
