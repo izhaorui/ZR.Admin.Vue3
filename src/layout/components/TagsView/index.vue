@@ -14,6 +14,7 @@
         :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
         class="tags-view-item"
         :style="tagActiveStyle(tag)"
+        @contextmenu.prevent="openMenu(tag, $event)"
         @click.middle="!isAffix(tag) ? closeSelectedTag(tag) : ''">
         <svg-icon v-if="settingsStore.tagsShowIcon && tag.meta?.icon" :name="tag.meta?.icon" />
         <span v-if="tag.meta && tag.meta.titleKey">{{ $t(tag.meta.titleKey) }}</span>
@@ -29,11 +30,7 @@
       <el-icon><arrow-right /></el-icon>
     </span>
     <el-divider direction="vertical" />
-    <!-- 刷新按钮 -->
-    <span class="tags-nav-btn" title="刷新页面" @click="refreshSelectedTag(selectedDropdownTag)">
-      <el-icon><refresh-right /></el-icon>
-    </span>
-    <el-divider direction="vertical" />
+
     <!-- 下拉操作菜单 -->
     <el-dropdown class="tags-action-dropdown" size="large" trigger="click" placement="bottom-end" @command="handleDropdownCommand">
       <span class="tags-action-btn">
@@ -59,6 +56,20 @@
         </el-dropdown-menu>
       </template>
     </el-dropdown>
+    <el-divider direction="vertical" />
+    <!-- 刷新按钮 -->
+    <span class="tags-nav-btn" title="刷新页面" @click="refreshSelectedTag(selectedDropdownTag)">
+      <el-icon><refresh-right /></el-icon>
+    </span>
+
+    <ul v-show="visible" :style="contextMenuStyle" class="tags-contextmenu">
+      <li @click="handleContextMenuCommand('refresh')">{{ $t('tagsView.refresh') }}</li>
+      <li v-if="!isAffix(selectedTag)" @click="handleContextMenuCommand('close')">{{ $t('tagsView.close') }}</li>
+      <li @click="handleContextMenuCommand('closeOthers')">{{ $t('tagsView.closeOther') }}</li>
+      <li :class="{ disabled: isFirstView() }" @click="!isFirstView() && handleContextMenuCommand('closeLeft')">{{ $t('tagsView.closeLeft') }}</li>
+      <li :class="{ disabled: isLastView() }" @click="!isLastView() && handleContextMenuCommand('closeRight')">{{ $t('tagsView.closeRight') }}</li>
+      <li @click="handleContextMenuCommand('closeAll')">{{ $t('tagsView.closeAll') }}</li>
+    </ul>
   </div>
 </template>
 
@@ -86,6 +97,13 @@ const visitedViews = computed(() => useTagsViewStore().visitedViews)
 const routes = computed(() => usePermissionStore().routes)
 const theme = computed(() => settingsStore.theme)
 const tagsViewStyle = computed(() => settingsStore.tagsViewStyle)
+
+const menuLeft = ref(0)
+const menuTop = ref(0)
+const contextMenuStyle = computed(() => ({
+  left: `${menuLeft.value}px`,
+  top: `${menuTop.value}px`
+}))
 const tagActiveStyle = (tag) => {
   if (!isActive(tag) || tagsViewStyle.value !== 'card') return {}
 
@@ -266,6 +284,16 @@ function toggleFullscreen() {
 function handleDropdownCommand(command) {
   const tag = selectedDropdownTag.value
   selectedTag.value = tag
+  executeTagCommand(command, tag)
+}
+
+function handleContextMenuCommand(command) {
+  const tag = selectedTag.value
+  executeTagCommand(command, tag)
+  closeMenu()
+}
+
+function executeTagCommand(command, tag) {
   switch (command) {
     case 'refresh':
       refreshSelectedTag(tag)
@@ -289,6 +317,17 @@ function handleDropdownCommand(command) {
       closeAllTags(tag)
       break
   }
+}
+
+function openMenu(tag, event) {
+  const menuMinWidth = 120
+  const menuMinHeight = 190
+  const maxLeft = window.innerWidth - menuMinWidth
+  const maxTop = window.innerHeight - menuMinHeight
+  selectedTag.value = tag
+  menuLeft.value = Math.max(0, Math.min(event.clientX, maxLeft))
+  menuTop.value = Math.max(0, Math.min(event.clientY, maxTop))
+  visible.value = true
 }
 
 function refreshSelectedTag(view) {
@@ -616,6 +655,38 @@ function handleScroll() {
 }
 .svg-icon {
   margin-right: 5px;
+}
+
+.tags-contextmenu {
+  margin: 0;
+  padding: 6px 0;
+  list-style: none;
+  position: fixed;
+  z-index: 3000;
+  min-width: 120px;
+  background: #fff;
+  border: 1px solid #ebeef5;
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+
+  li {
+    margin: 0;
+    padding: 8px 14px;
+    font-size: 13px;
+    color: #303133;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      background: #f5f7fa;
+    }
+
+    &.disabled {
+      color: #c0c4cc;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  }
 }
 
 /* 页签全屏模式样式 */
