@@ -84,7 +84,6 @@ import Editor from '@/components/Editor'
 import BaseForm from './components/BaseForm.vue'
 import SpecForm from './components/SpecForm.vue'
 import SingleSkuForm from './components/SingleSkuForm.vue'
-import router from '@/router'
 import OtherForm from './components/OtherForm.vue'
 const dictStore = useDictStore()
 const { proxy } = getCurrentInstance()
@@ -265,13 +264,9 @@ function handleSubmit() {
     if (opertype.value == 0) {
       addShoppingProduct(payload)
         .then((res) => {
-          ElMessage({
-            type: 'success',
-            message: '添加成功',
-            onClose: () => {
-              handleClose(res.data)
-            }
-          })
+          ElMessage({ type: 'success', message: '添加成功', duration: 1500 })
+          proxy.$modal.loading('跳转中...')
+          handleClose(res.data)
         })
         .finally(() => {
           submitLoading.value = false
@@ -279,15 +274,9 @@ function handleSubmit() {
     } else {
       updateShoppingProduct(payload)
         .then((res) => {
+          ElMessage({ type: 'success', message: '修改成功', duration: 1500 })
           proxy.$modal.loading('跳转中...')
-          ElMessage({
-            type: 'success',
-            message: '修改成功',
-            onClose: () => {
-              proxy.$modal.closeLoading()
-              handleClose(res.data)
-            }
-          })
+          handleClose(res.data)
         })
         .finally(() => {
           submitLoading.value = false
@@ -340,10 +329,14 @@ function getInfo(productId) {
   })
 }
 function handleClose(info) {
-  router.push({
-    path: './product',
-    replace: true
-  })
+  proxy.$tab
+    .closeOpenPage({
+      path: './product',
+      query: { refresh: '1' }
+    })
+    .finally(() => {
+      proxy.$modal.closeLoading()
+    })
 }
 // 选择规格
 function handleSelectSpec(val) {

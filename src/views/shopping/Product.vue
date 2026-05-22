@@ -196,6 +196,7 @@ import BrandSelect from './components/BrandSelect.vue'
 import useDictStore from '@/store/modules/dict'
 import router from '@/router'
 
+const route = useRoute()
 const { proxy } = getCurrentInstance()
 const ids = ref([])
 const multiple = ref(true)
@@ -392,4 +393,14 @@ treelistCategory().then((res) => {
 })
 
 handleQuery()
+
+watch(
+  () => route.query.refresh,
+  (val) => {
+    if (val === '1') {
+      handleQuery()
+      router.replace({ query: { ...route.query, refresh: undefined } })
+    }
+  }
+)
 </script>
