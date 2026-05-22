@@ -10,14 +10,11 @@
       </el-header>
       <el-main class="app-main">
         <router-view v-slot="{ Component, route }">
-          <transition name="fade-transform" mode="out-in" v-if="!dev">
+          <div v-if="!route.meta.link" class="route-switch-shell" :class="{ 'is-animating': routeSwitchAnimating }">
             <keep-alive :include="cachedViews">
-              <component v-if="!route.meta.link" :is="Component" :key="route.path" />
+              <component :is="Component" :key="route.path" />
             </keep-alive>
-          </transition>
-          <keep-alive :include="cachedViews" v-else>
-            <component v-if="!route.meta.link" :is="Component" :key="route.path" />
-          </keep-alive>
+          </div>
         </router-view>
         <iframe-toggle />
       </el-main>
@@ -41,7 +38,6 @@ import useTagsViewStore from '@/store/modules/tagsView'
 import useUserStore from '@/store/modules/user'
 const appStore = useAppStore()
 const { proxy } = getCurrentInstance()
-const dev = import.meta.env.DEV
 const settingsStore = useSettingsStore()
 const theme = computed(() => settingsStore.theme)
 const sidebar = computed(() => appStore.sidebar)
@@ -55,6 +51,30 @@ const route = useRoute()
 useTagsViewStore().addCachedView(route)
 const cachedViews = computed(() => {
   return useTagsViewStore().cachedViews
+})
+const routeSwitchAnimating = ref(false)
+let routeSwitchTimer = null
+watch(
+  () => route.fullPath,
+  () => {
+    routeSwitchAnimating.value = false
+    if (routeSwitchTimer) {
+      clearTimeout(routeSwitchTimer)
+    }
+    requestAnimationFrame(() => {
+      routeSwitchAnimating.value = true
+      routeSwitchTimer = setTimeout(() => {
+        routeSwitchAnimating.value = false
+        routeSwitchTimer = null
+      }, 220)
+    })
+  },
+  { immediate: true }
+)
+onBeforeUnmount(() => {
+  if (routeSwitchTimer) {
+    clearTimeout(routeSwitchTimer)
+  }
 })
 //appMain 模块结束
 
@@ -155,6 +175,27 @@ function handleOutsideClick() {
   height: 100%;
   overflow-x: hidden;
 }
+
+.route-switch-shell {
+  width: 100%;
+  height: 100%;
+}
+
+.route-switch-shell.is-animating {
+  animation: route-fade-in 0.22s ease-out;
+}
+
+@keyframes route-fade-in {
+  from {
+    opacity: 0;
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
 .sidebar-mobile {
   .el-drawer__body {
     padding: 0;
