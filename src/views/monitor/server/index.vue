@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" v-loading="loading" element-loading-text="拼命读取中">
     <el-row>
       <el-col :lg="24" class="card-box" v-if="server.cpu">
         <el-card class="box-card">
@@ -218,20 +218,21 @@ const appPercent = ref(0)
 const server = ref([])
 const intervalId = ref(null)
 const { proxy } = getCurrentInstance()
+const loading = ref(false)
 /** 查询服务器信息 */
 function getList() {
+  loading.value = true
   getServer()
     .then((response) => {
       server.value = response.data
-      proxy.$modal.closeLoading()
     })
-    .catch((err) => {
-      proxy.$modal.closeLoading()
+    .finally(() => {
+      loading.value = false
     })
 }
 // 打开加载层
 function openLoading() {
-  proxy.$modal.loading('拼命读取中')
+  loading.value = true
 }
 function dataRefreh() {
   if (intervalId.value != null) {
