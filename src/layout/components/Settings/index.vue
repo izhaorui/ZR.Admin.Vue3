@@ -74,6 +74,13 @@
         <el-switch v-model="showWatermark" class="drawer-switch" />
       </span>
     </div>
+    <div class="drawer-item watermark-row">
+      <span>水印前缀</span>
+      <span class="comp-style watermark-input-wrap">
+        <el-input v-model="watermarkPrefix" size="small" clearable maxlength="20" show-word-limit placeholder="可选，前缀内容" />
+      </span>
+      <span class="watermark-preview">最终水印：{{ watermarkPreview }}</span>
+    </div>
     <!-- <div class="drawer-item">
       <span>{{ $t('layout.fixed') }} Header</span>
       <span class="comp-style">
@@ -221,6 +228,18 @@ const showWatermark = computed({
     changeWatermark()
   }
 })
+const watermarkPrefix = computed({
+  get: () => storeSettings.value.watermarkText,
+  set: (val) => {
+    settingsStore.changeSetting({ key: 'watermarkText', value: val })
+    changeWatermark()
+  }
+})
+const userName = computed(() => useUserStore().userInfo?.userName || '')
+const watermarkPreview = computed(() => {
+  const prefix = watermarkPrefix.value?.trim()
+  return prefix ? `${prefix}-${userName.value}` : userName.value
+})
 
 /**标签持久化 */
 const tabsPersist = computed({
@@ -237,7 +256,10 @@ const tabsShowIcon = computed({
   }
 })
 const changeWatermark = () => {
-  storeSettings.value.showWatermark ? setWatermark(useUserStore().userInfo.userName) : removeWatermark()
+  const prefix = storeSettings.value.watermarkText?.trim()
+  const name = useUserStore().userInfo?.userName || ''
+  const text = prefix ? `${prefix}-${name}` : name
+  storeSettings.value.showWatermark && text ? setWatermark(text) : removeWatermark()
 }
 // 开启水印
 changeWatermark()
@@ -438,6 +460,23 @@ defineExpose({
   .comp-style {
     float: right;
     margin: -3px 8px 0px 0px;
+  }
+  .watermark-input-wrap {
+    width: 180px;
+    margin-right: 8px;
+  }
+  .watermark-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .watermark-preview {
+    color: #888;
+    font-size: 12px;
+    margin-left: 4px;
+    flex: 1;
+    min-width: 80px;
+    word-break: break-all;
   }
   .quick-color-wrap {
     display: flex;
