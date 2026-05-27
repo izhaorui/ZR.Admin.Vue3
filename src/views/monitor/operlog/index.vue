@@ -139,12 +139,12 @@
           </el-col>
           <el-col :lg="24" v-if="form.operParam">
             <el-form-item label="请求参数：">
-              <el-input type="textarea" rows="5" v-model="form.operParam"> </el-input>
+              <pre class="code-preview"><code class="hljs" v-html="highlightText(form.operParam, 'json')"></code></pre>
             </el-form-item>
           </el-col>
           <el-col :lg="24" v-if="form.jsonResult">
             <el-form-item label="返回结果：">
-              <el-input type="textarea" rows="10" v-model="form.jsonResult"> </el-input>
+              <pre class="code-preview code-preview-lg"><code class="hljs" v-html="highlightText(form.jsonResult, 'json')"></code></pre>
             </el-form-item>
           </el-col>
           <el-col :lg="24">
@@ -163,8 +163,14 @@
 
 <script setup name="operlog">
 import { list as listOperLog, delOperlog, cleanOperlog } from '@/api/monitor/operlog'
-import { showTime } from '@/utils'
+import { showTime, prettyJsonText } from '@/utils'
 import dayjs from 'dayjs'
+import hljs from 'highlight.js/lib/core'
+import json from 'highlight.js/lib/languages/json'
+import 'highlight.js/styles/github.css'
+
+hljs.registerLanguage('json', json)
+
 const { proxy } = getCurrentInstance()
 // 遮罩层
 const loading = ref(true)
@@ -256,7 +262,6 @@ function handleSelectionChange(selection) {
   ids.value = selection.map((item) => item.operId)
   multiple.value = !selection.length
 }
-const formRef = ref()
 /** 重置操作表单 */
 function reset() {
   form.value = {
@@ -358,5 +363,33 @@ watch(
     }
   }
 )
+
+function highlightText(content, language = 'json', formatJson = true) {
+  const text = content || ''
+  if (!text) return ''
+  const displayText = formatJson && language === 'json' ? prettyJsonText(text) : text
+  try {
+    return hljs.highlight(displayText, { language, ignoreIllegals: true }).value
+  } catch (error) {
+    return hljs.highlightAuto(displayText).value
+  }
+}
+
 handleQuery()
 </script>
+
+<style scoped>
+.code-preview {
+  width: 100%;
+  margin: 0;
+  border: 1px solid var(--el-border-color-light);
+  overflow: auto;
+  max-height: 180px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.code-preview-lg {
+  max-height: 280px;
+}
+</style>

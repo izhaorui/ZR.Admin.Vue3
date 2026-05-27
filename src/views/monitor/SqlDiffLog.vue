@@ -197,7 +197,6 @@ const columns = ref([
 ])
 const total = ref(0)
 const dataList = ref([])
-const queryRef = ref()
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 // AddTime时间范围
@@ -246,7 +245,6 @@ function sortChange(column) {
 }
 
 /*************** form操作 ***************/
-const formRef = ref()
 const title = ref('')
 // 操作类型 1、add 2、edit 3、view
 const opertype = ref(0)
@@ -303,7 +301,6 @@ function handleDelete(row) {
       getList()
       proxy.$modal.msgSuccess('删除成功')
     })
-    .catch(() => {})
 }
 
 /**

@@ -385,3 +385,56 @@ export function webNotify(optinos) {
     show()
   }
 }
+
+/**
+ * 格式化JSON字符串为更易读的格式
+ * @param {*} value
+ * @returns {string}
+ */
+export function prettyJsonText(value) {
+  if (value === null || value === undefined) return ''
+
+  if (typeof value === 'object') {
+    try {
+      return JSON.stringify(value, null, 2)
+    } catch (error) {
+      return String(value)
+    }
+  }
+
+  const source = String(value).trim()
+  if (!source) return ''
+
+  const formatParsed = (parsedValue) => {
+    if (typeof parsedValue === 'string') {
+      try {
+        return JSON.stringify(JSON.parse(parsedValue), null, 2)
+      } catch (error) {
+        return JSON.stringify(parsedValue, null, 2)
+      }
+    }
+    return JSON.stringify(parsedValue, null, 2)
+  }
+
+  try {
+    return formatParsed(JSON.parse(source))
+  } catch (error) {
+    // Continue with additional parsing strategies.
+  }
+
+  try {
+    return formatParsed(JSON.parse(decodeURIComponent(source)))
+  } catch (error) {
+    // Continue with additional parsing strategies.
+  }
+
+  if (source.includes('=') && source.includes('&')) {
+    try {
+      return JSON.stringify(Object.fromEntries(new URLSearchParams(source)), null, 2)
+    } catch (error) {
+      return source
+    }
+  }
+
+  return source
+}

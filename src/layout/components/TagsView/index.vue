@@ -397,11 +397,14 @@ function handleScroll() {
 .tags-view-container {
   height: var(--base-tags-height);
   width: 100%;
-  box-shadow: 0 0 1px #888;
+  // box-shadow: 0 6px 20px rgba(17, 24, 39, 0.06);
   position: relative;
   display: flex;
   align-items: center;
   overflow: hidden;
+  border-bottom: 1px solid var(--el-border-color-lighter, #ebeef5);
+  border-top: 1px solid var(--el-border-color-lighter, #ebeef5);
+  // background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
 
   $btn-width: 28px;
   $btn-color: #71717a;
@@ -424,9 +427,10 @@ function handleScroll() {
     transition:
       background 0.15s,
       color 0.15s;
+    border-radius: 8px;
 
     &:hover:not(.disabled) {
-      background: $btn-hover-bg;
+      background: #e9edf5;
       color: $btn-hover-color;
     }
 
@@ -445,10 +449,17 @@ function handleScroll() {
       height: 26px;
       line-height: 26px;
       color: var(--el-text-color-regular);
-      padding: 0 8px;
+      padding: 0 10px;
       font-size: 12px;
       margin-left: 5px;
-      margin-top: 4px;
+      // margin-top: 4px;
+      border-radius: 7px;
+      transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        background-color 0.18s ease,
+        color 0.18s ease;
+
       .close {
         width: 1em;
         height: 1em;
@@ -470,16 +481,31 @@ function handleScroll() {
           height: 12px !important;
         }
       }
-
+      &:first-of-type {
+        margin-left: 0;
+      }
       &:last-of-type {
         margin-right: 15px;
       }
+      &:not(.active) + .tags-view-item:not(.active)::before {
+        content: '|';
+        position: absolute;
+        left: -8px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: color-mix(in srgb, var(--el-text-color-placeholder) 82%, transparent);
+        pointer-events: none;
+      }
       &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+        background: rgba(64, 158, 255, 0.08);
         color: var(--el-color-primary);
       }
       &.active {
-        background-color: var(--el-color-primary);
-        border-color: var(--el-color-primary);
+        background: linear-gradient(135deg, var(--el-color-primary) 0%, color-mix(in srgb, var(--el-color-primary) 78%, #1f9dff) 100%);
+        border-color: transparent;
+        box-shadow: 0 4px 12px color-mix(in srgb, var(--el-color-primary) 35%, transparent);
         color: #fff;
       }
     }
@@ -504,9 +530,10 @@ function handleScroll() {
     transition:
       background 0.15s,
       color 0.15s;
+    border-radius: 8px;
 
     &:hover {
-      background: $btn-hover-bg;
+      background: #e9edf5;
       color: $btn-hover-color;
     }
   }
@@ -613,14 +640,24 @@ function handleScroll() {
         }
 
         &:not(.active) + .tags-view-item:not(.active) {
-          border-left: 1px solid var(--el-border-color-lighter, #e4e7ed);
-          padding-left: 11px;
+          padding-left: 12px;
+        }
+
+        &:not(.active) + .tags-view-item:not(.active)::before {
+          content: '|';
+          position: absolute;
+          left: -2px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: var(--el-text-color-placeholder, #a8abb2);
+          pointer-events: none;
         }
 
         &:hover:not(.active) {
           background: var(--chrome-tab-hover-bg) !important;
           border-radius: 6px 6px 0 0;
           color: var(--el-text-color-primary, #303133);
+          box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.06);
         }
 
         &.active {
@@ -632,7 +669,7 @@ function handleScroll() {
           background: var(--chrome-tab-active-bg) !important;
           border: none !important;
           border-radius: var(--chrome-wing-r) var(--chrome-wing-r) 0 0;
-          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+          box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
 
           &::before {
             box-shadow: calc(var(--chrome-wing-r) * 0.5) calc(var(--chrome-wing-r) * 0.5) 0 calc(var(--chrome-wing-r) * 0.5)
@@ -652,6 +689,13 @@ function handleScroll() {
   display: inline-block;
   width: 1em;
   margin-left: 5px;
+  opacity: 0.72;
+  transition: opacity 0.15s ease;
+}
+
+.tags-view-item:hover .close-wrap,
+.tags-view-item.active .close-wrap {
+  opacity: 1;
 }
 .svg-icon {
   margin-right: 5px;

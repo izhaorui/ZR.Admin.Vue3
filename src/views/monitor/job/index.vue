@@ -260,7 +260,10 @@
           </el-col>
           <el-col :lg="24" v-if="form.taskType == 3">
             <el-form-item label="SQL语句" prop="sqlText">
-              <el-input :rows="5" type="textarea" v-model="form.sqlText" placeholder="请输入SQL语句，批量执行SQL请换行"> </el-input>
+              <div class="sql-editor-wrap">
+                <el-input :rows="5" type="textarea" v-model="form.sqlText" placeholder="请输入SQL语句，批量执行SQL请换行" />
+                <pre v-if="form.sqlText" class="sql-preview"><code class="hljs sql" v-html="highlightedSqlText"></code></pre>
+              </div>
             </el-form-item>
           </el-col>
           <template v-if="form.taskType == 1">
@@ -378,6 +381,11 @@
 import { queryTasks, getTasks, createTasks, updateTasks, deleteTasks, startTasks, stopTasks, runTasks, exportTasks } from '@/api/monitor/job'
 import { listJobLog } from '@/api/monitor/jobLog'
 import Crontab from '@/components/Crontab'
+import hljs from 'highlight.js/lib/core'
+import sql from 'highlight.js/lib/languages/sql'
+import 'highlight.js/styles/github.css'
+
+hljs.registerLanguage('sql', sql)
 
 const router = useRouter()
 const { proxy } = getCurrentInstance()
@@ -472,6 +480,15 @@ const state = reactive({
 // 按钮是否可见
 const btnVisible = ref(true)
 const { rules, form, options } = toRefs(state)
+const highlightedSqlText = computed(() => {
+  const sqlText = form.value.sqlText || ''
+  if (!sqlText) return ''
+  try {
+    return hljs.highlight(sqlText, { language: 'sql', ignoreIllegals: true }).value
+  } catch (error) {
+    return hljs.highlightAuto(sqlText).value
+  }
+})
 
 /** 查询计划任务列表 */
 function getList() {
@@ -761,5 +778,19 @@ function handleCommand(command, row) {
   text-overflow: ellipsis;
   white-space: nowrap;
   vertical-align: bottom;
+}
+
+.sql-editor-wrap {
+  width: 100%;
+}
+
+.sql-preview {
+  border: 1px solid var(--el-border-color-light);
+  border-radius: 4px;
+  background: var(--el-fill-color-extra-light);
+  overflow: auto;
+  max-height: 220px;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 </style>

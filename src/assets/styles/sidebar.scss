@@ -14,8 +14,10 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    -webkit-box-shadow: 2px 0 14px rgb(0 21 41 / 10%);
-    box-shadow: 2px 0 14px rgb(0 21 41 / 10%);
+    overflow-x: hidden;
+    border-right: 1px solid var(--el-border-color-lighter, #ebeef5);
+    // -webkit-box-shadow: 2px 0 14px rgb(0 21 41 / 10%);
+    // box-shadow: 2px 0 14px rgb(0 21 41 / 10%);
 
     .el-scrollbar__bar.is-vertical {
       right: 0px;
@@ -46,7 +48,7 @@
         &.is-active::before {
           content: '';
           position: absolute;
-          right: 3px;
+          left: 3px;
           top: 0px;
           bottom: 0px;
           width: 3px;

@@ -174,6 +174,7 @@ function handleOutsideClick() {
   position: relative;
   height: 100%;
   overflow-x: hidden;
+  padding: 10px 12px 12px;
 }
 
 .route-switch-shell {
@@ -217,7 +218,7 @@ function handleOutsideClick() {
   text-align: center;
   color: #ccc;
   font-size: 14px;
-  border-top: 1px solid #e7eaec;
+  border-top: 1px solid var(--el-border-color-lighter, #ebeef5);
   letter-spacing: 0.1rem;
 }
 .hasTagsView {
@@ -236,5 +237,21 @@ function handleOutsideClick() {
   height: 100%;
   background: #000;
   opacity: 0.3;
+}
+
+@media screen and (max-width: 768px) {
+  .app-main {
+    padding: 8px;
+  }
+
+  .route-switch-shell {
+    border-radius: 10px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .route-switch-shell {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
+  }
 }
 </style>
