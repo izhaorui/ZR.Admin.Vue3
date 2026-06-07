@@ -249,9 +249,9 @@ function handleOutsideClick() {
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .route-switch-shell {
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
-  }
-}
+// @media (prefers-color-scheme: dark) {
+//   .route-switch-shell {
+//     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
+//   }
+// }
 </style>
