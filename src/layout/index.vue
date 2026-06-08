@@ -179,7 +179,9 @@ function handleOutsideClick() {
 
 .route-switch-shell {
   width: 100%;
-  height: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+  padding-bottom: 10px;
 }
 
 .route-switch-shell.is-animating {
