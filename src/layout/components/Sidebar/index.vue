@@ -1,5 +1,5 @@
 <template>
-  <el-aside :data-theme="sideTheme" class="sidebar">
+  <el-aside :data-theme="sideTheme" class="sidebar" v-show="sidebarRouters.length > 1 && !sidebarRouters[0].children">
     <logo v-if="showLogo" :collapse="isCollapse" />
 
     <el-scrollbar wrap-class="scrollbar-wrapper">
