@@ -49,9 +49,10 @@ const activeMenu = computed(() => {
   }
   return path
 })
-watch(route, (val) => {
+watch(route, () => {
   if (device.value === 'mobile') {
     appStore.closeSideBar()
   }
+  if (sidebarRouters.value.length === 1 && !sidebarRouters.value[0].children) appStore.toggleSideBarHide(true)
 })
 </script>

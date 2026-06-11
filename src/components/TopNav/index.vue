@@ -162,7 +162,11 @@ function activeRoutes(key) {
   const routes = children.filter(
     (item) => key === item.parentPath || (item.parentPath === '/' && key === item.path) || (key === '/index' && item.path === '')
   )
-  permissionStore.setSidebarRouters(routes)
+  if (routes.length > 0) {
+    permissionStore.setSidebarRouters(routes)
+  } else {
+    appStore.toggleSideBarHide(true)
+  }
   return routes
 }
 

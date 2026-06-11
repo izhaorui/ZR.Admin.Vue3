@@ -121,8 +121,6 @@ const codeUrl = ref('')
 const loading = ref(false)
 // 验证码开关
 const captchaOnOff = ref('')
-// 注册开关
-const register = ref(false)
 const redirect = ref()
 redirect.value = route.query.redirect
 // Get the visitor identifier when you need it.
