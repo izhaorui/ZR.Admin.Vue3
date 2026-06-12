@@ -1,7 +1,7 @@
 <template>
   <div class="top-right-btn">
     <slot></slot>
-    <el-tooltip class="item" effect="dark" content="显隐列" placement="top" v-if="data">
+    <el-tooltip class="item" effect="dark" content="显隐列" placement="bottom" v-if="data">
       <el-dropdown :hide-on-click="false" style="margin-right: 10px" trigger="click">
         <el-button circle icon="menu" />
         <template #dropdown>
@@ -14,10 +14,10 @@
       </el-dropdown>
     </el-tooltip>
 
-    <el-tooltip class="item" effect="dark" :content="showSearch ? '隐藏搜索' : '显示搜索'" placement="top">
+    <el-tooltip class="item" effect="dark" :content="showSearch ? '隐藏搜索' : '显示搜索'" placement="bottom">
       <el-button circle icon="Search" @click="toggleSearch()" />
     </el-tooltip>
-    <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+    <el-tooltip class="item" effect="dark" content="刷新" placement="bottom">
       <el-button circle icon="Refresh" @click="refresh()" />
     </el-tooltip>
   </div>

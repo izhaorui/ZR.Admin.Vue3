@@ -9,8 +9,8 @@ export const getmark = () => {
     //创建一个画布
     const can = document.createElement('canvas')
     //设置画布的长宽
-    can.width = 200
-    can.height = 120
+    can.width = 250
+    can.height = 150
 
     const cans = can.getContext('2d')
     //旋转角度

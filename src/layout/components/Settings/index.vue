@@ -77,9 +77,9 @@
     <div class="drawer-item watermark-row">
       <span>水印前缀</span>
       <span class="comp-style watermark-input-wrap">
-        <el-input v-model="watermarkPrefix" size="small" clearable maxlength="20" show-word-limit placeholder="可选，前缀内容" />
+        <el-input v-model="watermarkPrefix" size="small" clearable maxlength="8" show-word-limit placeholder="可选，前缀内容" />
+        <div class="watermark-preview">最终水印：{{ watermarkPreview }}</div>
       </span>
-      <span class="watermark-preview">最终水印：{{ watermarkPreview }}</span>
     </div>
     <!-- <div class="drawer-item">
       <span>{{ $t('layout.fixed') }} Header</span>
@@ -238,7 +238,7 @@ const watermarkPrefix = computed({
 const userName = computed(() => useUserStore().userInfo?.userName || '')
 const watermarkPreview = computed(() => {
   const prefix = watermarkPrefix.value?.trim()
-  return prefix ? `${prefix}-${userName.value}` : userName.value
+  return prefix ? `${userName.value}-${prefix}` : userName.value
 })
 
 /**标签持久化 */
@@ -258,7 +258,7 @@ const tabsShowIcon = computed({
 const changeWatermark = () => {
   const prefix = storeSettings.value.watermarkText?.trim()
   const name = useUserStore().userInfo?.userName || ''
-  const text = prefix ? `${prefix}-${name}` : name
+  const text = prefix ? `${name}-${prefix}` : name
   storeSettings.value.showWatermark && text ? setWatermark(text) : removeWatermark()
 }
 // 开启水印
