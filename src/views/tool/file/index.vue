@@ -254,6 +254,21 @@
             </el-form-item>
           </el-col>
           <el-col :lg="24">
+            <el-form-item label="压缩图片" prop="quality">
+              <template #label>
+                <span>
+                  <el-tooltip content="压缩质量1-100之间,数字越高质量越高,默认0不压缩" placement="top">
+                    <el-icon :size="15">
+                      <questionFilled />
+                    </el-icon>
+                  </el-tooltip>
+                  压缩图片
+                </span>
+              </template>
+              <el-slider v-model="form.quality" :step="10" />
+            </el-form-item>
+          </el-col>
+          <el-col :lg="24">
             <UploadFile
               ref="uploadRef"
               v-model="form.accessUrl"
@@ -397,7 +412,8 @@ const total = ref(0)
 
 const state = reactive({
   form: {
-    storeType: 1
+    storeType: 1,
+    quality: 0
   },
   rules: {
     accessUrl: [
@@ -462,7 +478,8 @@ function reset() {
     fileExt: '',
     storeType: 1,
     accessUrl: '',
-    fileNameType: 3
+    fileNameType: 3,
+    quality: 0
   }
   proxy.resetForm('formRef')
 }
@@ -541,7 +558,8 @@ function submitUpload() {
           fileDir: form.value.storePath,
           fileName: form.value.fileName,
           storeType: form.value.storeType,
-          fileNameType: form.value.fileNameType
+          fileNameType: form.value.fileNameType,
+          quality: form.value.quality
         }
         resolve(true)
       })
@@ -564,11 +582,6 @@ const copyText = async (val) => {
   } else {
     proxy.$modal.msgError('当前浏览器不支持')
   }
-}
-function handleClassifyChange(row) {
-  updateSysfile(row).then(() => {
-    proxy.$modal.msgSuccess('修改成功')
-  })
 }
 
 function openRenamePopover(row) {
