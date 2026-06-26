@@ -1,6 +1,6 @@
 <template>
-  <el-form ref="genInfoForm" :model="info" :rules="rules" label-width="150px">
-    <el-row>
+  <el-form ref="genInfoForm" :model="info" :rules="rules" label-width="150px" class="gen-info-form">
+    <el-row :gutter="16">
       <el-col :lg="12">
         <el-form-item prop="tplCategory">
           <template #label>生成模板</template>
@@ -114,9 +114,9 @@
           </el-cascader>
         </el-form-item>
       </el-col>
-      <el-col :lg="24">
-        <el-form-item label="默认查询排序字段">
-          <el-select v-model="info.sortField" placeholder="请选择字段" class="mr10" clearable="">
+      <el-col :lg="12">
+        <el-form-item label="默认查询排序字段" class="sort-field-item">
+          <el-select v-model="info.sortField" placeholder="请选择字段" style="width: 100px" class="mr10" clearable="">
             <el-option v-for="item in columns" :key="item.columnId" :label="item.csharpField" :value="item.csharpField"> </el-option>
           </el-select>
 
@@ -191,7 +191,7 @@
           <el-input v-model="info.genPath" placeholder="前端代码路径在后端配置文件gen->vuePath下配置"></el-input>
         </el-form-item>
       </el-col>
-      <el-col :lg="12">
+      <el-col :lg="8">
         <el-form-item label="是否生成仓储层">
           <template #label>
             是否生成仓储层
@@ -210,7 +210,7 @@
         </el-form-item>
       </el-col>
 
-      <el-col :lg="12" v-if="info.genType == '1'">
+      <el-col :lg="8" v-if="info.genType == '1'">
         <el-form-item prop="generateMenu" label="添加菜单">
           <template #label>
             生成菜单
@@ -225,11 +225,33 @@
           <el-switch v-model="info.generateMenu" class="ml-2" />
         </el-form-item>
       </el-col>
-
-      <el-col :lg="12">
+      <el-col :lg="8">
+        <el-form-item prop="enableColumns" label="启用显隐列">
+          <el-switch v-model="info.enableColumns" class="ml-2" />
+        </el-form-item>
+      </el-col>
+      <el-col :lg="8">
         <el-form-item prop="colNum" label="一行显示列">
           <el-radio v-model="info.colNum" :value="12">2列</el-radio>
           <el-radio v-model="info.colNum" :value="24">1列</el-radio>
+        </el-form-item>
+      </el-col>
+      <el-col :lg="12">
+        <el-form-item>
+          <template #label>
+            是否记录差异化日志
+            <span>
+              <el-tooltip content="表编辑、删除会自动记录差异化日志" placement="top">
+                <el-icon>
+                  <question-filled />
+                </el-icon>
+              </el-tooltip>
+            </span>
+          </template>
+          <el-radio-group v-model="info.enableLog">
+            <el-radio :value="true">是</el-radio>
+            <el-radio :value="false">否</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-col>
       <el-col :lg="12">
@@ -239,7 +261,7 @@
         </el-form-item>
       </el-col>
       <el-col :lg="24" v-show="info.tplCategory != 'select'">
-        <el-form-item label="生成功能">
+        <el-form-item label="生成功能" class="feature-check-item">
           <el-checkbox-group v-model="info.checkedBtn" @change="checkedBtnSelect">
             <el-checkbox :label="1">
               <el-tag>添加</el-tag>
@@ -268,28 +290,10 @@
           </el-checkbox-group>
         </el-form-item>
       </el-col>
-      <el-col :lg="12">
-        <el-form-item>
-          <template #label>
-            是否记录差异化日志
-            <span>
-              <el-tooltip content="表编辑、删除会自动记录差异化日志" placement="top">
-                <el-icon>
-                  <question-filled />
-                </el-icon>
-              </el-tooltip>
-            </span>
-          </template>
-          <el-radio-group v-model="info.enableLog">
-            <el-radio :value="true">是</el-radio>
-            <el-radio :value="false">否</el-radio>
-          </el-radio-group>
-        </el-form-item>
-      </el-col>
     </el-row>
 
     <!-- 树表配置 -->
-    <el-row v-if="info.tplCategory == 'tree'">
+    <el-row v-if="info.tplCategory == 'tree'" :gutter="16">
       <el-col :lg="24">
         <h4 class="form-header">树表信息</h4>
       </el-col>
@@ -361,7 +365,7 @@
     </el-row>
 
     <!-- 主子表配置 -->
-    <el-row v-if="info.tplCategory == 'sub' || info.tplCategory == 'subNav' || info.tplCategory == 'subNavMore'">
+    <el-row v-if="info.tplCategory == 'sub' || info.tplCategory == 'subNav' || info.tplCategory == 'subNavMore'" :gutter="16">
       <el-col :lg="24">
         <h4 class="form-header">关联信息</h4>
       </el-col>
@@ -516,3 +520,26 @@ watch(
 
 getMenuTreeselect()
 </script>
+
+<style scoped>
+.gen-info-form {
+  padding-bottom: 2px;
+}
+
+.sort-field-item .mr10 {
+  margin-right: 0 !important;
+  min-width: 220px;
+  flex: 1 1 220px;
+}
+
+@media (max-width: 768px) {
+  .gen-info-form :deep(.el-form-item__label) {
+    width: 112px !important;
+    padding-right: 8px;
+  }
+
+  .gen-info-form :deep(.el-form-item__content) {
+    margin-left: 112px !important;
+  }
+}
+</style>
