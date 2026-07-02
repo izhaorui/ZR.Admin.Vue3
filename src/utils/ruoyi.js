@@ -138,28 +138,28 @@ export function mergeRecursive(source, target) {
  * @param {*} children 孩子节点字段 默认 'children'
  */
 export function handleTree(data, id = 'id', parentId = 'parentId', children = 'children') {
-  const childrenMap = new Map();
-  const nodeMap = new Map();
-  const tree = [];
+  const childrenMap = new Map()
+  const nodeMap = new Map()
+  const tree = []
 
   // 初始化节点映射
-  data.forEach(item => {
-    nodeMap.set(item[id], item);
-    childrenMap.set(item[id], []);
-  });
+  data.forEach((item) => {
+    nodeMap.set(item[id], item)
+    childrenMap.set(item[id], [])
+  })
 
   // 构建树结构
-  data.forEach(item => {
-    const pid = item[parentId];
+  data.forEach((item) => {
+    const pid = item[parentId]
     if (nodeMap.has(pid)) {
-      nodeMap.get(pid)[children] = childrenMap.get(pid);
-      nodeMap.get(pid)[children].push(item);
+      nodeMap.get(pid)[children] = childrenMap.get(pid)
+      nodeMap.get(pid)[children].push(item)
     } else {
-      tree.push(item);
+      tree.push(item)
     }
-  });
+  })
 
-  return tree;
+  return tree
 }
 
 /**
@@ -315,4 +315,103 @@ export const delEmptyQueryNodes = (obj = {}) => {
     )
   // console.log('过滤后参数=', params)
   return params
+}
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+function formatImportRecord(record) {
+  if (record == null || record === '') {
+    return ''
+  }
+
+  const text = typeof record === 'string' ? record : JSON.stringify(record)
+  return text.length > 160 ? text.slice(0, 160) + '...' : text
+}
+
+function normalizeImportData(result) {
+  const data = result?.data ?? result ?? {}
+  const summary = data.summary ?? data.item1 ?? '导入完成'
+  const totalCount = Number(data.totalCount ?? 0)
+  const successCount = Number(data.successCount ?? data.insertCount ?? 0)
+  const failedCount = Number(data.failedCount ?? 0)
+  const ignoreCount = Number(data.ignoreCount ?? 0)
+  const errorDetails = Array.isArray(data.errorDetails) ? data.errorDetails : Array.isArray(data.item2) ? data.item2 : []
+  const ignoreDetails = Array.isArray(data.ignoreDetails) ? data.ignoreDetails : []
+
+  return {
+    summary,
+    totalCount,
+    successCount,
+    failedCount,
+    ignoreCount,
+    errorDetails,
+    ignoreDetails
+  }
+}
+
+function renderImportDetail(item) {
+  const message = escapeHtml(item?.storageMessage || '暂无说明')
+  const record = escapeHtml(formatImportRecord(item?.record))
+  return record
+    ? '<li><div style="font-weight: 600; margin-bottom: 4px;">' +
+        message +
+        '</div><div style="color: var(--el-text-color-secondary); line-height: 1.6; word-break: break-all;">' +
+        record +
+        '</div></li>'
+    : '<li>' + message + '</li>'
+}
+
+function renderImportSection(title, items) {
+  if (!items.length) {
+    return ''
+  }
+
+  const previewCount = 5
+  const detailList = items.slice(0, previewCount).map(renderImportDetail).join('')
+  const moreText =
+    items.length > previewCount
+      ? '<div style="margin-top: 8px; color: var(--el-text-color-secondary);">还有 ' + (items.length - previewCount) + ' 条未显示</div>'
+      : ''
+
+  return (
+    '<section style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--el-border-color-lighter);">' +
+    '<div style="font-weight: 600; margin-bottom: 8px;">' +
+    escapeHtml(title) +
+    '（' +
+    items.length +
+    '）</div>' +
+    '<ul style="margin: 0; padding-left: 20px;">' +
+    detailList +
+    '</ul>' +
+    moreText +
+    '</section>'
+  )
+}
+
+export function buildImportResultHtml(result) {
+  const { summary, totalCount, successCount, failedCount, ignoreCount, errorDetails, ignoreDetails } = normalizeImportData(result)
+  const overviewHtml =
+    '<div style="margin-bottom: 12px; line-height: 1.8;">' +
+    '<div style="font-size: 14px; font-weight: 600; margin-bottom: 6px;">' +
+    escapeHtml(summary) +
+    '</div>' +
+    '<div style="color: var(--el-text-color-secondary);">总数：' +
+    totalCount +
+    '，成功：' +
+    successCount +
+    '，失败：' +
+    failedCount +
+    '，忽略：' +
+    ignoreCount +
+    '</div>' +
+    '</div>'
+
+  return overviewHtml + renderImportSection('错误明细', errorDetails) + renderImportSection('忽略明细', ignoreDetails)
 }
