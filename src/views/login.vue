@@ -89,6 +89,7 @@ import { getCodeImg } from '@/api/system/login'
 import Cookies from 'js-cookie'
 import { encrypt, decrypt } from '@/utils/jsencrypt'
 import defaultSettings from '@/settings'
+import { ElNotification } from 'element-plus'
 import starBackground from '@/views/components/starBackground.vue'
 import LangSelect from '@/components/LangSelect/index.vue'
 import useUserStore from '@/store/modules/user'
@@ -163,7 +164,16 @@ function handleLogin() {
       // 调用action的登录方法
       userStore
         .login(loginForm.value)
-        .then(() => {
+        .then((res) => {
+          if (res?.notice) {
+            ElNotification({
+              title: '登录提醒',
+              message: res.notice,
+              type: 'warning',
+              duration: 0,
+              dangerouslyUseHTMLString: false
+            })
+          }
           proxy.$modal.msgSuccess(proxy.$t('login.loginSuccess'))
           const query = route.query
           const otherQueryParams = Object.keys(query).reduce((acc, cur) => {

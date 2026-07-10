@@ -41,7 +41,9 @@
     "userOnlineLog": "用戶在線日誌",
     "dataDiffLog": "數據差異日誌",
     "smsLog": "短信記錄",
-    "zujianDemo": "組件示例"
+    "zujianDemo": "組件示例",
+    "userMsg": "系統消息",
+    "lockscreen": "鎖定屏幕"
   },
   "tagsView": {
     "refresh": "重繪",
@@ -51,7 +53,8 @@
     "closeRight": "關閉右侧",
     "closeAll": "全部關閉",
     "fullscreen": "當前頁全屏",
-    "closeFullscreen": "關閉全屏"
+    "closeFullscreen": "關閉全屏",
+    "exitFullscreen": "退出全屏"
   },
   "layout": {
     "tip1": "如果覺得不錯歡迎給個⭐Star⭐收藏壹下，這樣作者才有繼續免費下去的動力，謝謝！",

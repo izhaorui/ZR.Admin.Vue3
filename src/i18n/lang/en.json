@@ -41,7 +41,9 @@
     "userOnlineLog": "User online logs",
     "dataDiffLog": "Data discrepancy logs",
     "smsLog": "SMS logs",
-    "zujianDemo": "Demo"
+    "zujianDemo": "Demo",
+    "userMsg": "Message",
+    "lockscreen": "Lock screen"
   },
   "tagsView": {
     "refresh": "refresh",
@@ -51,7 +53,8 @@
     "closeRight": "close right",
     "closeAll": "close all",
     "fullscreen": "fullscreen",
-    "closeFullscreen": "close fullscreen"
+    "closeFullscreen": "close fullscreen",
+    "exitFullscreen": "Exit fullscreen"
   },
   "layout": {
     "tip1": "If you feel good, welcome to ⭐ Star ⭐ Collect it so that the author can continue to be free. Thank you!",

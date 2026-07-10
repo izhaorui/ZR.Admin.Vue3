@@ -92,10 +92,25 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/usermsg',
+    alias: ['/system/user/userMsg'],
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/system/user/userMsg.vue'),
+        name: 'UserMsg',
+        meta: { title: '系统消息', icon: 'message', titleKey: 'menu.userMsg' }
+      }
+    ]
+  },
+  {
     path: '/lock',
     component: () => import('@/views/lock'),
     hidden: true,
-    meta: { title: '锁定屏幕' }
+    meta: { title: '锁定屏幕', titleKey: 'menu.lockscreen' }
   }
 ]
 

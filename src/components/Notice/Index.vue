@@ -33,7 +33,7 @@
           </div>
           <div class="foot-box">
             <div class="read" @click="onAllReadClick" v-show="dotNumInfo.noticeNum > 0">标记当前页已读</div>
-            <div class="goNotice" @click="handleToNotice" v-if="settings.noticeUrl">前往通知中心</div>
+            <div class="goNotice" @click="handleToNotice">前往通知中心</div>
           </div>
         </el-tab-pane>
 
@@ -101,8 +101,8 @@ import useSocketStore from '@/store/modules/socket'
 import useUserStore from '@/store/modules/user'
 import { dayjs } from 'element-plus'
 import { formatTime } from '@/utils/index'
-import settings from '@/settings'
 const { proxy } = getCurrentInstance()
+const router = useRouter()
 const socketStore = useSocketStore()
 const noticeType = ref('0')
 
@@ -163,7 +163,7 @@ function handleReadNotice(item) {
 }
 // 前往通知中心点击
 function handleToNotice() {
-  window.open(settings.noticeUrl)
+  router.push('/system/user/userMsg')
 }
 
 const sysList = ref([])

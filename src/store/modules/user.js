@@ -47,7 +47,7 @@ const useUserStore = defineStore('user', {
               setToken(res.data)
               this.token = res.data
               useLockStore().unlockScreen() //登录成功后解锁屏幕
-              resolve() //then处理
+              resolve(res) //then处理
             } else {
               console.log('login error ', res)
               reject(res) //catch处理

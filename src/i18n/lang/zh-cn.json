@@ -41,7 +41,9 @@
     "userOnlineLog": "用户在线日志",
     "dataDiffLog": "数据差异日志",
     "smsLog": "短信记录",
-    "zujianDemo": "组件示例"
+    "zujianDemo": "组件示例",
+    "userMsg": "系统消息",
+		"lockscreen": "锁定屏幕"
   },
   "tagsView": {
     "refresh": "刷新页面",
