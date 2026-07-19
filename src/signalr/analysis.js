@@ -41,6 +41,27 @@ export default {
     //   useSocketStore().setOnlineUsers(data)
     // })
 
+    // 接收消息中心实时推送（系统/私信/评论/点赞等 SysUserMsg 增量消息）
+    connection.on('receiveMessage', (list) => {
+      if (list && list.length) {
+        list.forEach((msg) => {
+          ElNotification({
+            title: '新消息',
+            message: msg.content,
+            type: 'warning',
+            duration: 4000
+          })
+        })
+      }
+      // 刷新列表与未读数（取绝对值，避免刷新/重连重复累加）
+      useSocketStore().refreshSysMsg()
+    })
+
+    // 接收日程提醒：仅更新未完成日程数（红点），不弹窗、不进消息列表
+    connection.on('dailyScheduleReminder', (count) => {
+      useSocketStore().setScheduleCount(count)
+    })
+
     // 接收强退通知
     connection.on('forceUser', (data) => {
       useSocketStore().setGlobalError({ code: 0, msg: `你的账号已被强退，原因：${data?.reason || '无'}` })

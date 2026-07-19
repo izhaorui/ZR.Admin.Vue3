@@ -53,6 +53,12 @@
         </el-card>
       </el-col>
     </el-row>
+    <el-row :gutter="15" class="mb10">
+      <el-col :span="24">
+        <daily-schedule-card />
+      </el-col>
+    </el-row>
+
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
     <el-row :gutter="32">
@@ -92,6 +98,7 @@
 
 <script setup name="index">
 import PanelGroup from './dashboard/PanelGroup'
+import DailyScheduleCard from './dashboard/DailyScheduleCard'
 import LineChart from './dashboard/LineChart'
 import RaddarChart from './dashboard/RaddarChart'
 import PieChart from './dashboard/PieChart'

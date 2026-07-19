@@ -80,3 +80,26 @@ export function readSysUserMsg(msgId, msgType) {
     params: { msgType }
   })
 }
+
+/**
+ * 当前用户全部消息标记为已读
+ */
+export function readAllSysUserMsg() {
+  return request({
+    url: 'SysUserMsg/readAll',
+    method: 'post'
+  })
+}
+
+/**
+ * 获取当前用户未读消息总数
+ */
+export function unreadCount() {
+  return request({
+    url: 'SysUserMsg/myMsgNum',
+    method: 'get'
+  }).then(res => {
+    const groups = res.data?.data || []
+    return { data: groups.reduce((sum, g) => sum + (g.num || 0), 0) }
+  })
+}

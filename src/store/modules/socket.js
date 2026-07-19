@@ -1,5 +1,6 @@
 import useUserStore from './user'
 import signalR from '@/signalr/signalr'
+import { listMySysUserMsg } from '@/api/system/sysusermsg'
 const useSocketStore = defineStore('socket', {
   persist: {
     paths: ['chatMessage', 'chatList', 'sessionList', 'newChat', 'noticeIdArr', 'newNotice', 'globalErrorMsg', 'promptNoticeReadList'] //存储指定key
@@ -26,6 +27,10 @@ const useSocketStore = defineStore('socket', {
     newNotice: 0,
     //系统消息未读数
     newSysMsg: 0,
+    //系统消息列表（消息中心）
+    sysMsgList: [],
+    //日程未完成数（红点，由 SignalR dailyScheduleReminder 推送，仅计数不进消息列表）
+    scheduleCount: 0,
     //所有通知id
     noticeIdArr: [],
     // 全局错误提醒
@@ -49,7 +54,7 @@ const useSocketStore = defineStore('socket', {
      * @returns
      */
     getAllDotNum() {
-      return this.newChat + this.newNotice + this.newSysMsg
+      return this.newChat + this.newNotice + this.newSysMsg + this.scheduleCount
     },
     /**
      * 获取所有小红点
@@ -59,7 +64,8 @@ const useSocketStore = defineStore('socket', {
       return {
         noticeNum: this.newNotice,
         chatNum: this.newChat,
-        sysMsgNum: this.newSysMsg
+        sysMsgNum: this.newSysMsg,
+        scheduleNum: this.scheduleCount
       }
     }
   },
@@ -70,6 +76,19 @@ const useSocketStore = defineStore('socket', {
     },
     setSysMsgNum(num) {
       this.newSysMsg = num
+    },
+    // 设置日程未完成数（红点）
+    setScheduleCount(num) {
+      this.scheduleCount = num ?? 0
+    },
+    // 刷新系统消息列表与未读数
+    refreshSysMsg() {
+      listMySysUserMsg({ msgType: 1 }).then((res) => {
+        this.sysMsgList = res.data?.result || []
+      })
+      // unreadCount().then((res) => {
+      //   this.newSysMsg = res.data ?? 0
+      // })
     },
     // 更新系统通知
     setNoticeList(data) {
