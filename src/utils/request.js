@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ElMessageBox, ElMessage, ElLoading } from 'element-plus'
+import { ElMessage, ElLoading, ElNotification } from 'element-plus'
 import { getToken } from '@/utils/auth'
 import errorCode from '@/utils/errorCode'
 import useUserStore from '@/store/modules/user'
@@ -94,7 +94,7 @@ service.interceptors.response.use(
     console.error('axios err', error)
     var duration = 3000
     let { message, response } = error
-
+    console.log('axios err', response.data)
     if (response.status == 404) {
       message = `${response.config.url}接口404`
     } else if (response.status == 403) {
@@ -109,16 +109,15 @@ service.interceptors.response.use(
       message = '系统接口' + message.substr(message.length - 3) + '异常，请联系管理员'
 
       if (import.meta.env.DEV) {
-        message = 'Oops,后端出错了，你不会连错误日志都不会看吧'
+        message = JSON.stringify(response.data.error)
         duration = 0
       }
     }
-    ElMessage({
+    ElNotification({
+      title: 'Oops,后端出错了',
       message: message,
-      type: 'error',
       duration: duration,
-      showClose: true,
-      grouping: true
+      type: 'error'
     })
     return Promise.reject({ code: 500, msg: message })
   }
