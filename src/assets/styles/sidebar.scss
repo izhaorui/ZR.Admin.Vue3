@@ -26,6 +26,30 @@
     .el-menu {
       border: none;
     }
+
+    // hover 微交互：背景平滑过渡 + 图标轻微缩放（克制专业，0.22s）
+    .el-menu-item,
+    .el-sub-menu__title {
+      transition: background-color 0.22s ease, color 0.22s ease;
+
+      .menu-icon {
+        transition: transform 0.22s ease;
+      }
+
+      // 非选中项 hover：柔和背景 + 图标缩放
+      &:not(.is-active):hover {
+        background-color: var(--el-fill-color-light, rgba(0, 0, 0, 0.04));
+
+        .menu-icon {
+          transform: scale(1.08);
+        }
+      }
+    }
+
+    // 选中项 hover：保留激活背景，避免被上方覆盖
+    .el-menu-item.is-active:hover {
+      background-color: var(--base-menu-active-bg);
+    }
   }
 
   // 展开sidebar状态设置svg-icon边距
