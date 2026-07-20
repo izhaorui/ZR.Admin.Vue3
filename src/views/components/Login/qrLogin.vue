@@ -87,6 +87,7 @@ defineExpose({
   height: 160px;
   line-height: 160px;
   margin: 0 auto;
+  border: 2px solid #fff;
 }
 
 .login-scan-container {

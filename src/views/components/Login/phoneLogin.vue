@@ -68,7 +68,7 @@ redirect.value = route.query.redirect
 
 function getCode() {
   getCodeImg().then((res) => {
-    codeUrl.value = 'data:image/gif;base64,' + res.data.img
+    codeUrl.value = res.data.img
     loginForm.value.uuid = res.data.uuid
     captchaOnOff.value = res.data.captchaOff
   })

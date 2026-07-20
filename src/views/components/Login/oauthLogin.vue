@@ -38,6 +38,13 @@ function onAuth(type) {
     height: 25px;
     margin-right: 20px;
     cursor: pointer;
+    color: #c7cee0;
+    transition: color 0.3s, transform 0.3s;
+
+    &:hover {
+      color: var(--brand-1, #5b8cff);
+      transform: translateY(-2px);
+    }
   }
 }
 </style>

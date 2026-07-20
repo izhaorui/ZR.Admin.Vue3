@@ -1,83 +1,89 @@
 <template>
-  <starBackground></starBackground>
-  <div class="login-wrap">
-    <div class="login">
-      <el-form ref="registerFormRef" :model="registerForm" :rules="registerRules" class="login-form">
-        <h3 class="title">{{ title }}</h3>
-        <el-form-item prop="username">
-          <el-input v-model="registerForm.username" type="text" size="default" auto-complete="off" placeholder="账号">
-            <template #prefix>
-              <svg-icon name="user" />
-            </template>
-          </el-input>
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input
-            v-model="registerForm.password"
-            type="password"
-            size="default"
-            auto-complete="off"
-            placeholder="密码"
-            @keyup.enter="handleRegister">
-            <template #prefix>
-              <svg-icon name="password" />
-            </template>
-          </el-input>
-        </el-form-item>
-        <el-form-item prop="confirmPassword">
-          <el-input
-            v-model="registerForm.confirmPassword"
-            type="password"
-            size="default"
-            auto-complete="off"
-            placeholder="确认密码"
-            @keyup.enter="handleRegister">
-            <template #prefix>
-              <svg-icon name="password" />
-            </template>
-          </el-input>
-        </el-form-item>
-        <el-form-item prop="code" v-if="captchaOnOff">
-          <el-input
-            v-model="registerForm.code"
-            auto-complete="off"
-            size="default"
-            placeholder="验证码"
-            style="width: 63%"
-            @keyup.enter="handleRegister">
-            <template #prefix>
-              <svg-icon name="validCode" />
-            </template>
-          </el-input>
-          <div class="register-code ml10">
-            <img :src="codeUrl" @click="getCode" class="register-code-img" />
+  <div class="login-container">
+    <brandPanel />
+
+    <!-- 右侧注册表单区 -->
+    <div class="form-panel">
+      <div class="login-card">
+        <h3 class="card-title">{{ title }}</h3>
+        <p class="card-subtitle">创建您的账号，开启高效管理</p>
+
+        <el-form ref="registerFormRef" :model="registerForm" :rules="registerRules" class="login-form">
+          <el-form-item prop="username">
+            <el-input v-model="registerForm.username" type="text" size="default" auto-complete="off" placeholder="账号">
+              <template #prefix>
+                <svg-icon name="user" class="input-icon" />
+              </template>
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="password">
+            <el-input
+              v-model="registerForm.password"
+              type="password"
+              size="default"
+              auto-complete="off"
+              placeholder="密码"
+              @keyup.enter="handleRegister">
+              <template #prefix>
+                <svg-icon name="password" class="input-icon" />
+              </template>
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="confirmPassword">
+            <el-input
+              v-model="registerForm.confirmPassword"
+              type="password"
+              size="default"
+              auto-complete="off"
+              placeholder="确认密码"
+              @keyup.enter="handleRegister">
+              <template #prefix>
+                <svg-icon name="password" class="input-icon" />
+              </template>
+            </el-input>
+          </el-form-item>
+          <el-form-item prop="code" v-if="captchaOnOff">
+            <el-input
+              v-model="registerForm.code"
+              auto-complete="off"
+              size="default"
+              placeholder="验证码"
+              style="width: 63%"
+              @keyup.enter="handleRegister">
+              <template #prefix>
+                <svg-icon name="validCode" class="input-icon" />
+              </template>
+            </el-input>
+            <div class="login-code">
+              <img :src="codeUrl" @click="getCode" class="login-code-img" />
+            </div>
+          </el-form-item>
+          <el-form-item>
+            <el-button :loading="loading" type="primary" size="default" round class="login-btn" @click.prevent="handleRegister">
+              <span v-if="!loading">{{ $t('login.register') }}</span>
+              <span v-else>注 册 中...</span>
+            </el-button>
+          </el-form-item>
+          <div class="link-wrap">
+            <router-link class="link-type" :to="'/login'">使用已有账户登录</router-link>
           </div>
-        </el-form-item>
-        <el-form-item style="width: 100%">
-          <el-button :loading="loading" type="primary" size="default" round style="width: 100%" @click.prevent="handleRegister">
-            <span v-if="!loading">{{ $t('login.register') }}</span>
-            <span v-else>注 册 中...</span>
-          </el-button>
-        </el-form-item>
-        <div style="text-align: center">
-          <router-link class="link-type" :to="'/login'">使用已有账户登录</router-link>
-        </div>
-      </el-form>
-      <oauthLogin></oauthLogin>
+        </el-form>
+        <oauthLogin></oauthLogin>
+      </div>
     </div>
-    <!--  底部  -->
-    <div class="el-register-footer">
-      <div v-html="copyRight"></div>
-    </div>
+  </div>
+
+  <div class="el-login-footer">
+    <div v-html="copyRight"></div>
   </div>
 </template>
 
 <script setup name="register">
-import starBackground from '@/views/components/starBackground.vue'
 import { getCodeImg, register } from '@/api/system/login'
 import defaultSettings from '@/settings'
 import { ElMessageBox } from 'element-plus'
 import oauthLogin from './components/Login/oauthLogin.vue'
+import brandPanel from './components/Login/brandPanel.vue'
 const { proxy } = getCurrentInstance()
 const router = useRouter()
 const codeUrl = ref('')
@@ -133,7 +139,7 @@ const title = computed(() => {
 
 function getCode() {
   getCodeImg().then((res) => {
-    codeUrl.value = 'data:image/gif;base64,' + res.data.img
+    codeUrl.value = res.data.img
     registerForm.uuid = res.data.uuid
     // this.$forceUpdate()
   })
@@ -170,52 +176,10 @@ getCode()
 
 <style rel="stylesheet/scss" scoped lang="scss">
 @use '@/assets/styles/login.scss';
-.register {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  background-size: cover;
-  flex-direction: column;
-  background: radial-gradient(220% 105% at top center, #1b2947 10%, #4b76a7 40%, #81acae 65%, #f7f7b6);
-}
-.login-form {
-  padding: 15px 25px 15px 25px;
-  height: 320px;
-}
-.title {
-  margin: 0px auto 30px auto;
-  text-align: center;
-  // color: #fff;
-}
 
-.register-tip {
+.link-wrap {
+  margin-top: -6px;
+  text-align: center;
   font-size: 13px;
-  text-align: center;
-  color: #bfbfbf;
-}
-.register-code {
-  width: 33%;
-  height: 38px;
-  float: right;
-  img {
-    cursor: pointer;
-    vertical-align: middle;
-  }
-}
-.el-register-footer {
-  height: 40px;
-  line-height: 40px;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  text-align: center;
-  color: #fff;
-  font-family: Arial;
-  font-size: 12px;
-  letter-spacing: 1px;
-}
-.register-code-img {
-  height: 38px;
 }
 </style>
