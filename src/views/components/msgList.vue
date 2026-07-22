@@ -61,9 +61,7 @@ function handleSend() {
       content.value = ''
       scrollBottom()
     })
-    .catch(() => {
-      proxy.$modal.msgError('发送失败')
-    })
+    .catch(() => {})
 }
 /**
  * 滚动聊天记录

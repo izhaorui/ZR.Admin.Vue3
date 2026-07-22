@@ -52,7 +52,6 @@ function generateCode() {
             })
             .catch((error) => {
               console.error(error)
-              proxy.$modal.msgError(error.msg)
             })
           clearQr()
         }

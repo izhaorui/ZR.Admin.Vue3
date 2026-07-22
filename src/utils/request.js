@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ElMessage, ElLoading, ElNotification } from 'element-plus'
+import { ElMessage, ElLoading, ElNotification, ElMessageBox } from 'element-plus'
 import { getToken } from '@/utils/auth'
 import errorCode from '@/utils/errorCode'
 import useUserStore from '@/store/modules/user'
@@ -66,7 +66,11 @@ service.interceptors.response.use(
     if (token) {
       useUserStore().refreshToken(token)
     }
-    if (code == 401) {
+    // 成功：仅 code == 200（与后端约定一致）
+    if (code == 200) {
+      // 返回标准 code/msg/data 字段
+      return res.data
+    } else if (code == 401) {
       // ElMessageBox.confirm('登录状态已过期，请重新登录', '系统提示', {
       //   confirmButtonText: '重新登陆',
       //   cancelButtonText: '取消',
@@ -79,15 +83,28 @@ service.interceptors.response.use(
           location.href = import.meta.env.VITE_APP_ROUTER_PREFIX + 'index'
         })
       return Promise.reject('无效的会话，或者会话已过期，请重新登录。')
-    } else if (code == 0 || code == 1 || code == 110 || code == 101 || code == 403 || code == 500 || code == 429) {
+    } else if (code == 480) {
+      // 单设备登录：账号在其他设备登录，当前会话被挤下线
+      ElMessageBox.confirm('您的账号已在其他设备登录，如非本人操作请及时修改密码', '账号被挤下线', {
+        confirmButtonText: '重新登录',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        useUserStore()
+          .logOut()
+          .then(() => {
+            location.href = import.meta.env.VITE_APP_ROUTER_PREFIX + 'index'
+          })
+      })
+
+      return Promise.reject('账号已在其他设备登录，当前会话已失效。')
+    } else {
+      // 其余非 200 码（0/1/110/101/403/500/429 等）均视为异常
       ElMessage({
         message: msg,
         type: 'error'
       })
       return Promise.reject(res.data)
-    } else {
-      //返回标准 code/msg/data字段
-      return res.data
     }
   },
   (error) => {

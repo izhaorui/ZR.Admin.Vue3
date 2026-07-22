@@ -176,7 +176,6 @@ function handleLogin() {
         })
         .catch((error) => {
           console.error(error)
-          proxy.$modal.msgError(error.msg)
           loading.value = false
           // 重新获取验证码
           if (captchaOnOff.value) {
