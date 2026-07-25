@@ -7,7 +7,7 @@ import { downFile } from '@/utils/request'
  */
 export function listSysUserMsg(query) {
   return request({
-    url: 'SysUserMsg/list',
+    url: 'sysUserMsg/list',
     method: 'get',
     params: query
   })
@@ -19,7 +19,7 @@ export function listSysUserMsg(query) {
  */
 export function listMySysUserMsg(query) {
   return request({
-    url: 'SysUserMsg/mylist',
+    url: 'sysUserMsg/mylist',
     method: 'get',
     params: query
   })
@@ -31,7 +31,7 @@ export function listMySysUserMsg(query) {
  */
 export function addSysUserMsg(data) {
   return request({
-    url: 'SysUserMsg',
+    url: 'sysUserMsg',
     method: 'post',
     data: data
   })
@@ -42,7 +42,7 @@ export function addSysUserMsg(data) {
  */
 export function getSysUserMsg(id) {
   return request({
-    url: 'SysUserMsg/' + id,
+    url: 'sysUserMsg/' + id,
     method: 'get'
   })
 }
@@ -53,20 +53,20 @@ export function getSysUserMsg(id) {
  */
 export function delSysUserMsg(pid) {
   return request({
-    url: 'SysUserMsg/delete/' + pid,
+    url: 'sysUserMsg/delete/' + pid,
     method: 'delete'
   })
 }
 // 清空用户系统消息
 export function clearSysUserMsg() {
   return request({
-    url: 'SysUserMsg/clean',
+    url: 'sysUserMsg/clean',
     method: 'delete'
   })
 }
 // 导出用户系统消息
 export async function exportSysUserMsg(query) {
-  await downFile('SysUserMsg/export', { ...query })
+  await downFile('sysUserMsg/export', { ...query })
 }
 
 /**
@@ -75,7 +75,7 @@ export async function exportSysUserMsg(query) {
  */
 export function readSysUserMsg(msgId, msgType) {
   return request({
-    url: 'SysUserMsg/read/' + msgId + '/' + msgType,
+    url: 'sysUserMsg/read/' + msgId + '/' + msgType,
     method: 'post',
     params: { msgType }
   })
@@ -86,7 +86,7 @@ export function readSysUserMsg(msgId, msgType) {
  */
 export function readAllSysUserMsg() {
   return request({
-    url: 'SysUserMsg/readAll',
+    url: 'sysUserMsg/readAll',
     method: 'post'
   })
 }
@@ -96,9 +96,9 @@ export function readAllSysUserMsg() {
  */
 export function unreadCount() {
   return request({
-    url: 'SysUserMsg/myMsgNum',
+    url: 'sysUserMsg/myMsgNum',
     method: 'get'
-  }).then(res => {
+  }).then((res) => {
     const groups = res.data?.data || []
     return { data: groups.reduce((sum, g) => sum + (g.num || 0), 0) }
   })

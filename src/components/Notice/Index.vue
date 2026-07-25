@@ -72,9 +72,7 @@
                   <svg-icon name="gonggao" color="#fff" size="16"></svg-icon>
                 </div>
                 <div class="content" @click="handleRead(item)" :style="item.isRead == 0 ? '' : 'opacity:0.6'">
-                  <div class="title md-content">
-                    <MdPreview :modelValue="item.content" :editorId="'sysmsg-' + item.msgId" />
-                  </div>
+                  <div class="title sysmsg-text">{{ item.content }}</div>
                   <div class="content-box-time">{{ formatTime(dayjs(item.addTime).valueOf()) }}</div>
                 </div>
                 <div class="ops">
@@ -111,7 +109,7 @@
                   </div>
                 </div>
                 <div class="ops">
-                  <el-button text @click.stop="handleTodoDone(item)">完成</el-button>
+                  <el-button text @click.stop="handleScheduleDone(item)">完成</el-button>
                 </div>
               </div>
             </el-scrollbar>
@@ -135,8 +133,8 @@ import useSocketStore from '@/store/modules/socket'
 import useUserStore from '@/store/modules/user'
 import { dayjs } from 'element-plus'
 import { formatTime } from '@/utils/index'
-import { MdPreview } from 'md-editor-v3'
-import 'md-editor-v3/lib/preview.css'
+
+
 const { proxy } = getCurrentInstance()
 const router = useRouter()
 const socketStore = useSocketStore()
@@ -231,13 +229,15 @@ function fetchReminders() {
     })
     .catch(() => {})
 }
-// 切换到待办 tab 时查询未完成待办
+// 切换到系统消息 tab 时按需拉取列表；切换到待办 tab 时查询未完成待办
 watch(noticeType, (val) => {
   if (val === '3') fetchReminders()
+  if (val === '2') socketStore.refreshSysMsg()
 })
 
 function init() {
-  socketStore.refreshSysMsg()
+  // 页面刷新时只拉未读数（红点），系统消息列表在打开对应 tab 时按需加载
+  socketStore.refreshSysMsgNum()
 }
 init()
 
@@ -300,18 +300,9 @@ function handleScheduleDone(item) {
       }
     }
 
-    .title.md-content {
-      :deep(.md-editor-preview-wrapper) {
-        padding: 0;
-      }
-      :deep(.md-editor-preview) {
-        padding: 0;
-        background: transparent;
-        font-size: 13px;
-      }
-      :deep(.default-theme) {
-        font-size: 13px;
-      }
+    .title.sysmsg-text {
+      white-space: pre-line;
+      font-size: 13px;
     }
 
     .ops {

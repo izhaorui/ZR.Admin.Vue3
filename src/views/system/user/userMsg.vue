@@ -24,6 +24,7 @@
           <el-option label="系统" value="SYSTEM" />
           <el-option label="点赞" value="PRAISE" />
           <el-option label="评论" value="COMMENT" />
+          <el-option label="租户通知" value="TENANT_NOTICE" />
         </el-select>
       </el-form-item>
       <el-form-item label="阅读状态" prop="isRead">
@@ -51,7 +52,7 @@
       </el-table-column>
       <el-table-column label="内容" prop="content" min-width="240" show-overflow-tooltip>
         <template #default="{ row }">
-          <el-link type="primary" :underline="false" :class="{ 'read-title': row.isRead == 1 }" @click="handleView(row)">{{ row.content }}</el-link>
+          <el-link type="primary" :underline="false" :class="{ 'read-title': row.isRead == 1 }" @click="handleView(row)">{{ plainSummary(row.content) }}</el-link>
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center" width="90">
@@ -96,12 +97,15 @@ import { showTime } from '@/utils'
 import { getCurrentInstance } from 'vue'
 import useSocketStore from '@/store/modules/socket'
 
+
+
 const { proxy } = getCurrentInstance()
 
 const msgTypeMeta = {
   SYSTEM: { label: '系统', type: 'primary' },
   PRAISE: { label: '点赞', type: 'warning' },
-  COMMENT: { label: '评论', type: 'success' }
+  COMMENT: { label: '评论', type: 'success' },
+  TENANT_NOTICE: { label: '租户通知', type: 'danger' }
 }
 
 const loading = ref(true)
@@ -113,6 +117,21 @@ const unreadTotal = ref(0)
 const msgList = ref([])
 const open = ref(false)
 const currentMsg = ref({})
+
+/**
+ * 将 Markdown 文案转为列表展示用的单行纯文本摘要：
+ * 去掉加粗符号、引用标记、列表符号与换行，避免列表里出现 **、-、> 等噪音。
+ */
+function plainSummary(md) {
+  if (!md) return '-'
+  return String(md)
+    .replace(/^#+\s*/gm, '')
+    .replace(/[*`>]/g, '')
+    .replace(/^\s*[-]\s+/gm, '')
+    .replace(/\s*\n\s*/g, ' ')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
+}
 
 const data = reactive({
   queryParams: { pageNum: 1, pageSize: 10, msgType: undefined, isRead: '', keyWord: '', sort: 'msgId', sortType: 'desc' }

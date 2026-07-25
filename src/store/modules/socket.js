@@ -1,6 +1,6 @@
 import useUserStore from './user'
 import signalR from '@/signalr/signalr'
-import { listMySysUserMsg } from '@/api/system/sysusermsg'
+import { listMySysUserMsg, unreadCount } from '@/api/system/sysusermsg'
 const useSocketStore = defineStore('socket', {
   persist: {
     paths: ['chatMessage', 'chatList', 'sessionList', 'newChat', 'noticeIdArr', 'newNotice', 'globalErrorMsg', 'promptNoticeReadList'] //存储指定key
@@ -81,14 +81,18 @@ const useSocketStore = defineStore('socket', {
     setScheduleCount(num) {
       this.scheduleCount = num ?? 0
     },
-    // 刷新系统消息列表与未读数
+    // 仅刷新系统消息未读数（红点），用于页面初始化/刷新等无需列表的场景
+    refreshSysMsgNum() {
+      unreadCount().then((res) => {
+        this.newSysMsg = res.data ?? 0
+      })
+    },
+    // 刷新系统消息列表与未读数（打开系统 tab / 收到推送时调用）
     refreshSysMsg() {
       listMySysUserMsg({ msgType: 1 }).then((res) => {
         this.sysMsgList = res.data?.result || []
       })
-      // unreadCount().then((res) => {
-      //   this.newSysMsg = res.data ?? 0
-      // })
+      this.refreshSysMsgNum()
     },
     // 更新系统通知
     setNoticeList(data) {
