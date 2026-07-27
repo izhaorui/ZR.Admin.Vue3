@@ -1,4 +1,5 @@
 <template>
+  <div v-loading="loading">
   <div v-if="info">
     <el-card header="订单信息" class="mb10">
       <el-descriptions>
@@ -7,11 +8,17 @@
         <el-descriptions-item label="订单状态">
           <dict-tag :options="dictStore.orderStatusOptions" :value="info.orderStatus" />
         </el-descriptions-item>
+        <el-descriptions-item label="支付方式">
+          <dict-tag :options="dictStore.payTypeOptions" :value="info.payType" />
+        </el-descriptions-item>
         <el-descriptions-item label="备注">
           {{ info.orderNote }}
         </el-descriptions-item>
         <el-descriptions-item label="支付时间">
           {{ info.payTime }}
+        </el-descriptions-item>
+        <el-descriptions-item label="支付流水号">
+          {{ info.transactionId || '—' }}
         </el-descriptions-item>
       </el-descriptions>
     </el-card>
@@ -56,7 +63,8 @@
     </el-card>
   </div>
   <div v-else>
-    <el-empty> 未查询到订单信息 </el-empty>
+    <el-empty> {{ loadError || '未查询到订单信息' }} </el-empty>
+  </div>
   </div>
 </template>
 
@@ -65,6 +73,8 @@ import { getOMSOrder } from '@/api/shopping/omsorder'
 import useDictStore from '@/store/modules/dict'
 const route = useRoute()
 const info = ref()
+const loading = ref(false)
+const loadError = ref('')
 const dictStore = useDictStore()
 watch(
   () => route.query.id,
@@ -79,11 +89,19 @@ watch(
 )
 
 function getInfo(id) {
+  loading.value = true
+  loadError.value = ''
   getOMSOrder(id).then((res) => {
     const { code, data } = res
     if (code == 200) {
       info.value = data
+    } else {
+      loadError.value = res.msg || '未查询到订单信息'
     }
+  }).catch((err) => {
+    loadError.value = err?.message || '加载失败'
+  }).finally(() => {
+    loading.value = false
   })
 }
 </script>

@@ -57,6 +57,27 @@ export function delOMSOrder(pid) {
     method: 'POST'
   })
 }
+/**
+ * 剔除/取消订单（回补库存），仅待付款/待发货可操作
+ * @param {主键} id
+ */
+export function cancelOMSOrder(id) {
+  return request({
+    url: 'shopping/Order/cancel/' + id,
+    method: 'POST'
+  })
+}
+/**
+ * 批量剔除/取消订单（回补库存），后端仅处理待付款/待发货状态的订单
+ * @param {主键数组} ids
+ */
+export function cancelOMSOrders(ids) {
+  return request({
+    url: 'shopping/Order/cancel/batch',
+    method: 'POST',
+    data: ids
+  })
+}
 // 导出订单管理
 export async function exportOMSOrder(query) {
   await downFile('shopping/Order/export', { ...query })
@@ -114,5 +135,13 @@ export function RefundOrder(data) {
     url: 'shopping/Order/refund',
     method: 'POST',
     data: data
+  })
+}
+// 查询订单状态变更日志（按订单Id或订单号）
+export function listOrderLog(params) {
+  return request({
+    url: 'shopping/orderlog/list',
+    method: 'get',
+    params: params
   })
 }

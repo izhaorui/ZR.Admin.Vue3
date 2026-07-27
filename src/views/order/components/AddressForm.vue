@@ -10,14 +10,15 @@
       <el-form-item label="收件人电话" prop="userName" allow-create>
         <el-input v-model="form.phone"></el-input>
       </el-form-item>
-      <el-form-item label="省" prop="province">
-        <el-input v-model="form.province"></el-input>
-      </el-form-item>
-      <el-form-item label="市" prop="city">
-        <el-input v-model="form.city"></el-input>
-      </el-form-item>
-      <el-form-item label="区" prop="district">
-        <el-input v-model="form.district"></el-input>
+      <el-form-item label="所在地区" prop="province">
+        <el-cascader
+          v-model="region"
+          :options="regionOptions"
+          :props="{ expandTrigger: 'hover' }"
+          placeholder="请选择省 / 市 / 区"
+          clearable
+          class="w100"
+          @change="onRegionChange" />
       </el-form-item>
       <el-form-item label="地址详情" prop="detailAddress" allow-create>
         <el-input v-model="form.detailAddress"></el-input>
@@ -34,6 +35,7 @@
 
 <script setup>
 import { updateOMSOrder } from '@/api/shopping/omsorder'
+import { regionOptions } from '@/views/shopping/regions'
 import { ElMessage } from 'element-plus'
 const { proxy } = getCurrentInstance()
 
@@ -42,8 +44,8 @@ const state = reactive({
   rules: {
     userName: [{ required: true, message: '请输入', trigger: 'blur' }],
     phone: [{ required: true, message: '请输入', trigger: 'blur' }],
-    province: [{ required: true, message: '请输入', trigger: 'blur' }],
-    city: [{ required: true, message: '请输入', trigger: 'blur' }],
+    province: [{ required: true, message: '请选择所在地区', trigger: 'change' }],
+    city: [{ required: false, message: '请输入', trigger: 'blur' }],
     district: [{ required: false, message: '请输入', trigger: 'blur' }],
     detailAddress: [{ required: true, message: '请输入', trigger: 'blur' }]
   },
@@ -53,6 +55,7 @@ const emits = defineEmits(['success'])
 const { form, rules, options } = toRefs(state)
 const open = ref(false)
 const formRef = ref()
+const region = ref([])
 // 重置表单
 function reset() {
   state.form = {
@@ -65,8 +68,16 @@ function reset() {
     detailAddress: '',
     operType: 3 //修改地址
   }
+  region.value = []
 
   proxy.resetForm('formRef')
+}
+
+function onRegionChange(val) {
+  const arr = val || []
+  form.value.province = arr[0] || ''
+  form.value.city = arr[1] || ''
+  form.value.district = arr[2] || ''
 }
 
 /**
@@ -77,6 +88,7 @@ function reset() {
 function handleOpen(orderNo, address) {
   reset()
   form.value = { ...address, orderNo }
+  region.value = [address.province, address.city, address.district].filter(Boolean)
   open.value = true
 }
 

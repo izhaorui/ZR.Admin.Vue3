@@ -1,83 +1,75 @@
 <template>
-  <el-form ref="specFormRef" label-position="left" label-width="110px">
+  <el-form ref="specFormRef" :model="info" :rules="rules" label-position="left" label-width="110px">
+    <!-- 规格定义 -->
     <el-form-item label="商品规格">
-      <div class="spec-wrap" v-for="(spec, specIndex) in form.specList" :key="specIndex">
-        <div class="left">
-          <el-select v-model="spec.name" placeholder="如：颜色、尺寸" class="mr-2" style="width: 150px" filterable allow-create>
-            <el-option v-for="item in commonSpecNames" :key="item" :label="item" :value="item" />
-          </el-select>
-
-          <el-tag v-for="(val, valIndex) in spec.values" :key="valIndex" closable @close="removeSpecValue(spec, valIndex)" class="mr-2">
-            {{ val }}
-          </el-tag>
-          <el-input
-            v-model="spec.temp"
-            class="mr-2"
-            placeholder="输入规格值后回车"
-            @keyup.enter="addSpecValue(spec, specIndex)"
-            style="width: 200px" />
+      <div class="spec-list">
+        <div class="spec-wrap" v-for="(spec, specIndex) in form.specList" :key="specIndex">
+          <div class="spec-head">
+            <el-select v-model="spec.name" placeholder="如：颜色、尺寸" class="spec-name" filterable allow-create>
+              <el-option v-for="item in commonSpecNames" :key="item" :label="item" :value="item" />
+            </el-select>
+            <el-button icon="remove" @click="removeSpec(specIndex)">删除规格</el-button>
+          </div>
+          <div class="spec-values">
+            <el-tag v-for="(val, valIndex) in spec.values" :key="valIndex" closable @close="removeSpecValue(spec, valIndex)">
+              {{ val }}
+            </el-tag>
+            <el-input v-model="spec.temp" class="spec-input" placeholder="输入规格值后回车" @keyup.enter="addSpecValue(spec, specIndex)" />
+          </div>
         </div>
-
-        <div class="right">
-          <el-button icon="remove" @click="removeSpec(specIndex)">删除规格</el-button>
-        </div>
+        <el-button icon="plus" type="primary" @click="addSpec()">添加规格</el-button>
       </div>
-
-      <el-button icon="plus" type="primary" @click="addSpec()">添加规格</el-button>
     </el-form-item>
-    <!-- <el-form-item>
-      <el-button type="success" @click="generateSkus" class="ml-2">生成 SKU 列表</el-button>
-    </el-form-item> -->
+
+    <el-divider />
 
     <!-- SKU 批量设置 -->
-    <el-form-item label="批量设置 SKU">
-      <el-button link text @click="handleMultiSet('price')">价格</el-button>
-      <el-button link text @click="handleMultiSet('stock')">库存</el-button>
-      <el-button link text @click="handleMultiSet('weight')">重量</el-button>
+    <el-form-item label="批量设置">
+      <el-space>
+        <el-button link type="primary" @click="handleMultiSet('price')">设置价格</el-button>
+        <el-button link type="primary" @click="handleMultiSet('stock')">设置库存</el-button>
+        <el-button link type="primary" @click="handleMultiSet('weight')">设置重量</el-button>
+      </el-space>
     </el-form-item>
-    <!-- SKU 表格 -->
-    <el-form-item label="SKU 列表">
-      <el-table :data="skus" border :key="tableKey">
-        <el-table-column label="skuId" prop="skuId" width="70"></el-table-column>
-        <el-table-column
-          v-for="(spec, index) in form.specList"
-          :key="index"
-          :label="spec.name || `规格${index + 1}`"
-          :prop="'specs[' + index + ']'">
+
+    <!-- SKU 列表（全宽，不缩进） -->
+    <div class="sku-section">
+      <div class="sku-section__title">SKU 列表（共 {{ skus.length }} 项）</div>
+      <el-table :data="skus" border :key="tableKey" style="width: 100%">
+        <el-table-column label="ID" prop="skuId" width="80" align="center"></el-table-column>
+        <el-table-column v-for="(spec, index) in form.specList" :key="index" :label="spec.name || `规格${index + 1}`" min-width="120">
           <template #default="{ row }">
-            {{ row.specs.find((s) => s.name === spec.name)?.value || '-' }}
+            <el-tag size="small" effect="plain">{{ row.specs.find((s) => s.name === spec.name)?.value || '-' }}</el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column label="规格图片" width="100" align="center">
+        <el-table-column label="规格图片" width="120" align="center">
           <template #default="{ row }">
-            <UploadImage v-model="row.imageUrl" :limit="1" style="width: 50px"></UploadImage>
+            <UploadImage v-model="row.imageUrl" :limit="1" :width="'80px'" />
           </template>
         </el-table-column>
-        <el-table-column label="商品价格" width="120" align="center">
+        <el-table-column label="价格" width="130" align="center">
           <template #default="{ row }">
-            <el-input-number v-model="row.price" :min="0" style="width: 100px" controls-position="right" />
+            <el-input-number v-model="row.price" :min="0" :precision="2" style="width: 110px" controls-position="right" />
           </template>
         </el-table-column>
-        <el-table-column label="库存数量" width="120" align="center">
+        <el-table-column label="库存" width="130" align="center">
           <template #default="{ row }">
-            <el-input-number v-model="row.stock" :min="0" style="width: 100px" controls-position="right" />
+            <el-input-number v-model="row.stock" :min="0" style="width: 110px" controls-position="right" />
           </template>
         </el-table-column>
-        <el-table-column label="商品重量(KG)" width="120" align="center">
+        <el-table-column label="重量(KG)" width="130" align="center">
           <template #default="{ row }">
-            <el-input-number v-model="row.weight" :min="0" style="width: 100px" controls-position="right" />
+            <el-input-number v-model="row.weight" :min="0" :precision="2" style="width: 110px" controls-position="right" />
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="80" align="center">
+        <el-table-column label="操作" width="70" align="center">
           <template #default="scope">
-            <el-button-group>
-              <el-button type="danger" icon="delete" size="small" @click="removeSku(scope.$index, scope.row)"> </el-button>
-            </el-button-group>
+            <el-button type="danger" text icon="delete" @click="removeSku(scope.$index, scope.row)" />
           </template>
         </el-table-column>
       </el-table>
-    </el-form-item>
+    </div>
   </el-form>
 </template>
 <script setup name="SpecInfoForm">
@@ -87,8 +79,12 @@ const commonSpecNames = ['颜色', '尺寸', '尺码', '版本', '材质', '内�
 const tableKey = ref(0)
 const form = reactive({
   specList: [],
-  skus: []
+  skus: [],
+  // 规格类型 1.单规格 2.多规格
+  specType: 2
 })
+const rules = {}
+
 const props = defineProps({
   specList: {
     type: Array,
@@ -97,6 +93,15 @@ const props = defineProps({
   skus: {
     type: Array,
     default: () => []
+  },
+  info: {
+    type: Object,
+    default: () => {
+      return {
+        type: 1,
+        purchaseLimit: {}
+      }
+    }
   }
 })
 const emit = defineEmits(['update:specList', 'update:skus'])
@@ -162,17 +167,11 @@ watch(
   },
   { deep: true } // 深度监听每个规格和规格值
 )
-function getSkuKey(specs) {
-  return specs
-    .map((s) => `${s.name}:${s.value}`)
-    .sort() // 保证顺序一致
-    .join('|')
-}
+
 // SKU 生成（笛卡尔积）
 // 单规格模式不需要笛卡尔积
 function generateSkus() {
   const specs = form.specList.filter((s) => s.name && s.values.length > 0)
-
   if (specs.length === 0) {
     form.skus = []
 
@@ -183,7 +182,7 @@ function generateSkus() {
   const combinations = cartesianProduct(specs.map((s) => s.values))
 
   // 旧数据映射，用 key = 颜色:红|尺码:M 的方式保存
-  const oldMap = new Map(props.skus.map((sku) => [getSkuKey(sku.specs), sku]))
+  const oldMap = new Map(props.skus.map((sku) => [sku.specs.map((s) => `${s.name}:${s.value}`).join('|'), sku]))
 
   // 生成新 SKU
   form.skus = combinations.map((comb) => {
@@ -191,7 +190,7 @@ function generateSkus() {
       name: specs[i].name,
       value: val
     }))
-    const key = getSkuKey(specItems)
+    const key = specItems.map((s) => `${s.name}:${s.value}`).join('|')
 
     if (oldMap.has(key)) {
       return { ...oldMap.get(key) }
@@ -267,15 +266,40 @@ function removeSku(index, row) {
 .el-card__header {
   padding: 10px;
 }
-.spec-wrap {
-  display: flex;
+.spec-list {
   width: 100%;
+}
+.spec-wrap {
+  border: 1px solid var(--el-border-color-lighter);
+  border-radius: 6px;
+  padding: 10px 12px;
   margin-bottom: 10px;
-  .left {
-    flex: 1;
+  background: var(--el-fill-color-blank);
+  .spec-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
   }
-  .right {
-    width: 100px;
+  .spec-name {
+    width: 180px;
+  }
+  .spec-values {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+  .spec-input {
+    width: 200px;
+  }
+}
+.sku-section {
+  margin-top: 4px;
+  &__title {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--el-text-color-primary);
   }
 }
 </style>

@@ -18,7 +18,20 @@ const useDictStore = defineStore('dict', {
     // 售卖状态
     saleStatusOptions: [
       { dictLabel: '在售', dictValue: '1' },
-      { dictLabel: '下架', dictValue: '0', listClass: 'danger' }
+      { dictLabel: '下架', dictValue: '0', listClass: 'info' }
+    ],
+    // 支付方式（与后端 ZR.Mall.Enum.PayTypeEnum 保持一致：0模拟 1微信 2支付宝预留）
+    payTypeOptions: [
+      { dictLabel: '模拟支付', dictValue: '0', listClass: 'info' },
+      { dictLabel: '微信支付', dictValue: '1', listClass: 'success' },
+      { dictLabel: '支付宝', dictValue: '2', listClass: 'primary' }
+    ],
+    // 支付流水状态（与后端 ZR.Mall.Enum.PaymentStatusEnum 保持一致：0预支付 1已支付 2已关闭 3已退款）
+    paymentStatusOptions: [
+      { dictLabel: '预支付', dictValue: '0', listClass: 'warning' },
+      { dictLabel: '已支付', dictValue: '1', listClass: 'success' },
+      { dictLabel: '已关闭', dictValue: '2', listClass: 'info' },
+      { dictLabel: '已退款', dictValue: '3', listClass: 'danger' }
     ]
   }),
   actions: {}

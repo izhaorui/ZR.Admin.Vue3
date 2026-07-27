@@ -1,5 +1,5 @@
 <template>
-  <div class="component-upload-image" :title="tipMsg">
+  <div class="component-upload-image" :title="tipMsg" :style="{ '--upload-size': sizeVar }">
     <el-upload
       multiple
       v-bind="$attrs"
@@ -18,7 +18,6 @@
       v-model:file-list="fileList"
       :on-preview="handlePictureCardPreview"
       :auto-upload="autoUpload"
-      :style="cssVars"
       :class="{ hide: fileList.length >= limit }"
       ref="imageUpload"
       @contextmenu.prevent="handleRightClick">
@@ -144,11 +143,11 @@ const props = defineProps({
   data: {
     type: Object
   },
-  style: {
-    type: Object,
-    default: {
-      width: '100px'
-    }
+  // 缩略图尺寸（如 '60px'），控制 picture-card 方块大小。
+  // 也可用 :style="{ width: '60px' }" 透传，二者等效。
+  width: {
+    type: String,
+    default: '120px'
   },
   listType: {
     type: String,
@@ -189,11 +188,10 @@ const recentHistoryDisplay = computed(() => {
   const maxCount = Number.isFinite(props.recentLimit) ? Math.max(0, props.recentLimit) : 0
   return recentHistory.value.slice(-maxCount).reverse()
 })
-const cssVars = computed(() => {
-  return {
-    '--el-upload-picture-card-size': props.style.width,
-    '--el-upload-list-picture-card-size': props.style.width
-  }
+const attrs = useAttrs()
+const sizeVar = computed(() => {
+  // 优先取 :style 透传的 width，其次取 width prop，默认 100px
+  return (attrs.style && attrs.style.width) || props.width || '120px'
 })
 
 const tipMsg = computed(() => {
@@ -454,18 +452,26 @@ defineExpose({
 })
 </script>
 <style>
-.el-upload--picture-card {
-  --el-upload-picture-card-size: 120px;
-}
-.el-upload-list--picture-card {
-  --el-upload-list-picture-card-size: 120px;
-}
 .el-upload__tip {
   font-size: 8px;
   margin-top: 8px !important;
 }
 .component-upload-image {
   display: table;
+  /* 缩略图尺寸：覆盖 Element Plus 在子元素上写死的 148px 默认值 */
+  --upload-size: 120px;
+}
+.component-upload-image .el-upload--picture-card {
+  --el-upload-picture-card-size: var(--upload-size);
+  width: var(--upload-size);
+  height: var(--upload-size);
+}
+.component-upload-image .el-upload-list--picture-card {
+  --el-upload-list-picture-card-size: var(--upload-size);
+}
+.component-upload-image .el-upload-list--picture-card .el-upload-list__item {
+  width: var(--upload-size);
+  height: var(--upload-size);
 }
 .history-grid {
   margin-top: 10px;
