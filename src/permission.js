@@ -60,11 +60,23 @@ router.beforeEach(async (to) => {
     // 根据roles权限生成可访问的路由表
     accessRoutes.forEach((route) => {
       if (!isHttp(route.path)) {
-        router.addRoute(route) // 动态添加可访问路由表
+        try {
+          router.addRoute(route) // 动态添加可访问路由表
+        } catch (e) {
+          // 单条菜单 path 非法（如未以 / 开头）不应中断整个路由注册
+          console.error('[permission] 跳过非法路由 path=', route.path, e?.message)
+        }
       }
     })
     return { ...to, replace: true } // hack方法 确保addRoutes已完成
   } catch (err) {
+    // 路由生成异常（如后端菜单存在非法 path，例如值为 "icon" 而非 "/xxx"）不应注销登录态，
+    // 否则单条脏菜单会把整个会话踢回登录页。仅真正无 token 才走注销。
+    const isRouteErr = typeof err?.message === 'string' && err.message.includes('Route paths')
+    if (isRouteErr) {
+      console.error('[permission] 菜单路由生成失败，请检查后端 sys_menu 表中 path 非法的记录（应以 / 开头）：', err.message)
+      return { ...to, replace: true }
+    }
     await userStore.logOut()
     // ElMessage.error(err != undefined ? err : '登录失败')
     return { path: '/' }
