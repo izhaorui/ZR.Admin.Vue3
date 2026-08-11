@@ -23,7 +23,7 @@
     </el-menu-item>
 
     <!-- ✅ 多个子菜单，渲染为 el-sub-menu -->
-    <el-sub-menu v-else :index="resolvePath(item.path)">
+    <el-sub-menu v-else :id="'submenu-' + resolvePath(item.path)" :index="resolvePath(item.path)">
       <template #title>
         <svg-icon class="menu-icon" :name="item.meta?.icon" />
 
