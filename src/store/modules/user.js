@@ -136,8 +136,9 @@ const useUserStore = defineStore('user', {
             this.userId = data.user.userId //新加
             this.userName = data.user.userName //新加
 
-            /* 初始密码提示 */
-            if (data.isDefaultModifyPwd) {
+            /* 初始密码提示（同一会话只提示一次，避免刷新浏览器反复弹窗） */
+            if (data.isDefaultModifyPwd && !sessionStorage.getItem('defaultPwdTipShown')) {
+              sessionStorage.setItem('defaultPwdTipShown', '1')
               ElMessageBox.confirm('您的密码还是初始密码，请修改密码！', '安全提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -146,8 +147,9 @@ const useUserStore = defineStore('user', {
                 router.push({ name: 'Profile', params: { activeTab: 'resetPwd' } })
               })
             }
-            /* 过期密码提示 */
-            if (!data.isDefaultModifyPwd && data.isPasswordExpired) {
+            /* 过期密码提示（同一会话只提示一次） */
+            if (!data.isDefaultModifyPwd && data.isPasswordExpired && !sessionStorage.getItem('expiredPwdTipShown')) {
+              sessionStorage.setItem('expiredPwdTipShown', '1')
               ElMessageBox.confirm('您的密码已过期，请尽快修改密码！', '安全提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
