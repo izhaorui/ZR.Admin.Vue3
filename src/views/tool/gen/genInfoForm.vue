@@ -370,47 +370,66 @@
         <h4 class="form-header">关联信息</h4>
       </el-col>
 
-      <el-col :lg="12">
-        <el-form-item prop="subTableName">
-          <template #label>
-            关联子表的表名
-            <span>
-              <el-tooltip content="关联子表的表名， 如：sys_user" placement="top">
-                <el-icon>
-                  <question-filled />
-                </el-icon>
-              </el-tooltip>
-            </span>
-          </template>
-          <el-select v-model="info.subTableName" filterable placeholder="请选择" @change="subSelectChange(this)">
-            <el-option
-              v-for="(table, index) in tables"
-              :disabled="table.tableName == info.tableName"
-              :key="index"
-              :label="table.tableName + '：' + table.tableComment"
-              :value="table.tableName">
-            </el-option>
-          </el-select>
+      <el-col :lg="12" v-for="(row, index) in subTableRows" :key="index">
+        <el-form-item
+          :label="index === 0 ? '关联子表' : ''"
+          :prop="'subTables.' + index + '.tableName'"
+          :rules="[{ required: true, message: '请选择子表', trigger: 'change' }]">
+          <div class="sub-table-row">
+            <el-select v-model="row.tableName" filterable placeholder="请选择子表" @change="onSubTableChange(row)" class="sub-table-select">
+              <el-option
+                v-for="table in tableOptions"
+                :disabled="table.tableName == info.tableName || isSubTableUsed(table.tableName, row.tableName)"
+                :key="table.tableName"
+                :label="table.tableName + '：' + table.tableComment"
+                :value="table.tableName">
+              </el-option>
+            </el-select>
+            <el-select
+              v-model="row.fkName"
+              placeholder="外键"
+              class="sub-fk-select">
+              <el-option
+                v-for="column in subColumnsMap[row.tableName] || []"
+                :key="column.columnId || column.csharpField"
+                :label="column.csharpField"
+                :value="column.csharpField">
+                <span style="float: left">{{ column.csharpField }}</span>
+                <span style="float: right">{{ column.columnComment }}</span>
+              </el-option>
+            </el-select>
+            <el-button icon="delete" text type="danger" @click="removeSubTable(index)" :disabled="subTableRows.length <= 1" />
+          </div>
         </el-form-item>
       </el-col>
       <el-col :lg="12">
-        <el-form-item prop="subTableFkName">
-          <template #label>
-            子表关联的外键名
-            <span>
-              <el-tooltip content="子表关联的外键名， 如：user_id" placement="top">
-                <el-icon>
-                  <question-filled />
-                </el-icon>
-              </el-tooltip>
-            </span>
-          </template>
-          <el-select v-model="info.subTableFkName">
-            <el-option v-for="(column, index) in subColumns" :key="index" :label="column.csharpField" :value="column.csharpField">
-              <span style="float: left">{{ column.csharpField }}</span>
-              <span style="float: right">{{ column.columnComment }}</span>
-            </el-option>
-          </el-select>
+        <el-form-item :label="subTableRows.length ? '' : '关联子表'">
+          <el-button type="primary" plain icon="plus" @click="addSubTable">添加子表</el-button>
+        </el-form-item>
+      </el-col>
+
+      <!-- 表关系可视化（默认折叠，避免把页面撑长） -->
+      <el-col :lg="24" v-if="subTableRows.some((r) => r.tableName)">
+        <el-form-item label="关系预览">
+          <el-collapse class="w100 relation-collapse">
+            <el-collapse-item name="graph">
+              <template #title>
+                <span class="relation-collapse__title">查看表关系图（{{ subTableRows.filter((r) => r.tableName).length }} 张）</span>
+              </template>
+              <div class="relation-graphs">
+                <template v-for="row in subTableRows" :key="'graph-' + row.tableName">
+                  <table-relation-graph
+                    v-if="row.tableName"
+                    :main-table="mainTableInfo"
+                    :main-table-columns="columns"
+                    :sub-table="getSubTableInfo(row.tableName)"
+                    :sub-table-columns="subColumnsMap[row.tableName] || []"
+                    :fk-name="row.fkName"
+                  />
+                </template>
+              </div>
+            </el-collapse-item>
+          </el-collapse>
         </el-form-item>
       </el-col>
     </el-row>
@@ -420,9 +439,89 @@
 <script setup name="genInfoForm">
 import { listMenu } from '@/api/system/menu'
 import { queryColumnInfo } from '@/api/tool/gen'
+import TableRelationGraph from './components/tableRelationGraph.vue'
 
-const subColumns = ref([])
 const menuOptions = ref([])
+// 子表列信息缓存 { tableName: columns }
+const subColumnsMap = reactive({})
+// 子表配置行列表（一对多），来源于 info.subTables
+const subTableRows = computed(() => props.info?.subTables || [])
+
+// 子表下拉选项：仅已导入代码生成的表
+const tableOptions = computed(() => props.tables || [])
+
+// 主表信息（从 tables 列表中匹配当前表名）
+const mainTableInfo = computed(() => {
+  if (!props.info?.tableName || !props.tables) return null
+  return props.tables.find((t) => t.tableName === props.info.tableName) || { tableName: props.info.tableName, tableComment: props.info.tableComment }
+})
+
+/** 初始化子表配置行（兼容旧版单子表 subTableName/subTableFkName） */
+function initSubTables() {
+  if (!props.info) return
+  let list = props.info.subTables
+  if (!Array.isArray(list) || list.length === 0) {
+    if (props.info.subTableName) {
+      list = [{ tableName: props.info.subTableName, fkName: props.info.subTableFkName }]
+    } else {
+      list = [{ tableName: '', fkName: '' }]
+    }
+  }
+  props.info.subTables = list.map((r) => ({ tableName: r.tableName || '', fkName: r.fkName || '' }))
+  props.info.subTables.forEach((r) => loadSubColumns(r.tableName))
+  syncLegacyFields()
+}
+
+/** 同步第一行到旧版单子表字段（后端级联模板按 subTableName 判断） */
+function syncLegacyFields() {
+  const first = props.info.subTables?.[0]
+  props.info.subTableName = first?.tableName || ''
+  props.info.subTableFkName = first?.fkName || ''
+}
+
+/** 加载子表列信息（带缓存） */
+function loadSubColumns(tableName) {
+  if (!tableName || subColumnsMap[tableName]) return
+  const obj = props.tables?.find((t) => t.tableName === tableName)
+  if (!obj) return
+  queryColumnInfo(obj.tableId).then((res) => {
+    if (res.code == 200) {
+      subColumnsMap[tableName] = res.data.columns
+    }
+  })
+}
+
+/** 子表选择变化 */
+function onSubTableChange(row) {
+  row.fkName = ''
+  loadSubColumns(row.tableName)
+  syncLegacyFields()
+}
+
+/** 添加子表行 */
+function addSubTable() {
+  if (!Array.isArray(props.info.subTables)) {
+    props.info.subTables = []
+  }
+  props.info.subTables.push({ tableName: '', fkName: '' })
+}
+
+/** 删除子表行 */
+function removeSubTable(index) {
+  props.info.subTables.splice(index, 1)
+  syncLegacyFields()
+}
+
+/** 子表是否已被其他行占用 */
+function isSubTableUsed(tableName, currentTableName) {
+  return subTableRows.value.some((r) => r.tableName === tableName && r.tableName !== currentTableName)
+}
+
+/** 获取子表表信息 */
+function getSubTableInfo(tableName) {
+  if (!tableName || !props.tables) return { tableName, tableComment: '' }
+  return props.tables.find((t) => t.tableName === tableName) || { tableName, tableComment: '' }
+}
 
 const props = defineProps({
   info: {
@@ -467,15 +566,11 @@ const rules = ref({
   },
   genType: [{ required: true, message: '请选择代码生成方式', trigger: 'blur' }],
   treeCode: [{ required: true, message: '请选择树编码字段', trigger: 'blur' }],
-  treeParentCode: [{ required: true, message: '请选择树父编码字段', trigger: 'blur' }],
-  subTableName: [{ required: true, message: '请选择关联的子表表名', trigger: 'blur' }],
-  subTableFkName: [{ required: true, message: '请选择子表关联的外键名', trigger: 'blur' }]
+  treeParentCode: [{ required: true, message: '请选择树父编码字段', trigger: 'blur' }]
 })
-function subSelectChange(value) {
-  props.info.subTableFkName = ''
-}
 function tplSelectChange(value) {
   if (value !== 'sub') {
+    props.info.subTables = [{ tableName: '', fkName: '' }]
     props.info.subTableName = ''
     props.info.subTableFkName = ''
   }
@@ -483,22 +578,6 @@ function tplSelectChange(value) {
 function clearParentMent(e) {
   if (e == null) {
     props.info.parentMenuId = 0
-  }
-}
-function setSubTableColumns(value) {
-  if (value == null || value == undefined || value == '') {
-    return
-  }
-  for (var item in props.tables) {
-    const obj = props.tables[item]
-    if (value === obj.tableName) {
-      queryColumnInfo(obj.tableId).then((res) => {
-        if (res.code == 200) {
-          subColumns.value = res.data.columns
-        }
-      })
-      break
-    }
   }
 }
 /** 查询菜单下拉树结构 */
@@ -511,11 +590,12 @@ function getMenuTreeselect() {
 function checkedBtnSelect(value) {
   console.log(value)
 }
+
+// info 由 editTable 异步加载后整体替换，触发子表行初始化
 watch(
-  () => props.info.subTableName,
-  (val) => {
-    setSubTableColumns(val)
-  }
+  () => props.info,
+  () => initSubTables(),
+  { immediate: true }
 )
 
 getMenuTreeselect()
@@ -530,6 +610,43 @@ getMenuTreeselect()
   margin-right: 0 !important;
   min-width: 220px;
   flex: 1 1 220px;
+}
+
+.sub-table-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.sub-table-select {
+  flex: 1 1 180px;
+  min-width: 160px;
+}
+
+.sub-fk-select {
+  flex: 1 1 120px;
+  min-width: 110px;
+}
+
+.relation-collapse {
+  width: 100%;
+  border-top: none;
+}
+
+.relation-collapse :deep(.el-collapse-item__header) {
+  height: 32px;
+  line-height: 32px;
+}
+
+.relation-collapse__title {
+  font-size: 13px;
+  color: var(--el-color-primary, #409eff);
+}
+
+.relation-graphs {
+  display: grid;
+  gap: 16px;
 }
 
 @media (max-width: 768px) {
