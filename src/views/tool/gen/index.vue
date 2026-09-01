@@ -4,6 +4,21 @@
       <el-form-item label="表名" prop="tableName">
         <el-input v-model="queryParams.tableName" style="width: 200px" clearable placeholder="输入要查询的表名" />
       </el-form-item>
+      <el-form-item label="表描述" prop="tableComment">
+        <el-input v-model="queryParams.tableComment" style="width: 160px" clearable placeholder="输入表描述" />
+      </el-form-item>
+      <el-form-item label="模板" prop="tplCategory">
+        <el-select v-model="queryParams.tplCategory" style="width: 120px" clearable placeholder="模板类型">
+          <el-option label="单表" value="crud" />
+          <el-option label="树表" value="tree" />
+          <el-option label="主子表" value="subNavMore" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="数据库" prop="dbName">
+        <el-select v-model="queryParams.dbName" style="width: 130px" clearable filterable placeholder="数据库">
+          <el-option v-for="d in dbOptions" :key="d" :label="d" :value="d" />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="search" @click="getList()">查询</el-button>
         <el-button icon="refresh" @click="handleReset()">重置</el-button>
@@ -94,7 +109,7 @@
 </template>
 
 <script setup name="gen">
-import { codeGenerator, listTable, delTable, previewTable, synchDb } from '@/api/tool/gen'
+import { codeGenerator, listTable, delTable, previewTable, synchDb, codeGetDBList } from '@/api/tool/gen'
 import { useRouter } from 'vue-router'
 import importTable from './importTable'
 // import hljs from 'highlight.js'
@@ -114,6 +129,7 @@ const { proxy } = getCurrentInstance()
 
 const tableList = ref([])
 const tableloading = ref(true)
+const dbOptions = ref([])
 const tableIds = ref([])
 const single = ref(true)
 const multiple = ref(true)
@@ -128,6 +144,9 @@ const data = reactive({
     pageNum: 1,
     pageSize: 10,
     tableName: undefined,
+    tableComment: undefined,
+    tplCategory: undefined,
+    dbName: undefined,
     t: 0
   },
   preview: {
@@ -309,6 +328,9 @@ function handleReset() {
   proxy.resetForm('codeform')
   handleQuery()
 }
+codeGetDBList().then((res) => {
+  dbOptions.value = res.data?.dbList || []
+})
 getList()
 </script>
 <style>
