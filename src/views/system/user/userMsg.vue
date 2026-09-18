@@ -52,7 +52,9 @@
       </el-table-column>
       <el-table-column label="内容" prop="content" min-width="240" show-overflow-tooltip>
         <template #default="{ row }">
-          <el-link type="primary" :underline="false" :class="{ 'read-title': row.isRead == 1 }" @click="handleView(row)">{{ plainSummary(row.content) }}</el-link>
+          <el-link type="primary" underline="never" :class="{ 'read-title': row.isRead == 1 }" @click="handleView(row)">{{
+            plainSummary(row.content)
+          }}</el-link>
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center" width="90">
@@ -96,8 +98,6 @@ import { listMySysUserMsg, unreadCount, readSysUserMsg, readAllSysUserMsg, delSy
 import { showTime } from '@/utils'
 import { getCurrentInstance } from 'vue'
 import useSocketStore from '@/store/modules/socket'
-
-
 
 const { proxy } = getCurrentInstance()
 

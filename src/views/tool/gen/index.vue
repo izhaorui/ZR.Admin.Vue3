@@ -95,7 +95,7 @@
       <el-tabs v-model="preview.activeName">
         <el-tab-pane v-for="(item, key) in preview.data" :label="item.title" :id="key" :name="key.toString()" :key="key">
           {{ item.path }}
-          <el-link :underline="false" icon="DocumentCopy" @click="onCopy(item.content)" class="btn-copy">复制 </el-link>
+          <el-link underline="never" icon="DocumentCopy" @click="onCopy(item.content)" class="btn-copy">复制 </el-link>
           <el-scrollbar>
             <div style="height: 500px">
               <pre><code class="hljs" v-html="highlightedCode(item.content)"></code></pre>
