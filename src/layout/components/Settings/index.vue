@@ -6,20 +6,20 @@
     <el-divider>{{ $t('layout.navMode') }}</el-divider>
     <div class="nav-wrap">
       <el-tooltip content="左侧菜单" placement="bottom">
-        <div class="item left" @click="handleNavType(1)" :class="{ activeItem: navType == 1 }">
+        <div class="item left" @click="handleNavType(NAV_TYPES.SIDEBAR)" :class="{ activeItem: navType == NAV_TYPES.SIDEBAR }">
           <b></b>
           <b></b>
         </div>
       </el-tooltip>
 
       <el-tooltip content="混合菜单" placement="bottom">
-        <div class="item mix" @click="handleNavType(2)" :class="{ activeItem: navType == 2 }">
+        <div class="item mix" @click="handleNavType(NAV_TYPES.MIX)" :class="{ activeItem: navType == NAV_TYPES.MIX }">
           <b></b>
           <b></b>
         </div>
       </el-tooltip>
       <el-tooltip content="顶部菜单" placement="bottom">
-        <div class="item top" @click="handleNavType(3)" :class="{ activeItem: navType == 3 }">
+        <div class="item top" @click="handleNavType(NAV_TYPES.TOP)" :class="{ activeItem: navType == NAV_TYPES.TOP }">
           <b></b>
           <b></b>
         </div>
@@ -142,6 +142,7 @@ import useAppStore from '@/store/modules/app'
 import useSettingsStore from '@/store/modules/settings'
 import usePermissionStore from '@/store/modules/permission'
 import useUserStore from '@/store/modules/user'
+import { NAV_TYPES } from '@/constants/navigation'
 const { proxy } = getCurrentInstance()
 const appStore = useAppStore()
 const settingsStore = useSettingsStore()
@@ -300,14 +301,8 @@ watch(
 watch(
   () => navType,
   (val) => {
-    //侧边栏
-    if (val.value == 1) {
-      appStore.toggleSideBarHide(false)
-      permissionStore.setSidebarRouters(permissionStore.defaultRoutes)
-    }
-    //top
-    if (val.value == 3) {
-      appStore.toggleSideBarHide(true)
+    appStore.applyNavMode(val.value)
+    if ([NAV_TYPES.SIDEBAR, NAV_TYPES.TOP].includes(Number(val.value))) {
       permissionStore.setSidebarRouters(permissionStore.defaultRoutes)
     }
   },

@@ -1,8 +1,8 @@
 <template>
   <el-container :class="classObj" class="app-layout" :style="{ '--current-color': theme }">
-    <div v-if="classObj.mobile && classObj.openSidebar" class="drawer__background" @click="handleOutsideClick"></div>
+    <div v-if="classObj.mobile && classObj.openSidebar && !sidebar.hide" class="drawer__background" @click="handleOutsideClick"></div>
     <sidebar v-else-if="!sidebar.hide && !classObj.mobile" />
-    <sidebar v-if="classObj.mobile" />
+    <sidebar v-if="classObj.mobile && !sidebar.hide" />
     <el-container class="main-container flex-center" :class="{ hasTagsView: needTagsView, sidebarHide: sidebar.hide }">
       <el-header :class="{ 'fixed-header': fixedHeader }">
         <navbar @setLayout="setLayout" />
@@ -36,6 +36,7 @@ import useAppStore from '@/store/modules/app'
 import useSettingsStore from '@/store/modules/settings'
 import useTagsViewStore from '@/store/modules/tagsView'
 import useUserStore from '@/store/modules/user'
+import { NAV_TYPES } from '@/constants/navigation'
 const appStore = useAppStore()
 const { proxy } = getCurrentInstance()
 const settingsStore = useSettingsStore()
@@ -90,16 +91,11 @@ const WIDTH = 792 // refer to Bootstrap's responsive design
 watchEffect(() => {
   if (width.value - 1 < WIDTH) {
     appStore.toggleDevice('mobile')
-    // useAppStore().closeSideBar()
+    appStore.applyNavMode(settingsStore.navType, 'mobile')
   } else {
-    useAppStore().toggleDevice('desktop')
-
-    if (width.value >= 1200) {
-      //大屏
-      appStore.sidebar.opened = true
-    } else {
-      appStore.closeSideBar()
-    }
+    appStore.toggleDevice('desktop')
+    appStore.sidebar.hide = Number(settingsStore.navType) === NAV_TYPES.TOP
+    appStore.sidebar.opened = appStore.sidebar.hide ? false : width.value >= 1200
   }
 })
 const token = computed(() => {

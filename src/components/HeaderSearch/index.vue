@@ -40,6 +40,7 @@ import { getNormalPath } from '@/utils/ruoyi'
 import { isHttp } from '@/utils/validate'
 import usePermissionStore from '@/store/modules/permission'
 import { findItem, color16 } from '@/utils/ruoyi'
+import { parseRouteQuery } from '@/utils/navigation'
 const { proxy } = getCurrentInstance()
 const search = ref('')
 const options = ref([])
@@ -80,7 +81,8 @@ function change(val) {
     window.open(path.substr(pindex, path.length), '_blank')
   } else {
     if (query) {
-      router.push({ path: path, query: JSON.parse(query) })
+      const routeQuery = parseRouteQuery(query)
+      router.push(routeQuery ? { path, query: routeQuery } : { path })
     } else {
       router.push(path)
     }

@@ -5,35 +5,16 @@
     mode="horizontal"
     background-color="transparent"
     @select="handleSelect"
-    :ellipsis="false">
-    <template v-for="(item, index) in topMenus">
-      <el-menu-item :style="{ '--theme': theme }" :index="item.path" :key="index" v-if="index < visibleNumber">
-        <svg-icon class="menu-icon" :name="item.meta.icon" />
-        <!-- {{ item.meta.title }} -->
-        <template v-if="item.meta.titleKey" #title>
-          {{ $t(item.meta.titleKey) }}
-        </template>
-        <template v-else-if="item.meta.title" #title>
-          {{ item.meta.title }}
-        </template>
-      </el-menu-item>
-    </template>
-
-    <!-- 顶部菜单超出数量折叠 -->
-    <el-sub-menu :style="{ '--theme': theme }" index="more" v-if="topMenus.length > visibleNumber">
-      <template #title>{{ $t('btn.more') }}</template>
-      <template v-for="(item, index) in topMenus">
-        <el-menu-item :index="item.path" :key="index" v-if="index >= visibleNumber">
-          <svg-icon class="menu-icon" :name="item.meta.icon" />
-          <template v-if="item.meta.titleKey" #title>
-            {{ $t(item.meta.titleKey) }}
-          </template>
-          <template v-else-if="item.meta.title" #title>
-            {{ item.meta.title }}
-          </template>
-        </el-menu-item>
+    :ellipsis="true">
+    <el-menu-item v-for="(item, index) in topMenus" :key="item.path || index" :style="{ '--theme': theme }" :index="item.path">
+      <svg-icon class="menu-icon" :name="item.meta.icon" />
+      <template v-if="item.meta.titleKey" #title>
+        {{ $t(item.meta.titleKey) }}
       </template>
-    </el-sub-menu>
+      <template v-else-if="item.meta.title" #title>
+        {{ item.meta.title }}
+      </template>
+    </el-menu-item>
   </el-menu>
 </template>
 
@@ -41,17 +22,11 @@
 import { constantRoutes } from '@/router'
 import { isHttp } from '@/utils/validate'
 import { useRouter } from 'vue-router'
-import { getNormalPath } from '@/utils/ruoyi'
 import useAppStore from '@/store/modules/app'
 import useSettingsStore from '@/store/modules/settings'
 import usePermissionStore from '@/store/modules/permission'
-
-// 顶部栏初始数
-const visibleNumber = ref(5)
-// 当前激活菜单的 index
-const currentIndex = ref(undefined)
-// 隐藏侧边栏路由
-const hideList = ['/index', '/user/profile']
+import { parseRouteQuery } from '@/utils/navigation'
+import { getTopMenuActivePath } from '@/utils/navigation'
 
 const appStore = useAppStore()
 const settingsStore = useSettingsStore()
@@ -79,62 +54,29 @@ const topMenus = computed(() => {
   })
   return topMenus
 })
-
 // 设置子路由
 const childrenMenus = computed(() => {
-  let childrenMenus = []
-  routers.value.map((router) => {
-    for (let item in router.children) {
-      if (router.children[item].parentPath === undefined) {
-        if (router.path === '/') {
-          router.children[item].path = '/' + router.children[item].path
-        } else {
-          if (!isHttp(router.children[item].path)) {
-            router.children[item].path = router.path + '/' + router.children[item].path
-          }
-        }
-        router.children[item].parentPath = router.path
-      }
-      childrenMenus.push(router.children[item])
-    }
+  const childrenMenus = routers.value.flatMap((menu) => {
+    return (menu.children || []).map((child) => {
+      const childPath = child.path || ''
+      const path = child.parentPath ? childPath : menu.path === '/' ? '/' + childPath : isHttp(childPath) ? childPath : `${menu.path}/${childPath}`
+      return { ...child, path, parentPath: menu.path }
+    })
   })
   return childrenMenus.concat(constantRoutes)
 })
 
 // 默认激活的菜单
-const activeMenu = computed(() => {
-  const path = route.path
-  let activePath = path
+const activeMenu = computed(() => getTopMenuActivePath(route))
 
-  if (path !== undefined && path.lastIndexOf('/') > 0 && hideList.indexOf(path) === -1) {
-    const tmpPath = path.substring(1, path.length)
-
-    // if (!route.meta.link) {
-    activePath = '/' + tmpPath.substring(0, tmpPath.indexOf('/'))
-    appStore.toggleSideBarHide(false)
-    // }
-  } else if (!route.children) {
-    activePath = path
-  }
-  activeRoutes(activePath)
-  return activePath
-})
-
-function setVisibleNumber() {
-  const width = document.body.getBoundingClientRect().width / 3
-  visibleNumber.value = parseInt(width / 85)
-}
 /**
  * 选中菜单
  * @param key
  * @param keyPath
  */
-function handleSelect(key, keyPath) {
-  currentIndex.value = key
+function handleSelect(key) {
   const route = routers.value.find((item) => item.path === key)
   if (key.startsWith('/link')) {
-    var path = import.meta.env.VITE_APP_ROUTER_PREFIX + key
-    path = path.replace('//', '/')
     window.open(key, '_blank')
   } else if (isHttp(key)) {
     // http(s):// 路径新窗口打开
@@ -143,8 +85,8 @@ function handleSelect(key, keyPath) {
     // 没有子路由路径内部打开
     const routeMenu = childrenMenus.value.find((item) => item.path === key)
     if (routeMenu && routeMenu.query) {
-      let query = JSON.parse(routeMenu.query)
-      router.push({ path: key, query: query })
+      const query = parseRouteQuery(routeMenu.query)
+      router.push(query ? { path: key, query } : { path: key })
     } else {
       router.push({ path: key })
     }
@@ -170,16 +112,11 @@ function activeRoutes(key) {
   return routes
 }
 
-onMounted(() => {
-  window.addEventListener('resize', setVisibleNumber)
-})
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', setVisibleNumber)
-})
-
-onMounted(() => {
-  setVisibleNumber()
-})
+watch(
+  () => activeMenu.value,
+  (key) => activeRoutes(key),
+  { immediate: true }
+)
 </script>
 
 <style lang="scss" scoped>

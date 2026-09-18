@@ -1,6 +1,7 @@
 // import Cookies from 'js-cookie'
 import cache from '@/plugins/cache'
 import defaultSettings from '@/settings'
+import { NAV_TYPES } from '@/constants/navigation'
 const useAppStore = defineStore('app', {
   state: () => ({
     sidebar: {
@@ -13,6 +14,11 @@ const useAppStore = defineStore('app', {
     lang: cache.local.get('lang') || defaultSettings.defaultLang
   }),
   actions: {
+    applyNavMode(navType, device = this.device) {
+      const isTopNav = Number(navType) === NAV_TYPES.TOP
+      this.sidebar.hide = isTopNav
+      this.sidebar.opened = device === 'mobile' ? false : !isTopNav
+    },
     toggleSideBar() {
       this.sidebar.opened = !this.sidebar.opened
     },

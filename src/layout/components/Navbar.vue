@@ -2,9 +2,9 @@
   <div class="navbar" :data-theme="sideTheme" :class="appStore.device + ' nav' + settingsStore.navType">
     <hamburger :is-active="appStore.sidebar.opened" :class="appStore.device" class="hamburger-container" @toggleClick="toggleSideBar" />
     <template v-if="appStore.device == 'desktop'">
-      <breadcrumb class="breadcrumb-container" v-if="settingsStore.navType == 1" />
-      <top-nav class="topmenu-container" v-if="settingsStore.navType == 2" />
-      <TopBar v-if="settingsStore.navType == 3"></TopBar>
+      <breadcrumb class="breadcrumb-container" v-if="settingsStore.navType == NAV_TYPES.SIDEBAR" />
+      <top-nav class="topmenu-container" v-if="settingsStore.navType == NAV_TYPES.MIX" />
+      <TopBar v-if="settingsStore.navType == NAV_TYPES.TOP"></TopBar>
     </template>
 
     <div class="right-menu">
@@ -88,6 +88,7 @@ import useUserStore from '@/store/modules/user'
 import useSettingsStore from '@/store/modules/settings'
 import useSocketStore from '@/store/modules/socket'
 import useLockStore from '@/store/modules/lock'
+import { NAV_TYPES } from '@/constants/navigation'
 import TopBar from './TopBar'
 // import { useClipboard } from '@vueuse/core'
 import useClipboard from 'vue-clipboard3'
@@ -198,13 +199,18 @@ function lockScreen() {
     flex: 1;
   }
   .topmenu-container {
+    box-sizing: border-box;
     flex: 1;
+    min-width: 0;
+    padding-right: 16px;
+    overflow: hidden;
   }
 
   .right-menu {
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    flex: 0 0 auto;
 
     .right-menu-item {
       padding: 0 8px;

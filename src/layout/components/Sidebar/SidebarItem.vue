@@ -57,6 +57,7 @@ import { isExternal } from '@/utils/validate'
 import { getNormalPath } from '@/utils/ruoyi'
 import defaultSettings from '@/settings'
 import AppLink from './Link.vue'
+import { parseRouteQuery } from '@/utils/navigation'
 
 const props = defineProps({
   item: { type: Object, required: true },
@@ -111,14 +112,15 @@ function resolvePath(routePath, routeQuery) {
   if (isExternal(routePath)) return routePath
   if (isExternal(props.basePath)) return props.basePath
 
+  const targetPath = routePath ? getNormalPath(props.basePath + '/' + routePath) : getNormalPath(props.basePath)
   if (routeQuery) {
     return {
-      path: getNormalPath(props.basePath + '/' + routePath),
-      query: JSON.parse(routeQuery)
+      path: targetPath,
+      query: parseRouteQuery(routeQuery) || undefined
     }
   }
 
-  return getNormalPath(props.basePath + '/' + routePath)
+  return targetPath
 }
 
 /**
