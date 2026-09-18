@@ -203,23 +203,14 @@ const loading = ref(false)
 watch(
   () => props.modelValue,
   (val) => {
-    if (val) {
-      // 首先将值转为数组
-      const list = Array.isArray(val) ? val : props.modelValue.split(',')
-      // 然后将数组转为对象数组
-      fileList.value = list.map((item) => {
-        if (typeof item === 'string') {
-          item = { name: item, url: item }
-        }
-        if (item && item.url && !item.name) {
-          item.name = item.url
-        }
-        return item
-      })
-    } else {
-      fileList.value = []
-      return []
-    }
+    const list = Array.isArray(val) ? val : typeof val === 'string' ? val.split(',') : val ? [val] : []
+    fileList.value = list.filter(Boolean).map((item, index) => {
+      const file = typeof item === 'string' ? { name: item, url: item } : { ...item }
+      file.name = file.name || file.url || '未命名图片'
+      file.uid = file.uid || `${Date.now()}-${index}`
+      file.status = file.status || 'success'
+      return file
+    })
   },
   { deep: true, immediate: true }
 )
@@ -232,23 +223,28 @@ function handleRemove(file) {
 
 // 上传成功回调
 function handleUploadSuccess(res) {
-  loading.value = false
-  if (res.code != 200) {
+  if (res.code !== 200 || !res.data?.url) {
     proxy.$modal.msgError(`上传失败，原因:${res.msg}!`)
-    // proxy.$modal.closeLoading()
-    fileList.value = fileList.value.slice(0, fileList.value.length - 1)
+    number.value = Math.max(0, number.value - 1)
+    completeUploadBatch()
     return
   }
-  uploadList.value.push({ name: res.data.fileName, url: res.data.url })
-  if (uploadList.value.length === number.value) {
+  uploadList.value.push({ name: res.data.fileName || res.data.url, url: res.data.url, status: 'success' })
+  number.value = Math.max(0, number.value - 1)
+  completeUploadBatch()
+}
+
+function completeUploadBatch() {
+  if (number.value === 0) {
     fileList.value = fileList.value.filter((f) => f.url !== undefined).concat(uploadList.value)
     pushRecentHistory(uploadList.value.map((item) => item.url))
     uploadList.value = []
-    number.value = 0
-    emit('success', fileList.value)
-    updateModelValue()
+    loading.value = false
+    if (fileList.value.length) {
+      emit('success', fileList.value)
+      updateModelValue()
+    }
   }
-  //proxy.$modal.closeLoading()
 }
 
 // 上传前loading加载
@@ -260,9 +256,13 @@ function handleBeforeUpload(file) {
       fileExtension = file.name.slice(file.name.lastIndexOf('.') + 1)
     }
     isImg = props.fileType.some((type) => {
-      if (file.type.indexOf(type) > -1) return true
-      if (fileExtension && fileExtension.indexOf(type) > -1) return true
-      return false
+      const normalizedType = String(type).toLowerCase().replace(/^\./, '')
+      return (
+        fileExtension.toLowerCase() === normalizedType ||
+        String(file.type || '')
+          .toLowerCase()
+          .includes(normalizedType)
+      )
     })
   } else {
     isImg = file.type.indexOf('image') > -1
@@ -290,9 +290,9 @@ function handleExceed() {
 
 // 上传失败
 function handleUploadError() {
-  loading.value = false
   proxy.$modal.msgError('上传图片失败')
-  // proxy.$modal.closeLoading()
+  number.value = Math.max(0, number.value - 1)
+  completeUploadBatch()
 }
 
 // 预览
@@ -317,8 +317,9 @@ function handleReplace() {
     proxy.$modal.msgError('请输入有效地址')
     return
   }
+  fileList.value = [{ name: nextUrl, url: nextUrl, uid: dayjs().valueOf(), status: 'success' }]
   dialogImageUrl.value = nextUrl
-  emit('update:modelValue', nextUrl)
+  updateModelValue()
 
   dialogVisible.value = false
 }

@@ -41,17 +41,21 @@
       </template>
     </el-upload>
     <!-- 文件列表 -->
-    <transition-group class="upload-file-list el-upload-list el-upload-list--text" name="el-fade-in-linear" tag="ul">
+    <transition-group ref="fileListRef" class="upload-file-list el-upload-list el-upload-list--text" name="el-fade-in-linear" tag="ul">
       <li :key="file.uid" class="el-upload-list__item ele-upload-list__item-content" v-for="(file, index) in fileList">
-        <el-link :href="`${file.url}`" :underline="false" target="_blank">
-          <svg-icon class-name="doc-icon" name="documentation" />
-
-          <el-text class="file-name" truncated>
-            {{ file.name }}
-          </el-text>
+        <el-link class="file-link" :href="file.url" underline="never" target="_blank">
+          <span class="file-type-icon">{{ getFileExtension(file.name) }}</span>
+          <span class="file-info">
+            <el-text class="file-name" truncated>{{ file.name }}</el-text>
+            <!-- <span class="file-url" v-if="file.url">{{ file.url }}</span> -->
+          </span>
         </el-link>
         <div class="ele-upload-list__item-content-action" v-if="!disabled">
-          <el-link :underline="false" @click="handleDelete(index)" type="danger">删除</el-link>
+          <el-tooltip content="删除文件" placement="top">
+            <el-button text type="danger" @click="handleDelete(index)">
+              <el-icon><delete /></el-icon>
+            </el-button>
+          </el-tooltip>
         </div>
       </li>
     </transition-group>
@@ -108,6 +112,8 @@ const { proxy } = getCurrentInstance()
 const emit = defineEmits()
 const number = ref(0)
 const uploadList = ref([])
+const fileListRef = ref()
+const sortable = ref()
 const baseUrl = import.meta.env.VITE_APP_BASE_API
 const uploadFileUrl = ref(baseUrl + import.meta.env.VITE_APP_UPLOAD_URL) // 上传的图片服务器地址
 const headers = ref({ Authorization: 'Bearer ' + getToken() })
@@ -118,26 +124,21 @@ const uploadData = computed(() => props.data)
 watch(
   () => props.modelValue,
   (val) => {
-    if (val) {
-      let temp = 1
-      // 首先将值转为数组
-      const list = Array.isArray(val) ? val : props.modelValue.split(',')
-      // 然后将数组转为对象数组
-      fileList.value = list.map((item) => {
-        var fileName = item.slice(item.lastIndexOf('/') + 1)
-        if (typeof item === 'string') {
-          item = { name: fileName, url: item }
-        }
-        item.uid = item.uid || new Date().getTime() + temp++
-        return item
-      })
-    } else {
-      fileList.value = []
-      return []
-    }
+    const list = Array.isArray(val) ? val : typeof val === 'string' ? val.split(',') : val ? [val] : []
+    fileList.value = list.filter(Boolean).map(normalizeFile)
   },
   { deep: true, immediate: true }
 )
+
+function normalizeFile(item) {
+  if (typeof item === 'string') {
+    return { name: getFileName(item), url: item, uid: `${Date.now()}-${Math.random()}` }
+  }
+  const file = { ...item }
+  file.name = file.name || getFileName(file.url || '')
+  file.uid = file.uid || `${Date.now()}-${Math.random()}`
+  return file
+}
 
 // 上传前校检格式和大小
 function handleBeforeUpload(file) {
@@ -148,9 +149,8 @@ function handleBeforeUpload(file) {
       fileExtension = file.name.slice(file.name.lastIndexOf('.') + 1)
     }
     const isTypeOk = props.fileType.some((type) => {
-      if (file.type.indexOf(type) > -1) return true
-      if (fileExtension && fileExtension.indexOf(type) > -1) return true
-      return false
+      const normalizedType = String(type).toLowerCase().replace(/^\./, '')
+      return fileExtension.toLowerCase() === normalizedType || file.type.toLowerCase().includes(normalizedType)
     })
     if (!isTypeOk) {
       proxy.$modal.msgError(`文件格式不正确, 请上传${props.fileType.join('/')}格式文件!`)
@@ -178,26 +178,33 @@ function handleExceed() {
 // 上传失败
 function handleUploadError(err) {
   proxy.$modal.msgError('上传失败')
-  proxy.$modal.closeLoading()
+  number.value = Math.max(0, number.value - 1)
+  completeUploadBatch()
 }
 
 // 上传成功回调
 function handleUploadSuccess(response, uploadFile) {
-  if (response.code != 200) {
-    fileList.value = []
-    proxy.$modal.msgError(`上传失败，原因:${response.msg}!`)
-    proxy.$modal.closeLoading()
+  if (response.code !== 200 || !response.data?.url) {
+    number.value = Math.max(0, number.value - 1)
+    proxy.$modal.msgError(`上传失败，原因:${response.msg || '服务器未返回文件地址'}!`)
+    completeUploadBatch()
     return
   }
   const { fileName, url, fileId } = response.data
-  const tempFile = { name: fileName, url: url }
+  const tempFile = { name: fileName || getFileName(url), url, fileId, uid: `${Date.now()}-${Math.random()}` }
   uploadList.value.push(tempFile)
+  completeUploadBatch()
+}
+
+function completeUploadBatch() {
   if (number.value > 0 && uploadList.value.length === number.value) {
-    fileList.value = fileList.value.filter((f) => f.url !== undefined).concat(uploadList.value)
+    fileList.value = fileList.value.filter((file) => file.url !== undefined).concat(uploadList.value)
     uploadList.value = []
     number.value = 0
-    emit('update:modelValue', listToString(fileList.value))
-    emit('success', listToString(fileList.value))
+    updateModelValue()
+    proxy.$modal.closeLoading()
+  } else if (number.value === 0) {
+    uploadList.value = []
     proxy.$modal.closeLoading()
   }
 }
@@ -205,16 +212,25 @@ function handleUploadSuccess(response, uploadFile) {
 // 删除文件
 function handleDelete(index) {
   fileList.value.splice(index, 1)
-  // emit('update:modelValue', listToString(fileList.value))
+  updateModelValue()
 }
 
 // 获取文件名称
 function getFileName(name) {
-  if (name.lastIndexOf('/') > -1) {
-    return name.slice(name.lastIndexOf('/') + 1).toLowerCase()
-  } else {
-    return ''
-  }
+  const cleanName = String(name || '').split('?')[0]
+  return decodeURIComponent(cleanName.slice(cleanName.lastIndexOf('/') + 1)) || '未命名文件'
+}
+
+function getFileExtension(name) {
+  const fileName = getFileName(name)
+  const extension = fileName.includes('.') ? fileName.split('.').pop() : 'FILE'
+  return extension.toUpperCase().slice(0, 5)
+}
+
+function updateModelValue() {
+  const value = listToString(fileList.value)
+  emit('update:modelValue', value)
+  emit('success', value)
 }
 
 // 对象转成指定字符串分隔
@@ -229,6 +245,7 @@ function listToString(list, separator) {
   })
   return strs != '' ? strs.substr(0, strs.length - 1) : ''
 }
+
 // 手动提交上传
 function submitUpload() {
   proxy.$refs.fileUpload.submit()
@@ -244,8 +261,10 @@ defineExpose({
 }
 .upload-file-list .el-upload-list__item {
   border: 1px solid #e4e7ed;
-  line-height: 2;
-  margin-bottom: 10px;
+  border-radius: 4px;
+  line-height: 1.4;
+  margin-bottom: 5px;
+  padding: 4px 2px;
   position: relative;
 }
 .upload-file-list .ele-upload-list__item-content {
@@ -254,13 +273,50 @@ defineExpose({
   align-items: center;
   color: inherit;
 }
+.file-link {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+}
+.file-type-icon {
+  align-items: center;
+  background: #ecf5ff;
+  border-radius: 3px;
+  color: #409eff;
+  display: inline-flex;
+  flex: 0 0 28px;
+  font-size: 10px;
+  font-weight: 600;
+  height: 28px;
+  justify-content: center;
+  margin-right: 8px;
+  overflow: hidden;
+  padding: 0 3px;
+}
+.file-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+.file-url {
+  color: #909399;
+  font-size: 12px;
+  margin-top: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .ele-upload-list__item-content-action .el-link {
   margin-right: 10px;
 }
-.doc-icon {
-  margin: 0 10px;
+.ele-upload-list__item-content-action .el-button {
+  margin-left: 6px;
+  padding: 4px;
 }
 .file-name {
-  width: 260px;
+  display: block;
+  max-width: 100%;
 }
 </style>
