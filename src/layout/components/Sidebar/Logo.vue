@@ -2,8 +2,7 @@
   <div class="logo-container" :class="{ collapse: collapse }">
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo" />
-        <h1 v-else class="sidebar-title">{{ title }}</h1>
+        <img :src="logo" class="sidebar-logo" />
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
         <img v-if="logo" :src="logo" class="sidebar-logo" />
@@ -15,7 +14,6 @@
 
 <script setup>
 import logo from '@/assets/logo/logo.png'
-import useSettingsStore from '@/store/modules/settings'
 
 defineProps({
   collapse: {
@@ -25,8 +23,6 @@ defineProps({
 })
 
 const title = ref(import.meta.env.VITE_APP_TITLE)
-const settingsStore = useSettingsStore()
-const sideTheme = computed(() => settingsStore.sideTheme)
 </script>
 
 <style lang="scss" scoped>
@@ -42,32 +38,44 @@ const sideTheme = computed(() => settingsStore.sideTheme)
 .logo-container {
   position: relative;
   min-width: var(--el-aside-width);
-  height: 50px;
-  line-height: 50px;
-  // background: var(--base-menu-background);
+  height: var(--base-header-height);
+  line-height: var(--base-header-height);
   text-align: center;
-  overflow: hidden;
 
   & .sidebar-logo-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 100%;
     width: 100%;
+    overflow: hidden;
+    padding: 0 12px;
+    box-sizing: border-box;
 
     & .sidebar-logo {
       width: 32px;
       height: 32px;
+      flex-shrink: 0;
       vertical-align: middle;
       margin-right: 12px;
     }
 
     & .sidebar-title {
-      display: inline-block;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       margin: 0;
       color: var(--base-logo-title-color);
       font-weight: 600;
-      line-height: 50px;
+      line-height: var(--base-header-height);
       font-size: 14px;
-      font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
-      vertical-align: middle;
+      font-family:
+        Avenir,
+        Helvetica Neue,
+        Arial,
+        Helvetica,
+        sans-serif;
     }
   }
 

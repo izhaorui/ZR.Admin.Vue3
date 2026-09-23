@@ -15,9 +15,8 @@
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
-    border-right: 1px solid var(--el-border-color-lighter, #ebeef5);
-    // -webkit-box-shadow: 2px 0 14px rgb(0 21 41 / 10%);
-    // box-shadow: 2px 0 14px rgb(0 21 41 / 10%);
+    // 分隔线弱化：半透明，深浅主题下均只保留极淡的分界感
+    border-right: 0.5px solid color-mix(in srgb, var(--el-border-color-lighter, #ebeef5) 50%, transparent);
 
     .el-scrollbar__bar.is-vertical {
       right: 0px;
