@@ -25,8 +25,7 @@ import { useRouter } from 'vue-router'
 import useAppStore from '@/store/modules/app'
 import useSettingsStore from '@/store/modules/settings'
 import usePermissionStore from '@/store/modules/permission'
-import { parseRouteQuery } from '@/utils/navigation'
-import { getTopMenuActivePath } from '@/utils/navigation'
+import { getTopMenuActivePath, parseRouteQuery, resolveMenuNavigatePath } from '@/utils/navigation'
 
 const appStore = useAppStore()
 const settingsStore = useSettingsStore()
@@ -83,12 +82,13 @@ function handleSelect(key) {
     window.open(key, '_blank')
   } else if (!route || !route.children) {
     // 没有子路由路径内部打开
-    const routeMenu = childrenMenus.value.find((item) => item.path === key)
+    const targetPath = resolveMenuNavigatePath(key, childrenMenus.value)
+    const routeMenu = childrenMenus.value.find((item) => item.path === key || item.path === targetPath)
     if (routeMenu && routeMenu.query) {
       const query = parseRouteQuery(routeMenu.query)
-      router.push(query ? { path: key, query } : { path: key })
+      router.push(query ? { path: targetPath, query } : { path: targetPath })
     } else {
-      router.push({ path: key })
+      router.push({ path: targetPath })
     }
     activeRoutes(key)
     // appStore.toggleSideBarHide(true)

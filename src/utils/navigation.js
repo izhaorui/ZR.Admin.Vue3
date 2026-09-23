@@ -9,6 +9,14 @@ export function getTopMenuActivePath(route) {
   return segments.length > 1 ? `/${segments[0]}` : path
 }
 
+export function resolveMenuNavigatePath(key, menus = []) {
+  if (!key || /^(https?:)?\/\//.test(key) || key.startsWith('/')) return key
+  const matched = menus.find((item) => item.path === key || item.path === `/${key}`)
+  const path = matched?.path || key
+  if (!path || /^(https?:)?\/\//.test(path) || path.startsWith('/')) return path
+  return `/${path}`
+}
+
 export function parseRouteQuery(query) {
   if (!query) return null
   if (typeof query === 'object') return query
