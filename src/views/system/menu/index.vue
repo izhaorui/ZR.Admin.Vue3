@@ -147,7 +147,11 @@
 import { delMenu, listMenu, changeMenuSort as changeSort, delAllMenu } from '@/api/system/menu'
 
 import menuForm from '@/views/components/form/menuForm.vue'
-const { proxy } = getCurrentInstance()
+import useVxeTable from '@/vxe-tb'
+
+const instance = getCurrentInstance()
+const { proxy } = instance
+useVxeTable(instance.appContext.app)
 
 var dictParams = [{ dictType: 'sys_show_hide' }, { dictType: 'sys_normal_disable' }]
 const menuList = ref([])
@@ -160,12 +164,11 @@ const menuQueryOptions = ref([])
 const isExpandAll = ref(false)
 
 const listRef = ref(null)
+const QUERY_MENU_TYPES = ['M', 'C', 'L']
 const state = reactive({
-  form: {},
   queryParams: {
     menuName: undefined,
     visible: undefined,
-    menuTypeIds: 'M,C,L',
     parentId: undefined
   },
   options: {
@@ -194,31 +197,60 @@ const columns = ref([
   { label: `排序`, visible: true, prop: 'orderNum' }
 ])
 
-const tableHeight = ref(document.documentElement.scrollHeight - 245 + 'px')
+const tableHeight = ref(calcTableHeight())
+
+function calcTableHeight() {
+  const offset = showSearch.value ? 245 : 180
+  return `${window.innerHeight - offset}px`
+}
+
+function updateTableHeight() {
+  tableHeight.value = calcTableHeight()
+}
+
+function filterMenuTree(nodes, types) {
+  if (!Array.isArray(nodes) || !nodes.length) {
+    return []
+  }
+  const list = []
+  for (const node of nodes) {
+    if (!types.includes(node.menuType)) {
+      continue
+    }
+    const nextChildren = node.children?.length ? filterMenuTree(node.children, types) : node.children
+    list.push(nextChildren === node.children ? node : { ...node, children: nextChildren })
+  }
+  return list
+}
+
+function applyFormTrees(tree) {
+  menuOptions.value = tree
+  menuQueryOptions.value = filterMenuTree(tree, QUERY_MENU_TYPES)
+}
+
+function buildListParams() {
+  const params = { ...queryParams.value }
+  const hasKeyword = params.menuName != null && String(params.menuName) !== ''
+  const hasParent = params.parentId != null && params.parentId !== ''
+  params.menuTypeIds = hasKeyword || hasParent ? '' : 'M,C,F,L'
+  return params
+}
 
 /** 查询菜单列表 */
-function getList(type) {
+async function getList() {
   loading.value = true
-  if (queryParams.value.parentId != undefined || queryParams.value.menuName != undefined) {
-    queryParams.value.menuTypeIds = ''
-  } else {
-    queryParams.value.menuTypeIds = 'M,C,F,L'
-  }
-  listMenu(queryParams.value).then((response) => {
-    menuList.value = response.data
-    if (type == 1) {
-      menuQueryOptions.value = response.data
+  try {
+    const params = buildListParams()
+    const response = await listMenu(params)
+    const tree = response.data || []
+    menuList.value = tree
+    if (params.menuTypeIds === 'M,C,F,L') {
+      applyFormTrees(tree)
     }
+  } finally {
     loading.value = false
-  })
+  }
 }
-/** 查询菜单下拉树结构 */
-function getTreeselect() {
-  listMenu({ menuTypeIds: 'M,C,F,L' }).then((response) => {
-    menuOptions.value = response.data
-  })
-}
-getTreeselect()
 /** 搜索按钮操作 */
 function handleQuery() {
   getList()
@@ -294,9 +326,9 @@ const editIndex = ref(-1)
 function editCurrRow(rowId, orderNum) {
   editIndex.value = rowId
   inputOrderNum.value = orderNum
-  setTimeout(() => {
+  nextTick(() => {
     columnRefs.value[rowId] && columnRefs.value[rowId].focus()
-  }, 100)
+  })
 }
 // 保存排序
 function handleChangeSort(info) {
@@ -310,29 +342,36 @@ function handleChangeSort(info) {
       return changeSort({ value: inputOrderNum.value, id: info.menuId })
     })
     .then(() => {
-      handleQuery()
-      refreshMenu(info.parentId)
+      refreshMenu()
       proxy.$modal.msgSuccess('修改成功')
     })
     .catch(() => {
-      handleQuery()
+      getList()
     })
 }
 // ******************自定义编辑 end **********************
-// 刷新懒加载后的数据
-function refreshMenu(pid) {
+function refreshMenu() {
+  const params = buildListParams()
+  if (params.menuTypeIds === 'M,C,F,L') {
+    return getList()
+  }
   loading.value = true
-
-  getList()
-
-  getTreeselect()
+  return Promise.all([listMenu(params), listMenu({ menuTypeIds: 'M,C,F,L' })])
+    .then(([listRes, treeRes]) => {
+      menuList.value = listRes.data || []
+      applyFormTrees(treeRes.data)
+    })
+    .finally(() => {
+      loading.value = false
+    })
 }
 
-listMenu({ menuTypeIds: 'M,C,L' }).then((response) => {
-  menuQueryOptions.value = response.data
+watch(showSearch, updateTableHeight)
+onMounted(() => {
+  window.addEventListener('resize', updateTableHeight)
+  handleQuery()
 })
-
-// 首次列表加载（只加载一层）
-// getList(1)
-handleQuery()
+onUnmounted(() => {
+  window.removeEventListener('resize', updateTableHeight)
+})
 </script>
