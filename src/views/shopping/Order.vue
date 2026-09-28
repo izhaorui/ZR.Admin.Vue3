@@ -14,6 +14,9 @@
           <el-option v-for="(label, val) in orderStatusMap" :key="val" :label="label" :value="Number(val)" />
         </el-select>
       </el-form-item>
+      <el-form-item label="会员ID" prop="memberId">
+        <el-input v-model="queryParams.memberId" placeholder="按会员ID查询" clearable style="width: 160px" />
+      </el-form-item>
       <el-form-item label="下单时间" prop="dateRange">
         <el-date-picker
           v-model="dateRange"
@@ -48,7 +51,17 @@
       highlight-current-row
       @sort-change="sortChange">
       <el-table-column prop="orderNo" label="订单号" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('orderNo')" />
-      <el-table-column prop="user" label="收货人" align="center" v-if="columns.showColumn('user')" />
+      <el-table-column prop="user" label="收货人" align="center" v-if="columns.showColumn('user')">
+        <template #default="scope">
+          {{ (scope.row.addressSnapshot && scope.row.addressSnapshot.userName) || '-' }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="memberId" label="下单身份" align="center" v-if="columns.showColumn('memberId')">
+        <template #default="scope">
+          <el-tag v-if="scope.row.memberId" type="success" effect="plain">会员 {{ scope.row.memberId }}</el-tag>
+          <el-tag v-else type="info" effect="plain">游客</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="totalAmount" label="总金额" align="center" v-if="columns.showColumn('totalAmount')" />
       <el-table-column prop="payAmount" label="实付金额" align="center" v-if="columns.showColumn('payAmount')" />
       <el-table-column prop="orderStatusLabel" label="状态" align="center" v-if="columns.showColumn('orderStatusLabel')">
@@ -85,8 +98,16 @@
         <el-descriptions-item label="实付金额">{{ detail.payAmount }}</el-descriptions-item>
         <el-descriptions-item label="支付方式">{{ payTypeMap[detail.payType] || '未知' }}</el-descriptions-item>
         <el-descriptions-item label="支付流水号">{{ detail.transactionId || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="收货人">{{ detail.user }}</el-descriptions-item>
+        <el-descriptions-item label="收货人">
+          {{ (detail.addressSnapshot && detail.addressSnapshot.userName) || '-' }}
+        </el-descriptions-item>
+        <el-descriptions-item label="收货电话">
+          {{ (detail.addressSnapshot && detail.addressSnapshot.phone) || '-' }}
+        </el-descriptions-item>
         <el-descriptions-item label="收货地址">{{ detail.addressLabel }}</el-descriptions-item>
+        <el-descriptions-item label="下单身份">
+          {{ detail.memberId ? '会员 ' + detail.memberId : '游客（未绑定会员）' }}
+        </el-descriptions-item>
         <el-descriptions-item label="物流公司">{{ detail.deliveryCompany || '-' }}</el-descriptions-item>
         <el-descriptions-item label="物流单号">{{ detail.deliveryNo || '-' }}</el-descriptions-item>
         <el-descriptions-item label="下单时间">{{ detail.createTime }}</el-descriptions-item>
@@ -99,7 +120,7 @@
         <el-table-column prop="productName" label="商品" :show-overflow-tooltip="true" />
         <el-table-column prop="skuSpec" label="规格" :show-overflow-tooltip="true" width="160" />
         <el-table-column prop="quantity" label="数量" width="70" align="center" />
-        <el-table-column prop="price" label="单价" width="90" align="center" />
+        <el-table-column prop="unitPrice" label="单价" width="90" align="center" />
         <el-table-column prop="totalPrice" label="小计" width="90" align="center" />
       </el-table>
 
@@ -151,6 +172,7 @@ const queryParams = reactive({
   sortType: 'asc',
   orderNo: undefined,
   orderStatus: undefined,
+  memberId: undefined,
   beginCreateTime: undefined,
   endCreateTime: undefined
 })
@@ -158,6 +180,7 @@ const dateRange = ref([])
 const columns = ref([
   { visible: true, align: 'center', type: '', prop: 'orderNo', label: '订单号', showOverflowTooltip: true },
   { visible: true, align: 'center', type: '', prop: 'user', label: '收货人' },
+  { visible: true, align: 'center', type: '', prop: 'memberId', label: '下单身份' },
   { visible: true, align: 'center', type: '', prop: 'totalAmount', label: '总金额' },
   { visible: true, align: 'center', type: '', prop: 'payAmount', label: '实付金额' },
   { visible: true, align: 'center', type: '', prop: 'orderStatusLabel', label: '状态' },
@@ -210,6 +233,7 @@ function resetQuery() {
   dateRange.value = []
   queryParams.orderNo = undefined
   queryParams.orderStatus = undefined
+  queryParams.memberId = undefined
   queryParams.beginCreateTime = undefined
   queryParams.endCreateTime = undefined
   handleQuery()
