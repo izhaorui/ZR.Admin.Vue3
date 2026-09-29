@@ -13,6 +13,8 @@ selenium-debug.log
 
 # Editor directories and files
 .idea
+.cursor
+/skills/
 *.suo
 *.ntvs*
 *.njsproj
