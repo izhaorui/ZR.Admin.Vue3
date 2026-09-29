@@ -78,12 +78,12 @@
       <el-col :span="1.5">
         <el-button type="primary" v-hasPermi="['shop:product:add']" plain icon="plus" @click="handleAdd"> 新增商品 </el-button>
       </el-col>
-      <el-col :span="1.5" v-if="parseInt(queryParams.saleStatus) == 0">
+      <el-col :span="1.5" v-if="String(queryParams.saleStatus) !== '1'">
         <el-button type="success" plain icon="Top" :disabled="multiple" @click="handleMulti('up')" v-hasPermi="['shop:product:edit']">
           批量上架
         </el-button>
       </el-col>
-      <el-col :span="1.5" v-if="queryParams.saleStatus == 1">
+      <el-col :span="1.5" v-if="String(queryParams.saleStatus) !== '0'">
         <el-button type="danger" plain icon="Bottom" :disabled="multiple" @click="handleMulti('down')" v-hasPermi="['shop:product:edit']">
           批量下架
         </el-button>
@@ -365,6 +365,7 @@ function handleMulti(type) {
       proxy.$modal.msgSuccess('操作成功')
     })
 }
+
 // 导出按钮操作
 function handleExport() {
   proxy
@@ -377,7 +378,6 @@ function handleExport() {
       await proxy.downFile('/shopping/product/export', { ...queryParams })
     })
 }
-
 /** 选择条数  */
 function handleSelectionChange(selection) {
   ids.value = selection.map((item) => item.productId)

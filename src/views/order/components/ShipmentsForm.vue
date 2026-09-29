@@ -70,8 +70,8 @@ function reset() {
     deliveryCompany: undefined,
     deliveryNo: undefined,
     orderNo: '',
-    id: undefined ,
-		addressSnapshot: {}
+    id: undefined,
+    addressSnapshot: {}
   }
 
   proxy.resetForm('formRef')

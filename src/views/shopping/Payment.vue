@@ -90,10 +90,10 @@
       </el-descriptions>
 
       <el-divider content-position="left">预支付凭证 (PrepayData)</el-divider>
-      <pre class="raw-box">{{ detail.prepayData || '无' }}</pre>
+      <pre class="raw-box">{{ detail?.prepayData || '无' }}</pre>
 
       <el-divider content-position="left">回调原文 (CallbackRaw)</el-divider>
-      <pre class="raw-box">{{ detail.callbackRaw || '无' }}</pre>
+      <pre class="raw-box">{{ detail?.callbackRaw || '无' }}</pre>
     </el-drawer>
   </div>
 </template>

@@ -380,7 +380,7 @@ function handleShipments(row) {
     ElMessage.error('用户还未选择收货地址不能发货')
     return
   }
-  shipmentsRef.value.handleOpen(row.orderNo)
+  shipmentsRef.value.handleOpen(row)
 }
 
 const merchantNoteFormRef = ref()
