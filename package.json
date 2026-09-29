@@ -9,7 +9,9 @@
     "dev": "vite",
     "build:prod": "vite build",
     "build:stage": "vite build --mode staging",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky",
+    "lint:commit": "commitlint --edit"
   },
   "repository": {
     "type": "git",
@@ -49,9 +51,12 @@
     "xe-utils": "^3.5.32"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.3",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/compiler-sfc": "^3.3.4",
+    "commitlint-config-gitmoji": "^2.3.1",
     "consola": "^3.2.3",
+    "husky": "^9.1.7",
     "sass": "^1.82.0",
     "unplugin-auto-import": "^0.17.2",
     "vite": "^6.0.2",
