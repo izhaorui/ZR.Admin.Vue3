@@ -191,13 +191,23 @@ function handleSubmit() {
       ElMessage.error('请在【价格库存】标签里面至少添加一个商品规格')
       return
     }
+    // 规格名不可重复：同名规格会让 SKU 的「名:值」组合、SKU 表格列显示与前台选择规格全部串数据
+    // （后端 ProductSpecValidator 同样拦截，这里提前提示，避免用户填完 SKU 才被拒绝）
+    const specNames = new Set()
     for (const [i, spec] of form.specList.entries()) {
-      if (!spec.name.trim()) {
+      const specName = (spec.name || '').trim()
+      if (!specName) {
         ElMessage.error(`第 ${i + 1} 个规格名称不能为空`)
         return
       }
+      if (specNames.has(specName)) {
+        activeName.value = 'sku'
+        ElMessage.error(`规格名 "${specName}" 重复，请修改后再提交`)
+        return
+      }
+      specNames.add(specName)
       if (spec.values.length === 0) {
-        ElMessage.error(`规格 "${spec.name}" 必须包含至少一个值`)
+        ElMessage.error(`规格 "${specName}" 必须包含至少一个值`)
         return
       }
     }
