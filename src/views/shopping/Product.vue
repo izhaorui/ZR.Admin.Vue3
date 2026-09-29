@@ -162,7 +162,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="addTime" label="添加时间" :show-overflow-tooltip="true" v-if="columns.showColumn('addTime')" />
-      <el-table-column label="操作" width="100">
+      <el-table-column label="操作" width="110">
         <template #default="scope">
           <el-button
             type="success"
@@ -228,7 +228,6 @@ const columns = ref([
 ])
 const total = ref(0)
 const dataList = ref([])
-const queryRef = ref()
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 // 添加时间时间范围

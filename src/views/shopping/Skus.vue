@@ -18,6 +18,7 @@
           remote
           :remote-method="searchProducts"
           :loading="productLoading"
+          @change="handleQuery()"
           style="width: 200px">
           <el-option
             v-for="item in productOptions"
@@ -34,9 +35,8 @@
     <!-- 工具区域 -->
     <el-row :gutter="15" class="mb10">
       <el-col :span="1.5">
-        <el-button type="primary" v-hasPermi="['shop:skus:add']" plain icon="plus" @click="handleAdd">
-          {{ $t('btn.add') }}
-        </el-button>
+        <!-- SKU 由商品编辑页的规格定义全量生成，这里只做"定义与 SKU 不一致"时的补齐 -->
+        <el-button type="primary" v-hasPermi="['shop:skus:add']" plain icon="plus" @click="handleFillMissing"> 补齐缺失规格 </el-button>
       </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
@@ -111,15 +111,11 @@
           </el-col>
           <el-col :lg="24">
             <el-form-item label="规格组合" prop="specCombination">
-              <div class="spec-editor">
-                <div class="spec-row" v-for="(it, idx) in specItems" :key="idx">
-                  <el-input v-model="it.name" placeholder="规格名，如 颜色" clearable style="width: 150px" />
-                  <span class="spec-sep">:</span>
-                  <el-input v-model="it.value" placeholder="规格值，如 红" clearable style="width: 170px" />
-                  <el-button v-if="specItems.length > 1" text type="danger" icon="delete" @click="removeSpec(idx)"></el-button>
-                </div>
-                <el-button text type="primary" icon="plus" @click="addSpec" class="spec-add">添加规格</el-button>
-              </div>
+              <!-- 规格组合是 SKU 的身份标识：库存、销量、订单项快照都挂在这个 SkuId 上，
+                   改组合会让历史数据错位，还可能撞上已是别的 SKU 的组合，因此这里只读。
+                   需要变更请先删除该 SKU，再用「补齐缺失规格」重建；规格值本身在商品编辑页维护。 -->
+              <el-text v-if="form.specCombination">{{ form.specCombination }}</el-text>
+              <el-text v-else type="info" size="small">该商品未定义规格</el-text>
             </el-form-item>
           </el-col>
           <el-col :lg="12">
@@ -149,15 +145,38 @@
         <el-button type="primary" :loading="state.submitLoading" @click="submitForm">{{ $t('btn.submit') }}</el-button>
       </template>
     </el-dialog>
+
+    <!-- 补齐缺失规格组合：规格定义里有、但还没有 SKU 的组合 -->
+    <el-dialog title="补齐缺失规格组合" draggable v-model="missingOpen" width="720px">
+      <el-alert type="info" :closable="false" class="mb10">
+        商品「{{ missingProductName }}」有 {{ missingCombinations.length }} 个规格组合还没有 SKU，填写价格后一次创建。
+      </el-alert>
+      <el-table :data="missingCombinations" max-height="360" border>
+        <el-table-column prop="combination" label="规格组合" show-overflow-tooltip />
+        <el-table-column label="价格" width="170">
+          <template #default="{ row }">
+            <el-input-number v-model="row.price" :min="0.01" :precision="2" :step="1" style="width: 100%" />
+          </template>
+        </el-table-column>
+        <el-table-column label="可售库存" width="170">
+          <template #default="{ row }">
+            <el-input-number v-model="row.stock" :min="0" :step="1" style="width: 100%" />
+          </template>
+        </el-table-column>
+      </el-table>
+      <template #footer>
+        <el-button text @click="missingOpen = false">取消</el-button>
+        <el-button type="primary" :loading="missingSubmitting" @click="submitMissing">创建全部</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup name="skus">
 import { listSkus, getSkus, addSkus, updateSkus, delSkus } from '@/api/shopping/skus.js'
-import { listShoppingProduct } from '@/api/shopping/product.js'
+import { listShoppingProduct, getShoppingProduct } from '@/api/shopping/product.js'
 import { ElMessage } from 'element-plus'
 const { proxy } = getCurrentInstance()
-const ids = ref([])
 const loading = ref(false)
 const showSearch = ref(true)
 const queryParams = reactive({
@@ -179,28 +198,34 @@ const columns = ref([
 ])
 const total = ref(0)
 const dataList = ref([])
-const queryRef = ref()
 const productOptions = ref([])
 const productLoading = ref(false)
 
-const dictParams = []
-
 function getList() {
   loading.value = true
-  listSkus(queryParams).then((res) => {
-    const { code, data } = res
-    if (code == 200) {
-      dataList.value = data.result
-      total.value = data.totalNum
+  listSkus(queryParams)
+    .then((res) => {
+      const { code, data } = res
+      if (code == 200) {
+        dataList.value = data.result
+        total.value = data.totalNum
+      }
+    })
+    .finally(() => {
       loading.value = false
-    }
-  })
+    })
 }
 
 // 远程搜索商品：按名称或编码检索，只取前若干条，避免一次性拉全量
 function searchProducts(keyword) {
   productLoading.value = true
-  listShoppingProduct({ pageNum: 1, pageSize: 20, productName: keyword || undefined })
+  const params = { pageNum: 1, pageSize: 20 }
+  if (keyword) {
+    params.productName = keyword
+    params.productCode = keyword
+  }
+
+  listShoppingProduct(params)
     .then((res) => {
       if (res.code == 200) {
         productOptions.value = res.data.result || []
@@ -254,39 +279,104 @@ const title = ref('')
 const opertype = ref(0)
 const open = ref(false)
 const state = reactive({
-  single: true,
-  multiple: true,
   submitLoading: false,
   form: {},
   rules: {
     productId: [{ required: true, message: '商品不能为空', trigger: 'change' }],
     price: [{ required: true, message: '价格不能为空', trigger: 'blur' }]
-  },
-  options: {}
+  }
 })
 
-const { form, rules, options, single, multiple } = toRefs(state)
+const { form, rules } = toRefs(state)
 
-// 结构化规格：维护 name/value 数组，提交时拼成 "颜色:红;尺寸:XL"
-const specItems = ref([{ name: '', value: '' }])
-function parseSpec(str) {
-  if (!str) return [{ name: '', value: '' }]
-  const items = String(str)
-    .split(';')
-    .map((pair) => {
-      const idx = pair.indexOf(':')
-      if (idx === -1) return { name: pair.trim(), value: '' }
-      return { name: pair.slice(0, idx).trim(), value: pair.slice(idx + 1).trim() }
-    })
-    .filter((it) => it.name || it.value)
-  items.push({ name: '', value: '' })
-  return items
+// 补齐缺失规格：SKU 由商品编辑页的规格定义全量生成，这里只补"定义里有、但还没建 SKU"的组合
+const missingOpen = ref(false)
+const missingSubmitting = ref(false)
+const missingProductName = ref('')
+const missingCombinations = ref([])
+
+// 计算尚无 SKU 的规格组合（规格定义笛卡尔积 - 已有组合）
+function calcMissingCombinations(defs, existingSkus) {
+  const usableDefs = (defs || []).filter((d) => d.name && (d.values || []).length > 0)
+  if (usableDefs.length === 0) {
+    return []
+  }
+
+  // 笛卡尔积
+  let combos = [[]]
+  for (const def of usableDefs) {
+    const next = []
+    for (const combo of combos) {
+      for (const value of def.values) {
+        next.push([...combo, { name: def.name, value }])
+      }
+    }
+    combos = next
+  }
+
+  const existed = new Set((existingSkus || []).map((sku) => sku.specCombination))
+  return combos
+    .map((pairs) => pairs.map((p) => `${p.name}:${p.value}`).join(';'))
+    .filter((combination) => !existed.has(combination))
+    .map((combination) => ({ combination }))
 }
-function addSpec() {
-  specItems.value.push({ name: '', value: '' })
+
+// 补齐按钮：必须先按商品筛选，否则不知道该补谁
+function handleFillMissing() {
+  if (!queryParams.productId) {
+    ElMessage.warning('请先在查询条件中选择商品，再执行补齐')
+    return
+  }
+
+  getShoppingProduct(queryParams.productId).then((res) => {
+    if (res.code != 200) {
+      return
+    }
+    const product = res.data || {}
+    const missing = calcMissingCombinations(product.spec, product.skus)
+    if (missing.length === 0) {
+      ElMessage.info('该商品的规格组合已全部创建，无需补齐')
+      return
+    }
+
+    missingProductName.value = product.productName || ''
+    missingCombinations.value = missing.map((item) => ({ ...item, price: undefined, stock: 0 }))
+    missingOpen.value = true
+  })
 }
-function removeSpec(idx) {
-  specItems.value.splice(idx, 1)
+
+// 一次创建全部缺失组合（逐个提交，任一失败即中断并保留已成功的部分）
+async function submitMissing() {
+  const invalid = missingCombinations.value.find((item) => !(item.price > 0))
+  if (invalid) {
+    ElMessage.warning(`请填写「${invalid.combination}」的价格（需大于 0）`)
+    return
+  }
+
+  if (!queryParams.productId) {
+    ElMessage.warning('请先选择商品，再补齐缺失规格')
+    return
+  }
+
+  missingSubmitting.value = true
+  try {
+    for (const item of missingCombinations.value) {
+      await addSkus({
+        productId: queryParams.productId,
+        specCombination: item.combination,
+        price: item.price,
+        stock: item.stock,
+        weight: 0
+      })
+    }
+    ElMessage.success(`已创建 ${missingCombinations.value.length} 个 SKU`)
+    missingOpen.value = false
+    getList()
+  } catch (error) {
+    ElMessage.error(error?.message || '创建缺失 SKU 失败')
+  } finally {
+    missingSubmitting.value = false
+  }
 }
 
 // 关闭dialog
@@ -306,22 +396,14 @@ function reset() {
     weight: 0,
     imageUrl: null
   }
-  specItems.value = [{ name: '', value: '' }]
+  state.submitLoading = false
   proxy.resetForm('formRef')
 }
 
-// 添加按钮操作
-function handleAdd() {
-  reset()
-  open.value = true
-  state.submitLoading = false
-  title.value = '添加商品库存'
-  opertype.value = 1
-}
 // 修改按钮操作
 function handleUpdate(row) {
   reset()
-  const id = row.skuId || ids.value
+  const id = row.skuId
   // 编辑时把当前商品补进下拉选项，保证名称正常回显
   ensureProductOption(row.productId, row.productName)
   getSkus(id).then((res) => {
@@ -334,7 +416,6 @@ function handleUpdate(row) {
       form.value = {
         ...data
       }
-      specItems.value = parseSpec(data.specCombination)
     }
   })
 }
@@ -343,31 +424,29 @@ function handleUpdate(row) {
 function submitForm() {
   proxy.$refs['formRef'].validate((valid) => {
     if (valid) {
-      const filled = specItems.value.filter((it) => it.name || it.value)
-      if (filled.some((it) => !it.name || !it.value)) {
-        ElMessage.warning('规格名和规格值需同时填写')
-        return
-      }
-      form.value.specCombination = filled.map((it) => `${it.name}:${it.value}`).join(';') || null
+      // 规格组合只读：原样提交（form.value.specCombination 来自详情接口，不参与重算，
+      // 也就不存在"规格定义加载失败把组合清空"的风险）
       state.submitLoading = true
 
       if (form.value.skuId != undefined && opertype.value === 2) {
-        updateSkus(form.value).then((res) => {
-          proxy.$modal.msgSuccess('修改成功')
-          open.value = false
-          getList()
-        })
+        updateSkus(form.value)
+          .then(() => {
+            proxy.$modal.msgSuccess('修改成功')
+            open.value = false
+            getList()
+          })
+          .finally(() => {
+            state.submitLoading = false
+          })
       } else {
         addSkus(form.value)
-          .then((res) => {
+          .then(() => {
             proxy.$modal.msgSuccess('新增成功')
             open.value = false
             getList()
           })
           .finally(() => {
-            setTimeout(() => {
-              state.submitLoading = false
-            }, 800)
+            state.submitLoading = false
           })
       }
     }
@@ -376,7 +455,7 @@ function submitForm() {
 
 // 删除按钮操作
 function handleDelete(row) {
-  const Ids = row.skuId || ids.value
+  const Ids = row.skuId
 
   proxy
     .$confirm('是否确认删除SKU编号为"' + Ids + '"的数据项？', '警告', {
@@ -396,21 +475,3 @@ function handleDelete(row) {
 searchProducts()
 handleQuery()
 </script>
-
-<style lang="scss" scoped>
-.spec-editor {
-  width: 100%;
-}
-.spec-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-.spec-sep {
-  color: var(--el-text-color-secondary);
-}
-.spec-add {
-  padding-left: 0;
-}
-</style>
