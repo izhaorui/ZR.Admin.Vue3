@@ -4,7 +4,10 @@
     <el-card header="订单信息" class="mb10">
       <el-descriptions>
         <el-descriptions-item label="订单编号">{{ info.orderNo }}</el-descriptions-item>
-        <el-descriptions-item label="用户ID">{{ info.userId }}</el-descriptions-item>
+        <el-descriptions-item label="下单身份">
+          <el-tag v-if="info.memberId" type="success" effect="plain">会员 {{ info.memberId }}</el-tag>
+          <el-tag v-else type="info" effect="plain">游客</el-tag>
+        </el-descriptions-item>
         <el-descriptions-item label="订单状态">
           <dict-tag :options="dictStore.orderStatusOptions" :value="info.orderStatus" />
         </el-descriptions-item>
@@ -31,9 +34,9 @@
         <el-descriptions-item label="收货人手机号">{{ info.addressSnapshot.phone }}</el-descriptions-item>
         <el-descriptions-item label="收货地区"> {{ info.addressLabel }}</el-descriptions-item>
 
-        <!-- <el-descriptions-item label="详细地址">
-          {{ info.addressSnapshot.detailsAddress }}
-        </el-descriptions-item> -->
+        <el-descriptions-item label="详细地址">
+          {{ info.addressSnapshot.detailAddress }}
+        </el-descriptions-item>
       </el-descriptions>
     </el-card>
 

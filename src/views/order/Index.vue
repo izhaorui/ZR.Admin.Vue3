@@ -33,8 +33,8 @@
     <el-form-item label="物流单号" prop="deliveryNo">
       <el-input v-model="queryParams.deliveryNo" placeholder="请输入物流单号" />
     </el-form-item>
-    <el-form-item label="用户ID" prop="userId">
-      <el-input v-model.number="queryParams.userId" placeholder="请输入用户ID" />
+    <el-form-item label="会员ID" prop="memberId">
+      <el-input v-model.number="queryParams.memberId" placeholder="请输入会员ID" />
     </el-form-item>
 
     <el-form-item label="下单时间">
@@ -127,7 +127,7 @@
         <span v-else>—</span>
       </template>
     </el-table-column>
-    <el-table-column prop="userId" label="订单号/用户" align="center" v-if="columns.showColumn('userId')">
+    <el-table-column prop="memberId" label="订单号/用户" align="center" v-if="columns.showColumn('memberId')">
       <template #default="{ row }">
         <div>
           <span class="link-type copy-no" v-clipboard:copy="row.orderNo" v-clipboard:success="copySuccess" title="点击复制订单号">
@@ -135,10 +135,10 @@
           </span>
         </div>
         <div class="mt5">
-          <span v-if="row.userId">{{ row.userId }}</span>
+          <el-tag v-if="row.memberId" size="small" type="success" effect="plain">会员 {{ row.memberId }}</el-tag>
           <span v-else>
             <el-tag size="small" type="info">游客</el-tag>
-            {{ row.addressSnapshot?.phone }}
+            {{ row.addressSnapshot?.phone || row.guestPhone }}
           </span>
         </div>
       </template>
@@ -280,7 +280,7 @@ const queryParams = reactive({
   sort: 'CreateTime',
   sortType: 'desc',
   orderNo: undefined,
-  userId: undefined,
+  memberId: undefined,
   orderStatus: '',
   createTime: undefined,
   confirmStatus: '',
@@ -289,7 +289,7 @@ const queryParams = reactive({
 const dictStore = useDictStore()
 const columns = ref([
   { visible: false, align: 'center', type: '', prop: 'id', label: '订单Id' },
-  { visible: true, align: 'center', type: '', prop: 'userId', label: '订单号/用户' },
+  { visible: true, align: 'center', type: '', prop: 'memberId', label: '订单号/用户' },
   { visible: true, align: 'center', type: '', prop: 'totalAmount', label: '总金额' },
   { visible: true, align: 'center', type: '', prop: 'payAmount', label: '付款金额' },
   { visible: true, align: 'center', type: 'dict', prop: 'orderStatus', label: '订单状态' },
