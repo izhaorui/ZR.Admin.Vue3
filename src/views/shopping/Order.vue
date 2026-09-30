@@ -59,7 +59,7 @@
       <el-table-column prop="memberId" label="下单身份" align="center" v-if="columns.showColumn('memberId')">
         <template #default="scope">
           <el-tag v-if="scope.row.memberId" type="success" effect="plain">会员 {{ scope.row.memberId }}</el-tag>
-          <el-tag v-else type="info" effect="plain">游客</el-tag>
+          <el-tag v-else type="info" effect="plain">未绑定会员</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="totalAmount" label="总金额" align="center" v-if="columns.showColumn('totalAmount')" />
@@ -106,7 +106,7 @@
         </el-descriptions-item>
         <el-descriptions-item label="收货地址">{{ detail.addressLabel }}</el-descriptions-item>
         <el-descriptions-item label="下单身份">
-          {{ detail.memberId ? '会员 ' + detail.memberId : '游客（未绑定会员）' }}
+          {{ detail.memberId ? '会员 ' + detail.memberId : '未绑定会员' }}
         </el-descriptions-item>
         <el-descriptions-item label="物流公司">{{ detail.deliveryCompany || '-' }}</el-descriptions-item>
         <el-descriptions-item label="物流单号">{{ detail.deliveryNo || '-' }}</el-descriptions-item>

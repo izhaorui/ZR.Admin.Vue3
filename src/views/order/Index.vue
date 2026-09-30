@@ -137,7 +137,7 @@
         <div class="mt5">
           <el-tag v-if="row.memberId" size="small" type="success" effect="plain">会员 {{ row.memberId }}</el-tag>
           <span v-else>
-            <el-tag size="small" type="info">游客</el-tag>
+            <el-tag size="small" type="info">未绑定会员</el-tag>
             {{ row.addressSnapshot?.phone || row.guestPhone }}
           </span>
         </div>

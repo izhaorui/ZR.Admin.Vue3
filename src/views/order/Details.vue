@@ -6,7 +6,7 @@
         <el-descriptions-item label="订单编号">{{ info.orderNo }}</el-descriptions-item>
         <el-descriptions-item label="下单身份">
           <el-tag v-if="info.memberId" type="success" effect="plain">会员 {{ info.memberId }}</el-tag>
-          <el-tag v-else type="info" effect="plain">游客</el-tag>
+          <el-tag v-else type="info" effect="plain">未绑定会员</el-tag>
         </el-descriptions-item>
         <el-descriptions-item label="订单状态">
           <dict-tag :options="dictStore.orderStatusOptions" :value="info.orderStatus" />
