@@ -129,7 +129,11 @@
       </el-col>
       <el-col :lg="24">
         <el-form-item v-if="operType == 1">
-          <el-button icon="check" type="primary" size="default" @click="handleSubmitInfo">保存</el-button>
+          <el-button icon="check" type="primary" plain :loading="saving" @click="handleSubmitInfo">仅保存基础信息</el-button>
+          <div class="save-tip">
+            <el-icon><InfoFilled /></el-icon>
+            只保存本页的商品名称、分类、图片、售卖状态等字段，<b>不含价格、库存、SKU 与商品详情</b>；完整保存请用底部的「提交商品」。
+          </div>
         </el-form-item>
       </el-col>
     </el-row>
@@ -139,7 +143,6 @@
 import { updateInfo } from '@/api/shopping/product'
 import { ElMessage } from 'element-plus'
 import BrandSelect from './BrandSelect.vue'
-const emits = defineEmits('success')
 const props = defineProps({
   info: {
     type: Object,
@@ -166,16 +169,39 @@ const rules = {
 }
 
 const basicInfoForm = ref()
+const saving = ref(false)
+
 /**
- * 保存表单信息
+ * 只保存基础信息（后端 UpdateInfo，更新商品主表的部分字段）。
+ * 不涉及价格、库存、SKU 与商品详情，那些由商品编辑页的「提交商品」统一保存。
  */
 function handleSubmitInfo() {
-  basicInfoForm.value.validate((valid) => {
+  basicInfoForm.value.validate(async (valid) => {
     if (!valid) return
-    updateInfo(props.info).then(() => {
-      ElMessage.success('修改成功')
-      // emits('success')
-    })
+    saving.value = true
+    try {
+      await updateInfo(props.info)
+      ElMessage.success('基础信息已保存（价格、库存、SKU 未改动）')
+    } catch (error) {
+      // 业务/网络错误由 request 拦截器统一提示，此处不重复弹错
+      console.error('[BaseForm] 保存基础信息失败', error)
+    } finally {
+      saving.value = false
+    }
   })
 }
 </script>
+
+<style lang="scss" scoped>
+.save-tip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-basis: 100%;
+  width: 100%;
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--el-text-color-secondary);
+}
+</style>

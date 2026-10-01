@@ -5,12 +5,15 @@
     </el-form-item>
     <el-form-item :label="'商品价格' + $t('currency')" prop="price">
       <el-input-number v-model="form.singleSku.price" :min="0.01" />
+      <div v-if="!(form.singleSku.price > 0)" class="cell-tip cell-tip--error">价格需大于 0，否则无法上架</div>
     </el-form-item>
     <el-form-item label="库存数量" prop="stock">
       <el-input-number v-model="form.singleSku.stock" :min="0" />
+      <div v-if="Number(form.singleSku.stock) === 0" class="cell-tip cell-tip--warning">库存为 0，前台会显示售罄</div>
     </el-form-item>
     <el-form-item label="商品重量(KG)" prop="weight">
       <el-input-number v-model="form.singleSku.weight" :min="0" />
+      <div v-if="!Number(form.singleSku.weight)" class="cell-tip">未填写重量，若按重量计运费会算作 0</div>
     </el-form-item>
   </el-form>
 </template>
@@ -69,3 +72,19 @@ watch(
   { deep: true }
 )
 </script>
+
+<style scoped lang="scss">
+.cell-tip {
+  flex-basis: 100%;
+  font-size: 12px;
+  line-height: 1.4;
+  margin-top: 2px;
+  color: var(--el-text-color-secondary);
+  &--error {
+    color: var(--el-color-danger);
+  }
+  &--warning {
+    color: var(--el-color-warning);
+  }
+}
+</style>

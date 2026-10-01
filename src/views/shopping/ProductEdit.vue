@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <el-tabs v-model="activeName" class="demo-tabs">
+  <div class="product-edit">
+    <el-tabs v-model="activeName">
+      <!-- 基本信息 -->
       <el-tab-pane label="基本信息" name="base">
         <BaseForm
           ref="basicInfo"
@@ -9,56 +10,74 @@
           :category-options="categoryOptions"
           :sale-status-options="dictStore.saleStatusOptions"></BaseForm>
       </el-tab-pane>
+
+      <!-- 价格/库存 -->
       <el-tab-pane label="价格/库存" name="sku">
-        <el-form label-position="left" label-width="110px">
-          <el-form-item label="规格类型">
-            <el-radio-group v-model="form.data.specType">
-              <el-radio-button :value="1">单规格</el-radio-button>
-              <el-radio-button :value="2">多规格</el-radio-button>
-            </el-radio-group>
-          </el-form-item>
-        </el-form>
-        <SingleSkuForm
-          v-if="form.data.specType === 1"
-          :skus="form.skus"
-          @update:skus="form.skus = $event"
-          @update:specList="form.specList = $event" />
-        <SpecForm v-else ref="specFormRef" v-model:info="form.data" v-model:spec-list="form.specList" v-model:skus="form.skus" />
-        <!-- 商品限购（单/多规格共用） -->
-        <el-form label-position="left" label-width="110px" class="mt20">
-          <el-form-item label="商品限购">
-            <el-radio-group v-model="form.data.purchaseLimit.limit">
-              <el-radio-button :value="false">不限购</el-radio-button>
-              <el-radio-button :value="true">限购</el-radio-button>
-            </el-radio-group>
-          </el-form-item>
-          <el-row :gutter="10" style="margin-left: 100px" v-if="form.data.purchaseLimit.limit">
-            <el-col :lg="24">
-              <el-form-item label="总限购">
-                <el-input-number v-model.number="form.data.purchaseLimit.totalLimit" :min="1" style="width: 100px"></el-input-number> 件/人
-              </el-form-item>
-            </el-col>
-            <el-col :lg="24">
-              <el-form-item label="每单限购">
-                <el-input-number v-model.number="form.data.purchaseLimit.singleLimit" :min="1" style="width: 100px"></el-input-number> 件/人
-              </el-form-item>
-            </el-col>
-            <div class="text-muted" style="font-size: 13px">用于限制每人购买该商品的数量</div>
-          </el-row>
-        </el-form>
+        <PriceStockStep ref="priceStock" :info="form.data" v-model:spec-list="form.specList" v-model:skus="form.skus" />
       </el-tab-pane>
+
+      <!-- 商品详情 -->
       <el-tab-pane label="商品详情" name="detail">
-        <el-form-item label="商品详情" label-width="70px">
-          <editor v-model="form.data.detailsHtml" style="width: 500px" :toolbarConfig="toolbarConfig" :min-height="196" />
-        </el-form-item>
+        <el-form label-position="left" label-width="70px">
+          <el-form-item label="商品详情">
+            <div class="detail-editor">
+              <!-- 详情内容仅在前台移动端展示，固定 500px 模拟移动端视口宽度，避免按桌面宽度排版产生错觉 -->
+              <editor
+                ref="detailEditorRef"
+                v-model="form.data.detailsHtml"
+                style="width: 500px"
+                :toolbarConfig="toolbarConfig"
+                height="420px" />
+              <div class="detail-editor__actions">
+                <el-button plain icon="picture" @click="openLibrary">从素材库选择图片</el-button>
+                <span class="text-muted">支持多选，插入到光标位置；未定位过光标时追加到详情末尾</span>
+              </div>
+            </div>
+          </el-form-item>
+        </el-form>
+
+        <!-- 复用素材库弹窗：容器隐藏即可，弹窗本身是 append-to-body 的 -->
+        <div class="detail-picker">
+          <ImageSelector
+            :key="pickerSeq"
+            ref="libraryPickerRef"
+            :model-value="libraryPicked"
+            :limit="9"
+            :file-size="10"
+            @update:model-value="handleLibraryPicked" />
+        </div>
+      </el-tab-pane>
+
+      <!-- 预览：提交前的总检查 -->
+      <el-tab-pane label="预览" name="preview">
+        <SkuPreview
+          :info="form.data"
+          :spec-list="form.specList"
+          :skus="form.skus"
+          :issues="allIssues"
+          :category-options="categoryOptions"
+          :sale-status-options="dictStore.saleStatusOptions"
+          @jump="activeName = $event" />
       </el-tab-pane>
     </el-tabs>
 
-    <el-row class="mt20">
-      <el-form-item label-width="100px">
-        <el-button type="success" @click="handleSubmit" :loading="submitLoading">提交商品</el-button>
-      </el-form-item>
-    </el-row>
+    <!-- 底部操作：贴在内容底部，滚动时保持可见 -->
+    <div class="edit-footer">
+      <div class="edit-footer__info">
+        <el-tooltip v-if="draftEnabled" content="新增商品的草稿会自动保存在本机，下次新增时可恢复；提交成功后自动清除" placement="top">
+          <span class="draft-chip" :class="{ 'is-saved': !!draftSavedAt }">
+            <el-icon><Document /></el-icon>{{ draftSavedAt ? `草稿 ${draftSavedAt}` : '草稿未保存' }}
+          </span>
+        </el-tooltip>
+        <el-button v-if="blockerIssues.length" type="danger" link size="small" @click="goFirstIssue">
+          <el-icon><WarningFilled /></el-icon>还有 {{ blockerIssues.length }} 项待处理
+        </el-button>
+      </div>
+      <div class="edit-footer__actions">
+        <el-button v-if="draftEnabled" plain icon="document-add" @click="saveDraft(false)">保存草稿</el-button>
+        <el-button type="success" :loading="submitLoading" @click="handleSubmit">提交商品</el-button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -71,26 +90,23 @@ import { ElMessage } from 'element-plus'
 // 富文本组件
 import Editor from '@/components/Editor'
 import BaseForm from './components/BaseForm.vue'
-import SpecForm from './components/SpecForm.vue'
-import SingleSkuForm from './components/SingleSkuForm.vue'
+import PriceStockStep from './components/PriceStockStep.vue'
+import SkuPreview from './components/SkuPreview.vue'
+import { useProductIssues } from './composables/useProductIssues'
+import { useProductDraft } from './composables/useProductDraft'
+
 const dictStore = useDictStore()
 const { proxy } = getCurrentInstance()
-const open = ref(false)
-const toolbarConfig = ref({
+const route = useRoute()
+
+const toolbarConfig = {
   toolbarKeys: [
-    // 菜单 key
-    // 'headerSelect',
     'bold', // 加粗
-    // 'italic', // 斜体
-    // 'through', // 删除线
     'underline', // 下划线
-    // 'bulletedList', // 无序列表
-    // 'numberedList', // 有序列表
     'color', // 文字颜色
     'uploadImage', // 上传图片
     'delIndent', // 缩进
     'indent', // 增进
-    // 'insertLink', // 插入链接
     'fontSize', // 字体大小
     'clearStyle', // 清除格式
     'divider', // 分割线
@@ -100,12 +116,14 @@ const toolbarConfig = ref({
     'justifyLeft', // 左对齐
     'justifyRight', // 右对齐
     'emotion'
-    // 'fullScreen' // 全屏
   ]
-})
-const route = useRoute()
-const emits = defineEmits(['success'])
+}
 
+const activeName = ref('base')
+// 0,add 1,update
+const opertype = ref(0)
+const submitLoading = ref(false)
+const categoryOptions = ref([])
 const form = reactive({
   data: {
     purchaseLimit: {
@@ -115,10 +133,100 @@ const form = reactive({
   skus: [],
   specList: []
 })
-const activeName = ref('base')
-// 0,add 1,update
-const opertype = ref(0)
-const submitLoading = ref(false)
+
+// 校验清单与本机草稿见同目录 composables，页面只负责流程编排
+const { allIssues, blockerIssues } = useProductIssues(form)
+const { draftEnabled, draftSavedAt, saveDraft, clearDraft, checkDraft, startTracking, resetTracking } = useProductDraft(form, route)
+
+// 切到第一条待处理问题所在的标签页
+function goFirstIssue() {
+  activeName.value = blockerIssues.value[0]?.tab || 'base'
+}
+
+/*************** 商品详情：从素材库插入图片 ***************/
+const detailEditorRef = ref()
+const libraryPickerRef = ref()
+const libraryPicked = ref('')
+// ImageSelector 弹窗的初始选中取自组件内部状态，选完确认后会残留；
+// 不改公共组件，这里在「选过之后下次打开」时换 key 重建实例回到干净状态
+const pickerSeq = ref(0)
+const pickerDirty = ref(false)
+
+function openLibrary() {
+  if (pickerDirty.value) {
+    pickerDirty.value = false
+    pickerSeq.value++
+    // 重建实例后 ref 会指向新组件，等渲染完成再打开弹窗
+    nextTick(() => libraryPickerRef.value?.openDialog())
+    return
+  }
+  libraryPickerRef.value?.openDialog()
+}
+
+// 素材库确认后回传的是逗号分隔地址，插入编辑器后清空，便于再次勾选
+function handleLibraryPicked(value) {
+  const urls = String(value || '')
+    .split(',')
+    .map((url) => url.trim())
+    .filter(Boolean)
+  if (urls.length) {
+    detailEditorRef.value?.insertImages(urls)
+    ElMessage.success(`已插入 ${urls.length} 张图片`)
+  }
+  libraryPicked.value = ''
+  // 标记已选过，下次打开前重建选择器实例
+  pickerDirty.value = true
+}
+
+function getFormPromise(form) {
+  return new Promise((resolve) => {
+    form.validate((isValid, invalidFields) => resolve({ isValid, invalidFields }))
+  })
+}
+
+// 提交：先跑表单规则（基本信息 + 价格库存），再看问题清单；哪一栏有问题就切到哪一栏
+async function handleSubmit() {
+  const checks = []
+  const basicForm = proxy.$refs.basicInfo?.$refs?.basicInfoForm
+  if (basicForm) checks.push({ tab: 'base', task: getFormPromise(basicForm) })
+  if (proxy.$refs.priceStock) checks.push({ tab: 'sku', task: proxy.$refs.priceStock.validate() })
+
+  const results = await Promise.all(checks.map((item) => item.task))
+  const invalidIndex = results.findIndex((item) => !item.isValid)
+  if (invalidIndex > -1) {
+    activeName.value = checks[invalidIndex].tab
+    const invalidFields = results[invalidIndex].invalidFields || {}
+    ElMessage.error(Object.values(invalidFields)?.[0]?.[0]?.message || '表单校验未通过，请检查必填项')
+    return
+  }
+
+  const blocker = blockerIssues.value[0]
+  if (blocker) {
+    activeName.value = blocker.tab
+    ElMessage.error(blocker.text)
+    return
+  }
+
+  const payload = {
+    ...form.data,
+    spec: form.specList,
+    skus: form.skus.map((sku, index) => ({ ...sku, sortId: index }))
+  }
+  submitLoading.value = true
+  try {
+    const res = opertype.value == 0 ? await addShoppingProduct(payload) : await updateShoppingProduct(payload)
+    ElMessage({ type: 'success', message: opertype.value == 0 ? '添加成功' : '修改成功', duration: 1500 })
+    clearDraft()
+    proxy.$modal.loading('跳转中...')
+    handleClose(res.data)
+  } catch (error) {
+    // 业务/网络错误由 request 拦截器统一提示，此处不重复弹错
+    console.error('[ProductEdit] 提交商品失败', error)
+  } finally {
+    submitLoading.value = false
+  }
+}
+
 // 重置表单
 function reset() {
   form.data = {
@@ -143,150 +251,6 @@ function reset() {
   opertype.value = 0
   form.specList.length = 0
   form.skus.length = 0
-  // form.skus = []
-  proxy.resetForm('formRef')
-}
-const specFormRef = ref()
-
-function getFormPromise(form) {
-  return new Promise((resolve) => {
-    form.validate((res, invalidFields) => {
-      resolve({
-        isValid: res,
-        invalidFields
-      })
-    })
-  })
-}
-
-// 提交校验
-function handleSubmit() {
-  const basicForm = proxy.$refs.basicInfo.$refs.basicInfoForm
-  const specFormRef = proxy.$refs.specFormRef?.$refs?.specFormRef
-
-  const formList = [basicForm, specFormRef].filter(Boolean) // 过滤掉不存在的 form
-  Promise.all(formList.map(getFormPromise)).then((results) => {
-    const validateResult = results.every((item) => item.isValid)
-    if (!validateResult) {
-      // 收集所有错误信息
-      const allErrors = results.flatMap((item) => {
-        if (!item.isValid && item.invalidFields) {
-          return Object.values(item.invalidFields).flatMap((fieldArr) => fieldArr.map((err) => err.message))
-        }
-        return []
-      })
-
-      // 去重 + 合并错误信息
-      // const errorMsg = [...new Set(allErrors)].join('；')
-      const firstError = Object.values(allErrors)?.[0]
-      if (allErrors.length > 0 && firstError) {
-        ElMessage.error(firstError || '表单验证未通过')
-      }
-      return
-    }
-
-    // 多规格校验
-    if (form.specList.length === 0) {
-      activeName.value = 'sku'
-      ElMessage.error('请在【价格库存】标签里面至少添加一个商品规格')
-      return
-    }
-    // 规格名不可重复：同名规格会让 SKU 的「名:值」组合、SKU 表格列显示与前台选择规格全部串数据
-    // （后端 ProductSpecValidator 同样拦截，这里提前提示，避免用户填完 SKU 才被拒绝）
-    const specNames = new Set()
-    for (const [i, spec] of form.specList.entries()) {
-      const specName = (spec.name || '').trim()
-      if (!specName) {
-        ElMessage.error(`第 ${i + 1} 个规格名称不能为空`)
-        return
-      }
-      if (specNames.has(specName)) {
-        activeName.value = 'sku'
-        ElMessage.error(`规格名 "${specName}" 重复，请修改后再提交`)
-        return
-      }
-      specNames.add(specName)
-      if (spec.values.length === 0) {
-        ElMessage.error(`规格 "${specName}" 必须包含至少一个值`)
-        return
-      }
-    }
-
-    // 校验 SKU
-    if (form.skus.length === 0) {
-      ElMessage.error('请生成 SKU 列表')
-      return
-    }
-
-    for (const [i, sku] of form.skus.entries()) {
-      if (sku.price <= 0) {
-        ElMessage.error(`第 ${i + 1} 个 SKU 的价格必须大于 0`)
-        return
-      }
-      if (sku.stock < 0) {
-        ElMessage.error(`第 ${i + 1} 个 SKU 的库存不能为负数`)
-        return
-      }
-    }
-
-    const payload = {
-      ...form.data,
-      spec: form.specList,
-      skus: form.skus.map((sku, index) => ({
-        ...sku,
-        sortId: index,
-        productId: form.productId
-      }))
-    }
-    submitLoading.value = true
-    if (opertype.value == 0) {
-      addShoppingProduct(payload)
-        .then((res) => {
-          ElMessage({ type: 'success', message: '添加成功', duration: 1500 })
-          proxy.$modal.loading('跳转中...')
-          handleClose(res.data)
-        })
-        .finally(() => {
-          submitLoading.value = false
-        })
-    } else {
-      updateShoppingProduct(payload)
-        .then((res) => {
-          ElMessage({ type: 'success', message: '修改成功', duration: 1500 })
-          proxy.$modal.loading('跳转中...')
-          handleClose(res.data)
-        })
-        .finally(() => {
-          submitLoading.value = false
-        })
-    }
-    console.log('提交表单数据:', JSON.stringify(payload, null, 2))
-  })
-}
-
-const categoryOptions = ref([])
-treelistCategory({ showStatus: 1 }).then((res) => {
-  categoryOptions.value = res.data
-})
-
-reset()
-watch(
-  () => route.query.id,
-  (val) => {
-    reset()
-    if (val) {
-      handleEdit(val)
-    }
-  },
-  {
-    immediate: true
-  }
-)
-
-function handleEdit(id) {
-  if (id) {
-    getInfo(id)
-  }
 }
 
 /**
@@ -294,19 +258,21 @@ function handleEdit(id) {
  * @param productId 商品id
  */
 function getInfo(productId) {
-  getShoppingProduct(productId).then((res) => {
+  return getShoppingProduct(productId).then((res) => {
     const { code, data } = res
     if (code == 200) {
       opertype.value = 1
       // 回显商品信息
       form.data = data
+      form.data.purchaseLimit = data.purchaseLimit || { limit: false, totalLimit: 0, singleLimit: 0 }
       form.specList.splice(0, form.specList.length, ...data.spec)
       // 回显 SKU
       form.skus = data.skus
     }
   })
 }
-function handleClose(info) {
+
+function handleClose() {
   proxy.$tab
     .closeOpenPage({
       path: './product',
@@ -317,22 +283,87 @@ function handleClose(info) {
     })
 }
 
-// defineExpose({
-//   handleEdit
-// })
+treelistCategory({ showStatus: 1 }).then((res) => {
+  categoryOptions.value = res.data
+})
+
+reset()
+
+watch(
+  () => route.query.id,
+  async (val) => {
+    reset()
+    // 加载期间不写草稿，否则会用空表单覆盖上一次的草稿
+    resetTracking()
+    if (val) {
+      await getInfo(val)
+    }
+    await checkDraft()
+    // 以加载完成后的内容为基线，之后只有真正改动才会自动存草稿
+    startTracking()
+  },
+  {
+    immediate: true
+  }
+)
 </script>
 
 <style scoped lang="scss">
-.mr-2 {
-  margin-right: 8px;
+.detail-editor {
+  width: 100%;
 }
-.ml-2 {
-  margin-left: 8px;
+.detail-editor__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  font-size: 12px;
 }
-.mb-4 {
-  margin-bottom: 16px;
+// 素材库选择器只借用它的弹窗，缩略图区域不需要显示
+.detail-picker {
+  display: none;
 }
-.el-card__header {
-  padding: 10px;
+.edit-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  padding: 12px 0 8px;
+  // 不做边框/阴影卡片：只用一层很淡的渐变把滚动的内容与按钮隔开，
+  // 左侧没内容时也不会出现一条空荡荡的浮层
+  background: linear-gradient(to top, var(--el-bg-color, #fff) 70%, transparent);
+}
+.edit-footer__info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 12px;
+}
+.draft-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--el-fill-color-light);
+  color: var(--el-text-color-secondary);
+  cursor: default;
+  &.is-saved {
+    background: var(--el-color-success-light-9, #f0f9eb);
+    color: var(--el-color-success);
+  }
+}
+.edit-footer__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
 }
 </style>
