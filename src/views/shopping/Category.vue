@@ -233,12 +233,15 @@ const formRef = ref()
 
 function getList() {
   loading.value = true
-  treelistCategory(queryParams).then((res) => {
-    if (res.code == 200) {
-      dataList.value = res.data
+  treelistCategory(queryParams)
+    .then((res) => {
+      if (res.code == 200) {
+        dataList.value = res.data
+      }
+    })
+    .finally(() => {
       loading.value = false
-    }
-  })
+    })
 }
 
 // 关闭dialog

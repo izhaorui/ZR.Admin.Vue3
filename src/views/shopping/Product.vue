@@ -244,14 +244,17 @@ function getList() {
   if (searchType.value && searchValue.value) {
     queryParams[searchType.value] = searchValue.value
   }
-  listShoppingProduct(queryParams).then((res) => {
-    const { code, data } = res
-    if (code == 200) {
-      dataList.value = data.result
-      total.value = data.totalNum
+  listShoppingProduct(queryParams)
+    .then((res) => {
+      const { code, data } = res
+      if (code == 200) {
+        dataList.value = data.result
+        total.value = data.totalNum
+      }
+    })
+    .finally(() => {
       loading.value = false
-    }
-  })
+    })
 }
 
 // 查询

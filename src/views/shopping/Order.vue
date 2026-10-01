@@ -207,14 +207,17 @@ function timelineType(operType) {
 
 function getList() {
   loading.value = true
-  listOMSOrder(queryParams).then((res) => {
-    const { code, data } = res
-    if (code == 200) {
-      dataList.value = data.result
-      total.value = data.totalNum
+  listOMSOrder(queryParams)
+    .then((res) => {
+      const { code, data } = res
+      if (code == 200) {
+        dataList.value = data.result
+        total.value = data.totalNum
+      }
+    })
+    .finally(() => {
       loading.value = false
-    }
-  })
+    })
 }
 
 function handleQuery() {

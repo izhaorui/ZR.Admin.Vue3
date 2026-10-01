@@ -26,7 +26,7 @@
     <template #footer>
       <div class="footer">
         <el-button text @click="open = false">取消</el-button>
-        <el-button type="primary" @click="handleSubmit">确定</el-button>
+        <el-button type="primary" :loading="submitLoading" @click="handleSubmit">确定</el-button>
       </div>
     </template>
   </el-dialog>
@@ -64,6 +64,8 @@ const emits = defineEmits(['success'])
 const { form, rules, options } = toRefs(state)
 const open = ref(false)
 const formRef = ref()
+// 发货请求进行中：拦截回车/确定按钮的重复触发（扫码枪回车 + 手点确定可能连发）
+const submitLoading = ref(false)
 // 重置表单
 function reset() {
   state.form = {
@@ -89,14 +91,20 @@ function handleOpen(row) {
  * 发货
  */
 function handleSubmit() {
+  if (submitLoading.value) return
   formRef.value.validate((valid) => {
     if (!valid) return
 
-    deliveryOrder(form.value).then(() => {
-      ElMessage.success('发货成功')
-      open.value = false
-      emits('success')
-    })
+    submitLoading.value = true
+    deliveryOrder(form.value)
+      .then(() => {
+        ElMessage.success('发货成功')
+        open.value = false
+        emits('success')
+      })
+      .finally(() => {
+        submitLoading.value = false
+      })
   })
 }
 

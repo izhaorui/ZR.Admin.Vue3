@@ -318,15 +318,18 @@ var dictParams = []
 function getList() {
   proxy.addDateRange(queryParams, dateRangeCreateTime.value, 'CreateTime')
   loading.value = true
-  listOMSOrder(queryParams).then((res) => {
-    const { code, data } = res
-    if (code == 200) {
-      dataList.value = data.result
-      total.value = data.totalNum
-      statsData.value = data.extra?.statusStats || {}
+  listOMSOrder(queryParams)
+    .then((res) => {
+      const { code, data } = res
+      if (code == 200) {
+        dataList.value = data.result
+        total.value = data.totalNum
+        statsData.value = data.extra?.statusStats || {}
+      }
+    })
+    .finally(() => {
       loading.value = false
-    }
-  })
+    })
 }
 
 // 查询

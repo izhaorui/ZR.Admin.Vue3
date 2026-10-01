@@ -7,7 +7,7 @@
       <el-form-item label="收件人姓名" prop="userName">
         <el-input v-model="form.userName"></el-input>
       </el-form-item>
-      <el-form-item label="收件人电话" prop="userName" allow-create>
+      <el-form-item label="收件人电话" prop="phone">
         <el-input v-model="form.phone"></el-input>
       </el-form-item>
       <el-form-item label="所在地区" prop="province">
@@ -20,14 +20,14 @@
           class="w100"
           @change="onRegionChange" />
       </el-form-item>
-      <el-form-item label="地址详情" prop="detailAddress" allow-create>
+      <el-form-item label="地址详情" prop="detailAddress">
         <el-input v-model="form.detailAddress"></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
       <div class="footer">
         <el-button text @click="open = false">取消</el-button>
-        <el-button type="primary" @click="handleSubmit">确定</el-button>
+        <el-button type="primary" :loading="submitLoading" @click="handleSubmit">确定</el-button>
       </div>
     </template>
   </el-dialog>
@@ -56,6 +56,7 @@ const { form, rules, options } = toRefs(state)
 const open = ref(false)
 const formRef = ref()
 const region = ref([])
+const submitLoading = ref(false)
 // 重置表单
 function reset() {
   state.form = {
@@ -93,17 +94,23 @@ function handleOpen(orderNo, address) {
 }
 
 /**
- * 发货
+ * 修改收件信息
  */
 function handleSubmit() {
+  if (submitLoading.value) return
   formRef.value.validate((valid) => {
     if (!valid) return
 
-    updateOMSOrder({ AddressSnapshot: form.value, orderNo: form.value.orderNo, operType: 3 }).then(() => {
-      ElMessage.success('修改成功')
-      open.value = false
-      emits('success')
-    })
+    submitLoading.value = true
+    updateOMSOrder({ AddressSnapshot: form.value, orderNo: form.value.orderNo, operType: 3 })
+      .then(() => {
+        ElMessage.success('修改成功')
+        open.value = false
+        emits('success')
+      })
+      .finally(() => {
+        submitLoading.value = false
+      })
   })
 }
 

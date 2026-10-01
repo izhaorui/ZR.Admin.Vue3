@@ -122,14 +122,17 @@ const queryRef = ref()
 
 function getList() {
   loading.value = true
-  listMmsSpecTemplate(queryParams).then((res) => {
-    const { code, data } = res
-    if (code == 200) {
-      dataList.value = data.result
-      total.value = data.totalNum
+  listMmsSpecTemplate(queryParams)
+    .then((res) => {
+      const { code, data } = res
+      if (code == 200) {
+        dataList.value = data.result
+        total.value = data.totalNum
+      }
+    })
+    .finally(() => {
       loading.value = false
-    }
-  })
+    })
 }
 
 // 查询
@@ -284,9 +287,7 @@ function submitForm() {
             getList()
           })
           .finally(() => {
-            setTimeout(() => {
-              state.submitLoading = false
-            }, 800)
+            state.submitLoading = false
           })
       }
     }

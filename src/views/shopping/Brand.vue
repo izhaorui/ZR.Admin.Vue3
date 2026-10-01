@@ -125,14 +125,17 @@ var dictParams = []
 
 function getList() {
   loading.value = true
-  listMmsBrand(queryParams).then((res) => {
-    const { code, data } = res
-    if (code == 200) {
-      dataList.value = data.result
-      total.value = data.totalNum
+  listMmsBrand(queryParams)
+    .then((res) => {
+      const { code, data } = res
+      if (code == 200) {
+        dataList.value = data.result
+        total.value = data.totalNum
+      }
+    })
+    .finally(() => {
       loading.value = false
-    }
-  })
+    })
 }
 
 // 查询
@@ -228,25 +231,17 @@ function submitForm() {
     if (valid) {
       state.submitLoading = true
 
-      if (form.value.id != undefined && opertype.value === 2) {
-        updateMmsBrand(form.value).then((res) => {
-          proxy.$modal.msgSuccess('修改成功')
+      const isEdit = form.value.id != undefined && opertype.value === 2
+      const request = isEdit ? updateMmsBrand(form.value) : addMmsBrand(form.value)
+      request
+        .then(() => {
+          proxy.$modal.msgSuccess(isEdit ? '修改成功' : '新增成功')
           open.value = false
           getList()
         })
-      } else {
-        addMmsBrand(form.value)
-          .then((res) => {
-            proxy.$modal.msgSuccess('新增成功')
-            open.value = false
-            getList()
-          })
-          .finally(() => {
-            setTimeout(() => {
-              state.submitLoading = false
-            }, 800)
-          })
-      }
+        .finally(() => {
+          state.submitLoading = false
+        })
     }
   })
 }

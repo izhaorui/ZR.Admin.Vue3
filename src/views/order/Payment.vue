@@ -112,14 +112,17 @@ const dateRange = ref([start, end])
 function getList() {
   proxy.addDateRange(queryParams, dateRange.value, 'CreateTime')
   loading.value = true
-  listPayment(queryParams).then((res) => {
-    const { code, data } = res
-    if (code == 200) {
-      dataList.value = data.result
-      total.value = data.totalNum
+  listPayment(queryParams)
+    .then((res) => {
+      const { code, data } = res
+      if (code == 200) {
+        dataList.value = data.result
+        total.value = data.totalNum
+      }
+    })
+    .finally(() => {
       loading.value = false
-    }
-  })
+    })
 }
 
 function handleQuery() {
