@@ -1,2 +1,5 @@
 # git hooks 脚本必须保持 LF：Windows 检出 CRLF 会让 sh 解析器路径带回车符而执行失败
 .husky/* text eol=lf
+
+# 自动导入声明由 unplugin-auto-import 生成（写入 LF），固定行尾避免 autocrlf 反复误判为已修改
+src/auto-import.d.ts text eol=lf
