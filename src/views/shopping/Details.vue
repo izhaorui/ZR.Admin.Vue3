@@ -28,7 +28,7 @@
         <!-- 显示价格 / 库存 -->
         <div class="mt-4">
           <div>
-            价格：<span class="text-danger">¥ {{ selectedSku?.price ?? '--' }}</span>
+            价格：<span class="text-danger">{{ formatMoney(selectedSku?.price) }}</span>
           </div>
           <div>库存：{{ selectedSku?.stock ?? '--' }} 件</div>
         </div>
@@ -44,6 +44,7 @@
 import { useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import axios from 'axios'
+import { formatMoney } from '@/utils/money'
 
 // 商品信息结构
 const product = ref({

@@ -23,9 +23,9 @@
           <span class="sales">已售 {{ p.totalSalesVolume || 0 }}</span>
         </div>
         <div class="price">
-          <span class="cur">¥{{ p.price }}</span>
-          <span class="range" v-if="p.maxPrice && p.maxPrice > p.price"> ~ ¥{{ p.maxPrice }}</span>
-          <span class="origin" v-if="p.originalPrice && p.originalPrice > p.price">¥{{ p.originalPrice }}</span>
+          <span class="cur">{{ formatMoney(p.price) }}</span>
+          <span class="range" v-if="p.maxPrice && p.maxPrice > p.price"> ~ {{ formatMoney(p.maxPrice) }}</span>
+          <span class="origin" v-if="p.originalPrice && p.originalPrice > p.price">{{ formatMoney(p.originalPrice) }}</span>
         </div>
       </div>
       <el-empty v-if="!loading && products.length === 0" description="暂无在售商品" />
@@ -46,6 +46,7 @@
 <script setup name="FrontShop">
 import { ref, onMounted } from 'vue'
 import { listFrontProduct } from '@/api/shopping/front'
+import { formatMoney } from '@/utils/money'
 
 /**
  * 简易商城 = 管理端内嵌的 C 端商品**预览**页（路由 /mallshop）。

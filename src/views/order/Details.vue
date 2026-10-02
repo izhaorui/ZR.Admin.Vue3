@@ -11,6 +11,9 @@
         <el-descriptions-item label="订单状态">
           <dict-tag :options="dictStore.orderStatusOptions" :value="info.orderStatus" />
         </el-descriptions-item>
+        <el-descriptions-item label="退款状态">
+          <dict-tag :options="dictStore.refundStatusOptions" :value="info.refundStatus" />
+        </el-descriptions-item>
         <el-descriptions-item label="支付方式">
           <dict-tag :options="dictStore.payTypeOptions" :value="info.payType" />
         </el-descriptions-item>

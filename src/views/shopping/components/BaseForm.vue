@@ -120,7 +120,7 @@
             </span>
           </template>
 
-          ￥{{ info.price }}- {{ info.maxPrice }}
+          {{ formatMoneyRange(info.price, info.maxPrice) }}
         </el-form-item>
         <el-form-item label="规格"> {{ info.specSummary || '-' }} </el-form-item>
         <el-form-item label="库存">
@@ -142,6 +142,7 @@
 <script setup name="BasicInfoForm">
 import { updateInfo } from '@/api/shopping/product'
 import { ElMessage } from 'element-plus'
+import { formatMoneyRange } from '@/utils/money'
 import BrandSelect from './BrandSelect.vue'
 const props = defineProps({
   info: {

@@ -99,7 +99,7 @@
               <el-text line-clamp="2">{{ item.productName }}</el-text>
             </div>
             <div>
-              <span class="price"> ￥{{ item.totalPrice }} </span>
+              <span class="price"> {{ formatMoney(item.totalPrice) }} </span>
               x{{ item.quantity }}
             </div>
             <div>{{ item.skuSpec }}</div>
@@ -146,10 +146,10 @@
     <el-table-column prop="totalAmount" label="总金额" sortable width="120" v-if="columns.showColumn('totalAmount')">
       <template #default="{ row }">
         <div>
-          <span class="amount_label">总金额</span> <span class="text-warning">￥{{ row.totalAmount }}</span>
+          <span class="amount_label">总金额</span> <span class="text-warning">{{ formatMoney(row.totalAmount) }}</span>
         </div>
         <div>
-          <span class="amount_label">付款金额</span> <span class="text-danger">￥{{ row.payAmount }}</span>
+          <span class="amount_label">付款金额</span> <span class="text-danger">{{ formatMoney(row.payAmount) }}</span>
         </div>
       </template>
     </el-table-column>
@@ -194,6 +194,11 @@
       </template>
     </el-table-column>
 
+    <el-table-column prop="refundStatus" label="退款状态" width="100" align="center" v-if="columns.showColumn('refundStatus')">
+      <template #default="{ row }">
+        <dict-tag :options="dictStore.refundStatusOptions" :value="row.refundStatus" />
+      </template>
+    </el-table-column>
     <el-table-column prop="cancelTime" label="取消时间" :show-overflow-tooltip="true" v-if="columns.showColumn('cancelTime')" />
     <el-table-column prop="orderNote" label="订单备注" width="140" v-if="columns.showColumn('orderNote')">
       <template #default="{ row }">
@@ -242,6 +247,17 @@
             v-if="scope.row.orderStatus == 1">
             发货
           </el-button>
+          <el-button
+            type="danger"
+            text
+            class="btn-danger-text"
+            size="small"
+            v-hasPermi="['oms:order:refund']"
+            v-if="canRefund(scope.row)"
+            :loading="refundLoadingId === scope.row.id"
+            @click="handleRefund(scope.row)">
+            退款
+          </el-button>
         </div>
       </template>
     </el-table-column>
@@ -261,8 +277,9 @@
 </template>
 
 <script setup name="order">
-import { listOMSOrder, cancelOMSOrder, cancelOMSOrders } from '@/api/shopping/omsorder.js'
+import { listOMSOrder, cancelOMSOrder, cancelOMSOrders, RefundOrder } from '@/api/shopping/omsorder.js'
 import { dayjs, ElMessage } from 'element-plus'
+import { formatMoney } from '@/utils/money'
 import shipments from './components/ShipmentsForm.vue'
 import merchantNoteForm from './components/MerchantNoteForm.vue'
 import addressForm from './components/AddressForm.vue'
@@ -287,12 +304,59 @@ const queryParams = reactive({
   deliveryNo: undefined
 })
 const dictStore = useDictStore()
+// 退款请求进行中的订单 Id（按钮级 loading，防连点重复退款）
+const refundLoadingId = ref()
+
+/**
+ * 订单退款：后端关闭订单并回补库存，渠道退款由人工在支付渠道完成后操作
+ */
+/**
+ * 是否展示"退款"入口：
+ * - 未取消的订单（待付款/待发货/已发货/已完成）：发起退款；
+ * - 已取消且退款状态为"退款中(1)"的订单：确认渠道退款完成。
+ *   （取消"已支付"订单会置为退款中，渠道退款由人工在支付渠道完成后回到这里确认）
+ */
+function canRefund(row) {
+  const status = parseInt(row.orderStatus)
+  if ([0, 1, 2, 3].includes(status)) return true
+  return status === 4 && row.refundStatus === 1
+}
+
+/**
+ * 订单退款入口：区分"发起退款"与"确认退款完成"两种语义。
+ * - 发起退款：后端关闭订单，未发货回补库存，已发货只关闭订单（货已出库，库存不自动加回）；渠道退款需人工完成。
+ * - 确认完成：订单此前已取消且处于"退款中"，此处仅把退款状态推进为"已退款"，不再变动库存。
+ */
+function handleRefund(row) {
+  const isConfirm = parseInt(row.orderStatus) === 4 && row.refundStatus === 1
+  const message = isConfirm
+    ? `确认订单「${row.orderNo}」的渠道退款已完成？确认后订单退款状态置为"已退款"，不再回补库存。`
+    : `确认退款订单「${row.orderNo}」？实付金额 ${formatMoney(row.payAmount)}。未发货会回补库存；已发货只关闭订单（货已出库，库存不自动加回）。渠道退款需人工在支付渠道完成。`
+  proxy
+    .$confirm(message, isConfirm ? '确认退款完成' : '退款确认', {
+      confirmButtonText: isConfirm ? '确认已完成' : '确认退款',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+    .then(() => {
+      refundLoadingId.value = row.id
+      return RefundOrder({ orderNo: row.orderNo })
+    })
+    .then(() => {
+      proxy.$modal.msgSuccess(isConfirm ? '已确认退款完成' : '退款成功')
+      getList()
+    })
+    .finally(() => {
+      refundLoadingId.value = undefined
+    })
+}
 const columns = ref([
   { visible: false, align: 'center', type: '', prop: 'id', label: '订单Id' },
   { visible: true, align: 'center', type: '', prop: 'memberId', label: '订单号/用户' },
   { visible: true, align: 'center', type: '', prop: 'totalAmount', label: '总金额' },
   { visible: true, align: 'center', type: '', prop: 'payAmount', label: '付款金额' },
   { visible: true, align: 'center', type: 'dict', prop: 'orderStatus', label: '订单状态' },
+  { visible: true, align: 'center', type: 'dict', prop: 'refundStatus', label: '退款状态' },
   { visible: true, align: 'center', type: '', prop: 'payType', label: '支付方式' },
   { visible: true, align: 'center', type: '', prop: 'createTime', label: '下单时间', showOverflowTooltip: true },
   { visible: false, align: 'center', type: '', prop: 'cancelTime', label: '取消时间', showOverflowTooltip: true },

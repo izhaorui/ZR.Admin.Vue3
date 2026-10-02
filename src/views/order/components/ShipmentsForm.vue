@@ -7,7 +7,7 @@
       </el-form-item>
       <el-form-item label="物流公司" prop="deliveryCompany">
         <el-select v-model="form.deliveryCompany" allow-create clearable filterable>
-          <el-option v-for="item in options.deliveryCompanyOptions" :value="item.dictValue">
+          <el-option v-for="item in dictStore.deliveryCompanyOptions" :key="item.dictValue" :value="item.dictValue">
             {{ item.dictLabel }}
           </el-option>
         </el-select>
@@ -35,7 +35,9 @@
 <script setup>
 import { deliveryOrder } from '@/api/shopping/omsorder'
 import { ElMessage } from 'element-plus'
+import useDictStore from '@/store/modules/dict'
 const { proxy } = getCurrentInstance()
+const dictStore = useDictStore()
 
 const state = reactive({
   form: {},
@@ -46,22 +48,10 @@ const state = reactive({
       { min: 6, max: 40, message: '单号长度一般为 6-40 位', trigger: 'blur' }
     ],
     deliveryCompany: [{ required: true, message: '请选择物流公司', trigger: 'blur' }]
-  },
-  options: {
-    deliveryCompanyOptions: [
-      { dictLabel: '顺丰速运', dictValue: '顺丰速运' },
-      { dictLabel: '京东物流', dictValue: '京东物流' },
-      { dictLabel: '中通快递', dictValue: '中通快递' },
-      { dictLabel: '圆通速递', dictValue: '圆通速递' },
-      { dictLabel: '申通快递', dictValue: '申通快递' },
-      { dictLabel: '韵达快递', dictValue: '韵达快递' },
-      { dictLabel: '中国邮政速递', dictValue: '中国邮政速递' },
-      { dictLabel: '德邦快递', dictValue: '德邦快递' }
-    ]
   }
 })
 const emits = defineEmits(['success'])
-const { form, rules, options } = toRefs(state)
+const { form, rules } = toRefs(state)
 const open = ref(false)
 const formRef = ref()
 // 发货请求进行中：拦截回车/确定按钮的重复触发（扫码枪回车 + 手点确定可能连发）

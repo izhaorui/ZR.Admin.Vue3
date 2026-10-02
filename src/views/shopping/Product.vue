@@ -140,7 +140,7 @@
 
       <el-table-column prop="specSummary" label="规格" v-if="columns.showColumn('specSummary')"></el-table-column>
       <el-table-column prop="price" label="价格" align="center" sortable v-if="columns.showColumn('price')">
-        <template #default="{ row }"> ￥{{ row.price }}- {{ row.maxPrice }} </template>
+        <template #default="{ row }"> {{ formatMoneyRange(row.price, row.maxPrice) }} </template>
       </el-table-column>
       <el-table-column prop="stock" label="总库存" align="center" />
       <el-table-column prop="totalSalesVolume" label="总销量" sortable align="center" />
@@ -189,6 +189,7 @@
 
 <script setup name="product">
 import { listShoppingProduct, delShoppingProduct, changeSort, operateShoppingProduct } from '@/api/shopping/product.js'
+import { formatMoneyRange } from '@/utils/money'
 import { treelistCategory } from '@/api/shopping/category.js'
 
 // import ProductEdit from './components/ProductEdit.vue'

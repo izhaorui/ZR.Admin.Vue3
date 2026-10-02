@@ -32,6 +32,32 @@ const useDictStore = defineStore('dict', {
       { dictLabel: '已支付', dictValue: '1', listClass: 'success' },
       { dictLabel: '已关闭', dictValue: '2', listClass: 'info' },
       { dictLabel: '已退款', dictValue: '3', listClass: 'danger' }
+    ],
+    // 退款状态（与后端 ZR.Mall.Enum.RefundStatusEnum 保持一致：0无退款 1退款中 2已退款 3退货中 4已退货）
+    // 说明：取消"已支付"订单会先置为 1（退款中），待运营在渠道退款完成后确认，才转为 2（已退款）。
+    refundStatusOptions: [
+      { dictLabel: '无退款', dictValue: '0', listClass: 'info' },
+      { dictLabel: '退款中', dictValue: '1', listClass: 'warning' },
+      { dictLabel: '已退款', dictValue: '2', listClass: 'danger' },
+      { dictLabel: '退货中', dictValue: '3', listClass: 'warning' },
+      { dictLabel: '已退货', dictValue: '4', listClass: 'danger' }
+    ],
+    // 物流公司（发货下拉；原 ShipmentsForm 页内硬编码收敛至此，后续可迁 sys_dict 后端下发）
+    deliveryCompanyOptions: [
+      { dictLabel: '顺丰速运', dictValue: '顺丰速运' },
+      { dictLabel: '京东物流', dictValue: '京东物流' },
+      { dictLabel: '中通快递', dictValue: '中通快递' },
+      { dictLabel: '圆通速递', dictValue: '圆通速递' },
+      { dictLabel: '申通快递', dictValue: '申通快递' },
+      { dictLabel: '韵达快递', dictValue: '韵达快递' },
+      { dictLabel: '中国邮政速递', dictValue: '中国邮政速递' },
+      { dictLabel: '德邦快递', dictValue: '德邦快递' }
+    ],
+    // 会员性别（与后端 ums_member Gender 保持一致：0未知 1男 2女）
+    memberGenderOptions: [
+      { dictLabel: '未知', dictValue: '0' },
+      { dictLabel: '男', dictValue: '1' },
+      { dictLabel: '女', dictValue: '2' }
     ]
   }),
   actions: {}

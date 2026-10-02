@@ -110,7 +110,7 @@
       </el-table-column>
       <el-table-column label="价格" width="110" align="center">
         <template #default="{ row }">
-          <span :class="{ 'text-danger': !(row.price > 0) }">{{ row.price > 0 ? '￥' + row.price : '未填写' }}</span>
+          <span :class="{ 'text-danger': !(row.price > 0) }">{{ row.price > 0 ? formatMoney(row.price) : '未填写' }}</span>
         </template>
       </el-table-column>
       <el-table-column label="库存" width="100" align="center">
@@ -131,6 +131,8 @@
 </template>
 
 <script setup name="SkuPreview">
+import { formatMoney } from '@/utils/money'
+
 const props = defineProps({
   info: {
     type: Object,
