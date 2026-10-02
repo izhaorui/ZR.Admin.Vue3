@@ -38,6 +38,12 @@ export function useProductIssues(form) {
     if (!form.data.categoryId) {
       list.push({ level: 'warning', tab: TAB_BASIC, text: '未选择商品分类，前台按分类筛选时查不到该商品' })
     }
+    // 运费模板未绑定是 warning 而非 error：存在默认模板时未绑定也能正常计费，
+    // 一个模板都没配时则计 0 运费 —— 两种情况都不该拦住运营发布商品。
+    // 提示的价值在于让运营知道"这个商品不会按我以为的方式计运费"。
+    if (!form.data.freightTemplateId) {
+      list.push({ level: 'warning', tab: TAB_BASIC, text: '未绑定运费模板，将按默认模板计费；若未设置默认模板则计 0 运费' })
+    }
     return list
   })
 

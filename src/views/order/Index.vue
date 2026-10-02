@@ -148,8 +148,21 @@
         <div>
           <span class="amount_label">总金额</span> <span class="text-warning">{{ formatMoney(row.totalAmount) }}</span>
         </div>
+        <!-- 金额构成：运费/优惠/积分抵扣/已退金额本期恒为 0，故不渲染；对应能力上线后自动出现 -->
+        <div v-if="row.freightAmount > 0">
+          <span class="amount_label">运费</span> <span class="text-warning">{{ formatMoney(row.freightAmount) }}</span>
+        </div>
+        <div v-if="row.discountAmount > 0">
+          <span class="amount_label">优惠</span> <span class="text-muted">{{ formatMoney(row.discountAmount) }}</span>
+        </div>
+        <div v-if="row.integralAmount > 0">
+          <span class="amount_label">积分抵扣</span> <span class="text-muted">{{ formatMoney(row.integralAmount) }}</span>
+        </div>
         <div>
           <span class="amount_label">付款金额</span> <span class="text-danger">{{ formatMoney(row.payAmount) }}</span>
+        </div>
+        <div v-if="row.refundAmount > 0">
+          <span class="amount_label">已退金额</span> <span class="text-muted">{{ formatMoney(row.refundAmount) }}</span>
         </div>
       </template>
     </el-table-column>
@@ -312,13 +325,16 @@ const refundLoadingId = ref()
  */
 /**
  * 是否展示"退款"入口：
- * - 未取消的订单（待付款/待发货/已发货/已完成）：发起退款；
+ * - 已付款且未取消的订单（待发货/已发货/已完成）：发起退款；
  * - 已取消且退款状态为"退款中(1)"的订单：确认渠道退款完成。
  *   （取消"已支付"订单会置为退款中，渠道退款由人工在支付渠道完成后回到这里确认）
+ *
+ * ⚠️ 待付款(0)刻意不在此列：它没有款可退，正解是同一行左侧的「取消」。
+ * 后端 RefundOrder 对未付款单也会显式拒绝，这里只是不给一个点了必然报错的入口。
  */
 function canRefund(row) {
   const status = parseInt(row.orderStatus)
-  if ([0, 1, 2, 3].includes(status)) return true
+  if ([1, 2, 3].includes(status)) return true
   return status === 4 && row.refundStatus === 1
 }
 

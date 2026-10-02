@@ -14,6 +14,13 @@
         <el-descriptions-item label="退款状态">
           <dict-tag :options="dictStore.refundStatusOptions" :value="info.refundStatus" />
         </el-descriptions-item>
+        <!-- 金额构成：运费/优惠/积分抵扣/已退金额本期恒为 0，零值不渲染，避免出现「运费 0.00」 -->
+        <el-descriptions-item label="总金额">{{ formatMoney(info.totalAmount) }}</el-descriptions-item>
+        <el-descriptions-item label="运费" v-if="info.freightAmount > 0">{{ formatMoney(info.freightAmount) }}</el-descriptions-item>
+        <el-descriptions-item label="优惠" v-if="info.discountAmount > 0">{{ formatMoney(info.discountAmount) }}</el-descriptions-item>
+        <el-descriptions-item label="积分抵扣" v-if="info.integralAmount > 0">{{ formatMoney(info.integralAmount) }}</el-descriptions-item>
+        <el-descriptions-item label="付款金额">{{ formatMoney(info.payAmount) }}</el-descriptions-item>
+        <el-descriptions-item label="已退金额" v-if="info.refundAmount > 0">{{ formatMoney(info.refundAmount) }}</el-descriptions-item>
         <el-descriptions-item label="支付方式">
           <dict-tag :options="dictStore.payTypeOptions" :value="info.payType" />
         </el-descriptions-item>
@@ -76,6 +83,7 @@
 
 <script setup name="orderdetails">
 import { getOMSOrder } from '@/api/shopping/omsorder'
+import { formatMoney } from '@/utils/money'
 import useDictStore from '@/store/modules/dict'
 const route = useRoute()
 const info = ref()

@@ -13,6 +13,13 @@
           </el-col>
 
           <el-col :lg="12">
+            <!-- 运费模板：不选即走默认模板 / 计 0 运费，clearable 是合法配置 -->
+            <el-form-item label="运费模板">
+              <FreightTemplateSelect v-model="info.freightTemplateId" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
             <el-form-item label="分类">
               <el-cascader
                 class="w100"
@@ -144,6 +151,7 @@ import { updateInfo } from '@/api/shopping/product'
 import { ElMessage } from 'element-plus'
 import { formatMoneyRange } from '@/utils/money'
 import BrandSelect from './BrandSelect.vue'
+import FreightTemplateSelect from './FreightTemplateSelect.vue'
 const props = defineProps({
   info: {
     type: Object,
