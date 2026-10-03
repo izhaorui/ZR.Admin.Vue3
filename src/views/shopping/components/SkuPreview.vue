@@ -54,6 +54,10 @@
         </span>
         <span v-else>不限购</span>
       </el-descriptions-item>
+      <el-descriptions-item label="下单表单">
+        <span v-if="formFields.length">{{ formFields.length }} 项：{{ formFieldSummary }}</span>
+        <span v-else class="text-muted">无需填写</span>
+      </el-descriptions-item>
       <el-descriptions-item label="商品主图">
         <ImagePreview v-if="info?.mainImage" :src="info.mainImage" width="60px" height="60px" />
         <span v-else class="text-danger">未上传</span>
@@ -160,7 +164,7 @@ const props = defineProps({
     default: () => []
   }
 })
-// jump 回传问题所在的标签页 name（base/sku），由父组件切换 el-tabs
+// jump 回传问题所在的标签页 name（base/sku/form），由父组件切换 el-tabs
 const emit = defineEmits(['jump'])
 
 const errorIssues = computed(() => props.issues.filter((item) => item.level === 'error'))
@@ -184,6 +188,14 @@ function findCategoryName(tree, id) {
   }
   return ''
 }
+
+// 下单表单：商品配的字段定义（info.formItems），为空表示买家下单无需额外填写
+const formFields = computed(() => props.info?.formItems || [])
+const formFieldSummary = computed(() =>
+  formFields.value
+    .map((item) => `${(item.label || item.field || '未命名字段').trim()}${item.required ? '（必填）' : ''}`)
+    .join('、')
+)
 
 const priceRangeText = computed(() => {
   const prices = props.skus.map((sku) => Number(sku.price) || 0).filter((price) => price > 0)

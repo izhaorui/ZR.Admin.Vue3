@@ -89,6 +89,19 @@ export function changeSort(data) {
 }
 
 /**
+ * 下单表单配置元数据（预设字段 + 字段类型 + 长度/数量限制）
+ *
+ * 预设与限制都取自服务端常量，前端不另维护一份「类型 → 中文名/默认长度」的映射表；
+ * 纯常量接口、不查库，随商品编辑页打开时取一次即可。
+ */
+export function getProductFormMeta() {
+  return request({
+    url: 'shopping/product/formMeta',
+    method: 'get'
+  })
+}
+
+/**
  * 上架/下架商品
  * @param {商品id字符串} ids
  * @param { 操作类型 up/down} type

@@ -3,6 +3,14 @@ import { computed } from 'vue'
 // 与 ProductEdit 的 el-tabs name 对应
 const TAB_BASIC = 'base'
 const TAB_SKU = 'sku'
+const TAB_FORM = 'form'
+
+// 需要候选项的字段类型。服务端 ProductFormType.NeedOptions 才是权威（保存时会拒绝），
+// 这里只做提交前的提前提示，避免"填了半天，一点保存才被服务端退回来"。
+const NEED_OPTIONS_TYPES = new Set(['select', 'radio', 'checkbox'])
+
+// 字段键格式：字母开头，只含字母/数字/下划线（与后端 ProductFormValidator 同规则）
+const FIELD_KEY_PATTERN = /^[A-Za-z][A-Za-z0-9_]*$/
 
 /**
  * 商品编辑的问题清单。
@@ -11,7 +19,7 @@ const TAB_SKU = 'sku'
  * 供提交前的统一校验与「去处理」跳转共用，避免各处再写一遍校验。
  *
  * level：error = 阻塞提交；warning = 只提醒，不拦。
- * tab：问题所在的标签页（base=基本信息，sku=价格/库存），用于提交校验失败时自动切换。
+ * tab：问题所在的标签页（base=基本信息，sku=价格/库存，form=下单表单），用于提交校验失败时自动切换。
  *
  * @param {object} form 商品编辑的响应式表单 { data, specList, skus }
  * @returns {{
@@ -110,7 +118,42 @@ export function useProductIssues(form) {
     return list
   })
 
-  const allIssues = computed(() => [...basicIssues.value, ...skuIssues.value])
+  // 下单表单：字段键与候选项。都是服务端保存时会直接拒绝的硬条件，
+  // 放在提交前拦下来，省得填完一堆字段才被退回。
+  const formIssues = computed(() => {
+    const list = []
+    const items = form.data.formItems || []
+    const fieldCount = new Map()
+
+    items.forEach((item, index) => {
+      const field = (item.field || '').trim()
+      // 标题为空时服务端会回落成字段键，故不算问题；这里只用于拼提示文案
+      const name = (item.label || '').trim() || field || `第 ${index + 1} 个字段`
+
+      if (!field) {
+        list.push({ level: 'error', tab: TAB_FORM, text: `第 ${index + 1} 个下单字段还没有填字段键` })
+      } else if (!FIELD_KEY_PATTERN.test(field)) {
+        list.push({ level: 'error', tab: TAB_FORM, text: `下单字段「${field}」的字段键只能用字母开头，且只含字母、数字、下划线` })
+      } else {
+        fieldCount.set(field, (fieldCount.get(field) || 0) + 1)
+      }
+
+      // 选择型字段没有候选项，服务端 ValidateDefinition 会直接拒绝保存
+      if (NEED_OPTIONS_TYPES.has(item.type) && !(item.options || '').trim()) {
+        list.push({ level: 'error', tab: TAB_FORM, text: `下单字段「${name}」是选择型，需要填写候选项（逗号分隔）` })
+      }
+    })
+
+    fieldCount.forEach((count, field) => {
+      if (count > 1) {
+        list.push({ level: 'error', tab: TAB_FORM, text: `下单字段的字段键「${field}」重复了 ${count} 次，买家填的值会对不上` })
+      }
+    })
+
+    return list
+  })
+
+  const allIssues = computed(() => [...basicIssues.value, ...skuIssues.value, ...formIssues.value])
   const blockerIssues = computed(() => allIssues.value.filter((issue) => issue.level === 'error'))
 
   return { allIssues, blockerIssues }

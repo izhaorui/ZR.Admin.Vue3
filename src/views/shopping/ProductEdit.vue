@@ -16,6 +16,11 @@
         <PriceStockStep ref="priceStock" :info="form.data" v-model:spec-list="form.specList" v-model:skus="form.skus" />
       </el-tab-pane>
 
+      <!-- 下单表单：勾选式配置（预设字段），不做拖拽式设计器 -->
+      <el-tab-pane label="下单表单" name="form">
+        <FormFieldsStep :info="form.data" v-model:items="form.data.formItems" />
+      </el-tab-pane>
+
       <!-- 商品详情 -->
       <el-tab-pane label="商品详情" name="detail">
         <el-form label-position="left" label-width="70px">
@@ -92,6 +97,7 @@ import Editor from '@/components/Editor'
 import BaseForm from './components/BaseForm.vue'
 import PriceStockStep from './components/PriceStockStep.vue'
 import SkuPreview from './components/SkuPreview.vue'
+import FormFieldsStep from './components/FormFieldsStep.vue'
 import { useProductIssues } from './composables/useProductIssues'
 import { useProductDraft } from './composables/useProductDraft'
 
@@ -277,6 +283,10 @@ function reset() {
     sortId: 200,
     saleStatus: 0,
     specType: 1,
+    // 商品形态默认实物（后端 ProductTypeEnum：1=实物 2=虚拟）。绝大多数商品都是实物，
+    // 让运营每次新增都点一次纯属多余；要用服务类商品再改成 2。
+    // 同时保证 isVirtual 不会因 undefined 把实物误判成虚拟、运费模板被无谓置灰。
+    productType: 1,
     productName: undefined,
     introduce: '',
     imageUrls: '',
