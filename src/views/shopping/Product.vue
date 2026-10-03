@@ -120,6 +120,14 @@
 
       <el-table-column prop="productName" label="商品名" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('productName')">
       </el-table-column>
+      <!-- 类型：虚拟商品的下单流程与实物不同（免地址、免运费、付款即完成），列表里要能一眼区分 -->
+      <el-table-column prop="productType" label="类型" align="center" width="90" v-if="columns.showColumn('productType')">
+        <template #default="{ row }">
+          <el-tag :type="row.productType === 2 ? 'warning' : 'info'" effect="plain">
+            {{ row.productType === 2 ? '虚拟' : '实物' }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="introduce" label="卖点" align="center" v-if="columns.showColumn('introduce')">
         <template #default="{ row }">
           <el-text line-clamp="2">
@@ -219,7 +227,8 @@ const dictStore = useDictStore()
 const columns = ref([
   { visible: true, prop: 'productId', label: '商品ID' },
   { visible: true, prop: 'productName', label: '商品名' },
-  { visible: false, prop: 'introduce', label: '卖点' },
+  { visible: true, prop: 'productType', label: '类型' },
+  { visible: true, prop: 'introduce', label: '卖点' },
   { visible: true, prop: 'categoryId', label: '商品分类' },
   { visible: true, prop: 'price', label: '价格' },
   { visible: false, prop: 'specSummary', label: '规格汇总' },

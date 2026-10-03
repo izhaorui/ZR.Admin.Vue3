@@ -85,7 +85,7 @@
 import { addShoppingProduct, getShoppingProduct, updateShoppingProduct } from '@/api/shopping/product'
 import { treelistCategory } from '@/api/shopping/category.js'
 import useDictStore from '@/store/modules/dict'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 // 富文本组件
 import Editor from '@/components/Editor'
@@ -141,6 +141,32 @@ const { draftEnabled, draftSavedAt, saveDraft, clearDraft, checkDraft, startTrac
 // 切到第一条待处理问题所在的标签页
 function goFirstIssue() {
   activeName.value = blockerIssues.value[0]?.tab || 'base'
+}
+
+/** 售卖状态：在售（后端 SaleStatus.OnSale） */
+const SALE_STATUS_ON_SALE = 1
+
+/**
+ * 「在售 + 价格过低」的二次确认文案；返回空串表示无需确认。
+ *
+ * 判据是**值本身**而不是"改动痕迹"：新增商品时价格框初始为 0，
+ * 而它历史上的 :min 会把 0 静默钳制成 0.01（见 SingleSkuForm 的说明），
+ * 两种情形都意味着"运营并没有真正定过价"，一旦上架前台就按这个价格售卖。
+ *
+ * 只在**在售**时提醒：下架商品可以安心先保存，之后从列表页批量上架，
+ * 在这里拦它只会多一次无意义的点击。
+ *
+ * 阈值取 0.01：既是输入框允许的最小金额，也是"没定过价"最典型的表现。
+ */
+function onSaleLowPriceWarning() {
+  if (Number(form.data.saleStatus) !== SALE_STATUS_ON_SALE) return ''
+  const lowPrices = form.skus
+    .map((sku) => Number(sku?.price || 0))
+    .filter((price) => price <= 0.01)
+  if (!lowPrices.length) return ''
+
+  const detail = lowPrices.map((price) => `¥${price.toFixed(2)}`).join('、')
+  return `该商品将按「在售」提交，但有 ${lowPrices.length} 个 SKU 的价格是 ${detail}，确认按这个价格上架？`
 }
 
 /*************** 商品详情：从素材库插入图片 ***************/
@@ -205,6 +231,23 @@ async function handleSubmit() {
     activeName.value = blocker.tab
     ElMessage.error(blocker.text)
     return
+  }
+
+  // 在售 + 价格过低：提交前二次确认。校验清单拦不住这种"值合法但没定过价"的情况，
+  // 而它一旦上架就是实打实的错误售价，故用一次确认兜住。
+  const priceWarning = onSaleLowPriceWarning()
+  if (priceWarning) {
+    try {
+      await ElMessageBox.confirm(priceWarning, '确认上架价格', {
+        confirmButtonText: '确认提交',
+        cancelButtonText: '返回改价',
+        type: 'warning'
+      })
+    } catch (error) {
+      // 取消不是错误：直接切到价格页签，让运营就地改价，而不是只丢一句提示
+      activeName.value = 'sku'
+      return
+    }
   }
 
   const payload = {

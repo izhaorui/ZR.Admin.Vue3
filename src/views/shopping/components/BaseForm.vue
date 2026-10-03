@@ -13,14 +13,34 @@
           </el-col>
 
           <el-col :lg="12">
-            <!-- 运费模板：不选即走默认模板 / 计 0 运费，clearable 是合法配置 -->
+            <!-- 商品形态：决定要不要收货地址、计不计运费、付款后是否直接完成、买家能不能申请售后 -->
+            <el-form-item label="商品类型">
+              <!-- 只有两个取值，radio 比下拉少一次点击；v-model 直接绑数字，没有取值形态问题 -->
+              <el-radio-group v-model="info.productType">
+                <el-radio :value="1">实物</el-radio>
+                <el-radio :value="2">虚拟（服务类）</el-radio>
+              </el-radio-group>
+              <div v-if="isVirtual" class="save-tip">
+                <el-icon><InfoFilled /></el-icon>
+                虚拟商品不计运费、下单不需收货地址、付款后订单直接完成、买家不能申请售后（运营仍可从订单页退款）。
+                <b>改动只影响之后的下单，历史订单保持原形态。</b>
+              </div>
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="12">
+            <!-- 运费模板：不选即走默认模板 / 计 0 运费，clearable 是合法配置。
+                 虚拟商品不计运费，故置灰 —— 留着可点会让人以为能配 -->
             <el-form-item label="运费模板">
-              <FreightTemplateSelect v-model="info.freightTemplateId" />
+              <FreightTemplateSelect v-model="info.freightTemplateId" :disabled="isVirtual" />
             </el-form-item>
           </el-col>
 
           <el-col :lg="12">
             <el-form-item label="分类">
+              <!-- 分类是树形数据，用下拉而不是平铺 radio：不占版面，且选中的是完整层级路径。
+                   emitPath: false 保证 v-model 拿到标量 categoryId（与后端 Product.CategoryId 同口径），
+                   checkStrictly 让父级与子级都能选。 -->
               <el-cascader
                 class="w100"
                 :options="categoryOptions"
@@ -33,6 +53,13 @@
                   <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
                 </template>
               </el-cascader>
+              <!-- 分类筛选是**精确匹配**（ProductService.QueryExp：CategoryId == 入参，不含子分类），
+                   而这里父级可选 —— 商品挂在父分类上时，前台按它的子分类筛不出来。
+                   提示写在字段上，免得又变成一次"分类好像没生效"的排查。 -->
+              <div class="save-tip">
+                <el-icon><InfoFilled /></el-icon>
+                前台按分类筛选是精确匹配、不含子分类：商品请选到末级分类。
+              </div>
             </el-form-item>
           </el-col>
           <el-col :lg="24">
@@ -169,6 +196,18 @@ const props = defineProps({
     type: Number
   }
 })
+
+/** 商品形态（与后端 ProductTypeEnum 逐值对应） */
+const PRODUCT_TYPE_VIRTUAL = 2
+
+/**
+ * 是否虚拟商品。
+ *
+ * 只用来置灰运费模板下拉并给出约束说明 —— 真正的行为判定全在服务端
+ *（下单免地址、免运费、付款即完成、买家不可售后），前端不做业务判断。
+ */
+const isVirtual = computed(() => Number(props.info?.productType || 0) === PRODUCT_TYPE_VIRTUAL)
+
 const rules = {
   productName: [{ required: true, message: '请输入商品名称', trigger: 'blur' }],
   introduce: [{ required: false, message: '请输入商品描述', trigger: 'blur' }],

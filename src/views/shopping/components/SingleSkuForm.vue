@@ -4,7 +4,11 @@
       <UploadImage v-model="form.singleSku.imageUrl" :limit="1"></UploadImage>
     </el-form-item>
     <el-form-item :label="'商品价格' + $t('currency')" prop="price">
-      <el-input-number v-model="form.singleSku.price" :min="0.01" />
+      <!-- min 必须是 0，不能是 0.01：el-input-number 会把低于 min 的绑定值**静默钳制成 min 并回写**
+           （源码 watch(modelValue, { immediate: true }) → verifyValue(value, true) → emit）。
+           于是"没填价格"的 0 会变成 0.01，反而通过了"价格须为正数"的校验，
+           商品就以 1 分钱上架且毫无提示。min=0 时未填就是 0，会被提交前的校验明确拦下。 -->
+      <el-input-number v-model="form.singleSku.price" :min="0" />
       <div v-if="!(form.singleSku.price > 0)" class="cell-tip cell-tip--error">价格需大于 0，否则无法上架</div>
     </el-form-item>
     <el-form-item label="库存数量" prop="stock">
