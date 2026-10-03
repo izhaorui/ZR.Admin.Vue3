@@ -115,6 +115,34 @@ export function listSaleTopProduct(query) {
 }
 
 /**
+ * 经营概览：客单价 / 退款率 / 售后率 / 虚拟占比 / 复购率
+ *
+ * 时间范围按支付时间，与销售总额/趋势同口径；比例由服务端算好（分母为 0 时给 0），
+ * 前端只做百分比格式化，不自己相除。
+ */
+export function getBusinessOverview(query) {
+  return request({
+    url: 'shopping/Order/getBusinessOverview',
+    method: 'get',
+    params: query
+  })
+}
+
+/**
+ * 退款 Top10 商品
+ *
+ * 注意口径：refundSales 是"退款订单里该商品的销售额"，不是退款金额 ——
+ * 退款金额是订单级字段，拆不到商品上。真正的退款总额看经营概览。
+ */
+export function listRefundTopProduct(query) {
+  return request({
+    url: 'shopping/Order/getRefundTopProduct',
+    method: 'get',
+    params: query
+  })
+}
+
+/**
  * 订单发货
  * @param data
  */
