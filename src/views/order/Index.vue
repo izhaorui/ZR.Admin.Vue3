@@ -4,37 +4,48 @@
  * @Date: (2025-05-30)
 -->
 <template>
-  <el-collapse>
+  <el-collapse class="mb8">
     <el-collapse-item title="操作提示" name="1">
-      <div>*订单状态有待付款，待发货，待收货，已完成，已关闭。</div>
-      <div>*待付款订单取消后则为已关闭。待付款订单支付后则为待发货。待发货订单发货后则为待收货。待收货订单收货后则为已完成。</div>
+      <div class="tip-line">订单状态流转：待付款 →（支付）→ 待发货 →（发货）→ 待收货 →（确认收货）→ 已完成。</div>
+      <div class="tip-line">待付款订单取消后为已关闭；已付款订单退款后为已退款。</div>
     </el-collapse-item>
   </el-collapse>
-  <el-form :model="queryParams" label-position="right" inline ref="queryRef" v-show="showSearch" @submit.prevent>
-    <el-tabs v-model="queryParams.orderStatus" class="demo-tabs" @tab-change="handleQuery">
-      <el-tab-pane name="">
-        <template #label>
-          <span class="tab-label"
-            >全部 <em class="tab-badge">{{ totalCount }}</em></span
-          >
-        </template>
-      </el-tab-pane>
-      <el-tab-pane :name="parseInt(item.dictValue)" v-for="item in dictStore.orderStatusOptions" :key="item.dictValue">
-        <template #label>
-          <span class="tab-label"
-            >{{ item.dictLabel }} <em class="tab-badge">{{ statsData[item.dictValue] ?? 0 }}</em></span
-          >
-        </template>
-      </el-tab-pane>
-    </el-tabs>
+
+  <!--
+    状态筛选独立成行，不放进下面的 inline 表单：
+    表单是行内流布局，el-tabs 塞进去宽度由内容决定，标签一多就换行、并与相邻表单项基线错位。
+    它也是本页主筛选（带各状态计数），故不随「隐藏搜索」一起收起。
+  -->
+  <el-tabs v-model="queryParams.orderStatus" class="order-tabs" @tab-change="handleQuery">
+    <el-tab-pane name="">
+      <template #label>
+        <span class="tab-label">全部 <em class="tab-badge">{{ totalCount }}</em></span>
+      </template>
+    </el-tab-pane>
+    <el-tab-pane :name="parseInt(item.dictValue)" v-for="item in dictStore.orderStatusOptions" :key="item.dictValue">
+      <template #label>
+        <span class="tab-label">{{ item.dictLabel }} <em class="tab-badge">{{ statsData[item.dictValue] ?? 0 }}</em></span>
+      </template>
+    </el-tab-pane>
+  </el-tabs>
+
+  <!-- label-width 固定：inline 表单的标签宽度默认随文字长度变，四个字段的输入框会左右参差 -->
+  <el-form
+    :model="queryParams"
+    label-position="right"
+    label-width="72px"
+    inline
+    ref="queryRef"
+    v-show="showSearch"
+    @submit.prevent>
     <el-form-item label="订单号" prop="orderNo">
-      <el-input v-model="queryParams.orderNo" placeholder="请输入订单号" />
+      <el-input v-model="queryParams.orderNo" placeholder="请输入订单号" class="search-input" @keyup.enter="handleQuery" />
     </el-form-item>
     <el-form-item label="物流单号" prop="deliveryNo">
-      <el-input v-model="queryParams.deliveryNo" placeholder="请输入物流单号" />
+      <el-input v-model="queryParams.deliveryNo" placeholder="请输入物流单号" class="search-input" @keyup.enter="handleQuery" />
     </el-form-item>
     <el-form-item label="会员ID" prop="memberId">
-      <el-input v-model.number="queryParams.memberId" placeholder="请输入会员ID" />
+      <el-input v-model.number="queryParams.memberId" placeholder="请输入会员ID" class="search-input" @keyup.enter="handleQuery" />
     </el-form-item>
 
     <el-form-item label="下单时间">
@@ -45,17 +56,9 @@
         end-placeholder="结束日期"
         value-format="YYYY-MM-DD HH:mm:ss"
         :default-time="defaultTime"
-        :shortcuts="dateOptions">
-      </el-date-picker>
+        :shortcuts="dateOptions"
+        class="search-range" />
     </el-form-item>
-    <!-- <el-form-item label="确认收货状态" prop="confirmStatus">
-        <el-radio-group v-model="queryParams.confirmStatus">
-          <el-radio-button value="">全部</el-radio-button>
-          <el-radio-button v-for="item in options.confirmStatusOptions" :key="item.dictValue" :value="item.dictValue">
-            {{ item.dictLabel }}
-          </el-radio-button>
-        </el-radio-group>
-      </el-form-item> -->
     <el-form-item>
       <el-button icon="search" type="primary" @click="handleQuery">{{ $t('btn.search') }}</el-button>
       <el-button icon="refresh" @click="resetQuery">{{ $t('btn.reset') }}</el-button>
@@ -93,22 +96,23 @@
       <template #default="props">
         <div class="expand-title">商品明细（{{ props.row.items?.length || 0 }}）</div>
         <div class="order-product" v-for="item in props.row.items" :key="item.id">
-          <ImagePreview style="width: 60px" :src="item.productPic"></ImagePreview>
+          <ImagePreview width="56" height="56" :src="item.productPic" />
           <div class="info">
             <div class="name">
               <el-text line-clamp="2">{{ item.productName }}</el-text>
             </div>
-            <div>
-              <span class="price"> {{ formatMoney(item.totalPrice) }} </span>
-              x{{ item.quantity }}
-            </div>
-            <div>{{ item.skuSpec }}</div>
+            <div class="spec">{{ item.skuSpec || '-' }}</div>
+          </div>
+          <!-- 金额/数量单独成列右对齐：原来跟在名称下面，多个商品时对不上哪行是哪单 -->
+          <div class="amount">
+            <div class="price">{{ formatMoney(item.totalPrice) }}</div>
+            <div class="quantity">&times; {{ item.quantity }}</div>
           </div>
         </div>
       </template>
     </el-table-column>
     <el-table-column prop="id" label="订单Id" align="center" sortable v-if="columns.showColumn('id')" />
-    <el-table-column label="收货信息" width="170" v-if="columns.showColumn('addressSnapshot')">
+    <el-table-column label="收货信息" min-width="180" v-if="columns.showColumn('addressSnapshot')">
       <template #default="{ row }">
         <div v-if="row.addressSnapshot">
           <div class="flex">
@@ -127,7 +131,7 @@
         <span v-else>—</span>
       </template>
     </el-table-column>
-    <el-table-column prop="memberId" label="订单号/用户" align="center" v-if="columns.showColumn('memberId')">
+    <el-table-column prop="memberId" label="订单号/用户" align="center" min-width="190" v-if="columns.showColumn('memberId')">
       <template #default="{ row }">
         <div>
           <span class="link-type copy-no" v-clipboard:copy="row.orderNo" v-clipboard:success="copySuccess" title="点击复制订单号">
@@ -143,7 +147,7 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column prop="totalAmount" label="总金额" sortable width="120" v-if="columns.showColumn('totalAmount')">
+    <el-table-column prop="totalAmount" label="总金额" sortable min-width="130" v-if="columns.showColumn('totalAmount')">
       <template #default="{ row }">
         <div>
           <span class="amount_label">总金额</span> <span class="text-warning">{{ formatMoney(row.totalAmount) }}</span>
@@ -166,26 +170,25 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column prop="orderStatus" label="订单状态" width="190" v-if="columns.showColumn('orderStatus')">
+    <el-table-column prop="orderStatus" label="订单状态" min-width="210" v-if="columns.showColumn('orderStatus')">
       <template #default="{ row }">
         <dict-tag :options="dictStore.orderStatusOptions" :value="row.orderStatus" />
 
+        <!-- 物流信息另起一行：原来物流公司 tag 紧跟状态 tag 同一行，窄列里两段标签基线不齐、行高被撑高 -->
         <template v-if="row.deliveryCompany">
-          <el-tag type="success" class="ml10"> {{ row.deliveryCompany }} </el-tag>
-          <div>
-            物流单号:{{ row.deliveryNo }}
-
+          <div class="logistics">
+            <el-tag type="success" size="small" effect="plain">{{ row.deliveryCompany }}</el-tag>
+            <span class="delivery-no">{{ row.deliveryNo }}</span>
             <el-button
-              type="danger"
+              type="primary"
               text
+              size="small"
               icon="document-copy"
-              plain
-              class="ml10"
+              title="复制「物流公司-物流单号」"
               v-clipboard:success="copySuccess"
-              v-clipboard:copy="row.deliveryCompany + '-' + row.deliveryNo">
-            </el-button>
+              v-clipboard:copy="row.deliveryCompany + '-' + row.deliveryNo" />
           </div>
-          <div>发货时间:{{ row.shipTime }}</div>
+          <div class="ship-time">发货时间:{{ row.shipTime }}</div>
         </template>
       </template>
     </el-table-column>
@@ -194,15 +197,17 @@
         <dict-tag :options="dictStore.payTypeOptions" :value="row.payType" />
       </template>
     </el-table-column>
-    <el-table-column prop="createTime" label="下单/付款时间" width="150" v-if="columns.showColumn('createTime')">
+    <el-table-column prop="createTime" label="下单/付款时间" width="165" v-if="columns.showColumn('createTime')">
       <template #default="{ row }">
-        <div v-if="row.createTime">
-          <el-tag>下单</el-tag>
-          {{ dayjs(row.createTime).format('MM-DD HH:mm:ss') }}
+        <!-- tag 用 small：默认尺寸 24px 高会把这一行的行高顶起来，两行叠加尤其明显 -->
+        <div class="time-line" v-if="row.createTime">
+          <el-tag size="small">下单</el-tag>
+          <!-- 列表只显示 MM-DD，跨年订单看不出年份，完整时间挂 title 备查 -->
+          <span :title="row.createTime">{{ dayjs(row.createTime).format('MM-DD HH:mm:ss') }}</span>
         </div>
-        <div v-if="row.payTime">
-          <el-tag type="danger">付款</el-tag>
-          {{ dayjs(row.payTime).format('MM-DD HH:mm:ss') }}
+        <div class="time-line" v-if="row.payTime">
+          <el-tag type="danger" size="small">付款</el-tag>
+          <span :title="row.payTime">{{ dayjs(row.payTime).format('MM-DD HH:mm:ss') }}</span>
         </div>
       </template>
     </el-table-column>
@@ -213,31 +218,32 @@
       </template>
     </el-table-column>
     <el-table-column prop="cancelTime" label="取消时间" :show-overflow-tooltip="true" v-if="columns.showColumn('cancelTime')" />
-    <el-table-column prop="orderNote" label="订单备注" width="140" v-if="columns.showColumn('orderNote')">
+    <el-table-column prop="orderNote" label="订单备注" min-width="170" v-if="columns.showColumn('orderNote')">
       <template #default="{ row }">
-        <template v-if="row.orderNote">
-          <div style="font-size: 12px; font-weight: bold">买家备注</div>
-          {{ row.orderNote }}
-        </template>
-
-        <template v-if="row.merchantNote">
-          <div style="font-size: 12px; font-weight: bold">商家备注</div>
-          {{ row.merchantNote }}
-        </template>
+        <div v-if="row.orderNote"><span class="note-label">买家</span>{{ row.orderNote }}</div>
+        <div v-if="row.merchantNote"><span class="note-label">商家</span>{{ row.merchantNote }}</div>
+        <span v-if="!row.orderNote && !row.merchantNote">—</span>
       </template>
     </el-table-column>
 
     <el-table-column prop="confirmStatus" label="确认收货状态" align="center" v-if="columns.showColumn('confirmStatus')">
-      <template #default="scope">
-        <dict-tag :options="options.confirmStatusOptions" :value="scope.row.confirmStatus" />
+      <template #default="{ row }">
+        <!--
+          后端 confirmStatus 的枚举还没进字典 store，这里先透传原值。
+          原先绑的是 options.confirmStatusOptions，而本页 script 里并不存在 options，
+          一旦有人在「显隐列」里打开本列就会抛 options is not defined，整张表渲染不出来。
+          确认枚举后改回 dict-tag 即可。
+        -->
+        {{ row.confirmStatus ?? '—' }}
       </template>
     </el-table-column>
 
     <!-- <el-table-column prop="deliverySn" label="物流单号" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('deliverySn')" /> -->
 
-    <el-table-column label="操作" width="170" fixed="right">
+    <el-table-column label="操作" width="190" fixed="right">
       <template #default="scope">
-        <div class="fr">
+        <!-- 原来用全局 .fr（float: right）：按钮一多就换行并把行高撑开，flex 右对齐更可控 -->
+        <div class="row-actions">
           <el-button type="primary" text @click="handlemerchantNote(scope.row)">备注</el-button>
           <el-button type="primary" text size="small" v-hasPermi="['oms:order:query']" @click="handleDetails(scope.row)"> 详情</el-button>
           <!-- <el-button type="primary" text size="small">日志</el-button> -->
@@ -551,9 +557,28 @@ function handleBatchCancel() {
 handleQuery()
 </script>
 <style lang="scss" scoped>
+/* 操作提示：两条流程说明各占一行，行高给足，别挤成两段 */
+.tip-line {
+  line-height: 1.7;
+}
+/* 状态筛选行：上方已有提示块、下方紧接搜索区，收掉 el-tabs 默认的 15px */
+.order-tabs {
+  margin-bottom: 4px;
+}
+/* 搜索区控件统一宽度：inline 表单里 el-input 会撑满剩余空间，各字段长度不一导致参差 */
+.search-input {
+  width: 200px;
+}
+.search-range {
+  width: 360px;
+}
+
 .amount_label {
-  width: 60px;
   display: inline-block;
+  width: 60px;
+  text-align: right;
+  padding-right: 6px;
+  color: var(--el-text-color-secondary);
 }
 .flex {
   display: flex;
@@ -575,23 +600,100 @@ handleQuery()
   font-size: 13px;
   font-weight: 600;
   color: var(--el-text-color-regular);
-  margin-bottom: 8px;
+  margin-bottom: 4px;
+}
+
+/* 订单状态列里的物流信息：公司名与单号同一行，发货时间另起一行 */
+.logistics {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 12px;
+}
+.delivery-no {
+  word-break: break-all;
+}
+.ship-time {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--el-text-color-secondary);
+}
+
+/* 下单/付款时间：tag 与时间基线对齐 */
+.time-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  & + .time-line {
+    margin-top: 4px;
+  }
+}
+
+/* 订单备注的「买家/商家」前缀，用浅底小标签代替原来的加粗独立行 */
+.note-label {
+  display: inline-block;
+  min-width: 30px;
+  margin-right: 6px;
+  padding: 0 4px;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+  color: var(--el-color-primary);
+  background: var(--el-color-primary-light-9);
+  border-radius: 3px;
 }
 
 .order-product {
   display: flex;
   align-items: flex-start;
-  margin-bottom: 12px;
-  margin-top: 12px;
+  gap: 12px;
+  padding: 8px 0;
+
+  &:first-of-type {
+    padding-top: 0;
+  }
+  &:last-child {
+    padding-bottom: 0;
+  }
 }
 
 .order-product .info {
   flex: 1;
-  padding: 0 10px;
+  /* flex 子项默认 min-width:auto，商品名过长会把右侧金额挤出可视区 */
+  min-width: 0;
+}
+
+.order-product .spec {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--el-text-color-secondary);
+}
+
+.order-product .amount {
+  flex-shrink: 0;
+  min-width: 96px;
+  text-align: right;
 }
 
 .order-product .price {
-  color: #f44;
+  font-weight: 600;
+  /* 原来写死 #f44，暗色模式下不跟主题走 */
+  color: var(--el-color-danger);
+}
+
+.order-product .quantity {
+  font-size: 12px;
+  color: var(--el-text-color-secondary);
+}
+
+/* 操作列按钮组右对齐 */
+.row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .tab-label {
