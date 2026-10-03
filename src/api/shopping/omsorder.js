@@ -145,3 +145,17 @@ export function listOrderLog(params) {
     params: params
   })
 }
+
+/**
+ * 查看订单中敏感字段的完整值（发货用）
+ *
+ * 订单详情里敏感字段是脱敏的（手机号 138****8000），虚拟商品发货要的是完整值，
+ * 只能从这里取 —— 后端要求 oms:order:sensitive 权限，且会把这次查看记进操作日志。
+ * 只返回敏感字段，非敏感字段在详情里本就是明文。
+ */
+export function getOrderFormValuesRaw(id) {
+  return request({
+    url: 'shopping/Order/formValuesRaw/' + id,
+    method: 'get'
+  })
+}
