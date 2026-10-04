@@ -287,6 +287,13 @@
   <merchantNoteForm ref="merchantNoteFormRef" @success="handleQuery"></merchantNoteForm>
   <addressForm ref="addressFormRef" @success="handleQuery"></addressForm>
   <el-dialog title="批量发货导入" v-model="importOpen" width="520px" append-to-body :close-on-click-modal="false">
+    <!--
+      批量发货不给买家发短信（与 NotifyBuyer 只在发货/退款两处发信的策略一致）：
+      逐单发是 N 次同步网络往返 + N 条短信费用，且批量场景买家本就靠订单状态看进度。
+      这条提示要写明，否则运营看到"买家没收到发货短信"会误以为没发货成功而重复操作。
+    -->
+    <el-alert type="info" :closable="false" show-icon class="mb10"
+      title="批量发货不会给买家发送短信通知，买家请在「我的订单」查看物流进度" />
     <importData
       importUrl="/shopping/Order/importData"
       templateUrl="shopping/Order/importTemplate"
@@ -465,8 +472,11 @@ const shipmentsRef = ref()
  * 发货
  */
 function handleShipments(row) {
-  if (!row.addressSnapshot) {
-    ElMessage.error('用户还未选择收货地址不能发货')
+  // 收货信息逐项判空：原先只判 addressSnapshot 是否存在，而后端已改为校验字段完整性。
+  // 字段全为 null 的空对象能通过前端这道检查，却会被后端拒掉，两边规则必须一致。
+  const addr = row.addressSnapshot
+  if (!addr || !addr.userName || !addr.phone || !addr.province || !addr.detailAddress) {
+    ElMessage.error('该订单收货信息不完整（收件人/手机号/地区/详细地址有缺失），无法发货')
     return
   }
   shipmentsRef.value.handleOpen(row)
