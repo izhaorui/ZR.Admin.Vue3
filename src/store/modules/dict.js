@@ -9,11 +9,12 @@ const useDictStore = defineStore('dict', {
       { dictLabel: '已取消', dictValue: '4', listClass: 'danger', text: '用户主动取消订单或超时未支付自动取消' },
       { dictLabel: '已退款', dictValue: '5', listClass: 'danger', text: '用户退款或商家退款,退款完成订单无效' }
     ],
-    // 发货状态
+    // 发货状态（与后端 ZR.Mall.Enum.DeliveryStatusEnum 保持一致：0未发货 1已发货 2已送达）
+    // 修正：原「已收货」写成 5，与后端 Delivered=2 不符（签收时后端写的是 2），接上页面就会显示错值
     deliveryStatus: [
       { dictLabel: '未发货', dictValue: '0', listClass: 'warning', text: '未发货' },
       { dictLabel: '已发货', dictValue: '1', listClass: 'primary', text: '商家已发货，待用户确认收货' },
-      { dictLabel: '已收货', dictValue: '5', listClass: 'danger', text: '确认收货' }
+      { dictLabel: '已收货', dictValue: '2', listClass: 'danger', text: '确认收货' }
     ],
     // 售卖状态
     saleStatusOptions: [
