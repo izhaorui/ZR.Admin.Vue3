@@ -54,7 +54,8 @@
 
         <el-table-column label="规格图片" width="120" align="center">
           <template #default="{ row }">
-            <UploadImage v-model="row.imageUrl" :limit="1" :width="'80px'" />
+            <!-- <UploadImage v-model="row.imageUrl" :limit="1" :width="'80px'" /> -->
+            <ImageSelector v-model="row.imageUrl" :limit="1" :file-size="10" width="60px" height="60px"></ImageSelector>
           </template>
         </el-table-column>
         <el-table-column label="价格" width="130" align="center">

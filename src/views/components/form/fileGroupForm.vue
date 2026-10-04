@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="title" :lock-scroll="false" v-model="open" width="500">
+  <el-dialog :title="title" :lock-scroll="false" append-to-body v-model="open" width="500">
     <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
       <el-row :gutter="20">
         <el-col :lg="24">

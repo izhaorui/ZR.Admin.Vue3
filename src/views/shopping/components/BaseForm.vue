@@ -147,12 +147,12 @@
           </el-col>
           <el-col :lg="24">
             <el-form-item label="商品主图" prop="mainImage">
-              <UploadImage v-model="info.mainImage" :limit="1"></UploadImage>
+              <ImageSelector v-model="info.mainImage" :limit="1" :file-size="10"></ImageSelector>
             </el-form-item>
           </el-col>
           <el-col :lg="24">
             <el-form-item label="轮播图片" prop="imageUrls">
-              <UploadImage v-model="info.imageUrls" :limit="8"></UploadImage>
+              <ImageSelector v-model="info.imageUrls" :limit="CAROUSEL_LIMIT" :file-size="10"></ImageSelector>
             </el-form-item>
           </el-col>
         </el-row>
@@ -237,6 +237,9 @@ const rules = {
   imageUrls: [{ required: true, message: '请上传商品轮播图片', trigger: 'change' }],
   productType: [{ required: true, message: '请选择商品类型', trigger: 'change' }]
 }
+
+// 轮播图数量上限，与上方 ImageSelector 的 limit 保持一致
+const CAROUSEL_LIMIT = 8
 
 const basicInfoForm = ref()
 const saving = ref(false)

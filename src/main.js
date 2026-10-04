@@ -43,6 +43,8 @@ import DictTag from '@/components/DictTag'
 import dateOptions from '@/utils/dateOptions'
 // Dialog组件
 import Dialog from '@/components/Dialog'
+// 图片选择器组件（素材库选图）
+import ImageSelector from '@/components/ImageSelector'
 
 const app = createApp(App)
 signalR.init(import.meta.env.VITE_APP_SOCKET_API)
@@ -68,6 +70,7 @@ app.component('ImagePreview', ImagePreview)
 app.component('RightToolbar', RightToolbar)
 app.component('svg-icon', SvgIcon)
 app.component('ZrDialog', Dialog)
+app.component('ImageSelector', ImageSelector)
 
 directive(app)
 app.use(pinia).use(router).use(plugins).use(ElementPlus, {}).use(elementIcons).use(vueI18n).mount('#app')

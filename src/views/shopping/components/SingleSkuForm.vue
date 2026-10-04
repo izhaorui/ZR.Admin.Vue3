@@ -1,7 +1,8 @@
 <template>
   <el-form ref="singleSkuFormRef" :model="form.singleSku" :rules="rules" label-position="left" label-width="110px">
     <el-form-item label="规格图片" prop="imageUrl">
-      <UploadImage v-model="form.singleSku.imageUrl" :limit="1"></UploadImage>
+      <!-- <UploadImage v-model="form.singleSku.imageUrl" :limit="1"></UploadImage> -->
+      <ImageSelector v-model="form.singleSku.imageUrl" :limit="1" :file-size="10" width="120px" height="120px"></ImageSelector>
     </el-form-item>
     <el-form-item :label="'商品价格' + $t('currency')" prop="price">
       <!-- min 必须是 0，不能是 0.01：el-input-number 会把低于 min 的绑定值**静默钳制成 min 并回写**
