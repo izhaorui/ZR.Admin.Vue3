@@ -40,45 +40,67 @@
           {{ $t('btn.export') }}
         </el-button>
       </el-col>
-      <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
+      <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns" @update:columns="onColumnsChange"></right-toolbar>
     </el-row>
 
-    <myTable
-      row-key="id"
-      v-loading="loading"
-      :columns="columns"
-      :data="dataList"
-      :dicts="options"
-      header-cell-class-name="el-table-header-cell"
-      @sort-change="sortChange">
-      <!-- <template #tableColumn>
-        <el-table-column type="selection" width="50" align="center" :selectable="checkSelectable" />
-      </template> -->
-      <template #beginTime="{ row }">
-        <div>{{ showTime(row.beginTime) }}</div>
-        <div>{{ showTime(row.endTime) }}</div>
-      </template>
-      <template #sortId="{ scope }">
-        <span v-show="editIndex != scope.$index" @click="editCurrRow(scope.$index)">{{ scope.row.sortId }}</span>
-        <el-input :ref="setColumnsRef" v-show="editIndex == scope.$index" v-model="scope.row.sortId" @blur="handleChangeSort(scope.row)"></el-input>
-      </template>
-      <template #actions="{ scope }">
-        <el-button
-          type="success"
-          size="small"
-          icon="edit"
-          title="编辑"
-          v-hasPermi="['bannerconfig:edit']"
-          @click="handleUpdate(scope.row)"></el-button>
-        <el-button
-          type="danger"
-          size="small"
-          icon="delete"
-          title="删除"
-          v-hasPermi="['bannerconfig:delete']"
-          @click="handleDelete(scope.row)"></el-button>
-      </template>
-    </myTable>
+    <el-table border highlight-current-row row-key="id" v-loading="loading" :data="list" header-cell-class-name="el-table-header-cell" @sort-change="sortChange">
+      <el-table-column prop="id" label="id" align="center" v-if="columns.showColumn('id')" />
+      <el-table-column prop="title" label="标题" align="center" v-if="columns.showColumn('title')" />
+      <el-table-column prop="content" label="说明" align="center" v-if="columns.showColumn('content')" />
+      <el-table-column prop="link" label="链接" align="center" show-overflow-tooltip v-if="columns.showColumn('link')" />
+      <el-table-column prop="imgUrl" label="图片" align="center" v-if="columns.showColumn('imgUrl')">
+        <template #default="scope">
+          <ImagePreview :src="scope.row.imgUrl" style="width: 40px" />
+        </template>
+      </el-table-column>
+      <el-table-column prop="jumpType" label="跳转类型" align="center" v-if="columns.showColumn('jumpType')">
+        <template #default="scope">
+          <dict-tag :options="options.jumpTypeOptions" :value="scope.row.jumpType" />
+        </template>
+      </el-table-column>
+      <el-table-column prop="addTime" label="添加时间" align="center" v-if="columns.showColumn('addTime')" />
+      <el-table-column prop="clicksNumber" label="点击次数" align="center" v-if="columns.showColumn('clicksNumber')" />
+      <el-table-column prop="showStatus" label="是否显示" align="center" v-if="columns.showColumn('showStatus')">
+        <template #default="scope">
+          <dict-tag :options="options.sys_show_hide" :value="scope.row.showStatus" />
+        </template>
+      </el-table-column>
+      <el-table-column prop="adType" label="广告类型" align="center" v-if="columns.showColumn('adType')">
+        <template #default="scope">
+          <dict-tag :options="options.sys_ad_type" :value="scope.row.adType" />
+        </template>
+      </el-table-column>
+      <el-table-column prop="beginTime" label="显示时间" align="left" width="130" v-if="columns.showColumn('beginTime')">
+        <template #default="scope">
+          <div>{{ showTime(scope.row.beginTime) }}</div>
+          <div>{{ showTime(scope.row.endTime) }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="sortId" label="排序id" align="center" v-if="columns.showColumn('sortId')">
+        <template #default="scope">
+          <span v-show="editIndex != scope.$index" @click="editCurrRow(scope.$index)">{{ scope.row.sortId }}</span>
+          <el-input :ref="setColumnsRef" v-show="editIndex == scope.$index" v-model="scope.row.sortId" @blur="handleChangeSort(scope.row)"></el-input>
+        </template>
+      </el-table-column>
+      <el-table-column prop="actions" label="操作" align="center" width="120" v-if="columns.showColumn('actions')">
+        <template #default="scope">
+          <el-button
+            type="success"
+            size="small"
+            icon="edit"
+            title="编辑"
+            v-hasPermi="['bannerconfig:edit']"
+            @click="handleUpdate(scope.row)"></el-button>
+          <el-button
+            type="danger"
+            size="small"
+            icon="delete"
+            title="删除"
+            v-hasPermi="['bannerconfig:delete']"
+            @click="del(scope.row.id, '广告管理')"></el-button>
+        </template>
+      </el-table-column>
+    </el-table>
     <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
 
     <el-dialog :title="title" :lock-scroll="false" v-model="open" width="600">
@@ -165,21 +187,31 @@
 
 <script setup name="bannerconfig">
 import { listBannerConfig, addBannerConfig, delBannerConfig, updateBannerConfig, getBannerConfig, changeSort } from '@/api/public/bannerconfig.js'
-const { proxy } = getCurrentInstance()
+import { useTable } from '@/composables/useTable'
 import { showTime } from '@/utils'
-const ids = ref([])
-const loading = ref(false)
-const showSearch = ref(true)
-const queryParams = reactive({
-  pageNum: 1,
-  pageSize: 10,
-  sort: 'id',
-  sortType: 'desc',
-  title: undefined,
-  jumpType: undefined,
-  showStatus: undefined,
-  adType: undefined
+const { proxy } = getCurrentInstance()
+
+// 列表取数骨架：分页请求 / 查询重置 / 勾选态 / 删除
+const { list, total, loading, queryParams, queryRef, ids, getList, handleQuery, resetQuery, del } = useTable(listBannerConfig, {
+  idField: 'id',
+  defaultQuery: {
+    sort: 'id',
+    sortType: 'desc',
+    title: undefined,
+    jumpType: undefined,
+    showStatus: undefined,
+    adType: undefined
+  },
+  deleteApi: (ids) => delBannerConfig(ids),
+  okText: () => proxy.$t('common.ok'),
+  cancelText: () => proxy.$t('common.cancel')
 })
+
+const showSearch = ref(true)
+/**
+ * 列配置：只服务于 RightToolbar 的列显隐（按 prop 匹配 visible）。
+ * 表格列本身已改为手写 el-table-column，type / dictType 等字段不再被渲染逻辑使用。
+ */
 const columns = ref([
   { visible: true, prop: 'id', label: 'id' },
   { visible: true, prop: 'title', label: '标题' },
@@ -201,9 +233,6 @@ const columns = ref([
     width: '120'
   }
 ])
-const total = ref(0)
-const dataList = ref([])
-const queryRef = ref()
 const defaultTime = ref([new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 2, 1, 23, 59, 59)])
 
 /******************自定义编辑 start **********************/
@@ -219,7 +248,8 @@ function editCurrRow(index) {
   editIndex.value = index
 
   setTimeout(() => {
-    columnRefs.value[index].focus()
+    // 列可能被列显隐隐藏销毁，取不到输入框时直接跳过
+    columnRefs.value[index]?.focus()
   }, 100)
 }
 // 保存排序
@@ -237,37 +267,6 @@ function handleChangeSort(info) {
 }
 /******************自定义编辑 end **********************/
 
-var dictParams = ['sys_show_hide', 'sys_ad_type']
-
-proxy.getDicts(dictParams).then((response) => {
-  response.data.forEach((element) => {
-    state.options[element.dictType] = element.list
-  })
-})
-
-function getList() {
-  loading.value = true
-  listBannerConfig(queryParams).then((res) => {
-    const { code, data } = res
-    if (code == 200) {
-      dataList.value = data.result
-      total.value = data.totalNum
-      loading.value = false
-    }
-  })
-}
-
-// 查询
-function handleQuery() {
-  queryParams.pageNum = 1
-  getList()
-}
-
-// 重置查询操作
-function resetQuery() {
-  proxy.resetForm('queryRef')
-  handleQuery()
-}
 // 自定义排序
 function sortChange(column) {
   var sort = undefined
@@ -282,6 +281,11 @@ function sortChange(column) {
   handleQuery()
 }
 
+// RightToolbar 内部维护列显隐副本，勾选后需回写，列显隐才会真正生效
+function onColumnsChange(val) {
+  columns.value = val
+}
+
 /*************** form操作 ***************/
 const formRef = ref()
 const title = ref('')
@@ -289,8 +293,6 @@ const title = ref('')
 const opertype = ref(0)
 const open = ref(false)
 const state = reactive({
-  single: true,
-  multiple: true,
   form: {},
   rules: {
     title: [{ required: true, message: 'Title不能为空', trigger: 'blur' }],
@@ -316,6 +318,14 @@ const state = reactive({
 })
 
 const { form, rules, options } = toRefs(state)
+
+var dictParams = ['sys_show_hide', 'sys_ad_type']
+
+proxy.getDicts(dictParams).then((response) => {
+  response.data.forEach((element) => {
+    state.options[element.dictType] = element.list
+  })
+})
 
 // 关闭dialog
 function cancel() {
@@ -389,25 +399,6 @@ function submitForm() {
   })
 }
 
-// 删除按钮操作
-function handleDelete(row) {
-  const Ids = row.id || ids.value
-
-  proxy
-    .$confirm('是否确认删除参数编号为"' + Ids + '"的数据项？', '警告', {
-      confirmButtonText: proxy.$t('common.ok'),
-      cancelButtonText: proxy.$t('common.cancel'),
-      type: 'warning'
-    })
-    .then(function () {
-      return delBannerConfig(Ids)
-    })
-    .then(() => {
-      getList()
-      proxy.$modal.msgSuccess('删除成功')
-    })
-}
-
 // 导出按钮操作
 function handleExport() {
   proxy
@@ -420,6 +411,4 @@ function handleExport() {
       await proxy.downFile('/public/BannerConfig/export', { ...queryParams })
     })
 }
-
-handleQuery()
 </script>
