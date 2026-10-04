@@ -1,3 +1,15 @@
+<!--
+  @deprecated 已废弃，请勿在新页面使用。本文件仅作历史保留，已从 main.js 全局注册移除。
+
+  废弃原因：
+  1. 列配置化覆盖不足。操作列无法表达 v-hasPermi 与行级 v-if 条件（本项目 250+ 处 v-hasPermi），
+     实际使用时仍要靠 slot 手写，抽象收益有限；
+  2. 与项目主流的 columns.showColumn(prop) 列显隐机制并存两套 visible 判断，容易误用；
+  3. index / text 等 type 未实现或未被使用，属半成品状态。
+
+  替代方案：直接使用 el-table + el-table-column，配合 RightToolbar 做列显隐。
+  列表页的取数骨架可改用 @/composables/useTable。
+-->
 <template>
   <el-table border highlight-current-row v-bind="$attrs" ref="elTableRef" @selection-change="selectionChange">
     <!-- 固定列插槽默认内容 -->

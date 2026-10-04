@@ -43,8 +43,6 @@ import DictTag from '@/components/DictTag'
 import dateOptions from '@/utils/dateOptions'
 // Dialog组件
 import Dialog from '@/components/Dialog'
-// 自定义table
-import MyTable from '@/components/MyTable'
 
 const app = createApp(App)
 signalR.init(import.meta.env.VITE_APP_SOCKET_API)
@@ -70,7 +68,6 @@ app.component('ImagePreview', ImagePreview)
 app.component('RightToolbar', RightToolbar)
 app.component('svg-icon', SvgIcon)
 app.component('ZrDialog', Dialog)
-app.component('MyTable', MyTable)
 
 directive(app)
 app.use(pinia).use(router).use(plugins).use(ElementPlus, {}).use(elementIcons).use(vueI18n).mount('#app')
