@@ -91,7 +91,7 @@
             <el-form-item label="排序" prop="sortId">
               <template #label>
                 <span>
-                  <el-tooltip content="数字越大排序越靠前" placement="top">
+                  <el-tooltip content="数字越大排序越靠前；仅「综合」排序档生效，且需落在置顶时效窗口内" placement="top">
                     <el-icon :size="15">
                       <questionFilled />
                     </el-icon>
@@ -100,6 +100,85 @@
                 </span>
               </template>
               <el-input-number type="text" v-model="info.sortId" />
+            </el-form-item>
+          </el-col>
+          <!-- 置顶时效：只有当前时间落在 [置顶开始, 置顶结束] 窗口内，"排序"才参与综合排序；
+               分场景权重按请求场景（首页/分类/搜索）各自生效，均为越大越靠前 -->
+          <el-col :lg="8">
+            <el-form-item label="置顶开始" prop="topBeginTime">
+              <template #label>
+                <span>
+                  <el-tooltip content="置顶生效开始时间；留空表示立即生效" placement="top">
+                    <el-icon :size="15"><questionFilled /></el-icon>
+                  </el-tooltip>
+                  置顶开始
+                </span>
+              </template>
+              <el-date-picker
+                v-model="info.topBeginTime"
+                type="datetime"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                placeholder="留空=不限"
+                clearable
+                style="width: 100%" />
+            </el-form-item>
+          </el-col>
+          <el-col :lg="8">
+            <el-form-item label="置顶结束" prop="topEndTime">
+              <template #label>
+                <span>
+                  <el-tooltip content="置顶失效时间；留空表示长期有效，过期后自动取消置顶" placement="top">
+                    <el-icon :size="15"><questionFilled /></el-icon>
+                  </el-tooltip>
+                  置顶结束
+                </span>
+              </template>
+              <el-date-picker
+                v-model="info.topEndTime"
+                type="datetime"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                placeholder="留空=长期有效"
+                clearable
+                style="width: 100%" />
+            </el-form-item>
+          </el-col>
+          <el-col :lg="8">
+            <el-form-item label="首页权重" prop="homeWeight">
+              <template #label>
+                <span>
+                  <el-tooltip content="首页/推荐位排序权重，越大越靠前；0 表示不额外加权" placement="top">
+                    <el-icon :size="15"><questionFilled /></el-icon>
+                  </el-tooltip>
+                  首页权重
+                </span>
+              </template>
+              <el-input-number v-model="info.homeWeight" :min="0" controls-position="right" style="width: 100%" />
+            </el-form-item>
+          </el-col>
+          <el-col :lg="8">
+            <el-form-item label="分类权重" prop="categoryWeight">
+              <template #label>
+                <span>
+                  <el-tooltip content="按分类筛选时的排序权重，越大越靠前；0 表示不额外加权" placement="top">
+                    <el-icon :size="15"><questionFilled /></el-icon>
+                  </el-tooltip>
+                  分类权重
+                </span>
+              </template>
+              <el-input-number v-model="info.categoryWeight" :min="0" controls-position="right" style="width: 100%" />
+            </el-form-item>
+          </el-col>
+          <el-col :lg="8">
+            <el-form-item label="搜索权重" prop="searchWeight">
+              <template #label>
+                <span>
+                  <el-tooltip content="关键词搜索时的排序权重（关键词相关性优先于它），越大越靠前" placement="top">
+                    <el-icon :size="15"><questionFilled /></el-icon>
+                  </el-tooltip>
+                  搜索权重
+                </span>
+              </template>
+              <el-input-number v-model="info.searchWeight" :min="0" controls-position="right" style="width: 100%" />
             </el-form-item>
           </el-col>
           <el-col :lg="8">

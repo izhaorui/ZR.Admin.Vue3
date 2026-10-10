@@ -281,6 +281,12 @@ function reset() {
   form.data = {
     productId: undefined,
     sortId: 200,
+    // 置顶时效与分场景权重：默认不限时、不加权（后端同默认值），避免 undefined 让表单绑定报错
+    topBeginTime: undefined,
+    topEndTime: undefined,
+    homeWeight: 0,
+    categoryWeight: 0,
+    searchWeight: 0,
     saleStatus: 0,
     specType: 1,
     // 商品形态默认实物（后端 ProductTypeEnum：1=实物 2=虚拟）。绝大多数商品都是实物，
