@@ -1,32 +1,14 @@
 <template>
   <div class="app-container">
     <el-splitter>
-      <el-splitter-panel size="200px" :collapsible="true" style="padding-right: 10px" max="300px">
+      <!-- 桌面端部门树常驻左栏；移动端改由下方抽屉承载，避免把列表挤成窄条 -->
+      <el-splitter-panel v-if="showDeptPanel" size="200px" :collapsible="true" style="padding-right: 10px" max="300px">
         <el-card>
-          <div class="head-container">
-            <el-input v-model="deptName" placeholder="请输入部门名称" clearable prefix-icon="search" style="margin-bottom: 20px" />
-          </div>
-          <div class="head-container">
-            <el-tree
-              :data="deptOptions"
-              :props="{ label: 'label', children: 'children' }"
-              :expand-on-click-node="false"
-              :filter-node-method="filterNode"
-              ref="deptTreeRef"
-              node-key="id"
-              highlight-current
-              default-expand-all
-              @node-click="handleNodeClick">
-              <template #default="{ node, data }">
-                <span class="custom-tree-node">
-                  <span>
-                    <svg-icon name="index" v-if="data.children && data.children.length > 0"></svg-icon>
-                    {{ node.label }}
-                  </span>
-                </span>
-              </template>
-            </el-tree>
-          </div>
+          <dept-tree
+            ref="deptTreeRef"
+            :dept-options="deptOptions"
+            :current-key="queryParams.deptId"
+            @node-click="handleNodeClick"></dept-tree>
         </el-card>
       </el-splitter-panel>
       <el-splitter-panel>
@@ -60,6 +42,10 @@
           </el-form>
 
           <el-row :gutter="10" class="mb8">
+            <!-- 移动端部门树在抽屉里，点这里打开；选完部门会自动关闭 -->
+            <el-col :span="1.5" v-if="isMobile">
+              <el-button type="info" plain icon="OfficeBuilding" @click="deptDrawerOpen = true">部门</el-button>
+            </el-col>
             <el-col :span="1.5">
               <el-button type="primary" plain icon="Plus" @click="handleAdd" v-hasPermi="['system:user:add']">
                 {{ $t('btn.add') }}
@@ -168,6 +154,11 @@
         </div>
       </el-splitter-panel>
     </el-splitter>
+
+    <!-- 移动端部门树：从左侧滑出，列表宽度不受影响；选完部门自动关闭 -->
+    <el-drawer v-if="isMobile" v-model="deptDrawerOpen" title="部门筛选" direction="ltr" size="78%" append-to-body destroy-on-close>
+      <dept-tree :dept-options="deptOptions" :current-key="queryParams.deptId" @node-click="handleNodeClick"></dept-tree>
+    </el-drawer>
 
     <!-- 添加或修改用户配置对话框 -->
     <el-dialog :title="title" v-model="open" width="600px" append-to-body>
@@ -299,6 +290,23 @@
       </template>
     </el-dialog>
 
+    <!-- 重置密码对话框 -->
+    <el-dialog :title="'重置「' + resetPwd.userName + '」的密码'" v-model="resetPwd.open" width="420px" append-to-body>
+      <el-form :model="resetPwd" :rules="resetPwdRules" ref="resetPwdRef" label-width="80px">
+        <el-form-item label="新密码" prop="password">
+          <el-input v-model="resetPwd.password" show-password maxlength="20" placeholder="请输入新密码">
+            <template #append>
+              <el-button @click="changeRandomPassword">随机生成</el-button>
+            </template>
+          </el-input>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="resetPwd.open = false">{{ $t('btn.cancel') }}</el-button>
+        <el-button type="primary" :loading="resetPwd.loading" @click="submitResetPwd">{{ $t('btn.submit') }}</el-button>
+      </template>
+    </el-dialog>
+
     <!-- 用戶詳情 -->
     <user-view-drawer ref="userViewDrawerRef"></user-view-drawer>
   </div>
@@ -309,6 +317,7 @@ import { getToken } from '@/utils/auth'
 import { treeselect } from '@/api/system/dept'
 import { changeUserStatus, listUser, resetUserPwd, delUser, getUser, updateUser, addUser, exportUser } from '@/api/system/user'
 import UserViewDrawer from './view.vue'
+import DeptTree from './dept-tree.vue'
 const { proxy } = getCurrentInstance()
 
 const statusOptions = ref([])
@@ -329,11 +338,30 @@ const multiple = ref(true)
 const total = ref(0)
 const title = ref('')
 const dateRange = ref([])
-const deptName = ref('')
 const deptOptions = ref([])
 const initPassword = ref(undefined)
 const postOptions = ref([])
 const roleOptions = ref([])
+// 移动端（<= 768px）：部门树收进左侧抽屉，不再与列表并排，避免把列表挤成窄条。
+// 同步取初值，避免首帧先按桌面端渲染出部门树再切换（闪一下）
+const isMobile = ref(window.innerWidth <= 768)
+const deptDrawerOpen = ref(false)
+// 桌面端部门树常驻左栏，移动端交给抽屉
+const showDeptPanel = computed(() => !isMobile.value)
+const updateIsMobile = () => {
+  const next = window.innerWidth <= 768
+  if (next === isMobile.value) return
+  isMobile.value = next
+  // 跨断点时收起抽屉，避免遮罩残留
+  deptDrawerOpen.value = false
+}
+onMounted(() => {
+  updateIsMobile()
+  window.addEventListener('resize', updateIsMobile)
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateIsMobile)
+})
 /*** 用户导入参数 */
 const upload = reactive({
   // 是否显示弹出层（用户导入）
@@ -349,6 +377,21 @@ const upload = reactive({
   // 上传的地址
   url: import.meta.env.VITE_APP_BASE_API + '/system/user/importData'
 })
+/** 重置密码弹框：预填随机密码，且可反复点「随机生成」更换 */
+const resetPwd = reactive({
+  open: false,
+  loading: false,
+  userId: undefined,
+  userName: '',
+  password: ''
+})
+const resetPwdRef = ref()
+const resetPwdRules = {
+  password: [
+    { required: true, message: '新密码不能为空', trigger: 'blur' },
+    { min: 5, max: 20, message: '新密码长度必须介于 5 和 20 之间', trigger: 'blur' }
+  ]
+}
 // 列显隐信息
 const columns = ref([
   { key: 0, label: `用户编号`, visible: true, prop: 'userId' },
@@ -418,15 +461,6 @@ proxy.getConfigKey('sys.user.initPassword').then((response) => {
   initPassword.value = response.data
 })
 
-/** 通过条件过滤节点  */
-const filterNode = (value, data) => {
-  if (!value) return true
-  return data.label.indexOf(value) !== -1
-}
-/** 根据名称筛选部门树 */
-watch(deptName, (val) => {
-  proxy.$refs['deptTreeRef'].filter(val)
-})
 /** 查询部门下拉树结构 */
 function getTreeselect() {
   treeselect().then((response) => {
@@ -446,6 +480,8 @@ function getList() {
 function handleNodeClick(data) {
   queryParams.value.deptId = data.id
   handleQuery()
+  // 移动端选完就关掉抽屉，直接看列表
+  if (isMobile.value) deptDrawerOpen.value = false
 }
 /** 搜索按钮操作 */
 function handleQuery() {
@@ -457,7 +493,7 @@ function resetQuery() {
   dateRange.value = []
   proxy.resetForm('queryRef')
   queryParams.value.deptId = undefined
-  proxy.$refs.deptTreeRef.setCurrentKey(null)
+  proxy.$refs.deptTreeRef?.setCurrentKey(null)
   handleQuery()
 }
 /** 删除按钮操作 */
@@ -501,22 +537,65 @@ function handleStatusChange(row) {
       row.status = row.status == 1 ? 0 : 1
     })
 }
-/** 重置密码按钮操作 */
+/**
+ * 生成随机密码：字母 + 数字，长度 6-10 位，且必然同时包含这两类字符。
+ * 供重置密码弹框预填与「随机生成」更换，运营可以直接用，也可以改成自己指定的密码。
+ */
+function generateRandomPassword() {
+  const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  const digits = '0123456789'
+  const all = letters + digits
+  // 6 ~ 10 位随机长度
+  const length = 6 + Math.floor(Math.random() * 5)
+  const chars = [
+    // 先各放一个字母与数字，保证两类字符一定出现，不会随机出纯数字或纯字母
+    letters[Math.floor(Math.random() * letters.length)],
+    digits[Math.floor(Math.random() * digits.length)]
+  ]
+  while (chars.length < length) {
+    chars.push(all[Math.floor(Math.random() * all.length)])
+  }
+  // 打乱顺序，否则字母与数字会固定落在前两位
+  for (let i = chars.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    const temp = chars[i]
+    chars[i] = chars[j]
+    chars[j] = temp
+  }
+  return chars.join('')
+}
+
+/** 重置密码按钮操作：打开弹框并预填一个随机密码 */
 function handleResetPwd(row) {
-  proxy
-    .$prompt('请输入"' + row.userName + '"的新密码', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      closeOnClickModal: false,
-      inputPattern: /^.{5,20}$/,
-      inputErrorMessage: '用户密码长度必须介于 5 和 20 之间'
-    })
-    .then(({ value }) => {
-      resetUserPwd(row.userId, value).then((response) => {
-        proxy.$modal.msgSuccess('修改成功，新密码是：' + value)
+  resetPwd.userId = row.userId
+  resetPwd.userName = row.userName
+  resetPwd.password = generateRandomPassword()
+  resetPwd.open = true
+  // 弹框是复用实例，清掉上一次可能残留的校验红字
+  nextTick(() => resetPwdRef.value?.clearValidate())
+}
+
+/** 更换随机密码：可反复点击，每次都是新的一个 */
+function changeRandomPassword() {
+  resetPwd.password = generateRandomPassword()
+  resetPwdRef.value?.clearValidate('password')
+}
+
+/** 提交重置密码 */
+function submitResetPwd() {
+  resetPwdRef.value.validate((valid) => {
+    if (!valid) return
+    resetPwd.loading = true
+    resetUserPwd(resetPwd.userId, resetPwd.password)
+      .then(() => {
+        // 弹框一关就看不到密码了，必须用提示把新密码显示出来
+        proxy.$modal.msgSuccess('修改成功，新密码是：' + resetPwd.password)
+        resetPwd.open = false
       })
-    })
-    .catch(() => {})
+      .finally(() => {
+        resetPwd.loading = false
+      })
+  })
 }
 /** 选择条数  */
 function handleSelectionChange(selection) {
