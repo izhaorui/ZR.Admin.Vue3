@@ -19,14 +19,20 @@
           </el-tabs>
         </div>
 
-        <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form" v-if="loginType == 1">
+        <!-- 必须是真正的 form 提交：浏览器密码管理器只在 submit 时记录/回填账号密码 -->
+        <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form" v-if="loginType == 1" @submit.prevent="handleLogin">
           <el-form-item prop="tenantId" v-show="defaultSettings.showTenant">
             <el-select v-model="loginForm.tenantId" size="default" placeholder="请选择租户" style="width: 100%" @change="handleTenantId">
               <el-option value="tenant0" label="默认租户"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item prop="username">
-            <el-input v-model="loginForm.username" type="text" auto-complete="off" :placeholder="$t('login.account')">
+            <el-input
+              v-model="loginForm.username"
+              type="text"
+              name="username"
+              autocomplete="username"
+              :placeholder="$t('login.account')">
               <template #prefix>
                 <svg-icon name="user" class="input-icon" />
               </template>
@@ -37,9 +43,9 @@
               v-model="loginForm.password"
               show-password
               type="password"
-              auto-complete="off"
-              :placeholder="$t('login.password')"
-              @keyup.enter="handleLogin">
+              name="password"
+              autocomplete="current-password"
+              :placeholder="$t('login.password')">
               <template #prefix>
                 <svg-icon name="password" class="input-icon" />
               </template>
@@ -47,7 +53,7 @@
           </el-form-item>
 
           <el-form-item prop="code" v-if="captchaOnOff != 'off'">
-            <el-input v-model="loginForm.code" auto-complete="off" :placeholder="$t('login.captcha')" style="width: 63%" @keyup.enter="handleLogin">
+            <el-input v-model="loginForm.code" autocomplete="off" :placeholder="$t('login.captcha')" style="width: 63%">
               <template #prefix>
                 <svg-icon name="validCode" class="input-icon" />
               </template>
@@ -65,7 +71,7 @@
           </div>
 
           <el-form-item style="width: 100%" :style="{ 'margin-top': captchaOnOff == 'off' ? '20px' : '' }">
-            <el-button :loading="loading" size="default" round type="primary" class="login-btn" @click.prevent="handleLogin">
+            <el-button :loading="loading" size="default" round type="primary" native-type="submit" class="login-btn">
               <span v-if="!loading">{{ $t('login.btnLogin') }}</span>
               <span v-else>登 录 中...</span>
             </el-button>
@@ -87,7 +93,6 @@
 <script setup name="login">
 import { getCodeImg } from '@/api/system/login'
 import Cookies from 'js-cookie'
-import { encrypt, decrypt } from '@/utils/jsencrypt'
 import defaultSettings from '@/settings'
 import { ElNotification } from 'element-plus'
 import starBackground from '@/views/components/starBackground.vue'
@@ -105,6 +110,21 @@ const userStore = useUserStore()
 const router = useRouter()
 const route = useRoute()
 const { proxy } = getCurrentInstance()
+
+// 记住账号的 cookie 命名空间。
+// cookie 的作用域只按「域名 + 路径」划分，不区分端口，本地多个 localhost 项目会共用
+// 同名 cookie，导致 A 项目记住的账号被 B 项目套用。这里用「项目标识 + 后端地址 + 当前站点」做隔离。
+const rememberNs = [import.meta.env.VITE_APP_KEY || 'zrlogin', import.meta.env.VITE_APP_API_HOST, window.location.origin]
+  .map((v) => String(v || 'default').replace(/[^a-zA-Z0-9]/g, '_'))
+  .join('_')
+// 只记住用户名：密码不再写入 cookie（原先存的是 RSA 密文，同源脚本/XSS 可直接解密复用），
+// 密码改由浏览器密码管理器通过 autocomplete="current-password" 托管。
+const rememberKeys = {
+  username: `${rememberNs}_username`,
+  // 历史版本存过加密密码，保留键名仅用于清理
+  legacyPassword: `${rememberNs}_password`,
+  legacyRememberMe: `${rememberNs}_rememberMe`
+}
 
 const loginForm = ref({
   username: '',
@@ -147,20 +167,19 @@ watch(
   { immediate: true }
 )
 function handleLogin() {
+  if (loading.value) return
   proxy.$refs.loginRef.validate((valid) => {
     if (valid) {
       loading.value = true
-      // 勾选了需要记住密码设置在cookie中设置记住用户名和密码
+      // 勾选了需要记住账号则把用户名写入 cookie（键名带项目命名空间，避免多项目串用），密码不落盘
       if (loginForm.value.rememberMe) {
-        Cookies.set('username', loginForm.value.username, { expires: 7 })
-        Cookies.set('password', encrypt(loginForm.value.password), { expires: 7 })
-        Cookies.set('rememberMe', loginForm.value.rememberMe, { expires: 7 })
+        Cookies.set(rememberKeys.username, loginForm.value.username, { expires: 7 })
       } else {
-        // 否则移除
-        Cookies.remove('username')
-        Cookies.remove('password')
-        Cookies.remove('rememberMe')
+        Cookies.remove(rememberKeys.username)
       }
+      // 清理历史版本遗留的密码/记住标记 cookie，避免密文长期留在浏览器
+      Cookies.remove(rememberKeys.legacyPassword)
+      Cookies.remove(rememberKeys.legacyRememberMe)
       // 调用action的登录方法
       userStore
         .login(loginForm.value)
@@ -205,12 +224,12 @@ function getCode() {
 }
 
 function getCookie() {
-  const username = Cookies.get('username')
-  const password = Cookies.get('password')
-  const rememberMe = Cookies.get('rememberMe')
+  // 只回填用户名与勾选状态，密码交给浏览器密码管理器
+  const username = Cookies.get(rememberKeys.username)
   loginForm.value.username = username === undefined ? loginForm.value.username : username
-  loginForm.value.password = password === undefined ? loginForm.value.password : decrypt(password)
-  loginForm.value.rememberMe = rememberMe === undefined ? false : Boolean(rememberMe)
+  loginForm.value.rememberMe = username !== undefined
+  // 迁移清理：删除历史版本在本域名下写入的全局同名 cookie（不区分项目的旧键，正是串号的根源）
+  Cookies.remove('password')
 }
 function handleForgetPwd() {
   proxy.$modal.msg('请联系管理员')

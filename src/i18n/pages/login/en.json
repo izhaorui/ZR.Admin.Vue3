@@ -4,7 +4,7 @@
     "password": "Password",
     "captcha": "Captcha",
     "btnLogin": "Login",
-    "rememberMe": "Remember Me",
+    "rememberMe": "Remember Account",
     "loginSuccess": "login success",
     "loginTimeOut": "Login status has expired, please log in again",
     "reLogin": "re-register",
