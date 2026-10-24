@@ -93,6 +93,7 @@
 <script setup name="login">
 import { getCodeImg } from '@/api/system/login'
 import Cookies from 'js-cookie'
+import { getClientId } from '@/utils/clientId'
 import defaultSettings from '@/settings'
 import { ElNotification } from 'element-plus'
 import starBackground from '@/views/components/starBackground.vue'
@@ -103,10 +104,9 @@ import phoneLogin from './components/Login/phoneLogin.vue'
 import qrLogin from './components/Login/qrLogin.vue'
 import brandPanel from './components/Login/brandPanel.vue'
 
-var visitorId = ''
-const fpPromise = import('https://openfpcdn.io/fingerprintjs/v3').then((FingerprintJS) => FingerprintJS.load())
-
 const userStore = useUserStore()
+// 设备标识：本地随机值（见 utils/clientId.js），不再从第三方 CDN 动态加载指纹脚本
+userStore.setClientId(getClientId())
 const router = useRouter()
 const route = useRoute()
 const { proxy } = getCurrentInstance()
@@ -151,14 +151,6 @@ const loading = ref(false)
 const captchaOnOff = ref('')
 const redirect = ref()
 redirect.value = route.query.redirect
-// Get the visitor identifier when you need it.
-fpPromise
-  .then((fp) => fp.get())
-  .then((result) => {
-    // This is the visitor identifier:
-    visitorId = result.visitorId
-    userStore.setClientId(visitorId)
-  })
 watch(
   route,
   (newRoute) => {

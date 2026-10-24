@@ -1,8 +1,8 @@
 // 官方文档：https://docs.microsoft.com/zh-cn/aspnet/core/signalr/javascript-client?view=aspnetcore-6.0&viewFallbackFrom=aspnetcore-2.2&tabs=visual-studio
 import * as signalR from '@microsoft/signalr'
 import { getToken } from '@/utils/auth'
+import { getClientId } from '@/utils/clientId'
 import { ElMessage } from 'element-plus'
-import cache from '@/plugins/cache'
 import analysis from '@/signalr/analysis'
 
 export default {
@@ -11,7 +11,7 @@ export default {
   // 失败连接重试次数
   failNum: 4,
   init(url) {
-    var socketUrl = window.location.origin + url + '?clientId=' + cache.local.get('clientId')
+    var socketUrl = window.location.origin + url + '?clientId=' + encodeURIComponent(getClientId())
     const connection = new signalR.HubConnectionBuilder()
       .withUrl(socketUrl, { accessTokenFactory: () => getToken() })
       // .withAutomaticReconnect() //自动重新连接
