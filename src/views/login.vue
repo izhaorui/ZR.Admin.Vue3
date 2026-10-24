@@ -165,13 +165,13 @@ function handleLogin() {
       loading.value = true
       // 勾选了需要记住账号则把用户名写入 cookie（键名带项目命名空间，避免多项目串用），密码不落盘
       if (loginForm.value.rememberMe) {
-        Cookies.set(rememberKeys.username, loginForm.value.username, { expires: 7 })
+        Cookies.set(rememberKeys.username, loginForm.value.username, { expires: 7, path: '/', sameSite: 'Lax' })
       } else {
-        Cookies.remove(rememberKeys.username)
+        Cookies.remove(rememberKeys.username, { path: '/' })
       }
       // 清理历史版本遗留的密码/记住标记 cookie，避免密文长期留在浏览器
-      Cookies.remove(rememberKeys.legacyPassword)
-      Cookies.remove(rememberKeys.legacyRememberMe)
+      Cookies.remove(rememberKeys.legacyPassword, { path: '/' })
+      Cookies.remove(rememberKeys.legacyRememberMe, { path: '/' })
       // 调用action的登录方法
       userStore
         .login(loginForm.value)
@@ -221,7 +221,7 @@ function getCookie() {
   loginForm.value.username = username === undefined ? loginForm.value.username : username
   loginForm.value.rememberMe = username !== undefined
   // 迁移清理：删除历史版本在本域名下写入的全局同名 cookie（不区分项目的旧键，正是串号的根源）
-  Cookies.remove('password')
+  Cookies.remove('password', { path: '/' })
 }
 function handleForgetPwd() {
   proxy.$modal.msg('请联系管理员')

@@ -66,18 +66,30 @@ const localCache = {
 }
 import Cookies from 'js-cookie'
 
+// cookie 统一属性：全站路径 + 同站携带；仅 HTTPS 下加 Secure，
+// 否则本地 http://localhost 或局域网 IP 调试时浏览器会直接拒收该 cookie
+function cookieOptions() {
+  return {
+    path: '/',
+    sameSite: 'Lax',
+    secure: window.location.protocol === 'https:'
+  }
+}
+
 const cookie = {
   set(key, data, expires) {
-    Cookies.set(key, data, { expires: expires })
-  },
-  set(key, data) {
-    Cookies.set(key, data)
+    const options = cookieOptions()
+    if (expires !== undefined && expires !== null) {
+      options.expires = expires
+    }
+    Cookies.set(key, data, options)
   },
   remove(key) {
-    Cookies.remove(key)
+    // 删除时只需 path 对齐（path 不一致会删不掉）
+    Cookies.remove(key, { path: '/' })
   },
   get(key) {
-    Cookies.get(key)
+    return Cookies.get(key)
   }
 }
 export default {
