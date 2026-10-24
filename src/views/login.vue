@@ -27,12 +27,7 @@
             </el-select>
           </el-form-item>
           <el-form-item prop="username">
-            <el-input
-              v-model="loginForm.username"
-              type="text"
-              name="username"
-              autocomplete="username"
-              :placeholder="$t('login.account')">
+            <el-input v-model="loginForm.username" type="text" name="username" autocomplete="username" :placeholder="$t('login.account')">
               <template #prefix>
                 <svg-icon name="user" class="input-icon" />
               </template>
