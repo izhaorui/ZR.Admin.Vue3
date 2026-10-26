@@ -12,12 +12,15 @@
       <el-form-item label="邮件主题" prop="subject">
         <el-input v-model="queryParams.subject" placeholder="请输入邮件主题" />
       </el-form-item>
-      <el-form-item label="是否送出" prop="isSend">
-        <el-radio-group v-model="queryParams.isSend">
-          <el-radio label="全部" value=""></el-radio>
-          <el-radio label="是" :value="1"></el-radio>
-          <el-radio label="否" :value="0"></el-radio>
-        </el-radio-group>
+      <el-form-item label="状态" prop="status">
+        <el-select v-model="queryParams.status" placeholder="全部" clearable style="width: 120px">
+          <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="类型" prop="emailType">
+        <el-select v-model="queryParams.emailType" placeholder="全部" clearable style="width: 140px">
+          <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
       </el-form-item>
       <el-form-item label="发送时间">
         <el-date-picker
@@ -70,12 +73,19 @@
       <el-table-column prop="subject" label="邮件主题" :show-overflow-tooltip="true" v-if="columns.showColumn('subject')" />
       <el-table-column prop="toEmails" label="接收邮箱" :show-overflow-tooltip="true" v-if="columns.showColumn('toEmails')" />
       <el-table-column prop="emailContent" label="邮件内容" :show-overflow-tooltip="true" v-if="columns.showColumn('emailContent')" />
-      <el-table-column prop="sendResult" label="发送结果" :show-overflow-tooltip="true" />
-      <el-table-column prop="addTime" label="发送时间" :show-overflow-tooltip="true" v-if="columns.showColumn('addTime')" />
-      <el-table-column prop="isSend" label="是否发送" align="center">
+      <el-table-column prop="status" label="状态" align="center" width="90">
         <template #default="{ row }">
-          <DictTag :options="options.isSendOptions" :value="row.isSend"></DictTag>
+          <el-tag :type="statusTagType(row.status)" size="small">{{ statusText(row.status) }}</el-tag>
         </template>
+      </el-table-column>
+      <el-table-column prop="emailType" label="类型" align="center" width="90">
+        <template #default="{ row }">{{ typeText(row.emailType) }}</template>
+      </el-table-column>
+      <el-table-column prop="retryCount" label="重试" align="center" width="70" />
+      <el-table-column prop="sendResult" label="发送结果" :show-overflow-tooltip="true" />
+      <el-table-column prop="addTime" label="记录时间" :show-overflow-tooltip="true" v-if="columns.showColumn('addTime')" />
+      <el-table-column prop="sendTime" label="发送成功时间" :show-overflow-tooltip="true">
+        <template #default="{ row }">{{ sendTimeText(row.sendTime) }}</template>
       </el-table-column>
       <el-table-column label="操作" width="200">
         <template #default="scope">
@@ -91,8 +101,8 @@
             text
             v-hasPermi="['tool:email:send']"
             @click="handleSend(scope.row)"
-            v-if="scope.row.isSend == 0">
-            发送
+            v-if="[2, 4].includes(scope.row.status)">
+            {{ scope.row.status === 4 ? '发送' : '重发' }}
           </el-button>
         </template>
       </el-table-column>
@@ -100,9 +110,20 @@
     <pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
 
     <zr-dialog title="预览" :lock-scroll="false" v-model="open" @close="cancel">
-      <el-form ref="formRef" :model="form" label-width="100px">
-        <div v-html="form.emailContent"></div>
-      </el-form>
+      <el-descriptions :column="2" border size="small" class="mb10">
+        <el-descriptions-item label="状态">{{ statusText(form.status) }}</el-descriptions-item>
+        <el-descriptions-item label="类型">{{ typeText(form.emailType) }}</el-descriptions-item>
+        <el-descriptions-item label="发送邮箱">{{ form.fromEmail }}</el-descriptions-item>
+        <el-descriptions-item label="接收邮箱">{{ form.toEmails }}</el-descriptions-item>
+        <el-descriptions-item label="抄送">{{ form.ccEmails }}</el-descriptions-item>
+        <el-descriptions-item label="重试次数">{{ form.retryCount || 0 }}</el-descriptions-item>
+        <el-descriptions-item label="错误码">{{ form.errorCode }}</el-descriptions-item>
+        <el-descriptions-item label="发送成功时间">{{ sendTimeText(form.sendTime) }}</el-descriptions-item>
+        <el-descriptions-item label="Message-Id" :span="2">{{ form.messageId }}</el-descriptions-item>
+        <el-descriptions-item label="发送结果" :span="2">{{ form.sendResult }}</el-descriptions-item>
+      </el-descriptions>
+      <!-- 使用 sandbox iframe 渲染：邮件正文可能包含用户可控内容（工作流标题等），禁止脚本执行 -->
+      <iframe class="email-preview-frame" :srcdoc="previewHtml(form.emailContent)" sandbox referrerpolicy="no-referrer"></iframe>
       <template #footer v-if="opertype != 3">
         <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
       </template>
@@ -126,8 +147,51 @@ const queryParams = reactive({
   fromEmail: undefined,
   subject: undefined,
   addTime: undefined,
-  isSend: ''
+  status: undefined,
+  emailType: undefined
 })
+
+const statusOptions = [
+  { value: 0, label: '待发送' },
+  { value: 1, label: '发送成功' },
+  { value: 2, label: '发送失败' },
+  { value: 3, label: '发送中' },
+  { value: 4, label: '草稿' }
+]
+const typeOptions = [
+  { value: 'manual', label: '手动发送' },
+  { value: 'template', label: '模板发送' },
+  { value: 'workflow', label: '工作流通知' },
+  { value: 'security', label: '安全提醒' },
+  { value: 'notify', label: '通知' }
+]
+
+function statusText(status) {
+  return statusOptions.find((x) => x.value === status)?.label || '未知'
+}
+function statusTagType(status) {
+  switch (status) {
+    case 1:
+      return 'success'
+    case 2:
+      return 'danger'
+    case 3:
+      return 'warning'
+    case 4:
+      return 'info'
+    default:
+      return 'info'
+  }
+}
+function typeText(type) {
+  return typeOptions.find((x) => x.value === type)?.label || type || '-'
+}
+// 后端未发送记录用 1900-01-01 哨兵值（存量列非空），列表按空展示
+function sendTimeText(value) {
+  if (!value || String(value).startsWith('1900-01-01')) return ''
+  return value
+}
+
 const columns = ref([
   { visible: false, prop: 'id', label: 'Id' },
   { visible: true, prop: 'fromEmail', label: '发送邮箱' },
@@ -202,16 +266,10 @@ const state = reactive({
   form: {},
   rules: {
     id: [{ required: true, message: 'Id不能为空', trigger: 'blur' }]
-  },
-  options: {
-    isSendOptions: [
-      { dictLabel: '已送出', dictValue: '1', listClass: 'info' },
-      { dictLabel: '未发送', dictValue: '0' }
-    ]
   }
 })
 
-const { form, options, single, multiple } = toRefs(state)
+const { form, single, multiple } = toRefs(state)
 
 // 关闭dialog
 function cancel() {
@@ -222,6 +280,20 @@ function handlePreview(row) {
   form.value = row
   open.value = true
 }
+
+// 纯文本（工作流通知等）按 pre 渲染；HTML 交由 sandbox iframe 渲染，脚本不会执行
+function previewHtml(content) {
+  if (!content) return ''
+  const text = String(content)
+  if (!/<[a-z][\s\S]*>/i.test(text)) {
+    return `<pre style="white-space:pre-wrap;word-break:break-word;font-family:inherit;margin:0">${escapeHtml(text)}</pre>`
+  }
+  return text
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c])
+}
 function handleSendEmail() {
   router.push({
     name: 'sendemail'
@@ -231,11 +303,12 @@ function handleSendEmail() {
 // 添加&修改 表单提交
 function handleSend(row) {
   const Ids = row.id != undefined ? [row.id] : ids.value
-  proxy.$modal.loading('发送中...')
+  proxy.$modal.loading('提交中...')
   sendEmail({ idArr: Ids })
-    .then(() => {
-      getList()
-      proxy.$modal.msgSuccess('发送成功')
+    .then((res) => {
+      // 后台异步投递：此处只代表已入队，失败原因需刷新后在「发送结果」查看
+      proxy.$modal.msgSuccess(`已提交 ${res.data ?? Ids.length} 条发送任务，稍后刷新查看结果`)
+      setTimeout(() => getList(), 1500)
     })
     .finally(() => {
       proxy.$modal.closeLoading()
@@ -259,3 +332,11 @@ function handleDelete(row) {
 
 handleQuery()
 </script>
+
+<style scoped>
+.email-preview-frame {
+  width: 100%;
+  height: 420px;
+  border: 0;
+}
+</style>

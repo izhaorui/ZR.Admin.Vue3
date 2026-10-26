@@ -9,6 +9,9 @@
       <el-form-item label="名称" prop="name">
         <el-input v-model="queryParams.name" placeholder="请输入名称" />
       </el-form-item>
+      <el-form-item label="编码" prop="code">
+        <el-input v-model="queryParams.code" placeholder="如 workflow.notify" />
+      </el-form-item>
       <el-form-item>
         <el-button icon="search" type="primary" @click="handleQuery">{{ $t('btn.search') }}</el-button>
         <el-button icon="refresh" @click="resetQuery">{{ $t('btn.reset') }}</el-button>
@@ -34,6 +37,15 @@
       @sort-change="sortChange">
       <el-table-column prop="id" label="Id" align="center" />
       <el-table-column prop="name" label="名称" align="center" :show-overflow-tooltip="true" />
+      <el-table-column prop="code" label="编码" align="center" width="160" :show-overflow-tooltip="true" />
+      <el-table-column prop="subject" label="邮件主题" align="center" :show-overflow-tooltip="true" />
+      <el-table-column prop="enabled" label="启用" align="center" width="80">
+        <template #default="{ row }">
+          <el-tag :type="row.enabled === false ? 'info' : 'success'" size="small">
+            {{ row.enabled === false ? '停用' : '启用' }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="content" label="模板内容" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('content')" />
       <el-table-column prop="createBy" label="创建人" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('createBy')" />
       <el-table-column prop="createTime" label="创建时间" :show-overflow-tooltip="true" v-if="columns.showColumn('createTime')" />
@@ -65,9 +77,34 @@
     <zr-dialog :title="title" :lock-scroll="false" v-model="open">
       <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
         <el-row :gutter="20">
-          <el-col :lg="24">
+          <el-col :lg="12">
             <el-form-item label="模板名称" prop="name">
               <el-input v-model="form.name" placeholder="请输入模板名称" />
+            </el-form-item>
+          </el-col>
+          <el-col :lg="12">
+            <el-form-item label="模板编码" prop="code">
+              <el-input v-model="form.code" placeholder="业务编码，如 workflow.notify" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="18">
+            <el-form-item label="邮件主题" prop="subject">
+              <el-input v-model="form.subject" :placeholder="'支持 {{key}} 占位符，如：【待办】{{subject}}'" />
+            </el-form-item>
+          </el-col>
+          <el-col :lg="6">
+            <el-form-item label="启用">
+              <el-switch v-model="form.enabled" active-text="启用" inactive-text="停用" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :lg="24">
+            <el-form-item label="正文格式">
+              <el-radio-group v-model="form.isHtml">
+                <el-radio :value="true">HTML</el-radio>
+                <el-radio :value="false">纯文本</el-radio>
+              </el-radio-group>
             </el-form-item>
           </el-col>
 
@@ -75,6 +112,14 @@
             <el-form-item label="模板内容" prop="content">
               <editor v-model="form.content" v-if="open" />
             </el-form-item>
+          </el-col>
+
+          <el-col :lg="24">
+            <el-alert
+              type="info"
+              :closable="false"
+              title="占位符说明"
+              :description="'正文与主题均可使用 {{key}} 占位符，发送时按业务数据替换。内置编码：workflow.notify（工作流待办）、security.alert（安全提醒），未配置时使用内置默认模板。'" />
           </el-col>
         </el-row>
       </el-form>
@@ -86,8 +131,9 @@
 
     <zr-dialog title="预览" draggable v-model="openPreview" width="580px">
       <template v-if="info">
-        <div style="text-align: center" class="mb10">{{ info.name }}</div>
-        <div v-html="info.content"></div>
+        <div style="text-align: center" class="mb10">{{ info.subject || info.name }}</div>
+        <!-- 模板内容可能是管理员输入的 HTML，用 sandbox iframe 渲染，避免脚本在后台执行 -->
+        <iframe class="email-preview-frame" :srcdoc="info.content || ''" sandbox referrerpolicy="no-referrer"></iframe>
       </template>
       <template #footer>
         <el-button type="primary" @click="openPreview = false">{{ $t('btn.submit') }}</el-button>
@@ -109,7 +155,8 @@ const queryParams = reactive({
   pageSize: 10,
   sort: 'Id',
   sortType: 'desc',
-  name: undefined
+  name: undefined,
+  code: undefined
 })
 const columns = ref([
   { visible: true, prop: 'content', label: '模板内容' },
@@ -189,7 +236,11 @@ function reset() {
   form.value = {
     id: null,
     name: null,
+    code: null,
+    subject: null,
     content: null,
+    isHtml: true,
+    enabled: true,
     createBy: null,
     createTime: null,
     updateBy: null,
@@ -267,3 +318,11 @@ const handleOpenPre = function (row) {
 }
 handleQuery()
 </script>
+
+<style scoped>
+.email-preview-frame {
+  width: 100%;
+  height: 360px;
+  border: 0;
+}
+</style>
