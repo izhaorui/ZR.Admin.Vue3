@@ -38,7 +38,9 @@ const rules = ref({
   oldPassword: [{ required: true, message: '旧密码不能为空', trigger: 'blur' }],
   newPassword: [
     { required: true, message: '新密码不能为空', trigger: 'blur' },
-    { min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur' }
+    // 与后端密码策略（sys.account.pwd.*，默认 8-32 位）保持一致：
+    // 前端只做初步拦截，最终由后端 ValidatePassword 判定复杂度
+    { min: 8, max: 32, message: '长度在 8 到 32 个字符，且需包含数字和字母', trigger: 'blur' }
   ],
   confirmPassword: [
     { required: true, message: '确认密码不能为空', trigger: 'blur' },

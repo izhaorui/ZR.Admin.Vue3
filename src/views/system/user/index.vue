@@ -294,7 +294,7 @@
     <el-dialog :title="'重置「' + resetPwd.userName + '」的密码'" v-model="resetPwd.open" width="420px" append-to-body>
       <el-form :model="resetPwd" :rules="resetPwdRules" ref="resetPwdRef" label-width="80px">
         <el-form-item label="新密码" prop="password">
-          <el-input v-model="resetPwd.password" show-password maxlength="20" placeholder="请输入新密码">
+          <el-input v-model="resetPwd.password" show-password maxlength="32" placeholder="请输入新密码">
             <template #append>
               <el-button @click="changeRandomPassword">随机生成</el-button>
             </template>
@@ -389,7 +389,8 @@ const resetPwdRef = ref()
 const resetPwdRules = {
   password: [
     { required: true, message: '新密码不能为空', trigger: 'blur' },
-    { min: 5, max: 20, message: '新密码长度必须介于 5 和 20 之间', trigger: 'blur' }
+    // 与后端密码策略（sys.account.pwd.*，默认 8-32 位）保持一致
+    { min: 8, max: 32, message: '新密码长度必须介于 8 和 32 之间，且需包含数字和字母', trigger: 'blur' }
   ]
 }
 // 列显隐信息
@@ -428,12 +429,13 @@ const data = reactive({
       }
     ],
     nickName: [{ required: true, message: '用户昵称不能为空', trigger: 'blur' }],
+    // 与后端密码策略（sys.account.pwd.*，默认 8-32 位）保持一致
     password: [
       { required: true, message: '用户密码不能为空', trigger: 'blur' },
       {
-        min: 5,
-        max: 20,
-        message: '用户密码长度必须介于 5 和 20 之间',
+        min: 8,
+        max: 32,
+        message: '用户密码长度必须介于 8 和 32 之间，且需包含数字和字母',
         trigger: 'blur'
       }
     ],
@@ -538,15 +540,18 @@ function handleStatusChange(row) {
     })
 }
 /**
- * 生成随机密码：字母 + 数字，长度 6-10 位，且必然同时包含这两类字符。
+ * 生成随机密码：字母 + 数字，长度 12-16 位，且必然同时包含这两类字符。
  * 供重置密码弹框预填与「随机生成」更换，运营可以直接用，也可以改成自己指定的密码。
+ *
+ * 长度下限必须 ≥ 后端密码策略的最短长度（默认 8），否则弹框预填的密码会立刻被校验拦下。
+ * 若后端开启了「必须含特殊字符」（sys.account.pwd.requireSymbol=1），此处的字符集需同步补充。
  */
 function generateRandomPassword() {
   const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
   const digits = '0123456789'
   const all = letters + digits
-  // 6 ~ 10 位随机长度
-  const length = 6 + Math.floor(Math.random() * 5)
+  // 12 ~ 16 位随机长度
+  const length = 12 + Math.floor(Math.random() * 5)
   const chars = [
     // 先各放一个字母与数字，保证两类字符一定出现，不会随机出纯数字或纯字母
     letters[Math.floor(Math.random() * letters.length)],
