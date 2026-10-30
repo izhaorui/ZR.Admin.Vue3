@@ -24,6 +24,7 @@
     "@wangeditor/editor": "^5.1.1",
     "@wangeditor/editor-for-vue": "^5.1.11",
     "axios": "^1.6.2",
+    "compresso.js": "^1.0.2",
     "crypto-js": "^4.1.1",
     "echarts": "5.2.2",
     "element-plus": "^2.14.0",

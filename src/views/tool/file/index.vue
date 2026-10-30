@@ -257,7 +257,7 @@
             <el-form-item label="压缩图片" prop="quality">
               <template #label>
                 <span>
-                  <el-tooltip content="压缩质量1-100之间,数字越高质量越高,默认0不压缩" placement="top">
+                  <el-tooltip content="上传前在浏览器压缩 JPG、PNG、WebP 图片；大于1MB且质量不为0时处理，PNG会转为WebP，数值越低压缩越明显" placement="top">
                     <el-icon :size="15">
                       <questionFilled />
                     </el-icon>
@@ -276,6 +276,7 @@
               :fileSize="100"
               :drag="true"
               :data="uploadData"
+              :beforeUpload="compressImageBeforeUpload"
               :autoUpload="false"
               @success="handleUploadSuccess" />
           </el-col>
@@ -363,6 +364,7 @@ import { treelistFileGroup } from '@/api/tool/filegroup.js'
 import { useClipboard } from '@vueuse/core'
 import QRCode from 'qrcodejs2-fixes'
 import { showTime } from '@/utils'
+import { compressImage } from '@/utils/image'
 // 选中id数组
 const ids = ref([])
 // 非单个禁用
@@ -558,8 +560,7 @@ function submitUpload() {
           fileDir: form.value.storePath,
           fileName: form.value.fileName,
           storeType: form.value.storeType,
-          fileNameType: form.value.fileNameType,
-          quality: form.value.quality
+          fileNameType: form.value.fileNameType
         }
         resolve(true)
       })
@@ -570,6 +571,14 @@ function submitUpload() {
       })
     }
   })
+}
+async function compressImageBeforeUpload(file) {
+  try {
+    return await compressImage(file, form.value.quality)
+  } catch (error) {
+    proxy.$modal.msgError(error.message || '图片压缩失败')
+    return false
+  }
 }
 async function handleDown(item) {
   await proxy.downFile('/common/downloadFile', { fileId: item.id })

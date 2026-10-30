@@ -123,4 +123,28 @@ export function runManual(id) {
   })
 }
 
-export default { queryTasks, getTasks, getAllTasks, createTasks, updateTasks, deleteTasks, startTasks, stopTasks, runTasks, exportTasks, runManual }
+/**
+ * 任务运行监控：正在执行、下次触发时间、累计耗时
+ * @param {string} ids 可选，逗号分隔的任务ID；为空返回全部
+ */
+export function getTaskRuntime(ids) {
+  return request({
+    url: '/system/tasks/runtime',
+    method: 'get',
+    params: ids ? { ids } : {}
+  })
+}
+export default {
+  queryTasks,
+  getTasks,
+  getAllTasks,
+  createTasks,
+  updateTasks,
+  deleteTasks,
+  startTasks,
+  stopTasks,
+  runTasks,
+  exportTasks,
+  runManual,
+  getTaskRuntime
+}

@@ -1,5 +1,12 @@
 <template>
   <div class="app-container">
+    <el-alert
+      v-if="!schedulerStarted && dataTasks.length > 0"
+      type="warning"
+      :closable="false"
+      show-icon
+      title="调度器未启动：「运行中 / 下次触发」信息不可用，请先启动任务调度"
+      class="mb8" />
     <el-form :model="queryParams" inline @submit.prevent ref="queryRef" v-show="searchToggle">
       <el-form-item prop="taskType">
         <el-select clearable v-model="queryParams.taskType" placeholder="请选择任务类型">
@@ -75,9 +82,29 @@
       <el-table-column prop="assemblyName" label="程序集名称" v-if="columns.showColumn('assemblyName')" :show-overflow-tooltip="true" />
       <el-table-column prop="className" label="任务类名" v-if="columns.showColumn('className')" />
       <el-table-column prop="runTimes" align="center" label="运行次数" width="80" />
+      <el-table-column label="运行中" align="center" width="85">
+        <template #default="scope">
+          <el-tag v-if="runtimeMap[scope.row.id]?.isRunning" type="success" effect="dark" size="small">运行中</el-tag>
+          <span v-else class="text-muted">--</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="下次触发" align="center" width="160">
+        <template #default="scope">{{ runtimeMap[scope.row.id]?.nextFireTime || '--' }}</template>
+      </el-table-column>
+      <el-table-column label="累计耗时" align="center" width="100">
+        <template #default="scope">{{ formatElapsed(runtimeMap[scope.row.id]?.totalElapsedMs) }}</template>
+      </el-table-column>
+      <el-table-column label="错过执行" align="center" width="130" v-if="columns.showColumn('misfirePolicy')">
+        <template #default="scope">
+          <dict-tag :options="options.misfirePolicyOptions" :value="String(scope.row.misfirePolicy ?? 0)" />
+        </template>
+      </el-table-column>
       <el-table-column prop="intervalSecond" align="center" label="执行间隔(s)" v-if="columns.showColumn('intervalSecond')" width="90" />
       <el-table-column prop="cron" align="center" label="运行表达式" v-if="columns.showColumn('cron')" :show-overflow-tooltip="true" />
       <el-table-column prop="jobParams" label="任务参数" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('jobParams')" />
+      <el-table-column label="存储过程" align="center" :show-overflow-tooltip="true" v-if="columns.showColumn('sqlText')">
+        <template #default="scope">{{ formatStoredProcedureCall(scope.row) || '--' }}</template>
+      </el-table-column>
       <el-table-column
         prop="lastRunTime"
         label="最后运行时间"
@@ -163,6 +190,19 @@
             <el-descriptions-item label="程序集" width="90px">
               {{ item.assemblyName }}
             </el-descriptions-item>
+            <el-descriptions-item label="运行状态" width="90px">
+              <el-tag v-if="runtimeMap[item.id]?.isRunning" type="success" effect="dark" size="small">运行中</el-tag>
+              <span v-else class="text-muted">--</span>
+            </el-descriptions-item>
+            <el-descriptions-item label="下次触发" width="90px">
+              <span class="text-ellipsis" :title="runtimeMap[item.id]?.nextFireTime">{{ runtimeMap[item.id]?.nextFireTime || '--' }}</span>
+            </el-descriptions-item>
+            <el-descriptions-item label="累计耗时" width="90px">
+              {{ formatElapsed(runtimeMap[item.id]?.totalElapsedMs) }}
+            </el-descriptions-item>
+            <el-descriptions-item label="错过执行" width="90px">
+              <dict-tag :options="options.misfirePolicyOptions" :value="String(item.misfirePolicy ?? 0)" />
+            </el-descriptions-item>
             <el-descriptions-item label="最后运行时间" width="90px">
               <span class="text-ellipsis" :title="item.lastRunTime">{{ item.lastRunTime || '--' }}</span>
             </el-descriptions-item>
@@ -186,6 +226,9 @@
             </el-descriptions-item>
             <el-descriptions-item label="apiUrl" width="90px">
               <span class="text-ellipsis" :title="item.apiUrl">{{ item.apiUrl || '--' }}</span>
+            </el-descriptions-item>
+            <el-descriptions-item v-if="item.taskType == 3" label="存储过程" width="90px">
+              <span class="text-ellipsis" :title="formatStoredProcedureCall(item)">{{ formatStoredProcedureCall(item) || '--' }}</span>
             </el-descriptions-item>
           </el-descriptions>
           <div class="job-card-actions">
@@ -226,6 +269,17 @@
             </el-form-item>
           </el-col>
           <el-col :lg="12">
+            <el-form-item label="错过执行" prop="misfirePolicy">
+              <el-select v-model="form.misfirePolicy" placeholder="请选择错过执行策略" style="width: 100%">
+                <el-option
+                  v-for="item in options.misfirePolicyOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="parseInt(item.dictValue)" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :lg="12">
             <el-form-item label="任务分组" maxlength="200" prop="jobGroup">
               <el-select v-model="form.jobGroup" placeholder="请选择任务分组">
                 <el-option
@@ -241,7 +295,7 @@
               <el-radio-group v-model="form.taskType">
                 <el-radio :value="1">执行程序集</el-radio>
                 <el-radio :value="2">执行url</el-radio>
-                <el-radio :value="3">执行SQL语句</el-radio>
+                <el-radio :value="3">调用存储过程</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -259,11 +313,12 @@
             </el-form-item>
           </el-col>
           <el-col :lg="24" v-if="form.taskType == 3">
-            <el-form-item label="SQL语句" prop="sqlText">
-              <div class="sql-editor-wrap">
-                <el-input :rows="5" type="textarea" v-model="form.sqlText" placeholder="请输入SQL语句，批量执行SQL请换行" />
-                <pre v-if="form.sqlText" class="sql-preview"><code class="hljs sql" v-html="highlightedSqlText"></code></pre>
-              </div>
+            <el-form-item label="存储过程" prop="sqlText">
+              <el-input
+                v-model="form.sqlText"
+                placeholder="schema.dbo.eee @usid = 1, @bb = 3"
+                @blur="proxy.$refs.formRef.validateField('sqlText')" />
+              <div class="tips-text">格式：schema.ProcedureName 参数</div>
             </el-form-item>
           </el-col>
           <template v-if="form.taskType == 1">
@@ -279,19 +334,8 @@
             </el-col>
           </template>
 
-          <el-col :lg="24">
+          <el-col :lg="24" v-if="form.taskType != 3">
             <el-form-item label="传入参数" prop="jobParams">
-              <template #label>
-                <span>
-                  <el-tooltip content="eg：{ token: abc123} or token=abc123&uid=1000" placement="top">
-                    <el-icon :size="15">
-                      <questionFilled />
-                    </el-icon>
-                  </el-tooltip>
-                  传入参数
-                </span>
-              </template>
-
               <el-input v-model="form.jobParams" placeholder="传入参数" />
             </el-form-item>
           </el-col>
@@ -378,14 +422,20 @@
 </template>
 
 <script setup name="job">
-import { queryTasks, getTasks, createTasks, updateTasks, deleteTasks, startTasks, stopTasks, runTasks, exportTasks } from '@/api/monitor/job'
+import {
+  queryTasks,
+  getTasks,
+  createTasks,
+  updateTasks,
+  deleteTasks,
+  startTasks,
+  stopTasks,
+  runTasks,
+  exportTasks,
+  getTaskRuntime
+} from '@/api/monitor/job'
 import { listJobLog } from '@/api/monitor/jobLog'
 import Crontab from '@/components/Crontab'
-import hljs from 'highlight.js/lib/core'
-import sql from 'highlight.js/lib/languages/sql'
-import 'highlight.js/styles/github.css'
-
-hljs.registerLanguage('sql', sql)
 
 const router = useRouter()
 const { proxy } = getCurrentInstance()
@@ -417,10 +467,10 @@ const queryParams = reactive({
 const columns = ref([
   // { visible: true, prop: 'name', label: '名称' },
   { visible: true, prop: 'taskType', label: '任务类型' },
-  { visible: true, prop: 'triggerType', label: '触发器类型' },
-  { visible: true, prop: 'jobGroup', label: '任务分组' },
-  { visible: true, prop: 'assemblyName', label: '程序集名称' },
-  { visible: true, prop: 'className', label: '类名' },
+  { visible: false, prop: 'triggerType', label: '触发器类型' },
+  { visible: false, prop: 'jobGroup', label: '任务分组' },
+  { visible: false, prop: 'assemblyName', label: '程序集名称' },
+  { visible: false, prop: 'className', label: '类名' },
   { visible: true, prop: 'lastRunTime', label: '最后运行时间' },
   { visible: true, prop: 'remark', label: '备注' },
   { visible: false, prop: 'id', label: '任务id' },
@@ -431,11 +481,16 @@ const columns = ref([
   { visible: false, prop: 'intervalSecond', label: '执行每隔(s)' },
   // { visible: false, prop: 'isStart', label: '是否启动' },
   { visible: false, prop: 'jobParams', label: '任务参数' },
-  { visible: false, prop: 'apiUrl', label: '网络请求地址' }
-  // { visible: false, prop: 'sqlText', label: 'sql脚本' }
+  { visible: false, prop: 'apiUrl', label: '网络请求地址' },
+  { visible: false, prop: 'misfirePolicy', label: '错过执行策略' },
+  { visible: false, prop: 'sqlText', label: '存储过程' }
 ])
 // 计划任务列表
 const dataTasks = ref([])
+// 任务运行时状态（按任务ID索引，来自 /system/tasks/runtime）
+const runtimeMap = ref({})
+// 调度器是否已启动
+const schedulerStarted = ref(true)
 // 任务日志列表
 const jobLogList = ref([])
 const logTitle = ref('')
@@ -454,7 +509,15 @@ const state = reactive({
     beginTime: [{ required: false, message: '请选择开始日期', trigger: 'blur' }],
     endTime: [{ required: false, message: '请选择结束日期', trigger: 'blur' }],
     intervalSecond: [{ message: '请设置执行间隔', type: 'number', trigger: 'blur' }],
-    sqlText: [{ required: true, message: '请输入sql语句', trigger: 'blur' }],
+    sqlText: [
+      {
+        validator: (rule, value, callback) => {
+          if (form.value.taskType !== 3) return callback()
+          callback(validateStoredProcedureCall(value) ? undefined : new Error('格式无效，例如 schema.dbo.eee @usid = 1, @bb = 3'))
+        },
+        trigger: 'blur'
+      }
+    ],
     requestMethod: [{ required: true, message: '请选择请求方式', trigger: 'blur' }]
   },
   options: {
@@ -463,10 +526,16 @@ const state = reactive({
       { dictLabel: '普通', dictValue: '0' },
       { dictLabel: '表达式', dictValue: '1' }
     ],
+    // 错过执行（Misfire）策略，与后端 SysTasks.MisfirePolicy 对应
+    misfirePolicyOptions: [
+      { dictLabel: '不补执行', dictValue: '0', listClass: 'info' },
+      { dictLabel: '立即补一次', dictValue: '1', listClass: 'warning' },
+      { dictLabel: '全部补执行', dictValue: '2', listClass: 'danger' }
+    ],
     taskTypeOptions: [
       { dictLabel: '程序集', dictValue: '1' },
       { dictLabel: 'api请求', dictValue: '2', listClass: 'danger' },
-      { dictLabel: 'sql脚本', dictValue: '3', listClass: 'info' }
+      { dictLabel: '存储过程', dictValue: '3', listClass: 'info' }
     ],
     // 任务状态字典
     isStartOptions: [
@@ -480,16 +549,28 @@ const state = reactive({
 // 按钮是否可见
 const btnVisible = ref(true)
 const { rules, form, options } = toRefs(state)
-const highlightedSqlText = computed(() => {
-  const sqlText = form.value.sqlText || ''
-  if (!sqlText) return ''
-  try {
-    return hljs.highlight(sqlText, { language: 'sql', ignoreIllegals: true }).value
-  } catch (error) {
-    return hljs.highlightAuto(sqlText).value
+function formatStoredProcedureCall(task) {
+  const procedureCall = task?.sqlText?.trim() || ''
+  const legacyParameters = task?.jobParams?.trim() || ''
+  return procedureCall && legacyParameters ? `${procedureCall} ${legacyParameters}` : procedureCall
+}
+function validateStoredProcedureCall(procedureCall) {
+  const text = (procedureCall || '').trim()
+  const match = text.match(/^((?:[A-Za-z_][A-Za-z0-9_$#]*\.){1,2}[A-Za-z_][A-Za-z0-9_$#]*)(?:\s+([\s\S]+))?$/)
+  return Boolean(match) && (!match[2] || validateStoredProcedureParameters(match[2]))
+}
+function validateStoredProcedureParameters(parameterText) {
+  const text = parameterText.trim()
+  if (!text) return true
+  if (text.startsWith('{')) {
+    try {
+      return typeof JSON.parse(text) === 'object'
+    } catch {
+      return false
+    }
   }
-})
-
+  return /^@?\w+\s*=\s*('(?:[^']|'')*'|[^,']+)(\s*,\s*@?\w+\s*=\s*('(?:[^']|'')*'|[^,']+))*$/.test(text)
+}
 /** 查询计划任务列表 */
 function getList() {
   loading.value = true
@@ -497,7 +578,36 @@ function getList() {
     dataTasks.value = response.data.result
     total.value = response.data.totalNum
     loading.value = false
+    // 运行态单独拉取：只查当前页任务，避免全量扫描调度器
+    getRuntime(dataTasks.value.map((t) => t.id))
   })
+}
+
+/** 拉取任务运行态（正在执行 / 下次触发 / 累计耗时） */
+function getRuntime(ids) {
+  const params = ids && ids.length ? ids.join(',') : undefined
+  getTaskRuntime(params)
+    .then((res) => {
+      const map = {}
+      const list = res.data?.tasks || []
+      list.forEach((item) => {
+        map[item.taskId] = item
+      })
+      runtimeMap.value = map
+      schedulerStarted.value = res.data?.schedulerStarted !== false
+    })
+    .catch(() => {
+      // 运行态不可用不应影响列表本身，静默降级为「--」
+      runtimeMap.value = {}
+    })
+}
+
+/** 毫秒转可读耗时 */
+function formatElapsed(ms) {
+  if (!ms || ms <= 0) return '--'
+  if (ms < 1000) return `${Math.round(ms)}ms`
+  if (ms < 60000) return `${(ms / 1000).toFixed(1)}s`
+  return `${(ms / 60000).toFixed(1)}min`
 }
 function handleQuery() {
   getList()
@@ -519,7 +629,11 @@ function handleUpdate(row) {
   reset()
   btnVisible.value = true
   getTasks(row.id).then((res) => {
-    form.value = res.data
+    form.value = {
+      ...res.data,
+      sqlText: formatStoredProcedureCall(res.data),
+      jobParams: res.data.taskType == 3 ? undefined : res.data.jobParams
+    }
     open.value = true
     title.value = '修改计划任务'
   })
@@ -642,6 +756,7 @@ function reset() {
     className: undefined,
     jobParams: undefined,
     triggerType: 1,
+    misfirePolicy: 0,
     beginTime: undefined,
     endTime: undefined,
     intervalSecond: 1,
@@ -718,7 +833,11 @@ function handleJobLog(row) {
 function handleDetails(row) {
   reset()
   getTasks(row.id).then((res) => {
-    form.value = res.data
+    form.value = {
+      ...res.data,
+      sqlText: formatStoredProcedureCall(res.data),
+      jobParams: res.data.taskType == 3 ? undefined : res.data.jobParams
+    }
     open.value = true
     title.value = '详情'
     btnVisible.value = false
@@ -780,17 +899,8 @@ function handleCommand(command, row) {
   vertical-align: bottom;
 }
 
-.sql-editor-wrap {
-  width: 100%;
-}
-
-.sql-preview {
-  border: 1px solid var(--el-border-color-light);
-  border-radius: 4px;
-  background: var(--el-fill-color-extra-light);
-  overflow: auto;
-  max-height: 220px;
-  white-space: pre-wrap;
-  word-break: break-word;
+.tips-text {
+  font-size: 12px;
+  color: #909399;
 }
 </style>

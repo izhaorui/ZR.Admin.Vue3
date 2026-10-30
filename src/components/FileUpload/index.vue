@@ -101,6 +101,11 @@ const props = defineProps({
   data: {
     type: Object
   },
+  // 上传前自定义处理
+  beforeUpload: {
+    type: Function,
+    default: null
+  },
   // 禁用组件（仅查看文件）
   disabled: {
     type: Boolean,
@@ -141,7 +146,7 @@ function normalizeFile(item) {
 }
 
 // 上传前校检格式和大小
-function handleBeforeUpload(file) {
+async function handleBeforeUpload(file) {
   // 校检文件类型
   if (props.fileType.length) {
     let fileExtension = ''
@@ -165,9 +170,11 @@ function handleBeforeUpload(file) {
       return false
     }
   }
+  const processedFile = props.beforeUpload ? await props.beforeUpload(file) : file
+  if (processedFile === false) return false
   proxy.$modal.loading('正在上传文件，请稍候...')
   number.value++
-  return true
+  return processedFile
 }
 
 // 文件个数超出
