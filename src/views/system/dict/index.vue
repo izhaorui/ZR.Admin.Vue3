@@ -167,7 +167,8 @@ function handleSelectionChange(selection) {
 }
 /** 修改按钮操作 */
 function handleUpdate(row) {
-  proxy.$refs.dictFormRef.handleUpdate(row)
+  const dictId = row?.dictId || ids.value[0]
+  proxy.$refs.dictFormRef.handleUpdate({ dictId })
 }
 
 /** 删除按钮操作 */

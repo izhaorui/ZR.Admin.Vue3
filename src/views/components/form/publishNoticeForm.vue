@@ -145,7 +145,7 @@ function handleAdd() {
 /**修改按钮操作 */
 function handleUpdate(row) {
   reset()
-  const noticeId = row.noticeId || ids.value
+  const noticeId = row.noticeId
   getNotice(noticeId).then((response) => {
     form.value = response.data
     open.value = true

@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-bind="$attrs" :fullscreen="isFullscreen" ref="myDialogRef" v-model="open">
-    <template #header="{ close, titleId, titleClass }">
+    <template #header="{ titleId, titleClass }">
       <div class="custom-header">
         <span :id="titleId" :class="titleClass">{{ title }}</span>
         <span class="fullscreen" @click="handleScreen()">

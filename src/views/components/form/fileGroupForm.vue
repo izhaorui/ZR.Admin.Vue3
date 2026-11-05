@@ -165,7 +165,7 @@ function handleAdd() {
 // 修改按钮操作
 function handleUpdate(row) {
   reset()
-  const id = row.groupId || ids.value
+  const id = row.groupId
   open.value = true
   title.value = '修改数据'
   opertype.value = 2

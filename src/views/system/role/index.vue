@@ -388,7 +388,7 @@ function reset() {
   if (proxy.$refs.menuRef != undefined) {
     proxy.$refs.menuRef.setCheckedKeys([])
   }
-  ;(menuExpand.value = false),
+  ;((menuExpand.value = false),
     (menuNodeAll.value = false),
     (deptExpand.value = true),
     (deptNodeAll.value = false),
@@ -404,7 +404,7 @@ function reset() {
       menuCheckStrictly: true,
       deptCheckStrictly: true,
       remark: undefined
-    })
+    }))
   proxy.resetForm('form')
 }
 const showPermi = ref(false)
@@ -436,6 +436,7 @@ function handleCommand(command, row) {
       break
     case 'handleExportMenu':
       handleExportMenu(row)
+      break
     default:
       break
   }

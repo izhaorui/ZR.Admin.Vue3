@@ -12,20 +12,20 @@ export default {
   props: {
     className: {
       type: String,
-      default: 'chart',
+      default: 'chart'
     },
     width: {
       type: String,
-      default: '100%',
+      default: '100%'
     },
     height: {
       type: String,
-      default: '300px',
-    },
+      default: '300px'
+    }
   },
   data() {
     return {
-      chart: null,
+      chart: null
     }
   },
   mounted() {
@@ -33,7 +33,7 @@ export default {
       this.initChart()
     })
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (!this.chart) {
       return
     }
@@ -49,8 +49,8 @@ export default {
           trigger: 'axis',
           axisPointer: {
             // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow', // 默认为直线，可选为：'line' | 'shadow'
-          },
+            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+          }
         },
         radar: {
           radius: '66%',
@@ -63,8 +63,8 @@ export default {
               shadowBlur: 45,
               shadowColor: 'rgba(0,0,0,.5)',
               shadowOffsetX: 0,
-              shadowOffsetY: 15,
-            },
+              shadowOffsetY: 15
+            }
           },
           indicator: [
             { name: 'Sales', max: 10000 },
@@ -72,13 +72,13 @@ export default {
             { name: 'Information Techology', max: 20000 },
             { name: 'Customer Support', max: 20000 },
             { name: 'Development', max: 20000 },
-            { name: 'Marketing', max: 20000 },
-          ],
+            { name: 'Marketing', max: 20000 }
+          ]
         },
         legend: {
           left: 'center',
           bottom: '10',
-          data: ['Allocated Budget', 'Expected Spending', 'Actual Spending'],
+          data: ['Allocated Budget', 'Expected Spending', 'Actual Spending']
         },
         series: [
           {
@@ -89,27 +89,27 @@ export default {
               shadowColor: 'rgba(0,0,0,.2)',
               shadowOffsetX: 0,
               shadowOffsetY: 10,
-              opacity: 1,
+              opacity: 1
             },
             data: [
               {
                 value: [5000, 7000, 12000, 11000, 15000, 14000],
-                name: 'Allocated Budget',
+                name: 'Allocated Budget'
               },
               {
                 value: [4000, 9000, 15000, 15000, 13000, 11000],
-                name: 'Expected Spending',
+                name: 'Expected Spending'
               },
               {
                 value: [5500, 11000, 12000, 15000, 12000, 12000],
-                name: 'Actual Spending',
-              },
+                name: 'Actual Spending'
+              }
             ],
-            animationDuration: animationDuration,
-          },
-        ],
+            animationDuration: animationDuration
+          }
+        ]
       })
-    },
-  },
+    }
+  }
 }
 </script>

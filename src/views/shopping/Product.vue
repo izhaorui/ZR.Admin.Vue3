@@ -161,7 +161,7 @@
             v-show="editIndex == scope.$index"
             v-model="scope.row.sortId"
             @blur="editIndex = -1"
-            @keyup.enter.native="handleChangeSort(scope.row)"></el-input>
+            @keyup.enter="handleChangeSort(scope.row)"></el-input>
         </template>
       </el-table-column>
       <el-table-column prop="saleStatus" label="销售状态" align="center">

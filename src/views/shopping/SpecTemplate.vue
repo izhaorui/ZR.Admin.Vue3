@@ -83,7 +83,7 @@
                 {{ val }}
               </el-tag>
 
-              <el-input v-model="spec.temp" @keyup.enter.native="addSpecValue(index)" placeholder="输入值后回车" style="width: 200px" />
+              <el-input v-model="spec.temp" @keyup.enter="addSpecValue(index)" placeholder="输入值后回车" style="width: 200px" />
             </div>
 
             <el-button type="danger" text icon="delete" @click="removeSpec(index)" />

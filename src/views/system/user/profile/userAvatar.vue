@@ -62,8 +62,7 @@ import useUserStore from '@/store/modules/user'
 
 export default {
   components: {
-    VueCropper,
-    uploadAvatar
+    VueCropper
   },
   setup() {
     const useStore = useUserStore()

@@ -95,7 +95,7 @@ function handleAdd() {
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset()
-  const dictId = row.dictId || ids.value
+  const dictId = row.dictId
   getType(dictId).then((response) => {
     form.value = response.data
     open.value = true
