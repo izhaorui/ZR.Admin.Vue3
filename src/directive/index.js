@@ -3,6 +3,7 @@ import hasPermi from './permission/hasPermi'
 import clipboard from './module/clipboard'
 import drag from './module/drag'
 import waves from './module/waves'
+import safeHtml from './module/safeHtml'
 
 export default function directive(app) {
   app.directive('hasRole', hasRole)
@@ -10,4 +11,5 @@ export default function directive(app) {
   app.directive('clipboard', clipboard)
   app.directive('drag', drag)
   app.directive('waves', waves)
+  app.directive('safe-html', safeHtml)
 }

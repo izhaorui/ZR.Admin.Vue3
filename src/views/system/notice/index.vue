@@ -84,7 +84,7 @@
     <zr-dialog title="预览" draggable v-model="openPreview" width="580px">
       <template v-if="info">
         <h2 style="text-align: center; margin-top: 0" class="mb10">{{ info.noticeTitle }}</h2>
-        <div v-html="info.noticeContent"></div>
+        <div v-safe-html="info.noticeContent"></div>
 
         <div class="n_right">{{ info.create_by }}</div>
         <div class="n_right">{{ dayjs(info.create_time).format('YYYY-MM-DD HH:mm') }}</div>

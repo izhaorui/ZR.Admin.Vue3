@@ -4,7 +4,7 @@
       <div class="text-center title">{{ info.title }}</div>
       <template v-if="showType == 0">
         <el-scrollbar>
-          <div class="content-wrap" v-html="info.noticeContent"></div>
+          <div class="content-wrap" v-safe-html="info.noticeContent"></div>
         </el-scrollbar>
 
         <div class="n_right">
