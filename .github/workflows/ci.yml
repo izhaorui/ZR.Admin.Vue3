@@ -34,6 +34,9 @@ jobs:
       - name: 代码检查
         run: npm run lint
 
+      - name: 单元测试
+        run: npm run test
+
       - name: 构建
         run: npm run build:prod
 
@@ -42,4 +45,34 @@ jobs:
         with:
           name: dist
           path: dist
+          retention-days: 7
+
+  e2e:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 安装 Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: 端到端冒烟测试
+        run: npm run test:e2e
+
+      - name: 上传测试报告
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-report
+          path: tests/e2e/reports
           retention-days: 7
