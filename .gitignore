@@ -21,7 +21,6 @@ selenium-debug.log
 *.sln
 *.local
 
-package-lock.json
 yarn.lock
 /deploy.js
 /.vs

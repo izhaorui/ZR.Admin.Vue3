@@ -1,0 +1,10 @@
+node_modules
+dist
+public
+html
+src/assets
+scripts-debug
+skills
+package-lock.json
+src/auto-import.d.ts
+src/**/*.vue3

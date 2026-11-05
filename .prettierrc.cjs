@@ -18,7 +18,6 @@ module.exports = {
   // 在对象，数组括号与文字之间加空格 "{ foo: bar }"
   bracketSpacing: true,
   // jsx 标签的反尖括号需要换行
-  jsxBracketSameLine: true,
   bracketSameLine: true,
   // 箭头函数，always只有一个参数的时候，也需要括号,'avoid'箭头函数只有一个参数的时候可以忽略括号
   arrowParens: 'always',

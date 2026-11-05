@@ -1,0 +1,28 @@
+version: 1.0
+name: ci
+displayName: 前端 CI
+triggers:
+  push:
+    branches:
+      include:
+        - main
+        - pro
+  pullRequest:
+    branches:
+      include:
+        - main
+        - pro
+stages:
+  - stage:
+      name: build-and-lint
+      displayName: 安装依赖、检查与构建
+      steps:
+        - step: npmbuild@1
+          name: npm-build
+          displayName: npm 检查与构建
+          inputs:
+            nodeVersion: 20
+            goals: |
+              npm ci
+              npm run lint
+              npm run build:prod
