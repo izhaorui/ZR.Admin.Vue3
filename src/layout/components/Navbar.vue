@@ -145,6 +145,8 @@ function logout() {
     })
     .then(() => {
       userStore.logOut().then(() => {
+        // 登出后停止长连接并取消待重连，避免用已失效的 token 反复重试
+        proxy.signalr?.stop?.()
         location.href = import.meta.env.VITE_APP_ROUTER_PREFIX + 'index'
       })
     })
