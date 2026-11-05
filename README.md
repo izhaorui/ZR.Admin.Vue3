@@ -39,16 +39,54 @@ git clone https://gitee.com/izory/ZRAdmin-vue.git
 # 进入项目目录
 cd ZRAdmin-vue
 
-# 安装依赖
-yarn --registry=https://registry.npm.taobao.org
+# 安装依赖（Node >= 20.19.0，详见 .nvmrc）
+npm install
 
 # 启动服务
-yarn dev
+npm run dev
 
-# 构建测试环境 yarn build:stage
-# 构建生产环境 yarn build:prod
+# 构建测试环境 npm run build:stage
+# 构建生产环境 npm run build:prod
 # 前端访问地址 http://localhost:8887
 ```
+
+## 🧰 代码检查
+
+```bash
+# ESLint 检查（0 error 视为通过，存量规则暂为 warning）
+npm run lint
+
+# ESLint 自动修复
+npm run lint:fix
+
+# Prettier 格式化
+npm run format
+```
+
+- 提交前由 husky 的 `pre-commit` 钩子调用 lint-staged，只对暂存文件执行 `eslint --fix` 与 `prettier --write`；`commit-msg` 钩子沿用 commitlint（gitmoji 规范）
+- 规则配置见 `eslint.config.js`（Flat Config），格式规范见 `.prettierrc.cjs`
+- 提交 `package-lock.json` 锁定依赖，CI 使用 `npm ci` 保证可复现构建
+- 流水线：GitHub Actions（`.github/workflows/ci.yml`）、Gitee Go（`.workflow/ci.yml`），流程为安装依赖 → lint → 单元测试 → 生产构建（GitHub 额外跑 E2E 冒烟）
+
+## 🧪 测试
+
+```bash
+# 单元测试（Vitest + jsdom）
+npm run test
+
+# 监听模式
+npm run test:watch
+
+# 覆盖率（输出到 tests/unit/coverage）
+npm run test:coverage
+
+# 端到端冒烟（Playwright，全程 mock 接口，不需要后端）
+npm run test:e2e
+```
+
+- 单元测试位于 `tests/unit`，覆盖 `src/utils`、`src/composables` 等纯逻辑模块
+- E2E 位于 `tests/e2e`，验证应用启动、路由守卫与登录页渲染；首次运行需 `npx playwright install chromium`
+- 富文本渲染统一使用 `v-safe-html` 指令（基于 DOMPurify），不要在公告等内容型场景直接使用 `v-html`
 
 ## 🍖 内置功能
 

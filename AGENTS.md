@@ -245,12 +245,31 @@ permission 字段控制。
 
 ---
 
+## Quality Gate
+
+修改代码后：
+
+- `npm run lint` 必须 0 error（存量 warning 逐步收敛，不新增）
+- `npm run test` 必须全绿；纯逻辑改动需补 `tests/unit` 用例
+- 提交时 husky `pre-commit` 会对暂存文件执行 `eslint --fix` + `prettier --write`
+- 新代码遵循 `.prettierrc.cjs`（单引号、无分号、printWidth 148）
+- CI 会依次执行 `npm ci`、`npm run lint`、`npm run test`、`npm run build:prod`，本地先跑通再提交
+
+---
+
+## Security
+
+- 后端维护的富文本（公告、文章等）用 `v-safe-html` 渲染，禁止直接用 `v-html`
+- 新增外链需带 `rel="noopener noreferrer"`
+
+---
+
 ## Don't
 
 不要：
 
-- 修改 eslint
+- 随意修改 eslint.config.js（调整规则需说明原因）
 - 修改 vite.config
-- 修改 package.json
+- 随意修改 package.json（新增依赖需说明原因）
 - 修改全局样式
 - 引入新的 UI 框架
