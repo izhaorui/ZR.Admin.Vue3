@@ -23,7 +23,7 @@ const {
 const storageSetting = JSON.parse(localStorage.getItem('layout-setting')) || ''
 const useSettingsStore = defineStore('layout-setting', {
   persist: {
-    paths: [
+    pick: [
       'theme',
       'sideTheme',
       'topNav',

@@ -3,7 +3,7 @@ import signalR from '@/signalr/signalr'
 import { listMySysUserMsg, unreadCount } from '@/api/system/sysusermsg'
 const useSocketStore = defineStore('socket', {
   persist: {
-    paths: ['chatMessage', 'chatList', 'sessionList', 'newChat', 'noticeIdArr', 'newNotice', 'globalErrorMsg', 'promptNoticeReadList'] //存储指定key
+    pick: ['chatMessage', 'chatList', 'sessionList', 'newChat', 'noticeIdArr', 'newNotice', 'globalErrorMsg', 'promptNoticeReadList'] //存储指定key
   },
   state: () => ({
     onlineNum: 0,

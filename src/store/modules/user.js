@@ -9,7 +9,7 @@ import useLockStore from './lock'
 
 const useUserStore = defineStore('user', {
   persist: {
-    paths: ['loginType', 'clientId', 'tenantId'] //存储指定key
+    pick: ['loginType', 'clientId', 'tenantId'] //存储指定key
   },
   state: () => ({
     loginType: 1,
