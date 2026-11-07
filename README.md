@@ -39,7 +39,7 @@ git clone https://gitee.com/izory/ZRAdmin-vue.git
 # 进入项目目录
 cd ZRAdmin-vue
 
-# 安装依赖（Node >= 20.19.0，详见 .nvmrc）
+# 安装依赖（Node >= 22.12.0，详见 .nvmrc）
 npm install
 
 # 启动服务

@@ -21,7 +21,7 @@ stages:
           name: npm-build
           displayName: npm 检查与构建
           inputs:
-            nodeVersion: 20
+            nodeVersion: 22
             goals: |
               npm ci
               npm run lint
