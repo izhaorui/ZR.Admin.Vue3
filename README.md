@@ -92,6 +92,7 @@ npm run test:e2e
 - 单元测试位于 `tests/unit`，覆盖 `src/utils`、`src/composables` 等纯逻辑模块
 - E2E 位于 `tests/e2e`，验证应用启动、路由守卫与登录页渲染；首次运行需 `npx playwright install chromium`
 - 富文本渲染统一使用 `v-safe-html` 指令（基于 DOMPurify），不要在公告等内容型场景直接使用 `v-html`
+- 表格组件默认使用 Element Plus `el-table`；仅虚拟滚动（单次渲染上千行）或 vxe 专有能力（行编辑、列拖拽、跨页选中、聚合汇总）才使用 `vxe-table`，详见 `AGENTS.md`
 
 ## 🍖 内置功能
 
