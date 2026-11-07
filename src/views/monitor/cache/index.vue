@@ -124,8 +124,8 @@
               :data="[
                 {
                   value: (parseFloat(cache.info.used_memory_human) / parseFloat(cache.info.total_system_memory_human)).toFixed(2),
-                  name: '内存消耗',
-                },
+                  name: '内存消耗'
+                }
               ]" />
           </div>
         </el-card>
@@ -148,7 +148,7 @@
 
 <script setup name="cache">
 import { getCache } from '@/api/monitor/cache'
-import * as echarts from 'echarts'
+import { echarts } from '@/utils/echarts'
 import Gauge from '@/components/Echarts/Gauge.vue'
 
 // 统计命令信息
@@ -171,7 +171,7 @@ function getList() {
     commandstats.value.setOption({
       tooltip: {
         trigger: 'item',
-        formatter: '{a} <br/>{b} : {c} ({d}%)',
+        formatter: '{a} <br/>{b} : {c} ({d}%)'
       },
       series: [
         {
@@ -182,9 +182,9 @@ function getList() {
           center: ['50%', '38%'],
           data: response.data.commandStats,
           animationEasing: 'cubicInOut',
-          animationDuration: 1000,
-        },
-      ],
+          animationDuration: 1000
+        }
+      ]
     })
   })
 }

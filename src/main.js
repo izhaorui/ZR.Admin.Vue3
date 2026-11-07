@@ -1,8 +1,11 @@
-import { createApp } from 'vue'
+import { createApp, defineAsyncComponent } from 'vue'
 // import Cookies from 'js-cookie'
 
-import ElementPlus from 'element-plus'
 import 'dayjs/locale/zh-cn'
+import 'element-plus/es/components/loading/style/css'
+import 'element-plus/es/components/message-box/style/css'
+import 'element-plus/es/components/message/style/css'
+import 'element-plus/es/components/notification/style/css'
 import '@/assets/styles/index.scss' // global css
 
 import App from './App'
@@ -43,10 +46,9 @@ import DictTag from '@/components/DictTag'
 import dateOptions from '@/utils/dateOptions'
 // Dialog组件
 import Dialog from '@/components/Dialog'
-// 图片选择器组件（素材库选图）
-import ImageSelector from '@/components/ImageSelector'
 
 const app = createApp(App)
+const ImageSelector = defineAsyncComponent(() => import('@/components/ImageSelector'))
 signalR.init(import.meta.env.VITE_APP_SOCKET_API)
 app.config.globalProperties.signalr = signalR
 // 全局方法挂载
@@ -73,4 +75,4 @@ app.component('ZrDialog', Dialog)
 app.component('ImageSelector', ImageSelector)
 
 directive(app)
-app.use(pinia).use(router).use(plugins).use(ElementPlus, {}).use(elementIcons).use(vueI18n).mount('#app')
+app.use(pinia).use(router).use(plugins).use(elementIcons).use(vueI18n).mount('#app')

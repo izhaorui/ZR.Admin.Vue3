@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import * as echarts from 'echarts'
+import { echarts } from '@/utils/echarts'
 
 // import("echarts/theme/macarons"); // echarts theme
 // import { debounce } from '@/utils'
@@ -14,37 +14,37 @@ const { proxy } = getCurrentInstance()
 const props = defineProps({
   name: {
     type: String,
-    default: '',
+    default: ''
   },
   min: {
     type: [Object, Number],
-    default: 0,
+    default: 0
   },
   max: {
     type: [Object, Number],
-    default: 0,
+    default: 0
   },
   data: {
     type: Array,
     default: () => [
       {
         value: '',
-        name: '占比',
-      },
-    ],
+        name: '占比'
+      }
+    ]
   },
   className: {
     type: String,
-    default: 'chart',
+    default: 'chart'
   },
   width: {
     type: String,
-    default: '100%',
+    default: '100%'
   },
   height: {
     type: String,
-    default: '300px',
-  },
+    default: '300px'
+  }
 })
 let chart = null
 const chartRef = ref()
@@ -58,7 +58,7 @@ function initChart() {
 
   chart.setOption({
     tooltip: {
-      formatter: '{a} <br/>{b} : {c}',
+      formatter: '{a} <br/>{b} : {c}'
     },
     series: [
       {
@@ -67,16 +67,16 @@ function initChart() {
         min: props.min,
         max: props.max,
         detail: {
-          formatter: '{value}%',
+          formatter: '{value}%'
         },
-        data: props.data,
-      },
-    ],
+        data: props.data
+      }
+    ]
   })
 }
 const debouncedFn = useDebounceFn(() => {
   // do something
-	resizeHandler()
+  resizeHandler()
 }, 500)
 
 document.addEventListener('resize', debouncedFn)
@@ -85,6 +85,6 @@ onMounted(() => {
   initChart()
 })
 onBeforeUnmount(() => {
-	window.removeEventListener('resize', debouncedFn)
+  window.removeEventListener('resize', debouncedFn)
 })
 </script>

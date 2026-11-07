@@ -2,7 +2,7 @@
   <div class="echarts" ref="chartsRef" />
 </template>
 <script setup>
-import * as echarts from 'echarts'
+import { echarts } from '@/utils/echarts'
 const chartsRef = ref(null)
 
 const options = {

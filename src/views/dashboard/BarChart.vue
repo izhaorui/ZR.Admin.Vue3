@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import * as echarts from 'echarts'
+import { echarts } from '@/utils/echarts'
 let chart = null
 const { proxy } = getCurrentInstance()
 const animationDuration = 6000

@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import * as echarts from 'echarts'
+import { echarts } from '@/utils/echarts'
 const { proxy } = getCurrentInstance()
 const chartRef = ref(null)
 const props = defineProps({

@@ -10,7 +10,14 @@ export default defineConfig(({ mode, command }) => {
     // 设置路径
     '~': path.resolve(__dirname, './'),
     // 设置别名
-    '@': path.resolve(__dirname, './src')
+    '@': path.resolve(__dirname, './src'),
+    // compresso.js 会为 HEIC 支持预打两个 3MB 以上的动态 chunk；
+    // 当前压缩工具只接受 JPEG、PNG 和 WebP，因此以明确报错的轻量实现替代。
+    'heic-to/next': path.resolve(__dirname, './src/utils/heicUnsupported.js'),
+    'heic-to': path.resolve(__dirname, './src/utils/heicUnsupported.js'),
+    // echarts-wordcloud 仍引用 ECharts 4 的 lib 入口；指向同一份按需 core 实例，
+    // 使扩展完成注册而不回退到完整 ECharts 构建。
+    'echarts/lib/echarts': path.resolve(__dirname, './node_modules/echarts/core.js')
   }
   if (command === 'serve') {
     // 解决警告You are running the esm-bundler build of vue-i18n.
@@ -40,7 +47,34 @@ export default defineConfig(({ mode, command }) => {
         output: {
           chunkFileNames: 'static/js/[name]-[hash].js',
           entryFileNames: 'static/js/[name]-[hash].js',
-          assetFileNames: 'static/[ext]/[name]-[hash].[ext]'
+          assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
+          manualChunks(id) {
+            if (!id.includes('node_modules')) {
+              return
+            }
+            // Vue 运行时保持在稳定的公共 chunk；Element Plus 由组件解析器按实际路由使用拆分。
+            if (
+              id.includes('@vue/') ||
+              id.includes('@vue\\') ||
+              id.includes('@vueuse/') ||
+              id.includes('@vueuse\\') ||
+              /[\\/](?:vue|vue-router|pinia|pinia-plugin-persistedstate)(?:[\\/]|$)/.test(id)
+            ) {
+              return 'framework'
+            }
+            if (id.includes('echarts')) {
+              return 'echarts'
+            }
+            if (id.includes('@vue-office/docx') || id.includes('@vue-office\\docx')) {
+              return 'vue-office-docx'
+            }
+            if (id.includes('@vue-office/excel') || id.includes('@vue-office\\excel')) {
+              return 'vue-office-excel'
+            }
+            if (id.includes('@wangeditor')) {
+              return 'wangeditor'
+            }
+          }
         }
       }
     },

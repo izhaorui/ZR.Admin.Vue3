@@ -58,8 +58,7 @@
           <div class="stat-line">
             <span class="stat-line__label">商品形态分布</span>
             <span>
-              实物 {{ overview.physicalOrderCount }} 单 /
-              虚拟 {{ overview.virtualOrderCount }} 单
+              实物 {{ overview.physicalOrderCount }} 单 / 虚拟 {{ overview.virtualOrderCount }} 单
               <b>（虚拟占比 {{ percent(overview.virtualOrderRate) }}%）</b>
             </span>
           </div>
@@ -67,10 +66,7 @@
         <el-col :span="12">
           <div class="stat-line">
             <span class="stat-line__label">单量退款率</span>
-            <span>
-              {{ overview.refundOrderCount }} / {{ overview.orderCount }} 单
-              （{{ percent(overview.refundOrderRate) }}%）
-            </span>
+            <span> {{ overview.refundOrderCount }} / {{ overview.orderCount }} 单 （{{ percent(overview.refundOrderRate) }}%） </span>
           </div>
         </el-col>
       </el-row>
@@ -189,14 +185,8 @@
 </template>
 
 <script setup>
-import * as echarts from 'echarts'
-import {
-  getBusinessOverview,
-  listRefundTopProduct,
-  listSales,
-  listSalesTrade,
-  listSaleTopProduct
-} from '@/api/shopping/omsorder'
+import { echarts } from '@/utils/echarts'
+import { getBusinessOverview, listRefundTopProduct, listSales, listSalesTrade, listSaleTopProduct } from '@/api/shopping/omsorder'
 import { dayjs } from 'element-plus'
 const end = dayjs().endOf('week').add(1, 'day').format('YYYY-MM-DD') + ' 23:59:59'
 const start = dayjs().startOf('week').add(1, 'day').format('YYYY-MM-DD 00:00:00')

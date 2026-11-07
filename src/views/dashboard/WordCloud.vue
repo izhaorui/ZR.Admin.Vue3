@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import * as echarts from 'echarts'
+import { echarts } from '@/utils/echarts'
 
 import { useDebounceFn } from '@vueuse/core'
 // import 'echarts-wordcloud'
@@ -13,32 +13,32 @@ const { proxy } = getCurrentInstance()
 const props = defineProps({
   name: {
     type: String,
-    default: '',
+    default: ''
   },
   min: {
     type: [Object, Number],
-    default: 0,
+    default: 0
   },
   max: {
     type: [Object, Number],
-    default: 0,
+    default: 0
   },
   data: {
     type: Array,
-    default: () => [{}],
+    default: () => [{}]
   },
   className: {
     type: String,
-    default: 'chart',
+    default: 'chart'
   },
   width: {
     type: String,
-    default: '100%',
+    default: '100%'
   },
   height: {
     type: String,
-    default: '300px',
-  },
+    default: '300px'
+  }
 })
 let chart = null
 const chartRef = ref()
@@ -52,7 +52,7 @@ function initChart() {
 
   chart.setOption({
     tooltip: {
-      formatter: '{a} <br/>{b} : {c}',
+      formatter: '{a} <br/>{b} : {c}'
     },
     series: [
       {
@@ -68,16 +68,16 @@ function initChart() {
               return (
                 'rgb(' + Math.round(Math.random() * 255) + ', ' + Math.round(Math.random() * 255) + ', ' + Math.round(Math.random() * 255) + ')'
               )
-            },
-          },
+            }
+          }
         },
         left: 'center',
         top: 'center',
         right: null,
         bottom: null,
-        data: props.data,
-      },
-    ],
+        data: props.data
+      }
+    ]
   })
 }
 const debouncedFn = useDebounceFn(() => {

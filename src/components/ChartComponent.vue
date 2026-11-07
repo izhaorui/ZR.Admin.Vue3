@@ -4,7 +4,7 @@
 
 <script setup>
 import { onMounted, onBeforeUnmount, ref } from 'vue'
-import * as echarts from 'echarts'
+import { echarts } from '@/utils/echarts'
 
 const chartRef = ref(null)
 let chartInstance = null

@@ -132,7 +132,6 @@
 </template>
 
 <script setup>
-import 'element-plus/theme-chalk/index.css'
 import 'element-plus/theme-chalk/dark/css-vars.css'
 import { useColorMode } from '@vueuse/core'
 import { useDynamicTitle } from '@/utils/dynamicTitle'
