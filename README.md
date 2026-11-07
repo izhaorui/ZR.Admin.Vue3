@@ -61,12 +61,17 @@ npm run lint:fix
 
 # Prettier 格式化
 npm run format
+
+# 生产构建后的 Bundle 体积门槛检查
+npm run build:prod
+npm run check:bundle
 ```
 
 - 提交前由 husky 的 `pre-commit` 钩子调用 lint-staged，只对暂存文件执行 `eslint --fix` 与 `prettier --write`；`commit-msg` 钩子沿用 commitlint（gitmoji 规范）
 - 规则配置见 `eslint.config.js`（Flat Config），格式规范见 `.prettierrc.cjs`
 - 提交 `package-lock.json` 锁定依赖，CI 使用 `npm ci` 保证可复现构建
-- 流水线：GitHub Actions（`.github/workflows/ci.yml`）、Gitee Go（`.workflow/ci.yml`），流程为安装依赖 → lint → 单元测试 → 生产构建（GitHub 额外跑 E2E 冒烟）
+- `npm run check:bundle` 会限制未压缩总产物、JavaScript、CSS、最大 JavaScript 与 ECharts chunk 体积，并阻止不可达的 `heic-to` 转码包重新进入产物
+- 流水线：GitHub Actions（`.github/workflows/ci.yml`）、Gitee Go（`.workflow/ci.yml`），流程为安装依赖 → lint → 单元测试 → 生产构建 → Bundle 体积门槛（GitHub 额外跑 E2E 冒烟）
 
 ## 🧪 测试
 

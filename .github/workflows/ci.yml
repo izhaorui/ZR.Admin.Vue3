@@ -40,6 +40,9 @@ jobs:
       - name: 构建
         run: npm run build:prod
 
+      - name: Bundle 体积预算
+        run: npm run check:bundle
+
       - name: 上传构建产物
         uses: actions/upload-artifact@v4
         with:
