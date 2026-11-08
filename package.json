@@ -42,7 +42,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
     "@microsoft/signalr": "^8.0.0",
-    "@vueuse/core": "^10.7.0",
+    "@vueuse/core": "^15.0.0",
     "@wangeditor/editor": "^5.1.1",
     "@wangeditor/editor-for-vue": "^5.1.11",
     "axios": "^1.6.2",
@@ -51,7 +51,7 @@
     "dompurify": "^3.4.17",
     "echarts": "5.2.2",
     "echarts-wordcloud": "^2.1.0",
-    "element-plus": "^2.14.0",
+    "element-plus": "^2.14.8",
     "file-saver": "2.0.5",
     "fuse.js": "6.4.6",
     "highlight.js": "^11.5.1",
