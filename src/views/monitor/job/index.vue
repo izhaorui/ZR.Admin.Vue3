@@ -244,157 +244,18 @@
     </el-row>
     <pagination v-model:total="total" v-model:page="queryParams.PageNum" v-model:limit="queryParams.pageSize" @pagination="getList" />
 
-    <el-dialog :title="title" v-model="open" width="600px" draggable append-to-body>
-      <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
-        <el-row>
-          <el-col :lg="24" v-if="form.id">
-            <el-form-item label="任务ID">
-              <div>{{ form.id }}</div>
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="任务名称" maxlength="200" prop="name">
-              <el-input v-model="form.name" placeholder="请输入任务名称" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="触发器类型" prop="triggerType">
-              <el-select v-model="form.triggerType" placeholder="请选择触发器类型" style="width: 100%">
-                <el-option
-                  v-for="item in options.triggerTypeOptions"
-                  :key="item.dictValue"
-                  :label="item.dictLabel"
-                  :value="parseInt(item.dictValue)" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="错过执行" prop="misfirePolicy">
-              <el-select v-model="form.misfirePolicy" placeholder="请选择错过执行策略" style="width: 100%">
-                <el-option
-                  v-for="item in options.misfirePolicyOptions"
-                  :key="item.dictValue"
-                  :label="item.dictLabel"
-                  :value="parseInt(item.dictValue)" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="任务分组" maxlength="200" prop="jobGroup">
-              <el-select v-model="form.jobGroup" placeholder="请选择任务分组">
-                <el-option
-                  v-for="dict in options.jobGroupOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :lg="24">
-            <el-form-item label="任务类型" prop="taskType">
-              <el-radio-group v-model="form.taskType">
-                <el-radio :value="1">执行程序集</el-radio>
-                <el-radio :value="2">执行url</el-radio>
-                <el-radio :value="3">调用存储过程</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-
-          <el-col :lg="24" v-if="form.taskType == 2">
-            <el-form-item label="apiUrl" prop="apiUrl">
-              <el-input v-model="form.apiUrl" placeholder="远程调用接口url">
-                <template #prepend>
-                  <el-select v-model="form.requestMethod" placeholder="请选择请求方式" style="width: 125px">
-                    <el-option label="GET" value="GET" />
-                    <el-option label="POST" value="POST" />
-                  </el-select>
-                </template>
-              </el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :lg="24" v-if="form.taskType == 3">
-            <el-form-item label="存储过程" prop="sqlText">
-              <el-input
-                v-model="form.sqlText"
-                placeholder="schema.dbo.eee @usid = 1, @bb = 3"
-                @blur="proxy.$refs.formRef.validateField('sqlText')" />
-              <div class="tips-text">格式：schema.ProcedureName 参数</div>
-            </el-form-item>
-          </el-col>
-          <template v-if="form.taskType == 1">
-            <el-col :lg="24">
-              <el-form-item label="程序集名称" maxlength="200" prop="assemblyName">
-                <el-input v-model="form.assemblyName" placeholder="请输入程序集名称" />
-              </el-form-item>
-            </el-col>
-            <el-col :lg="24">
-              <el-form-item label="任务类名" maxlength="200" prop="className">
-                <el-input v-model="form.className" placeholder="请输入任务类名" />
-              </el-form-item>
-            </el-col>
-          </template>
-
-          <el-col :lg="24" v-if="form.taskType != 3">
-            <el-form-item label="传入参数" prop="jobParams">
-              <el-input v-model="form.jobParams" placeholder="传入参数" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="24" v-if="form.triggerType == 1">
-            <el-form-item label="间隔(Cron)" prop="cron">
-              <el-input v-model="form.cron" placeholder="请输入cron执行表达式">
-                <template #append>
-                  <el-button type="primary" @click="handleShowCron" style="width: 80px">
-                    生成表达式
-                    <el-icon><time /></el-icon>
-                  </el-button>
-                </template>
-              </el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="开始日期" prop="beginTime">
-              <template #label>
-                <span>
-                  <el-tooltip content="如果不写开始时间和结束时间，任务将以当前时间开始执行，到9999年结束" placement="top">
-                    <el-icon :size="15">
-                      <questionFilled />
-                    </el-icon>
-                  </el-tooltip>
-                  开始日期
-                </span>
-              </template>
-              <el-date-picker v-model="form.beginTime" style="width: 100%" type="date" placeholder="选择开始日期" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="结束日期" prop="endTime">
-              <el-date-picker v-model="form.endTime" style="width: 100%" type="date" placeholder="选择结束日期" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="24">
-            <el-form-item v-show="form.triggerType == 0" label="执行间隔(秒)" prop="intervalSecond">
-              <el-input-number v-model="form.intervalSecond" :max="9999999999" step-strictly controls-position="right" :min="1" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="24">
-            <el-form-item label="描述" prop="remark">
-              <el-input type="textarea" v-model="form.remark" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="24">
-            <el-form-item label="最后运行时间" prop="lastRunTime">
-              {{ form.lastRunTime }}
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <template #footer v-if="btnVisible">
-        <div class="dialog-footer">
-          <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
-          <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
-        </div>
-      </template>
-    </el-dialog>
+    <JobFormDialog
+      v-if="open"
+      ref="jobFormRef"
+      v-model="open"
+      :title="title"
+      :form="form"
+      :rules="rules"
+      :options="options"
+      :btn-visible="btnVisible"
+      @cancel="cancel"
+      @show-cron="handleShowCron"
+      @submit="submitForm" />
 
     <el-dialog title="Cron表达式生成器" v-model="openCron" append-to-body destroy-on-close>
       <crontab ref="crontabRef" @hide="openCron = false" @fill="crontabFill" :expression="expression"></crontab>
@@ -437,8 +298,10 @@ import {
 import { listJobLog } from '@/api/monitor/jobLog'
 import Crontab from '@/components/Crontab'
 
+const JobFormDialog = defineAsyncComponent(() => import('./components/JobFormDialog.vue'))
 const router = useRouter()
 const { proxy } = getCurrentInstance()
+const jobFormRef = ref()
 // 是否显示Cron表达式弹出层
 const openCron = ref(false)
 // 传入的表达式
@@ -711,7 +574,7 @@ function handleRun(row) {
 
 /** 提交按钮 */
 function submitForm() {
-  proxy.$refs['formRef'].validate((valid) => {
+  jobFormRef.value?.validate((valid) => {
     if (valid) {
       if (form.value.id !== undefined) {
         updateTasks(form.value).then((response) => {
@@ -764,7 +627,7 @@ function reset() {
     taskType: 1,
     requestMethod: 'GET'
   }
-  proxy.resetForm('formRef')
+  jobFormRef.value?.resetFields()
 }
 
 // 取消按钮

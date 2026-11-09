@@ -4,11 +4,7 @@
       <!-- 桌面端部门树常驻左栏；移动端改由下方抽屉承载，避免把列表挤成窄条 -->
       <el-splitter-panel v-if="showDeptPanel" size="200px" :collapsible="true" style="padding-right: 10px" max="300px">
         <el-card>
-          <dept-tree
-            ref="deptTreeRef"
-            :dept-options="deptOptions"
-            :current-key="queryParams.deptId"
-            @node-click="handleNodeClick"></dept-tree>
+          <dept-tree ref="deptTreeRef" :dept-options="deptOptions" :current-key="queryParams.deptId" @node-click="handleNodeClick"></dept-tree>
         </el-card>
       </el-splitter-panel>
       <el-splitter-panel>
@@ -160,101 +156,21 @@
       <dept-tree :dept-options="deptOptions" :current-key="queryParams.deptId" @node-click="handleNodeClick"></dept-tree>
     </el-drawer>
 
-    <!-- 添加或修改用户配置对话框 -->
-    <el-dialog :title="title" v-model="open" width="600px" append-to-body>
-      <el-form :model="form" :rules="rules" ref="userRef" label-width="80px">
-        <el-row :gutter="20">
-          <el-col :lg="12">
-            <el-form-item label="用户名" prop="userName">
-              <el-input :disabled="form.userId != undefined" v-model="form.userName" placeholder="请输入用户名(用于登陆)" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12" v-if="form.userId == undefined">
-            <el-form-item label="用户密码" prop="password">
-              <el-input v-model="form.password" show-password placeholder="请输入用户密码" type="password" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="用户昵称" prop="nickName">
-              <el-input v-model="form.nickName" placeholder="请输入用户昵称" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="归属部门" prop="deptId">
-              <el-tree-select
-                v-model="form.deptId"
-                :data="deptOptions"
-                :props="{ value: 'id', label: 'label', children: 'children' }"
-                value-key="id"
-                placeholder="请选择归属部门"
-                check-strictly
-                :render-after-expand="false"
-                clearable />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="手机号码" prop="phonenumber">
-              <el-input v-model="form.phonenumber" placeholder="请输入手机号码" maxlength="11" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="邮箱" prop="email">
-              <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="50" />
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="用户性别">
-              <el-radio-group v-model="form.sex" placeholder="请选择用户性别">
-                <el-radio-button v-for="dict in sexOptions" :key="dict.dictValue" :value="parseInt(dict.dictValue)">{{
-                  dict.dictLabel
-                }}</el-radio-button>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-          <el-col :lg="12">
-            <el-form-item label="用户状态">
-              <el-radio-group v-model="form.status">
-                <el-radio-button v-for="dict in statusOptions" :key="dict.dictValue" :value="parseInt(dict.dictValue)">{{
-                  dict.dictLabel
-                }}</el-radio-button>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-          <el-col :lg="24">
-            <el-form-item label="岗位">
-              <el-select v-model="form.postIds" multiple placeholder="请选择岗位" style="width: 100%">
-                <el-option v-for="item in postOptions" :key="item.postId" :label="item.postName" :value="item.postId" :disabled="item.status == 1">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :lg="24">
-            <el-form-item label="角色">
-              <el-select v-model="form.roleIds" multiple placeholder="请选择角色" style="width: 100%" @change="selectRole($event)">
-                <el-option
-                  v-for="item in roleOptions"
-                  :key="item.roleId"
-                  :label="item.roleName"
-                  :value="item.roleId"
-                  :disabled="item.status == 1 || form.userId == 1">
-                  <span style="float: left">{{ item.roleName }}</span>
-                  <span style="float: right">{{ item.roleKey }}</span>
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :lg="24">
-            <el-form-item label="备注">
-              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <template #footer>
-        <el-button text @click="cancel">{{ $t('btn.cancel') }}</el-button>
-        <el-button type="primary" @click="submitForm">{{ $t('btn.submit') }}</el-button>
-      </template>
-    </el-dialog>
+    <UserFormDialog
+      v-if="open"
+      ref="userFormRef"
+      v-model="open"
+      :title="title"
+      :form="form"
+      :rules="rules"
+      :dept-options="deptOptions"
+      :sex-options="sexOptions"
+      :status-options="statusOptions"
+      :post-options="postOptions"
+      :role-options="roleOptions"
+      @cancel="cancel"
+      @select-role="selectRole"
+      @submit="submitForm" />
 
     <!-- 用户导入对话框 -->
     <el-dialog :title="upload.title" v-model="upload.open" width="400px" append-to-body>
@@ -318,7 +234,10 @@ import { treeselect } from '@/api/system/dept'
 import { changeUserStatus, listUser, resetUserPwd, delUser, getUser, updateUser, addUser, exportUser } from '@/api/system/user'
 import UserViewDrawer from './view.vue'
 import DeptTree from './dept-tree.vue'
+
+const UserFormDialog = defineAsyncComponent(() => import('./components/UserFormDialog.vue'))
 const { proxy } = getCurrentInstance()
+const userFormRef = ref()
 
 const statusOptions = ref([])
 const sexOptions = ref([])
@@ -667,7 +586,7 @@ function reset() {
     postIds: [],
     roleIds: []
   }
-  proxy.resetForm('userRef')
+  userFormRef.value?.resetFields()
 }
 /** 取消按钮 */
 function cancel() {
@@ -712,12 +631,12 @@ function handleUpdate(row) {
     postOptions.value = response.data.posts
     open.value = true
     title.value = '修改用户'
-    form.password = ''
+    form.value.password = ''
   })
 }
 /** 提交按钮 */
 function submitForm() {
-  proxy.$refs['userRef'].validate((valid) => {
+  userFormRef.value?.validate((valid) => {
     if (valid) {
       if (form.value.userId != undefined) {
         updateUser(form.value).then((response) => {
